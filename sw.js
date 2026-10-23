@@ -1,5 +1,5 @@
 // Kunlik tizim: offline ishlash uchun service worker
-const C = 'trk-v1';
+const C = 'trk-v2';
 const SHELL = ['./', 'index.html', 'favicon.svg', 'manifest.webmanifest', 'icon-192.png', 'icon-512.png', 'apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {
@@ -32,4 +32,18 @@ self.addEventListener('fetch', (e) => {
       caches.match(r).then((m) => m || fetch(r).then((res) => { const cp = res.clone(); caches.open(C).then((c) => c.put(r, cp)); return res; }))
     );
   }
+});
+
+// Bildirishnomalar (push)
+self.addEventListener('push', (e) => {
+  let d = { title: 'Kunlik tizim', body: '' };
+  try { d = e.data.json(); } catch (x) {}
+  e.waitUntil(self.registration.showNotification(d.title, { body: d.body, icon: 'icon-192.png', badge: 'icon-192.png', tag: d.title }));
+});
+self.addEventListener('notificationclick', (e) => {
+  e.notification.close();
+  e.waitUntil(clients.matchAll({ type: 'window', includeUncontrolled: true }).then((l) => {
+    for (const c of l) { if ('focus' in c) return c.focus(); }
+    return clients.openWindow('./');
+  }));
 });
