@@ -1,0 +1,208 @@
+<!doctype html>
+<html lang="uz">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0a1a2c">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<title>Kunlik tizim</title>
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="manifest" href="manifest.webmanifest">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@600;800&family=Figtree:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0a1a2c;--c1:#112640;--c2:#183456;--tx:#e9eef2;--mu:#8fa6ba;--ac:#46c4b2;--go:#e2b857;--ln:#23415f;--bad:#e5766b;color-scheme:dark}
+@media(prefers-color-scheme:light){:root{--bg:#eef3f4;--c1:#fff;--c2:#e1eaee;--tx:#10233a;--mu:#587087;--ac:#0f8a7c;--go:#a97b12;--ln:#cdd9df;--bad:#b9473c;color-scheme:light}}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;background:var(--bg);color:var(--tx);font:16px/1.45 Figtree,system-ui,sans-serif}
+#app{max-width:480px;margin:0 auto;padding:calc(env(safe-area-inset-top,0px) + 18px) 16px calc(env(safe-area-inset-bottom,0px) + 96px)}
+h1,h2{font-family:'Bricolage Grotesque',Figtree,system-ui,sans-serif;margin:0}
+h2{font-size:18px;margin:26px 0 10px}
+.top{display:flex;justify-content:space-between;align-items:center}
+.top p{margin:0}.top .d{font-family:'Bricolage Grotesque',system-ui;font-size:22px;font-weight:600}
+.mu{color:var(--mu);font-size:14px}
+.hero{margin-top:16px;padding:22px 20px;border-radius:24px;border:1px solid var(--ln);background:var(--c1) repeating-conic-gradient(from 45deg,transparent 0 25%,rgba(70,196,178,.07) 0 50%) 0 0/30px 30px}
+.hero .lab{margin:0;color:var(--ac);font-weight:600}
+.hero h1{font-size:clamp(34px,10vw,46px);line-height:1.05;font-weight:800;margin:6px 0 10px}
+.hero p{margin:0 0 4px}
+.big{width:100%;margin-top:16px;padding:15px;border:0;border-radius:16px;background:var(--go);color:#14202c;font:600 17px Figtree,system-ui}
+.big.ok{background:var(--c2);color:var(--ac)}
+.ghost{width:100%;margin-top:12px;padding:12px;border-radius:14px;border:1px dashed var(--ln);background:none;color:var(--tx);font:600 15px Figtree,system-ui}
+.row{display:flex;align-items:center;gap:12px;padding:12px 12px;border-radius:14px;background:var(--c1);margin-bottom:6px;border-left:3px solid transparent;width:100%;text-align:left;color:var(--tx);border-top:0;border-right:0;border-bottom:0;font:inherit}
+.row.now{border-left-color:var(--go);background:var(--c2)}
+.row.done .t{text-decoration:line-through;color:var(--mu)}
+.row .t{flex:1}.row .tm{color:var(--mu);font-size:13px;white-space:nowrap}
+.ck{width:22px;height:22px;border-radius:50%;border:2px solid var(--mu);flex:none;display:grid;place-items:center;font-size:13px;color:#14202c}
+.done .ck{background:var(--ac);border-color:var(--ac)}
+.in{display:flex;gap:8px;margin-bottom:8px}
+input,.seg button{font:inherit}
+input[type=text],input[type=password],input[type=number],input:not([type]){flex:1;min-width:0;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--c1);color:var(--tx)}
+.btn{padding:12px 16px;border:0;border-radius:12px;background:var(--ac);color:#08202a;font-weight:600}
+.btn.s{background:var(--c2);color:var(--tx)}
+.seg{display:flex;background:var(--c1);border-radius:12px;padding:3px;margin-bottom:10px}
+.seg button{flex:1;border:0;padding:9px;border-radius:10px;background:none;color:var(--mu);font-weight:600}
+.seg button.on{background:var(--c2);color:var(--tx)}
+.sum{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:12px}
+.sum div{background:var(--c1);border-radius:14px;padding:12px}
+.sum b{display:block;font-size:19px;font-family:'Bricolage Grotesque',system-ui}
+.sum .w{grid-column:1/3;border:1px solid var(--go)}
+.in-c{color:var(--ac)}.out-c{color:var(--bad)}
+.x{border:0;background:none;color:var(--mu);font-size:20px;padding:0 4px}
+.goal{background:var(--c1);border-radius:14px;padding:12px 14px;margin-bottom:8px}
+.goal .h{display:flex;justify-content:space-between;gap:8px}
+input[type=range]{width:100%;accent-color:var(--ac);margin:10px 0 0}
+nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;background:var(--bg);border-top:1px solid var(--ln);padding:6px 12px calc(env(safe-area-inset-bottom,0px) + 6px)}
+nav div{display:flex;width:100%;max-width:480px;gap:6px}
+nav button{flex:1;padding:12px 0;border:0;border-radius:12px;background:none;color:var(--mu);font:600 15px Figtree,system-ui}
+nav button.on{background:var(--c1);color:var(--go)}
+.auth{margin-top:12vh}.auth h1{font-size:40px;font-weight:800;margin-bottom:6px}
+.err{color:var(--bad);min-height:22px;margin:8px 0}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
+<script>
+// 1) Supabase kalitini shu yerga qo‘ying (Project Settings → API → anon public key)
+const CFG={url:'https://dsfwagfsehpugjkervqc.supabase.co',key:'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRzZndhZ2ZzZWhwdWdqa2VydnFjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3OTI3MjcwNTksImV4cCI6MjEwODMwMzA1OX0.-fUlJz-VU3Y3_PkpfHsbFkCFsRTCBeJJ5qXs-ZiAMq8'};
+const sb=(CFG.key&&window.supabase)?supabase.createClient(CFG.url,CFG.key):null;
+
+const DAYS=['Yakshanba','Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba'];
+const MON=['yanvar','fevral','mart','aprel','may','iyun','iyul','avgust','sentabr','oktyabr','noyabr','dekabr'];
+const M=(h,m=0)=>h*60+m;
+const ALL=[0,1,2,3,4,5,6],WD=[1,2,3,4,5],GYM=[1,3,5,6],NG=[0,2,4];
+// Jadval: s/e daqiqada, e>1440 bo‘lsa yarim tundan o‘tadi. Hamma narsa shu yerda o‘zgartiriladi.
+const BL=[
+{id:'uyg',t:'Uyg‘onish',n:'Tur, tahorat, namoz, suv ich.',s:M(5),e:M(6),d:ALL},
+{id:'qur',t:'Qur‘on',n:'3 bet yodlash, takror, kunlik hatm.',s:M(6),e:M(9),d:ALL},
+{id:'dok',t:'Dokon',n:'Mijoz kam paytda IELTS listening va lug‘at.',s:M(9),e:M(17),d:ALL},
+{id:'yol',t:'Yo‘l va ovqat',n:'Univerga tayyorlan.',s:M(17),e:M(18),d:WD},
+{id:'uni',t:'Univer',n:'Darsda to‘liq qatnash.',s:M(18),e:M(20,50),d:WD},
+{id:'dam',t:'Ovqat va dam',n:'Yengil ovqat, 20 daqiqa dam.',s:M(20,50),e:M(21,15),d:WD},
+{id:'iel',t:'IELTS',n:'Reading yoki writing mashqi.',s:M(21,15),e:M(22),d:WD},
+{id:'zal',t:'Zal',n:'Mashq, cho‘zilish, suv.',s:M(22),e:M(24),d:GYM},
+{id:'mol',t:'Pul hisobi va ertangi reja',n:'Kirim-chiqimni yoz, ertangi 3 ta ishni belgila.',s:M(22),e:M(22,45),d:[2,4]},
+{id:'hft',t:'Haftalik tahlil',n:'Haftani ko‘rib chiq, keyingi haftani rejala.',s:M(18),e:M(19),d:[0]},
+{id:'uyqu1',t:'Uxlash',n:'Telefon chetga. Ertaga 05:00.',s:M(23),e:M(29),d:NG},
+{id:'uyqu2',t:'Uxlash',n:'Telefon chetga. Ertaga 05:00.',s:M(24),e:M(29),d:GYM}
+];
+const RULES=[{id:'ig',t:'Instagramsiz kun'},{id:'ph',t:'Yotishdan oldin 30 daqiqa telefonsiz'},{id:'sl',t:'Rejadagi vaqtda uxlashga yotdim'}];
+const GOALS=['Hofizi Qur‘on bo‘lish','IELTS 8–9 ball','O‘qituvchi bo‘lib ishlash','Prava olish','Zalda yaxshi tana qurish'];
+
+const $=s=>document.querySelector(s);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pad=n=>String(n).padStart(2,'0');
+const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
+const dk=()=>new Date().toLocaleDateString('sv');
+const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
+const num=n=>Number(n).toLocaleString('ru-RU');
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:GOALS.map(t=>({t,p:0})),money:[]});
+
+let S=blank(),UID=null,tab='h',W='p',K='out',FA='',FN='',tm=null;
+const KEY=()=>'trk_'+(UID||'local');
+function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}'))}catch(e){return blank()}}
+function save(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);render()}
+async function push(){if(sb&&UID)try{await sb.from('app_state').upsert({user_id:UID,data:S,updated_at:new Date().toISOString()})}catch(e){}}
+async function pull(){if(!sb||!UID)return;try{const r=await sb.from('app_state').select('data').eq('user_id',UID).maybeSingle();const d=r.data&&r.data.data;if(d&&(d.ts||0)>(S.ts||0))S=Object.assign(blank(),d);else if(S.ts)push()}catch(e){}}
+
+function nowInfo(){
+  const d=new Date(),n=d.getHours()*60+d.getMinutes(),today=BL.filter(b=>b.d.includes(d.getDay()));
+  for(const b of today){
+    if(n>=b.s&&n<b.e)return{b,nn:n};
+    if(n+1440>=b.s&&n+1440<b.e)return{b,nn:n+1440};
+  }
+  return{nx:today.filter(b=>b.s>n).sort((a,c)=>a.s-c.s)[0],n};
+}
+
+function hozir(){
+  const k=dk(),dn=S.done[k]||{},rd=S.rules[k]||{},tasks=S.tasks[k]||[],d=new Date(),I=nowInfo();
+  const list=BL.filter(b=>b.d.includes(d.getDay())).sort((a,c)=>a.s-c.s);
+  const cnt=list.filter(b=>!b.id.startsWith('uyqu'));
+  const tot=cnt.length+RULES.length+tasks.length;
+  const got=cnt.filter(b=>dn[b.id]).length+RULES.filter(r=>rd[r.id]).length+tasks.filter(t=>t.x).length;
+  const sc=tot?Math.round(got/tot*100):0,C=2*Math.PI*20;
+  let hero;
+  if(I.b){
+    const b=I.b,sl=b.id.startsWith('uyqu');
+    hero=`<section class="hero"><p class="lab">Hozir</p><h1>${b.t}</h1><p>${hm(b.s)} dan ${hm(b.e)} gacha</p><p class="mu">${fmt(b.e-I.nn)} qoldi. ${b.n}</p>${sl?'':`<button class="big ${dn[b.id]?'ok':''}" onclick="tg('${b.id}')">${dn[b.id]?'Bajarildi':'Bajardim'}</button>`}</section>`;
+  }else{
+    hero=`<section class="hero"><p class="lab">Hozir</p><h1>Bo‘sh vaqt</h1><p class="mu">${I.nx?`Keyingisi: ${I.nx.t}, ${hm(I.nx.s)} da.`:'Bugungi jadval tugadi.'}</p></section>`;
+  }
+  const w=S.wake[k];
+  const wake=w?`<p class="mu" style="margin:12px 4px 0">Bugun ${w} da turding. Maqsad: 05:00.</p>`:(d.getHours()<12?`<button class="ghost" onclick="wk()">Turdim</button>`:'');
+  const rows=list.map(b=>{const cur=I.b&&I.b.id===b.id,x=dn[b.id];
+    return `<button class="row ${cur?'now':''} ${x?'done':''}" onclick="tg('${b.id}')"><span class="ck">${x?'✓':''}</span><span class="t">${b.t}</span><span class="tm">${hm(b.s)}</span></button>`}).join('');
+  const rr=RULES.map(r=>`<button class="row ${rd[r.id]?'done':''}" onclick="rl('${r.id}')"><span class="ck">${rd[r.id]?'✓':''}</span><span class="t">${r.t}</span></button>`).join('');
+  const tt=tasks.map((t,i)=>`<div class="row ${t.x?'done':''}"><span class="ck" onclick="tk(${i})">${t.x?'✓':''}</span><span class="t" onclick="tk(${i})">${esc(t.t)}</span><button class="x" onclick="dt(${i})">×</button></div>`).join('');
+  return `<div class="top"><div><p class="d">${DAYS[d.getDay()]}</p><p class="mu">${d.getDate()} ${MON[d.getMonth()]}</p></div>
+  <svg width="56" height="56" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
+  ${hero}${wake}
+  <h2>Bugungi jadval</h2>${rows}
+  <h2>Kun qoidalari</h2>${rr}
+  <h2>Qo‘shimcha vazifalar</h2>${tt}
+  <div class="in"><input id="nt" placeholder="Yangi vazifa" onkeydown="if(event.key==='Enter')addT()"><button class="btn" onclick="addT()">Qo‘sh</button></div>`;
+}
+
+function maqsad(){
+  const g=S.goals.map((x,i)=>`<div class="goal"><div class="h"><b>${esc(x.t)}</b><span><span class="mu">${x.p}%</span> <button class="x" onclick="dg(${i})">×</button></span></div><input type="range" min="0" max="100" step="5" value="${x.p}" onchange="gp(${i},this.value)"></div>`).join('');
+  return `<div class="top"><p class="d">Maqsadlar</p></div><p class="mu">Har hafta oxirida jarayonni belgilab bor.</p><div style="margin-top:12px">${g}</div>
+  <div class="in"><input id="ng" placeholder="Yangi maqsad" onkeydown="if(event.key==='Enter')addG()"><button class="btn" onclick="addG()">Qo‘sh</button></div>
+  <h2>Hisob</h2><p class="mu">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':''):'Hozircha faqat shu telefonda saqlanadi. Boshqa qurilmada ko‘rish uchun Supabase kalitini qo‘shing.'}</p>
+  ${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}`;
+}
+
+function pul(){
+  const mo=dk().slice(0,7),L=S.money.filter(m=>m.w===W),ML=L.filter(m=>m.d.startsWith(mo));
+  const inn=ML.filter(m=>m.k==='in').reduce((a,m)=>a+m.a,0),ou=ML.filter(m=>m.k==='out').reduce((a,m)=>a+m.a,0);
+  const rows=L.slice().sort((a,b)=>b.id-a.id).slice(0,15).map(m=>`<div class="row"><span class="t">${esc(m.n||(m.k==='in'?'Kirim':'Chiqim'))}<br><span class="mu">${m.d.slice(8)}.${m.d.slice(5,7)}</span></span><b class="${m.k==='in'?'in-c':'out-c'}">${m.k==='in'?'+':'−'}${num(m.a)}</b><button class="x" onclick="dm(${m.id})">×</button></div>`).join('');
+  return `<div class="top"><p class="d">Pul</p><span class="mu">${MON[new Date().getMonth()]} oyi</span></div>
+  <div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">Dokon</button></div>
+  <div class="sum"><div><span class="mu">Kirim</span><b class="in-c">${num(inn)}</b></div><div><span class="mu">Chiqim</span><b class="out-c">${num(ou)}</b></div><div class="w"><span class="mu">Oy balansi, so‘m</span><b>${num(inn-ou)}</b></div></div>
+  <div class="seg"><button class="${K==='out'?'on':''}" onclick="K='out';render()">Chiqim</button><button class="${K==='in'?'on':''}" onclick="K='in';render()">Kirim</button></div>
+  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${esc(FA)}" oninput="FA=this.value"><input placeholder="Izoh" value="${esc(FN)}" oninput="FN=this.value"></div>
+  <button class="big" style="margin:0 0 14px" onclick="addM()">Yozish</button>${rows||'<p class="mu">Hali yozuv yo‘q. Birinchi kirim yoki chiqimni yozing.</p>'}`;
+}
+
+function authView(msg){
+  return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1><p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
+}
+
+function render(){
+  const a=$('#app');
+  if(sb&&!UID){if(!$('#lg'))a.innerHTML=authView();return}
+  const v=tab==='h'?hozir():tab==='m'?maqsad():pul();
+  a.innerHTML=v+`<nav><div>${[['h','Hozir'],['m','Maqsad'],['p','Pul']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="tab='${x[0]}';render();scrollTo(0,0)">${x[1]}</button>`).join('')}</div></nav>`;
+}
+
+const tgl=(o,id)=>{const k=dk();(o[k]=o[k]||{})[id]=!o[k][id]};
+function tg(id){tgl(S.done,id);save()}
+function rl(id){tgl(S.rules,id);save()}
+function wk(){const d=new Date();S.wake[dk()]=pad(d.getHours())+':'+pad(d.getMinutes());save()}
+function addT(){const v=$('#nt').value.trim();if(!v)return;const k=dk();(S.tasks[k]=S.tasks[k]||[]).push({t:v,x:0});save()}
+function tk(i){const t=S.tasks[dk()][i];t.x=t.x?0:1;save()}
+function dt(i){S.tasks[dk()].splice(i,1);save()}
+function gp(i,v){S.goals[i].p=+v;save()}
+function addG(){const v=$('#ng').value.trim();if(!v)return;S.goals.push({t:v,p:0});save()}
+function dg(i){if(confirm('Maqsad o‘chirilsinmi?')){S.goals.splice(i,1);save()}}
+function addM(){const a=parseInt(String(FA).replace(/\D/g,''),10);if(!a)return;S.money.push({id:Date.now(),d:dk(),k:K,a,n:FN.trim(),w:W});FA='';FN='';save()}
+function dm(id){if(confirm('Yozuv o‘chirilsinmi?')){S.money=S.money.filter(m=>m.id!==id);save()}}
+async function out(){await sb.auth.signOut();UID=null;S=blank();render()}
+function err(t){const e=$('#er');if(e)e.textContent=t}
+async function auth(up){
+  const l=$('#lg').value.trim().toLowerCase(),p=$('#pw').value;
+  if(!l.includes('@')&&!/^[a-z0-9_.]{3,20}$/.test(l))return err('Login 3–20 ta lotin harf yoki raqamdan iborat bo‘lsin.');
+  if(p.length<6)return err('Parol kamida 6 belgidan iborat bo‘lsin.');
+  const c={email:l.includes('@')?l:l+'@trk.app',password:p};
+  const r=up?await sb.auth.signUp(c):await sb.auth.signInWithPassword(c);
+  if(r.error)return err(/invalid/i.test(r.error.message)?'Login yoki parol noto‘g‘ri.':r.error.message);
+    await start(r.data.session.user.id);
+}
+async function start(id){UID=id;S=load();await pull();render()}
+(async()=>{
+  if(!sb){S=load();render()}
+  else{const r=await sb.auth.getSession();if(r.data.session)await start(r.data.session.user.id);else render()}
+  setInterval(()=>{const a=document.activeElement;if(!a||a.tagName!=='INPUT')render()},30000);
+})();
+</script>
+</body>
+</html>
