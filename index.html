@@ -98,6 +98,7 @@ const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa
 const num=n=>Number(n).toLocaleString('ru-RU');
 const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:GOALS.map(t=>({t,p:0})),money:[]});
 
+let OW=null,OL='',OP='',ON='',OE='',OC=null;
 let S=blank(),UID=null,tab='h',W='p',K='out',FA='',FN='',tm=null;
 const KEY=()=>'trk_'+(UID||'local');
 function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}'))}catch(e){return blank()}}
@@ -147,6 +148,7 @@ function maqsad(){
   const g=S.goals.map((x,i)=>`<div class="goal"><div class="h"><b>${esc(x.t)}</b><span><span class="mu">${x.p}%</span> <button class="x" onclick="dg(${i})">×</button></span></div><input type="range" min="0" max="100" step="5" value="${x.p}" onchange="gp(${i},this.value)"></div>`).join('');
   return `<div class="top"><p class="d">Maqsadlar</p></div><p class="mu">Har hafta oxirida jarayonni belgilab bor.</p><div style="margin-top:12px">${g}</div>
   <div class="in"><input id="ng" placeholder="Yangi maqsad" onkeydown="if(event.key==='Enter')addG()"><button class="btn" onclick="addG()">Qo‘sh</button></div>
+  ${owner()}
   <h2>Hisob</h2><p class="mu">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':''):'Hozircha faqat shu telefonda saqlanadi. Boshqa qurilmada ko‘rish uchun Supabase kalitini qo‘shing.'}</p>
   ${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}`;
 }
@@ -170,6 +172,7 @@ function authView(msg){
 function render(){
   const a=$('#app');
   if(sb&&!UID){if(!$('#lg'))a.innerHTML=authView();return}
+  if(tab==='m'&&sb&&UID&&OW===null){OW=0;loadOw()}
   const v=tab==='h'?hozir():tab==='m'?maqsad():pul();
   a.innerHTML=v+`<nav><div>${[['h','Hozir'],['m','Maqsad'],['p','Pul']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="tab='${x[0]}';render();scrollTo(0,0)">${x[1]}</button>`).join('')}</div></nav>`;
 }
@@ -186,7 +189,28 @@ function addG(){const v=$('#ng').value.trim();if(!v)return;S.goals.push({t:v,p:0
 function dg(i){if(confirm('Maqsad o‘chirilsinmi?')){S.goals.splice(i,1);save()}}
 function addM(){const a=parseInt(String(FA).replace(/\D/g,''),10);if(!a)return;S.money.push({id:Date.now(),d:dk(),k:K,a,n:FN.trim(),w:W});FA='';FN='';save()}
 function dm(id){if(confirm('Yozuv o‘chirilsinmi?')){S.money=S.money.filter(m=>m.id!==id);save()}}
-async function out(){await sb.auth.signOut();UID=null;S=blank();render()}
+async function fn(body){const r=await sb.functions.invoke('create-user',{body});
+  if(!r.error)return r.data;
+  try{return await r.error.context.json()}catch(e){return{error:'Funksiya topilmadi yoki ishlamadi'}}}
+async function loadOw(){const d=await fn({action:'list'});OW=d&&d.users?d.users:false;render()}
+function genP(){const c='abcdefghjkmnpqrstuvwxyz23456789';OP=[...crypto.getRandomValues(new Uint8Array(8))].map(x=>c[x%c.length]).join('');render()}
+async function mkU(){
+  const l=OL.trim().toLowerCase();
+  if(!/^[a-z0-9_.]{3,20}$/.test(l)||OP.length<6){OE='Login 3–20 ta lotin harf yoki raqam, parol kamida 6 belgi bo‘lsin.';return render()}
+  const d=await fn({action:'create',login:l,password:OP,name:ON.trim()});
+  if(!d||d.error){OE=(d&&d.error)||'Xato';return render()}
+  OC={login:l,pass:OP};OL=OP=ON=OE='';await loadOw();
+}
+async function du(id){if(!confirm('Foydalanuvchi va uning ma‘lumoti o‘chirilsinmi?'))return;const d=await fn({action:'delete',id});OE=d&&d.error?d.error:'';await loadOw()}
+function cp(){const t='Kunlik tizim\nLink: '+location.origin+location.pathname+'\nLogin: '+OC.login+'\nParol: '+OC.pass;
+  (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{OC.copied=1;render()}).catch(()=>{prompt('Nusxalang:',t)})}
+function owner(){
+  if(!Array.isArray(OW))return '';
+  const us=OW.map(u=>`<div class="row"><span class="t">${esc((u.email||'').replace('@trk.app',''))}${u.name?`<br><span class="mu">${esc(u.name)}</span>`:''}</span><button class="x" onclick="du('${u.id}')">×</button></div>`).join('');
+  const card=OC?`<div class="goal" style="border:1px solid var(--go)"><b>Tayyor. Yuborish uchun nusxala</b><p class="mu" style="margin:6px 0 10px">Login: ${esc(OC.login)}<br>Parol: ${esc(OC.pass)}</p><button class="btn" onclick="cp()">${OC.copied?'Nusxalandi':'Nusxalash'}</button></div>`:'';
+  return `<h2>Foydalanuvchilar</h2>${card}<div class="in"><input placeholder="Login (masalan: aziz01)" value="${esc(OL)}" oninput="OL=this.value" autocapitalize="none"></div><div class="in"><input placeholder="Parol (kamida 6 belgi)" value="${esc(OP)}" oninput="OP=this.value" autocapitalize="none"></div><button class="ghost" style="margin:0 0 8px" onclick="genP()">Parol yaratish</button><div class="in"><input placeholder="Ism (ixtiyoriy)" value="${esc(ON)}" oninput="ON=this.value"></div><p class="err">${esc(OE)}</p><button class="big" style="margin:0 0 14px" onclick="mkU()">Foydalanuvchi qo‘shish</button>${us}`;
+}
+async function out(){await sb.auth.signOut();UID=null;OW=null;OC=null;S=blank();render()}
 function err(t){const e=$('#er');if(e)e.textContent=t}
 async function auth(up){
   const l=$('#lg').value.trim().toLowerCase(),p=$('#pw').value;
