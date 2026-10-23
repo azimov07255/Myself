@@ -80,6 +80,15 @@ button{transition:transform .12s,background .2s}button:active{transform:scale(.9
 .chip{display:inline-block;padding:3px 10px;border-radius:12px;background:var(--c2);font-size:12px;color:var(--mu);margin:0 6px 4px 0}.chip.bad{color:var(--bad)}
 .path{position:relative;height:16px;border-radius:8px;background:var(--c2);overflow:hidden}.path i{position:absolute;top:0;bottom:0;background:var(--ac);opacity:.9;border-right:2px solid var(--bg)}.path i.n{background:var(--ln)}.path u{position:absolute;top:-2px;bottom:-2px;width:3px;background:var(--go);border-radius:2px}
 .gh{display:flex;gap:14px;align-items:center;margin:10px 0}
+.pt{margin:16px 0 8px;font-weight:600}
+.tl{display:grid;grid-template-columns:50px 26px 1fr;gap:8px;position:relative}
+.tt{text-align:right;padding-top:10px}.tt b{display:block;font:700 15px Figtree,system-ui}.tt span{font-size:11px;color:var(--mu)}
+.tc{position:relative;display:flex;justify-content:center;padding-top:10px}.tc::before{content:'';position:absolute;top:0;bottom:-10px;width:2px;background:var(--ln)}
+.tc .ck{position:relative;z-index:1;background:var(--bg)}
+.tl.done .tc .ck{background:var(--ac);border-color:var(--ac)}.tl.now .tc .ck{border-color:var(--go);box-shadow:0 0 0 4px rgba(226,184,87,.2)}.tl.miss .tc .ck{border-color:var(--bad)}
+.tb{background:var(--c1);border-radius:14px;padding:10px 12px;margin-bottom:10px;border-left:3px solid transparent;min-width:0}.tb .t{flex:1;font-weight:600}
+.tl.now .tb{background:var(--c2);border-left-color:var(--go)}.tl.done .tb .t{text-decoration:line-through;color:var(--mu)}.tl.miss .tb{opacity:.85}
+.nowl{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:var(--go);font-weight:700;font-size:13px}.nowl::before,.nowl::after{content:'';height:2px;background:var(--go);flex:1;opacity:.6}
 </style>
 </head>
 <body>
@@ -161,8 +170,19 @@ function hozir(){
     hero=`<section class="hero"><div style="display:flex;justify-content:space-between;gap:12px"><div><p class="lab">Hozir</p><h1>${esc(b.t)}</h1><p>${hm(b.s)} dan ${hm(b.e)} gacha</p></div><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="30" fill="none" stroke="rgba(128,128,128,.3)" stroke-width="6"/><circle cx="38" cy="38" r="30" fill="none" stroke="var(--hlab)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${R*fr} ${R}" transform="rotate(-90 38 38)"/><text x="38" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="var(--htx)">${Math.round(fr*100)}%</text></svg></div><p class="mu">${fmt(b.e-I.nn)} qoldi. ${esc(b.n||'')}</p>${nx?`<p class="mu">Keyingisi: ${esc(nx.b.t)}, ${hm(nx.b.s)} da</p>`:''}${sl?'':`<button class="big ${dn[b.id]?'ok':''}" onclick="tg('${b.id}')">${dn[b.id]?'Bajarildi':'Bajardim'}</button>`}</section>`;
   }else if(isT)hero=`<section class="hero"><p class="lab">Hozir</p><h1>Bo‘sh vaqt</h1><p class="mu">${I.nx?`Keyingisi: ${esc(I.nx.t)}, ${hm(I.nx.s)} da.`:'Bugungi jadval tugadi.'}</p></section>`;
   else hero=`<section class="hero"><p class="lab">${fu?'Kelgusi kun rejasi':'O‘tgan kun'}</p><h1>${d.getDate()} ${MON[d.getMonth()]}</h1><p>${DAYS[day]}</p><p class="mu">${tot} ta belgi, ${got} tasi bajarilgan, ball ${sc}%</p><button class="big" onclick="vd('${T0}')">Bugunga qaytish</button></section>`;
-  const rows=list.map(({b,i})=>{const cur=isT&&I.b&&I.b.id===b.id,x=dn[b.id],f=act(`tg('${b.id}')`);
-    return `<div class="row ${cur?'now':''} ${x?'done':''}"><span class="ck" onclick="${f}">${x?'✓':''}</span><span class="t" onclick="${f}">${esc(b.t)}${ALLV?`<br><span class="mu">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</span>`:''}</span><span class="tm">${hm(b.s)}</span><button class="x" onclick="eb(${i})">✎</button></div>`}).join('');
+  const nmn=new Date(),nowM=nmn.getHours()*60+nmn.getMinutes(),part=s=>s<720?'Ertalab':s<1080?'Kunduzi':s<1320?'Kechqurun':'Tun';
+  let cD=0,cM=0,cL=0,lastP='',lineDone=false,ix=0;
+  const rows=list.map(({b,i})=>{
+    const x=dn[b.id],sl=b.id.startsWith('uyqu'),cur=isT&&I.b&&I.b.id===b.id,ended=isT?(b.e<=nowM):!fu,miss=ended&&!x&&!sl&&!cur,f=act(`tg('${b.id}')`);
+    if(!sl){if(x)cD++;else if(miss)cM++;else cL++}
+    let st='';
+    if(x)st='Bajarildi';else if(cur)st=fmt(b.e-I.nn).trim()+' qoldi';else if(miss)st='O‘tkazib yuborilgan';else if(isT&&b.s>nowM&&b.s-nowM<=180)st=fmt(b.s-nowM).trim()+'dan keyin';
+    let o='';
+    if(part(b.s)!==lastP){lastP=part(b.s);o+=`<p class="mu pt">${lastP}</p>`}
+    if(isT&&!I.b&&!lineDone&&b.s>nowM){lineDone=true;o+=`<div class="nowl"><span>${hm(nowM)}</span></div>`}
+    const fr=cur?Math.min(100,(I.nn-b.s)/(b.e-b.s)*100):0;
+    return o+`<div class="tl ${x?'done':cur?'now':miss?'miss':''}" style="animation-delay:${Math.min(ix++,10)*.05+.15}s"><div class="tt"><b>${hm(b.s)}</b><span>${fmt(b.e-b.s).trim()}</span></div><div class="tc"><span class="ck" onclick="${f}">${x?'✓':''}</span></div><div class="tb"><div style="display:flex;justify-content:space-between;gap:8px"><span class="t" onclick="${f}">${esc(b.t)}</span><button class="x" onclick="eb(${i})">✎</button></div>${st?`<p class="mu" style="margin:2px 0 0;font-size:13px${miss?';color:var(--bad)':''}">${st}</p>`:''}${ALLV?`<p class="mu" style="margin:2px 0 0;font-size:12px">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</p>`:''}${cur?`<div class="bar" style="margin-top:8px"><i style="width:${fr}%"></i></div>`:''}</div></div>`}).join('');
+  const sm=`<div style="margin-bottom:4px"><span class="chip" style="color:var(--ac)">${cD} bajarildi</span><span class="chip">${cL} qoldi</span>${cM?`<span class="chip bad">${cM} o‘tkazildi</span>`:''}</div>`;
   const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${act(fn)}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
   const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,x.t)).join(''):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
   const rr=RULES.map(r=>chk(rd[r.id],`rl('${r.id}')`,r.t)).join('');
@@ -186,7 +206,7 @@ function hozir(){
   ${mg?`<div class="goal" style="margin-top:12px;border-left:4px solid var(--go)"><div class="h"><span class="mu">Asosiy maqsad</span><span class="mu">${gpct(mg)}%</span></div><b style="font:700 19px Fraunces,serif">${esc(mg.t)}</b><div class="bar" style="margin:8px 0"><i style="width:${gpct(mg)}%"></i></div><p class="mu" style="margin:0">${mn?'Keyingi qadam: '+esc(mn.t):'Bosqich qo‘shish uchun Maqsad bo‘limiga o‘t.'}</p></div>`:''}
   ${isT?wakeC():''}
   <h2>Kun yo‘li</h2><div class="path">${path}</div><div class="h mu" style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px"><span>05:00</span><span>24:00</span></div>
-  <h2>${ALLV?'Barcha rejalar':'Kun jadvali'}</h2>${rows}
+  <h2>${ALLV?'Barcha rejalar':'Kun jadvali'}</h2>${sm}${rows}
   <div class="in"><button class="btn s" onclick="eb(-1)">Reja qo‘shish</button><button class="btn s" onclick="ALLV=!ALLV;render()">${ALLV?'Faqat bu kun':'Barcha rejalar'}</button></div>
   <h2>Odatlar</h2>${hh}<h2>Kun qoidalari</h2>${rr}
   <h2>Qo‘shimcha vazifalar</h2>${tt}<div class="in"><input id="nt" placeholder="Yangi vazifa" onkeydown="if(event.key==='Enter')addT()"><button class="btn" onclick="addT()">Qo‘sh</button></div>
@@ -308,7 +328,7 @@ function render(){
   if(sb&&!UID){if(!$('#lg'))a.innerHTML=authView();return}
   if(tab==='s'&&sb&&UID&&OW===null){OW=0;loadOw()}
   const v=tab==='h'?hozir():tab==='q'?quran():tab==='o'?odatTab():tab==='m'?maqsad():tab==='s'?sozlama():pul();
-  a.innerHTML=v+`<nav><div>${[['h','Hozir'],['q','Qur‘on'],['o','Odat'],['m','Maqsad'],['p','Pul'],['s','Sozlama']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}</div></nav>`;
+  a.innerHTML=v+`<nav><div>${[['h','Bugun'],['q','Qur‘on'],['o','Odat'],['m','Maqsad'],['p','Pul'],['s','Sozlama']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}</div></nav>`;
 }
 
 const cd=()=>VD||dk();
@@ -362,7 +382,8 @@ function rvPlan(){const q=S.q,o=q.ord;if(!o.length)return[];const a=[],j=q.rv%o.
 function rvDone(){const q=S.q,a=rvPlan();if(!a.length)return;const k=dk();q.rd[k]=r1((q.rd[k]||0)+a.reduce((s,i)=>s+Math.min(q.m[i]||0,SL(i)),0));q.rv=(q.rv+a.length)%q.ord.length;save()}
 function hd(n){const q=S.q,k=dk();q.hp=Math.max(0,q.hp+n);q.hd[k]=Math.max(0,(q.hd[k]||0)+n);if(q.hp>=604){q.hc++;q.hp-=604}save()}
 const ZK=[['Subhanalloh','سُبْحَانَ ٱللَّٰهِ',33],['Alhamdulillah','ٱلْحَمْدُ لِلَّٰهِ',33],['Allohu akbar','ٱللَّٰهُ أَكْبَرُ',34],['La ilaha illalloh','لَا إِلَٰهَ إِلَّا ٱللَّٰهُ',100],['Astag’firulloh','أَسْتَغْفِرُ ٱللَّٰهَ',100],['Salovat','ٱللَّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ',100]];
-function zt(){const z=S.z,k=dk(),c=z.c[k]=z.c[k]||{};c[z.sel]=(c[z.sel]||0)+1;if(navigator.vibrate)navigator.vibrate(12);save()}
+function zt(){const z=S.z,k=dk(),c=z.c[k]=z.c[k]||{},t=z.tg||ZK[z.sel][2];c[z.sel]=(c[z.sel]||0)+1;if(navigator.vibrate)navigator.vibrate(c[z.sel]%t===0?[40,50,40]:12);save()}
+function ztg(n){S.z.tg=n;save()}
 function zr(){const z=S.z;if(confirm('Bugungi sanoq nolga tushirilsinmi?')){(z.c[dk()]=z.c[dk()]||{})[z.sel]=0;save()}}
 const stp=(f,min)=>`<div class="in" style="margin-top:10px"><button class="btn s" onclick="gs('${f}',-1,${min})">−</button><button class="btn s" onclick="gs('${f}',1,${min})">+</button></div>`;
 function quran(){
@@ -396,9 +417,9 @@ function hatm(){
   const q=S.q,k=dk(),left=604-q.hp,days=Math.ceil(left/q.hg);let jn=1;for(let j=0;j<30;j++)if(q.hp+1>=J[j])jn=j+1;
   return `<section class="hero"><p class="lab">Hatm</p><h1 style="font-size:30px">${q.hp} / 604 bet</h1><div class="bar" style="margin:10px 0"><i style="width:${q.hp/6.04}%"></i></div><p class="mu">Hozirgi pora: ${jn}-pora. Tugatilgan hatmlar: ${q.hc}. Kuniga ${q.hg} bet bilan hatmga ${days} kun qoldi. Bugun o‘qilgan: ${q.hd[k]||0} bet.</p><p class="mu" style="margin-top:8px">Kunlik maqsad: ${q.hg} bet</p>${stp('hg',1)}<button class="big" style="margin-top:6px" onclick="hd(${q.hg})">Bugun ${q.hg} bet o‘qidim</button><button class="ghost" style="color:var(--htx)" onclick="hd(1)">+1 bet</button><button class="ghost" style="color:var(--htx)" onclick="hd(-1)">−1 bet</button></section>`}
 function zikr(){
-  const z=S.z,c=z.c[dk()]||{},x=ZK[z.sel],t=x[2],v=c[z.sel]||0,rem=v%t,tot=Object.values(c).reduce((a,b)=>a+b,0);
+  const z=S.z,c=z.c[dk()]||{},x=ZK[z.sel],t=z.tg||x[2],v=c[z.sel]||0,rem=v%t,tot=Object.values(c).reduce((a,b)=>a+b,0);
   const chips=ZK.map((y,i)=>`<button class="${z.sel===i?'on':''}" onclick="S.z.sel=${i};render()">${y[0]}</button>`).join('');
-  return `<div class="chips" style="margin-top:12px">${chips}</div><p dir="rtl" lang="ar" style="font-size:28px;text-align:center;margin:14px 0 0">${x[1]}</p>
+  return `<div class="chips" style="margin-top:12px">${chips}</div><div class="seg" style="margin-top:10px">${[[0,'Standart'],[33,'33'],[99,'99'],[100,'100']].map(y=>`<button class="${(z.tg||0)===y[0]?'on':''}" onclick="ztg(${y[0]})">${y[1]}</button>`).join('')}</div><p dir="rtl" lang="ar" style="font-size:28px;text-align:center;margin:14px 0 0">${x[1]}</p>
   <button class="tsb" style="background:conic-gradient(var(--ac) ${rem/t*360}deg,var(--c2) 0)" onclick="zt()"><span>${rem}</span></button>
   <p class="mu" style="text-align:center;margin:0">Maqsad: ${t}. To‘liq aylanish: ${Math.floor(v/t)}. Jami bugun: ${tot}</p><button class="ghost" onclick="zr()">Nolga tushirish</button>`}
 
