@@ -89,6 +89,7 @@ button{transition:transform .12s,background .2s}button:active{transform:scale(.9
 .tb{background:var(--c1);border-radius:14px;padding:10px 12px;margin-bottom:10px;border-left:3px solid transparent;min-width:0}.tb .t{flex:1;font-weight:600}
 .tl.now .tb{background:var(--c2);border-left-color:var(--go)}.tl.done .tb .t{text-decoration:line-through;color:var(--mu)}.tl.miss .tb{opacity:.85}
 .nowl{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:var(--go);font-weight:700;font-size:13px}.nowl::before,.nowl::after{content:'';height:2px;background:var(--go);flex:1;opacity:.6}
+.stars button{font-size:28px;background:none;border:0;color:var(--hmu);padding:2px 6px;opacity:.6}.stars .on{color:var(--go);opacity:1}.stars{display:flex;gap:2px;margin:4px 0 10px}
 </style>
 </head>
 <body>
@@ -128,7 +129,7 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:GOALS.map(t=>({t,p:0})),money:[],name:'',main:0,gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:GOALS.map(t=>({t,p:0})),money:[],name:'',main:0,top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
 let VD=null,WO=0,HMo=0,YS=-1,YA=1,YB=3,LJ=false,FL=25,FE=0,FS=1500,FR=null;
@@ -138,7 +139,8 @@ let S=blank(),UID=null,tab='h',W='p',K='out',FA='',FN='',tm=null;
 const KEY=()=>'trk_'+(UID||'local');
 function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}'))}catch(e){return blank()}}
 function save(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);render()}
-async function push(){if(sb&&UID)try{await sb.from('app_state').upsert({user_id:UID,data:S,updated_at:new Date().toISOString()})}catch(e){}}
+let SYNC=navigator.onLine===false?'off':'ok';
+async function push(){if(!(sb&&UID))return;try{const r=await sb.from('app_state').upsert({user_id:UID,data:S,updated_at:new Date().toISOString()});if(r&&r.error)throw r.error;SYNC='ok';try{localStorage.removeItem('trk_dirty')}catch(e){}}catch(e){SYNC='wait';try{localStorage.setItem('trk_dirty','1')}catch(e2){}}}
 async function pull(){if(!sb||!UID)return;try{const r=await sb.from('app_state').select('data').eq('user_id',UID).maybeSingle();const d=r.data&&r.data.data;if(d&&(d.ts||0)>(S.ts||0))S=Object.assign(blank(),d);else if(S.ts)push()}catch(e){}}
 
 function nowInfo(){
@@ -151,7 +153,7 @@ function nowInfo(){
 }
 
 const QUOTES=['Ilm olish — beshikdan qabrgacha.','Kichik qadamlar har kuni, katta natija har yili.','Bugungi ish ertaga qolmasin.','Sabr bilan qilingan mehnat so‘nmaydi.','Vaqt — eng qimmat omonat.'];
-function scoreOf(k){const day=new Date(k+'T12:00').getDay(),dn=S.done[k]||{},rd=S.rules[k]||{},hb=S.hb[k]||{},tk_=S.tasks[k]||[];
+function scoreOf(k){const day=new Date(k+'T12:00').getDay(),dn=S.done[k]||{},rd=S.rules[k]||{},hb=S.hb[k]||{},tk_=(S.tasks[k]||[]).concat(S.top[k]||[]);
   const c=bl().filter(b=>b.d.includes(day)&&!b.id.startsWith('uyqu')),tot=c.length+RULES.length+S.hab.length+tk_.length;
   const got=c.filter(b=>dn[b.id]).length+RULES.filter(r=>rd[r.id]).length+S.hab.filter(h=>hb[h.id]).length+tk_.filter(t=>t.x).length;
   return{tot,got,p:tot?Math.round(got/tot*100):0}}
@@ -197,12 +199,13 @@ function hozir(){
   const path=td.filter(x=>!x.b.id.startsWith('uyqu')).map(({b})=>{const s=Math.max(300,b.s),e=Math.min(1440,b.e);return `<i class="${dn[b.id]?'':'n'}" style="left:${(s-300)/11.4}%;width:${Math.max(.5,(e-s)/11.4)}%"></i>`}).join('')+(np>=0&&np<=100?`<u style="left:${np}%"></u>`:'');
   const mg=S.goals[S.main],mn=mg&&(mg.ms||[]).find(m=>!m.x);
   const msg=sc>=100?'Mashallah, kun mukammal!':sc>=60?`Zo‘r ketyapsan. Yana ${tot-got} ta belgi qoldi.`:sc>0?`Boshlading, davom et. Qolgan: ${tot-got} ta.`:'Kun endigina boshlandi. Birinchi belgini hozir qo‘y.';
-  const head=isT?`<p class="mu" style="margin:0">${d.getDate()} ${MON[d.getMonth()]}, ${DAYS[day]}</p><h1 class="gr">${hr<12?'Xayrli tong':hr<18?'Xayrli kun':'Xayrli kech'}${S.name?', '+esc(S.name):''}</h1><p class="mu qt">“${QUOTES[Math.floor(Date.now()/864e5)%QUOTES.length]}”</p>`:`<p class="mu" style="margin:0">${fu?'Rejalashtirish':'Kunni ko‘rish'}</p><h1 class="gr">${DAYS[day]}, ${d.getDate()} ${MON[d.getMonth()]}</h1>`;
+  const head=isT?`<p class="mu" style="margin:0">${d.getDate()} ${MON[d.getMonth()]}, ${DAYS[day]}${navigator.onLine===false?' <span class="chip bad">internet yo‘q</span>':''}</p><h1 class="gr">${hr<12?'Xayrli tong':hr<18?'Xayrli kun':'Xayrli kech'}${S.name?', '+esc(S.name):''}</h1><p class="mu qt">“${QUOTES[Math.floor(Date.now()/864e5)%QUOTES.length]}”</p>`:`<p class="mu" style="margin:0">${fu?'Rejalashtirish':'Kunni ko‘rish'}</p><h1 class="gr">${DAYS[day]}, ${d.getDate()} ${MON[d.getMonth()]}</h1>`;
+  const topC=topCard(k,fu),rit=isT&&(hr>=20||(S.close[k]||{}).d)?ritual(k,sc):'';
   return `<div class="top"><div>${head}</div>
   <svg width="64" height="64" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
   <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>
   ${X?`<div class="st"><div><b>${X.st} kun</b>ketma-ket faol</div><div><b>${X.L}-daraja</b>${X.name}</div><div><b>${sc}%</b>bugungi ball</div></div><div class="bar" style="margin:10px 0 4px"><i style="width:${X.pc}%"></i></div><p class="mu" style="margin:0;font-size:13px">Keyingi darajagacha ${100-X.pc}%. ${msg}</p>`:''}
-  ${edForm()}${hero}
+  ${topC}${edForm()}${hero}${rit}
   ${mg?`<div class="goal" style="margin-top:12px;border-left:4px solid var(--go)"><div class="h"><span class="mu">Asosiy maqsad</span><span class="mu">${gpct(mg)}%</span></div><b style="font:700 19px Fraunces,serif">${esc(mg.t)}</b><div class="bar" style="margin:8px 0"><i style="width:${gpct(mg)}%"></i></div><p class="mu" style="margin:0">${mn?'Keyingi qadam: '+esc(mn.t):'Bosqich qo‘shish uchun Maqsad bo‘limiga o‘t.'}</p></div>`:''}
   ${isT?wakeC():''}
   <h2>Kun yo‘li</h2><div class="path">${path}</div><div class="h mu" style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px"><span>05:00</span><span>24:00</span></div>
@@ -452,8 +455,41 @@ function sozlama(){const t=getTh();
   <h2>Ko‘rinish</h2><div class="seg">${[['auto','Tizim'],['light','Yorug‘'],['dark','Qorong‘u']].map(x=>`<button class="${t===x[0]?'on':''}" onclick="setTh('${x[0]}')">${x[1]}</button>`).join('')}</div><p class="mu">Tizim tanlansa, telefonning kunduz va tun rejimiga qarab o‘zi almashadi. Bu tanlov faqat shu qurilmada saqlanadi.</p>
   <h2>Profil</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div>
   <h2>Hisob</h2><p class="mu">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':'Kirilmagan.'):'Hozircha faqat shu telefonda saqlanadi.'}</p>${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}
+  <h2>Sinxronlash</h2><p class="mu">${SYNC==='ok'?'Hamma narsa saqlangan.':SYNC==='wait'?'Internet kelganda yuboriladi, hozircha shu telefonda saqlangan.':'Internet yo‘q. Ilova ishlayveradi, ma‘lumot shu telefonda saqlanadi va keyin sinxronlanadi.'}</p>
+  <h2>Zaxira nusxa</h2><p class="mu">Hamma ma‘lumotingni faylga saqlab qo‘y. Keyin istalgan vaqt tiklash mumkin.${(()=>{let b=null;try{b=localStorage.getItem('trk_bk')}catch(e){}return b?' Oxirgi zaxira: '+b+'.':' Hali zaxira olinmagan.'})()}</p>
+  <div class="in"><button class="btn s" onclick="bkDl()">Faylga saqlash</button><button class="btn s" onclick="bkCp()">Matnni nusxalash</button></div>
+  <div class="in"><label class="btn s" style="cursor:pointer">Fayldan tiklash<input type="file" accept="application/json,.json" style="display:none" onchange="bkLd(this)"></label><button class="btn s" onclick="bkTx()">Matndan tiklash</button></div>
   ${owner()}`}
 applyTheme();try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTh()==='auto')applyTheme()})}catch(e){}
+
+// ---- Bugungi 3 ta asosiy ish va kunni yopish ----
+function addTopTo(id,k){const e=$('#'+id),v=e&&e.value.trim();if(!v)return;const L=S.top[k]=S.top[k]||[];if(L.length>=3)return;L.push({t:v,x:0});save()}
+function tpT(k,i){const t=S.top[k][i];t.x=t.x?0:1;save()}
+function tpD(k,i){S.top[k].splice(i,1);save()}
+function setRate(k,v){(S.close[k]=S.close[k]||{}).r=v;save()}
+function togPh(k){const c=S.close[k]=S.close[k]||{};c.p=!c.p;save()}
+function closeDay(k,v){(S.close[k]=S.close[k]||{}).d=v;save()}
+function topCard(k,fu){
+  const L=S.top[k]||[],a=fu?'':'1';
+  const rows=L.map((x,i)=>`<div class="row ${x.x?'done':''}"><span class="ck" onclick="${a?`tpT('${k}',${i})`:''}">${x.x?'✓':''}</span><span class="t" onclick="${a?`tpT('${k}',${i})`:''}">${esc(x.t)}</span><button class="x" onclick="tpD('${k}',${i})">×</button></div>`).join('');
+  return `<div class="goal" style="margin-top:12px;border-left:4px solid var(--go)"><div class="h"><b style="font:700 19px Fraunces,serif">3 ta asosiy ish</b><span class="mu">${L.filter(x=>x.x).length}/${L.length||3}</span></div>${L.length?'':'<p class="mu" style="margin:6px 0 8px">Eng muhim 3 ta ishni yoz. Qolgan hamma narsa shulardan keyin.</p>'}<div style="margin-top:8px">${rows}</div>${L.length<3?`<div class="in"><input id="tpa" placeholder="${L.length+1}-asosiy ish" onkeydown="if(event.key==='Enter')addTopTo('tpa','${k}')"><button class="btn" onclick="addTopTo('tpa','${k}')">+</button></div>`:''}</div>`}
+function ritual(k,sc){
+  const cl=S.close[k]||{},tom=dAgo(-1),tt=S.top[tom]||[];
+  if(cl.d)return `<section class="hero" style="margin-top:12px"><p class="lab">Kun yopildi</p><h1 style="font-size:28px">Xayrli tun</h1><p class="mu">Bugungi ball ${sc}%${cl.r?', baho '+'★'.repeat(cl.r):''}. Ertaga uchun ${tt.length} ta asosiy ish tayyor.</p><button class="ghost" style="color:var(--htx)" onclick="closeDay('${k}',false)">Qayta ochish</button></section>`;
+  const list=tt.map((x,i)=>`<div class="row"><span class="t">${esc(x.t)}</span><button class="x" onclick="tpD('${tom}',${i})">×</button></div>`).join('');
+  return `<section class="hero" style="margin-top:12px"><p class="lab">Kunni yopish</p><h1 style="font-size:26px">Bugunni xotirjam yakunla</h1>
+  <p class="mu" style="margin-top:10px">1. Kunni bahola (bugungi ball ${sc}%)</p><div class="stars">${[1,2,3,4,5].map(n=>`<button class="${(cl.r||0)>=n?'on':''}" onclick="setRate('${k}',${n})">★</button>`).join('')}</div>
+  <p class="mu">2. Ertangi 3 ta asosiy ish (${tt.length}/3)</p>${list}${tt.length<3?`<div class="in"><input id="tpb" placeholder="Ertangi ish" onkeydown="if(event.key==='Enter')addTopTo('tpb','${tom}')"><button class="btn" onclick="addTopTo('tpb','${tom}')">+</button></div>`:''}
+  <p class="mu">3. Telefon</p><button class="row ${cl.p?'done':''}" onclick="togPh('${k}')"><span class="ck">${cl.p?'✓':''}</span><span class="t">Telefonni chetga qo‘ydim</span></button>
+  <button class="big" onclick="closeDay('${k}',true)">Kunni yopish</button></section>`}
+
+// ---- Zaxira nusxa ----
+const bkMark=()=>{try{localStorage.setItem('trk_bk',dk())}catch(e){}};
+function bkApply(t){try{const d=JSON.parse(t);if(!d||typeof d!=='object'||!d.goals)throw 0;if(!confirm('Hozirgi ma‘lumot zaxiradagi bilan almashtiriladi. Davom etilsinmi?'))return;S=Object.assign(blank(),d);save();alert('Tiklandi.')}catch(e){alert('Zaxira noto‘g‘ri.')}}
+function bkDl(){const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tizim-zaxira-'+dk()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);bkMark();render()}
+function bkCp(){const t=JSON.stringify(S);(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{bkMark();alert('Nusxalandi. Uni Telegram’dagi “Saqlangan xabarlar”ga yopishtirib qo‘ying.');render()}).catch(()=>prompt('Nusxalang:',t))}
+function bkLd(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>bkApply(r.result);r.readAsText(f)}
+function bkTx(){const t=prompt('Zaxira matnini shu yerga qo‘ying:');if(t)bkApply(t)}
 
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
@@ -476,7 +512,7 @@ function owner(){
   const card=OC?`<div class="goal" style="border:1px solid var(--go)"><b>Tayyor. Yuborish uchun nusxala</b><p class="mu" style="margin:6px 0 10px">Login: ${esc(OC.login)}<br>Parol: ${esc(OC.pass)}</p><button class="btn" onclick="cp()">${OC.copied?'Nusxalandi':'Nusxalash'}</button></div>`:'';
   return `<h2>Foydalanuvchilar</h2>${card}<div class="in"><input placeholder="Login (masalan: aziz01)" value="${esc(OL)}" oninput="OL=this.value" autocapitalize="none"></div><div class="in"><input placeholder="Parol (kamida 6 belgi)" value="${esc(OP)}" oninput="OP=this.value" autocapitalize="none"></div><button class="ghost" style="margin:0 0 8px" onclick="genP()">Parol yaratish</button><div class="in"><input placeholder="Ism (ixtiyoriy)" value="${esc(ON)}" oninput="ON=this.value"></div><p class="err">${esc(OE)}</p><button class="big" style="margin:0 0 14px" onclick="mkU()">Foydalanuvchi qo‘shish</button>${us}`;
 }
-async function out(){await sb.auth.signOut();UID=null;OW=null;OC=null;S=blank();render()}
+async function out(){try{await sb.auth.signOut()}catch(e){}try{localStorage.removeItem('trk_uid')}catch(e){}UID=null;OW=null;OC=null;S=blank();render()}
 function err(t){const e=$('#er');if(e)e.textContent=t}
 async function auth(up){
   const l=$('#lg').value.trim().toLowerCase(),p=$('#pw').value;
@@ -487,11 +523,18 @@ async function auth(up){
   if(r.error)return err(/invalid/i.test(r.error.message)?'Login yoki parol noto‘g‘ri.':r.error.message);
     await start(r.data.session.user.id);
 }
-async function start(id){UID=id;S=load();await pull();render()}
+async function start(id){UID=id;try{localStorage.setItem('trk_uid',id)}catch(e){}S=load();await pull();try{if(localStorage.getItem('trk_dirty'))push()}catch(e){}render()}
 (async()=>{
   if(!sb){S=load();render()}
-  else{const r=await sb.auth.getSession();if(r.data.session)await start(r.data.session.user.id);else render()}
+  else{
+    let ok=false;
+    try{const r=await sb.auth.getSession();if(r.data&&r.data.session){ok=true;await start(r.data.session.user.id)}}catch(e){}
+    if(!ok){let u=null;try{u=localStorage.getItem('trk_uid')}catch(e){}if(u&&navigator.onLine===false)await start(u);else render()}
+  }
   setInterval(()=>{const a=document.activeElement;if(!a||a.tagName!=='INPUT')render()},30000);
+  window.addEventListener('online',()=>{SYNC='ok';let d=null;try{d=localStorage.getItem('trk_dirty')}catch(e){}if(d)push();render()});
+  window.addEventListener('offline',()=>{SYNC='off';render()});
+  if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 })();
 </script>
 </body>
