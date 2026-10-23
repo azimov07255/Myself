@@ -164,7 +164,7 @@ function pul(){
 }
 
 function authView(msg){
-  return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1><p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
+  return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1><p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
 }
 
 function render(){
@@ -190,9 +190,9 @@ async function out(){await sb.auth.signOut();UID=null;S=blank();render()}
 function err(t){const e=$('#er');if(e)e.textContent=t}
 async function auth(up){
   const l=$('#lg').value.trim().toLowerCase(),p=$('#pw').value;
-  if(!/^[a-z0-9_.]{3,20}$/.test(l))return err('Login 3–20 ta lotin harf yoki raqamdan iborat bo‘lsin.');
+  if(!l.includes('@')&&!/^[a-z0-9_.]{3,20}$/.test(l))return err('Login 3–20 ta lotin harf yoki raqamdan iborat bo‘lsin.');
   if(p.length<6)return err('Parol kamida 6 belgidan iborat bo‘lsin.');
-  const c={email:l+'@trk.app',password:p};
+  const c={email:l.includes('@')?l:l+'@trk.app',password:p};
   const r=up?await sb.auth.signUp(c):await sb.auth.signInWithPassword(c);
   if(r.error)return err(/invalid/i.test(r.error.message)?'Login yoki parol noto‘g‘ri.':r.error.message);
     await start(r.data.session.user.id);
