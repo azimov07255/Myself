@@ -74,6 +74,11 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .anim>:not(nav){animation:fu .5s both}.anim>:nth-child(2){animation-delay:.05s}.anim>:nth-child(3){animation-delay:.1s}.anim>:nth-child(4){animation-delay:.15s}.anim .bar i{animation:grow .9s ease-out}
 button{transition:transform .12s,background .2s}button:active{transform:scale(.97)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+.wd{font:inherit;width:100%}.wd.t{border-color:var(--go)}
+.st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.st div{background:var(--c1);border-radius:14px;padding:10px 6px;text-align:center;font-size:12px;color:var(--mu)}.st b{display:block;font:700 19px Fraunces,serif;color:var(--tx)}
+.chip{display:inline-block;padding:3px 10px;border-radius:12px;background:var(--c2);font-size:12px;color:var(--mu);margin:0 6px 4px 0}.chip.bad{color:var(--bad)}
+.path{position:relative;height:16px;border-radius:8px;background:var(--c2);overflow:hidden}.path i{position:absolute;top:0;bottom:0;background:var(--ac);opacity:.9;border-right:2px solid var(--bg)}.path i.n{background:var(--ln)}.path u{position:absolute;top:-2px;bottom:-2px;width:3px;background:var(--go);border-radius:2px}
+.gh{display:flex;gap:14px;align-items:center;margin:10px 0}
 </style>
 </head>
 <body>
@@ -113,9 +118,9 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:GOALS.map(t=>({t,p:0})),money:[],name:'',hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:GOALS.map(t=>({t,p:0})),money:[],name:'',main:0,hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
-let HMo=0,YS=-1,YA=1,YB=3,LJ=false,FL=25,FE=0,FS=1500,FR=null;
+let VD=null,WO=0,HMo=0,YS=-1,YA=1,YB=3,LJ=false,FL=25,FE=0,FS=1500,FR=null;
 let QT='y',LO=false,ED=null,ALLV=false;
 let OW=null,OL='',OP='',ON='',OE='',OC=null;
 let S=blank(),UID=null,tab='h',W='p',K='out',FA='',FN='',tm=null;
@@ -139,44 +144,69 @@ function scoreOf(k){const day=new Date(k+'T12:00').getDay(),dn=S.done[k]||{},rd=
   const c=bl().filter(b=>b.d.includes(day)&&!b.id.startsWith('uyqu')),tot=c.length+RULES.length+S.hab.length+tk_.length;
   const got=c.filter(b=>dn[b.id]).length+RULES.filter(r=>rd[r.id]).length+S.hab.filter(h=>hb[h.id]).length+tk_.filter(t=>t.x).length;
   return{tot,got,p:tot?Math.round(got/tot*100):0}}
+function xpInfo(){let xp=0,st=0,run=true;for(let i=0;i<120;i++){const s=scoreOf(dAgo(i));xp+=s.got;if(run){if(s.p>=50)st++;else if(i>0)run=false}}
+  const L=Math.floor(Math.sqrt(xp/12)),cur=L*L*12,nx=(L+1)*(L+1)*12;
+  return{xp,L:L+1,st,pc:Math.round((xp-cur)/(nx-cur)*100),name:['Boshlovchi','Qat‘iyatli','Intizomli','Mustahkam','Usta','Ustoz'][Math.min(5,L)]}}
+function vd(k){VD=k===dk()?null:k;render();scrollTo(0,0)}
+function pn(i){S.main=i;save()}
 function hozir(){
-  const k=dk(),dn=S.done[k]||{},rd=S.rules[k]||{},hb=S.hb[k]||{},tasks=S.tasks[k]||[],d=new Date(),I=nowInfo(),day=d.getDay();
+  const T0=dk(),k=cd(),isT=k===T0,fu=k>T0,dn=S.done[k]||{},rd=S.rules[k]||{},hb=S.hb[k]||{},tasks=S.tasks[k]||[],d=new Date(k+'T12:00'),I=nowInfo(),day=d.getDay(),hr=new Date().getHours();
   const all=bl().map((b,i)=>({b,i})),td=all.filter(x=>x.b.d.includes(day)).sort((a,c)=>a.b.s-c.b.s),list=ALLV?all.slice().sort((a,c)=>a.b.s-c.b.s):td;
-  const{tot,got,p:sc}=scoreOf(k),C=2*Math.PI*20,hr=d.getHours();
+  const{tot,got,p:sc}=scoreOf(k),C=2*Math.PI*20,X=isT?xpInfo():null;
+  const act=(f)=>fu?'':f;
   let hero;
-  if(I.b){const b=I.b,sl=b.id.startsWith('uyqu');
-    hero=`<section class="hero"><p class="lab">Hozir</p><h1>${esc(b.t)}</h1><p>${hm(b.s)} dan ${hm(b.e)} gacha</p><p class="mu">${fmt(b.e-I.nn)} qoldi. ${esc(b.n||'')}</p>${sl?'':`<button class="big ${dn[b.id]?'ok':''}" onclick="tg('${b.id}')">${dn[b.id]?'Bajarildi':'Bajardim'}</button>`}</section>`;
-  }else hero=`<section class="hero"><p class="lab">Hozir</p><h1>Bo‘sh vaqt</h1><p class="mu">${I.nx?`Keyingisi: ${esc(I.nx.t)}, ${hm(I.nx.s)} da.`:'Bugungi jadval tugadi.'}</p></section>`;
-  const rows=list.map(({b,i})=>{const cur=I.b&&I.b.id===b.id,x=dn[b.id];
-    return `<div class="row ${cur?'now':''} ${x?'done':''}"><span class="ck" onclick="tg('${b.id}')">${x?'✓':''}</span><span class="t" onclick="tg('${b.id}')">${esc(b.t)}${ALLV?`<br><span class="mu">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</span>`:''}</span><span class="tm">${hm(b.s)}</span><button class="x" onclick="eb(${i})">✎</button></div>`}).join('');
-  const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${fn}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
-  const hh=S.hab.length?S.hab.map(h=>chk(hb[h.id],`hbT('${h.id}')`,h.t)).join(''):'<p class="mu">Odatlar bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
+  if(isT&&I.b){const b=I.b,sl=b.id.startsWith('uyqu'),fr=Math.min(1,(I.nn-b.s)/(b.e-b.s)),R=2*Math.PI*30,nx=td.find(x=>x.b.s>=b.e&&!x.b.id.startsWith('uyqu'));
+    hero=`<section class="hero"><div style="display:flex;justify-content:space-between;gap:12px"><div><p class="lab">Hozir</p><h1>${esc(b.t)}</h1><p>${hm(b.s)} dan ${hm(b.e)} gacha</p></div><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="30" fill="none" stroke="rgba(128,128,128,.3)" stroke-width="6"/><circle cx="38" cy="38" r="30" fill="none" stroke="var(--hlab)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${R*fr} ${R}" transform="rotate(-90 38 38)"/><text x="38" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="var(--htx)">${Math.round(fr*100)}%</text></svg></div><p class="mu">${fmt(b.e-I.nn)} qoldi. ${esc(b.n||'')}</p>${nx?`<p class="mu">Keyingisi: ${esc(nx.b.t)}, ${hm(nx.b.s)} da</p>`:''}${sl?'':`<button class="big ${dn[b.id]?'ok':''}" onclick="tg('${b.id}')">${dn[b.id]?'Bajarildi':'Bajardim'}</button>`}</section>`;
+  }else if(isT)hero=`<section class="hero"><p class="lab">Hozir</p><h1>Bo‘sh vaqt</h1><p class="mu">${I.nx?`Keyingisi: ${esc(I.nx.t)}, ${hm(I.nx.s)} da.`:'Bugungi jadval tugadi.'}</p></section>`;
+  else hero=`<section class="hero"><p class="lab">${fu?'Kelgusi kun rejasi':'O‘tgan kun'}</p><h1>${d.getDate()} ${MON[d.getMonth()]}</h1><p>${DAYS[day]}</p><p class="mu">${tot} ta belgi, ${got} tasi bajarilgan, ball ${sc}%</p><button class="big" onclick="vd('${T0}')">Bugunga qaytish</button></section>`;
+  const rows=list.map(({b,i})=>{const cur=isT&&I.b&&I.b.id===b.id,x=dn[b.id],f=act(`tg('${b.id}')`);
+    return `<div class="row ${cur?'now':''} ${x?'done':''}"><span class="ck" onclick="${f}">${x?'✓':''}</span><span class="t" onclick="${f}">${esc(b.t)}${ALLV?`<br><span class="mu">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</span>`:''}</span><span class="tm">${hm(b.s)}</span><button class="x" onclick="eb(${i})">✎</button></div>`}).join('');
+  const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${act(fn)}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
+  const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,x.t)).join(''):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
   const rr=RULES.map(r=>chk(rd[r.id],`rl('${r.id}')`,r.t)).join('');
   const tt=tasks.map((t,i)=>`<div class="row ${t.x?'done':''}"><span class="ck" onclick="tk(${i})">${t.x?'✓':''}</span><span class="t" onclick="tk(${i})">${esc(t.t)}</span><button class="x" onclick="dt(${i})">×</button></div>`).join('');
-  const wd=(d.getDay()+6)%7,wk=[...Array(7)].map((_,i)=>{const x=new Date(d.getFullYear(),d.getMonth(),d.getDate()-wd+i),kk=x.toLocaleDateString('sv');return `<div class="wd ${kk===k?'on':''}"><span>${DAYS[x.getDay()].slice(0,2)}</span><b>${x.getDate()}</b><i class="dot ${scoreOf(kk).p>0?'y':''}"></i></div>`}).join('');
+  const bs=new Date();bs.setDate(bs.getDate()+WO*7);const w0=(bs.getDay()+6)%7;
+  const wk=[...Array(7)].map((_,i)=>{const x=new Date(bs.getFullYear(),bs.getMonth(),bs.getDate()-w0+i),kk=x.toLocaleDateString('sv');return `<button class="wd ${kk===k?'on':''} ${kk===T0?'t':''}" onclick="vd('${kk}')"><span>${DAYS[x.getDay()].slice(0,2)}</span><b>${x.getDate()}</b><i class="dot ${scoreOf(kk).p>0?'y':''}"></i></button>`}).join('');
   const mv=S.mood[k]||0,wt_=S.water[k]||0,fm=S.fm[k]||0,left=Math.max(0,FR?Math.ceil((FE-Date.now())/1000):FS);
-  const faces=['😞','🙁','😐','🙂','😄'].map((f,i)=>`<button class="${mv===i+1?'on':''}" onclick="S.mood[dk()]=${i+1};save()">${f}</button>`).join('');
+  const faces=['😞','🙁','😐','🙂','😄'].map((f,i)=>`<button class="${mv===i+1?'on':''}" onclick="S.mood[cd()]=${i+1};save()">${f}</button>`).join('');
   const gls=[...Array(8)].map((_,i)=>`<button class="gl ${i<wt_?'on':''}" onclick="wt(${i<wt_?i:i+1})"></button>`).join('');
   let avg=0;const bars=[...Array(14)].map((_,i)=>{const kk=dAgo(13-i),p=scoreOf(kk).p;avg+=p;return `<div style="flex:1;text-align:center"><div style="height:80px;display:flex;align-items:flex-end"><div style="width:100%;height:${Math.max(4,p*.8)}px;background:${i===13?'var(--go)':'var(--ac)'};opacity:${i===13?1:.7};border-radius:4px"></div></div><span class="mu" style="font-size:11px">${DAYS[new Date(kk+'T12:00').getDay()].slice(0,2)}</span></div>`}).join('');
-  return `<div class="top"><div><p class="mu" style="margin:0">${d.getDate()} ${MON[d.getMonth()]}, ${DAYS[d.getDay()]}</p><h1 class="gr">${hr<12?'Xayrli tong':hr<18?'Xayrli kun':'Xayrli kech'}${S.name?', '+esc(S.name):''}</h1><p class="mu qt">“${QUOTES[Math.floor(Date.now()/864e5)%QUOTES.length]}”</p></div>
+  const nm=new Date();const np=isT?(nm.getHours()*60+nm.getMinutes()-300)/1140*100:-1;
+  const path=td.filter(x=>!x.b.id.startsWith('uyqu')).map(({b})=>{const s=Math.max(300,b.s),e=Math.min(1440,b.e);return `<i class="${dn[b.id]?'':'n'}" style="left:${(s-300)/11.4}%;width:${Math.max(.5,(e-s)/11.4)}%"></i>`}).join('')+(np>=0&&np<=100?`<u style="left:${np}%"></u>`:'');
+  const mg=S.goals[S.main],mn=mg&&(mg.ms||[]).find(m=>!m.x);
+  const msg=sc>=100?'Mashallah, kun mukammal!':sc>=60?`Zo‘r ketyapsan. Yana ${tot-got} ta belgi qoldi.`:sc>0?`Boshlading, davom et. Qolgan: ${tot-got} ta.`:'Kun endigina boshlandi. Birinchi belgini hozir qo‘y.';
+  const head=isT?`<p class="mu" style="margin:0">${d.getDate()} ${MON[d.getMonth()]}, ${DAYS[day]}</p><h1 class="gr">${hr<12?'Xayrli tong':hr<18?'Xayrli kun':'Xayrli kech'}${S.name?', '+esc(S.name):''}</h1><p class="mu qt">“${QUOTES[Math.floor(Date.now()/864e5)%QUOTES.length]}”</p>`:`<p class="mu" style="margin:0">${fu?'Rejalashtirish':'Kunni ko‘rish'}</p><h1 class="gr">${DAYS[day]}, ${d.getDate()} ${MON[d.getMonth()]}</h1>`;
+  return `<div class="top"><div>${head}</div>
   <svg width="64" height="64" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
-  <div class="wk">${wk}</div>${edForm()}${hero}${wakeC()}
-  <h2>${ALLV?'Barcha rejalar':'Bugungi jadval'}</h2>${rows}
-  <div class="in"><button class="btn s" onclick="eb(-1)">Reja qo‘shish</button><button class="btn s" onclick="ALLV=!ALLV;render()">${ALLV?'Faqat bugun':'Barcha rejalar'}</button></div>
+  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>
+  ${X?`<div class="st"><div><b>${X.st} kun</b>ketma-ket faol</div><div><b>${X.L}-daraja</b>${X.name}</div><div><b>${sc}%</b>bugungi ball</div></div><div class="bar" style="margin:10px 0 4px"><i style="width:${X.pc}%"></i></div><p class="mu" style="margin:0;font-size:13px">Keyingi darajagacha ${100-X.pc}%. ${msg}</p>`:''}
+  ${edForm()}${hero}
+  ${mg?`<div class="goal" style="margin-top:12px;border-left:4px solid var(--go)"><div class="h"><span class="mu">Asosiy maqsad</span><span class="mu">${gpct(mg)}%</span></div><b style="font:700 19px Fraunces,serif">${esc(mg.t)}</b><div class="bar" style="margin:8px 0"><i style="width:${gpct(mg)}%"></i></div><p class="mu" style="margin:0">${mn?'Keyingi qadam: '+esc(mn.t):'Bosqich qo‘shish uchun Maqsad bo‘limiga o‘t.'}</p></div>`:''}
+  ${isT?wakeC():''}
+  <h2>Kun yo‘li</h2><div class="path">${path}</div><div class="h mu" style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px"><span>05:00</span><span>24:00</span></div>
+  <h2>${ALLV?'Barcha rejalar':'Kun jadvali'}</h2>${rows}
+  <div class="in"><button class="btn s" onclick="eb(-1)">Reja qo‘shish</button><button class="btn s" onclick="ALLV=!ALLV;render()">${ALLV?'Faqat bu kun':'Barcha rejalar'}</button></div>
   <h2>Odatlar</h2>${hh}<h2>Kun qoidalari</h2>${rr}
   <h2>Qo‘shimcha vazifalar</h2>${tt}<div class="in"><input id="nt" placeholder="Yangi vazifa" onkeydown="if(event.key==='Enter')addT()"><button class="btn" onclick="addT()">Qo‘sh</button></div>
-  <section class="hero" style="margin-top:20px"><p class="lab">Fokus taymer</p><h1 id="ft" style="font-size:54px">${fmtT(left)}</h1><p class="mu">Bugun: ${fm} daqiqa</p><div class="in" style="margin-top:10px">${[15,25,50].map(m=>`<button class="btn s" style="${FL===m?'outline:2px solid var(--hlab)':''}" onclick="fset(${m})">${m} daq</button>`).join('')}</div><button class="big" style="margin-top:0" onclick="fgo()">${FR?'To‘xtatish':'Boshlash'}</button><button class="ghost" style="color:var(--htx)" onclick="frs()">Qayta</button></section>
-  <h2>Kayfiyat</h2><div class="mood">${faces}</div>
-  <h2>Suv: ${wt_} / 8 stakan</h2><div class="in" style="justify-content:space-between">${gls}</div>
-  <h2>Kun xulosasi</h2><textarea placeholder="Bugun nimani o‘rgandim? Nima uchun minnatdorman?" onchange="S.note[dk()]=this.value;save()">${esc(S.note[k]||'')}</textarea>
+  ${isT?`<section class="hero" style="margin-top:20px"><p class="lab">Fokus taymer</p><h1 id="ft" style="font-size:54px">${fmtT(left)}</h1><p class="mu">Bugun: ${fm} daqiqa</p><div class="in" style="margin-top:10px">${[15,25,50].map(m=>`<button class="btn s" style="${FL===m?'outline:2px solid var(--hlab)':''}" onclick="fset(${m})">${m} daq</button>`).join('')}</div><button class="big" style="margin-top:0" onclick="fgo()">${FR?'To‘xtatish':'Boshlash'}</button><button class="ghost" style="color:var(--htx)" onclick="frs()">Qayta</button></section>`:''}
+  ${fu?'':`<h2>Kayfiyat</h2><div class="mood">${faces}</div><h2>Suv: ${wt_} / 8 stakan</h2><div class="in" style="justify-content:space-between">${gls}</div><h2>Kun xulosasi</h2><textarea placeholder="Nimani o‘rgandim? Nima uchun minnatdorman?" onchange="S.note[cd()]=this.value;save()">${esc(S.note[k]||'')}</textarea>`}
   <h2>So‘nggi 14 kun <span class="mu" style="font-size:14px;font-family:Figtree,system-ui">o‘rtacha ${Math.round(avg/14)}%</span></h2><div style="display:flex;gap:3px">${bars}</div>`;
 }
 
+const GCOL=['var(--ac)','var(--go)','#6f9fd8','#b27ad6','#d96f8f'],GEM=['📖','🎓','🧑‍🏫','🚗','💪'];
 function maqsad(){
-  const g=S.goals.map((x,i)=>{const ms=x.ms||[],pc=gpct(x),lf=x.dl?Math.ceil((new Date(x.dl)-new Date(dk()))/864e5):null;
+  let tm=0,td_=0,sp_=0,nd=null;
+  const g=S.goals.map((x,i)=>{const ms=x.ms||[],pc=gpct(x),lf=x.dl?Math.ceil((new Date(x.dl)-new Date(dk()))/864e5):null,col=GCOL[i%5],mn=ms.find(m=>!m.x),R=2*Math.PI*26;
+    tm+=ms.length;td_+=ms.filter(m=>m.x).length;sp_+=pc;if(lf!==null&&lf>=0&&(nd===null||lf<nd))nd=lf;
     const ml=ms.map((m,j)=>`<div class="row ${m.x?'done':''}"><span class="ck" onclick="gm(${i},${j})">${m.x?'✓':''}</span><span class="t" onclick="gm(${i},${j})">${esc(m.t)}</span><button class="x" onclick="gmd(${i},${j})">×</button></div>`).join('');
-    return `<div class="goal"><div class="h"><b style="font:700 19px Fraunces,serif">${esc(x.t)}</b><span><span class="mu">${pc}%</span> <button class="x" onclick="dg(${i})">×</button></span></div>${x.why?`<p class="mu" style="margin:4px 0 0">Nega: ${esc(x.why)}</p>`:''}<div class="bar" style="margin:10px 0"><i style="width:${pc}%"></i></div><div class="in"><input type="date" value="${x.dl||''}" onchange="gdl(${i},this.value)"><span class="mu" style="align-self:center;white-space:nowrap">${lf===null?'Muddat yo‘q':lf>=0?lf+' kun qoldi':'Muddat o‘tdi'}</span></div>${ml}<div class="in"><input id="gm${i}" placeholder="Yangi bosqich" onkeydown="if(event.key==='Enter')gma(${i})"><button class="btn" onclick="gma(${i})">+</button></div>${ms.length?'':`<input type="range" min="0" max="100" step="5" value="${x.p||0}" onchange="gp(${i},this.value)">`}</div>`}).join('');
-  return `<p class="mu" style="margin:0">Maqsadlar</p><h1 class="gr">Katta orzular, kichik bosqichlar</h1><p class="mu">Har maqsadni bajariladigan bosqichlarga bo‘l va belgilab bor.</p><div style="margin-top:12px">${g}</div>
+    return `<div class="goal" style="border-left:4px solid ${col}"><div class="h"><b style="font:700 19px Fraunces,serif">${x.e||GEM[i]||'🎯'} ${esc(x.t)}</b><span><button class="x" style="font-size:16px;${S.main===i?'color:var(--go)':''}" onclick="pn(${i})">${S.main===i?'★':'☆'}</button><button class="x" onclick="dg(${i})">×</button></span></div>
+    <div class="gh"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="var(--c2)" stroke-width="7"/><circle cx="32" cy="32" r="26" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${R*pc/100} ${R}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-size="14" font-weight="700" fill="var(--tx)">${pc}%</text></svg>
+    <div>${x.why?`<p class="mu" style="margin:0 0 6px">Nega: ${esc(x.why)}</p>`:''}<span class="chip">${ms.filter(m=>m.x).length}/${ms.length} bosqich</span><span class="chip ${lf!==null&&lf<0?'bad':''}">${lf===null?'Muddat yo‘q':lf>=0?lf+' kun qoldi':'Muddat o‘tdi'}</span>${pc>=100&&ms.length?'<span class="chip" style="color:var(--ac)">Bajarildi</span>':''}</div></div>
+    ${mn?`<p style="margin:0 0 8px">Keyingi qadam: <b>${esc(mn.t)}</b></p>`:''}<div class="in"><input type="date" value="${x.dl||''}" onchange="gdl(${i},this.value)"></div>${ml}<div class="in"><input id="gm${i}" placeholder="Yangi bosqich" onkeydown="if(event.key==='Enter')gma(${i})"><button class="btn" onclick="gma(${i})">+</button></div>${ms.length?'':`<input type="range" min="0" max="100" step="5" value="${x.p||0}" onchange="gp(${i},this.value)">`}</div>`}).join('');
+  const av=S.goals.length?Math.round(sp_/S.goals.length):0,mm=av>=100?'Hammasi bajarildi. Yangi maqsad qo‘y!':av>=60?'Marraga yaqinsan, to‘xtama.':av>=20?'Yaxshi ketyapsan, bosqichma-bosqich.':'Yo‘l endi boshlandi. Birinchi bosqichni bugun yop.';
+  return `<p class="mu" style="margin:0">Maqsadlar</p><h1 class="gr">Katta orzular, kichik bosqichlar</h1>
+  <section class="hero" style="margin-top:12px"><p class="lab">Umumiy jarayon</p><h1 style="font-size:44px">${av}%</h1><div class="bar" style="margin:8px 0"><i style="width:${av}%"></i></div><p class="mu">${S.goals.length} maqsad, ${td_}/${tm} bosqich bajarilgan${nd!==null?`. Eng yaqin muddat: ${nd} kun`:''}. ${mm}</p></section>
+  <p class="mu" style="margin:14px 0 8px">Yulduzcha bosilgan maqsad Hozir ekranida asosiy maqsad bo‘lib chiqadi.</p>${g}
   <div class="goal"><b>Yangi maqsad</b><div class="in" style="margin-top:8px"><input id="ng" placeholder="Maqsad nomi"></div><div class="in"><input id="nw" placeholder="Nega kerak? (ixtiyoriy)"></div><button class="btn" onclick="addG()">Qo‘shish</button></div>
   ${owner()}
   <h2>Hisob</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div><p class="mu">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':''):'Hozircha faqat shu telefonda saqlanadi.'}</p>
@@ -221,13 +251,14 @@ function render(){
   a.innerHTML=v+`<nav><div>${[['h','Hozir'],['q','Qur‘on'],['o','Odat'],['m','Maqsad'],['p','Pul']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}</div></nav>`;
 }
 
-const tgl=(o,id)=>{const k=dk();(o[k]=o[k]||{})[id]=!o[k][id]};
+const cd=()=>VD||dk();
+const tgl=(o,id)=>{const k=cd();(o[k]=o[k]||{})[id]=!o[k][id]};
 function tg(id){tgl(S.done,id);save()}
 function rl(id){tgl(S.rules,id);save()}
 function wk(){const d=new Date();S.wake[dk()]=pad(d.getHours())+':'+pad(d.getMinutes());save()}
-function addT(){const v=$('#nt').value.trim();if(!v)return;const k=dk();(S.tasks[k]=S.tasks[k]||[]).push({t:v,x:0});save()}
-function tk(i){const t=S.tasks[dk()][i];t.x=t.x?0:1;save()}
-function dt(i){S.tasks[dk()].splice(i,1);save()}
+function addT(){const v=$('#nt').value.trim();if(!v)return;const k=cd();(S.tasks[k]=S.tasks[k]||[]).push({t:v,x:0});save()}
+function tk(i){const t=S.tasks[cd()][i];t.x=t.x?0:1;save()}
+function dt(i){S.tasks[cd()].splice(i,1);save()}
 function gp(i,v){S.goals[i].p=+v;save()}
 function addG(){const v=$('#ng').value.trim();if(!v)return;S.goals.push({t:v,why:$('#nw').value.trim(),dl:'',ms:[],p:0});save()}
 function dg(i){if(confirm('Maqsad o‘chirilsinmi?')){S.goals.splice(i,1);save()}}
@@ -322,7 +353,7 @@ function gm(i,j){const m=S.goals[i].ms[j];m.x=!m.x;save()}
 function gmd(i,j){S.goals[i].ms.splice(j,1);save()}
 function gma(i){const e=$('#gm'+i),v=e.value.trim();if(!v)return;const g=S.goals[i];(g.ms=g.ms||[]).push({t:v,x:0});save()}
 function gdl(i,v){S.goals[i].dl=v;save()}
-function wt(n){S.water[dk()]=Math.max(0,Math.min(8,n));save()}
+function wt(n){S.water[cd()]=Math.max(0,Math.min(8,n));save()}
 const fmtT=s=>pad(Math.floor(s/60))+':'+pad(s%60);
 function ftick(){FS=Math.max(0,Math.ceil((FE-Date.now())/1000));const e=$('#ft');if(e)e.textContent=fmtT(FS);if(FS<=0){clearInterval(FR);FR=null;S.fm[dk()]=(S.fm[dk()]||0)+FL;FS=FL*60;if(navigator.vibrate)navigator.vibrate([200,100,200]);save()}}
 function fgo(){if(FR){clearInterval(FR);FR=null;render();return}FE=Date.now()+FS*1000;FR=setInterval(ftick,500);render()}
