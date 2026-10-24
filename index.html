@@ -73,7 +73,7 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .gl{width:28px;height:34px;border-radius:6px 6px 12px 12px;border:2px solid var(--ln);background:none;padding:0}.gl.on{background:var(--ac);border-color:var(--ac)}
 @keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}@keyframes grow{from{width:0}}
 .anim>:not(nav){animation:fu .5s both}.anim>:nth-child(2){animation-delay:.05s}.anim>:nth-child(3){animation-delay:.1s}.anim>:nth-child(4){animation-delay:.15s}.anim .bar i{animation:grow .9s ease-out}
-button{transition:transform .12s,background .2s}button:active{transform:scale(.97)}
+.btn,.big{transition:transform .12s}.btn:active,.big:active{transform:scale(.97)}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 .wd{font:inherit;width:100%}.wd.t{border-color:var(--go)}
 .st{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}.st div{background:var(--c1);border-radius:14px;padding:10px 6px;text-align:center;font-size:12px;color:var(--mu)}.st b{display:block;font:700 19px Fraunces,serif;color:var(--tx)}
@@ -340,16 +340,24 @@ function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
 }
 
+function navOff(){const n=document.getElementById('navc');if(n&&n.dataset.s){n.innerHTML='';n.dataset.s=''}}
+function drawNav(){
+  let n=document.getElementById('navc');if(!n){n=document.createElement('div');n.id='navc';document.body.appendChild(n)}
+  const sig=tab+'|'+SO;if(n.dataset.s===sig)return;n.dataset.s=sig;
+  n.innerHTML=`<nav><div>${[['h','Bugun'],['q','Qur‘on'],['o','Odat'],['m','Maqsad'],['e','O‘qish'],['p','Pul'],['s','⚙']].map(x=>`<button class="${tab===x[0]?'on':''}" style="${x[0]==='s'?'flex:.5;font-size:18px':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}</div></nav>${SO?'':`<button class="sbtn" onclick="srOpen()" aria-label="Qidiruv">🔍</button>`}`}
 function render(){
   const a=$('#app');
-  if(sb&&!UID){if(!$('#lg'))a.innerHTML=authView();return}
-  if(sb&&UID&&lockMsg()){a.innerHTML=lockView();return}
-  if(!S.ob&&!S.ts){a.innerHTML=PULLED?obView():`<div class="auth"><h1>Yuklanmoqda</h1><p class="mu">Ma‘lumotlaringiz yuklanmadi. Internetni tekshirib, qayta urinib ko‘ring.</p><button class="big" onclick="start(UID)">Qayta urinish</button></div>`;return}
+  if(sb&&!UID){navOff();if(!$('#lg'))a.innerHTML=authView();return}
+  if(sb&&UID&&lockMsg()){navOff();a.innerHTML=lockView();return}
+  if(!S.ob&&!S.ts){navOff();a.innerHTML=PULLED?obView():`<div class="auth"><h1>Yuklanmoqda</h1><p class="mu">Ma‘lumotlaringiz yuklanmadi. Internetni tekshirib, qayta urinib ko‘ring.</p><button class="big" onclick="start(UID)">Qayta urinish</button></div>`;return}
   if(tab==='s'&&sb&&UID&&OW===null){OW=0;loadOw()}
   const v=SO?srView():tab==='h'?hozir():tab==='q'?quran():tab==='o'?odatTab():tab==='e'?oqish():tab==='m'?maqsad():tab==='s'?sozlama():pul();
   const hs={};if(document.querySelectorAll)document.querySelectorAll('.hg').forEach(e=>{hs[e.dataset.k]=e.scrollLeft});
-  a.innerHTML=v+`<nav><div>${[['h','Bugun'],['q','Qur‘on'],['o','Odat'],['m','Maqsad'],['e','O‘qish'],['p','Pul'],['s','⚙']].map(x=>`<button class="${tab===x[0]?'on':''}" style="${x[0]==='s'?'flex:.5;font-size:18px':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('')}</div></nav>${SO?'':`<button class="sbtn" onclick="srOpen()" aria-label="Qidiruv">🔍</button>`}`;
+  const sy=window.scrollY||0;
+  a.innerHTML=v;
+  drawNav();
   fixGrid(hs);
+  if(sy>0)window.scrollTo(0,sy);
 }
 
 const cd=()=>VD||dk();
@@ -916,7 +924,7 @@ function nhCard(){
   <div class="in">${[0.5,1,2,3].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="nhAdd(${n})">+${n}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="nhAdd(0,1)">Navbatdagi surani to‘liq o‘qidim</button>
   <p class="mu" style="margin:8px 0 0">Bugun namozda: ${r1(tp)} bet</p>${rows}${N.hist.length?`<p class="mu" style="margin:10px 0 0">Tugatilgan hatmlar: ${N.hist.map(x=>x.d).join(', ')}</p>`:''}</div>`}
 
-let PM=0,PMO=false,PUPL={},HV='w',HW=0;
+let PM=0,PMO=false,PUPL={},HV='w',HW=0,LT=0;
 let SO=false,SQ='',SRL=[];
 function ptMonth(){
   const P=S.pt,now=new Date(),d0=new Date(now.getFullYear(),now.getMonth()+PM,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate();
@@ -1114,7 +1122,8 @@ async function start(id,em){UID=id;try{localStorage.setItem('trk_uid',id);if(em)
     try{const r=await sb.auth.getSession();if(r.data&&r.data.session){ok=true;await start(r.data.session.user.id,r.data.session.user.email);ptEnsure()}}catch(e){}
     if(!ok){let u=null;try{u=localStorage.getItem('trk_uid')}catch(e){}if(u&&navigator.onLine===false)await start(u);else render()}
   }
-  setInterval(()=>{ptEnsure();const a=document.activeElement;if(!a||!/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))render()},30000);
+  ['touchstart','touchmove','scroll'].forEach(ev=>window.addEventListener(ev,()=>{LT=Date.now()},{passive:true}));
+  setInterval(()=>{ptEnsure();if(Date.now()-LT<3000)return;if(tab!=='h'&&tab!=='q')return;const a=document.activeElement;if(!a||!/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))render()},30000);
   window.addEventListener('online',()=>{SYNC='ok';let d=null;try{d=localStorage.getItem('trk_dirty')}catch(e){}if(d)push();render()});
   window.addEventListener('offline',()=>{SYNC='off';render()});
   if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
