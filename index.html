@@ -146,6 +146,8 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 html,body{max-width:100%;overflow-x:hidden}
 .ai{left:0;right:0;top:0;bottom:0;width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}.aih,.aic,.aiq,.aif{min-width:0;max-width:100%;box-sizing:border-box}.aih>div{min-width:0}.aif textarea{font-size:16px!important;min-width:0;box-sizing:border-box;width:auto}
 .tbar{display:flex;justify-content:flex-end;gap:8px;margin:0 0 6px}.tbb{height:36px;min-width:36px;padding:0 12px;border-radius:18px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:600 13px Figtree,system-ui}.tbb.ai{background:linear-gradient(135deg,var(--ac),var(--go));color:#fff;border:0}
+.tbb{width:34px;height:34px;min-width:34px;padding:0;border-radius:50%;font-size:16px}.tbb.on{border-color:var(--ac);background:var(--c2)}
+nav>div{align-items:flex-end}.navai{flex:0 0 58px!important;width:58px;height:58px;margin:-24px 4px 2px!important;padding:0!important;border-radius:50%!important;background:linear-gradient(135deg,var(--ac),var(--go))!important;color:#fff!important;font-size:25px!important;display:grid!important;place-items:center;border:4px solid var(--bg)!important;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 </style>
 </head>
 <body>
@@ -487,12 +489,15 @@ function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
 }
 
-const topbar=()=>`<div class="tbar"><button class="tbb" onclick="srOpen()" aria-label="Qidiruv">🔍</button>${sb&&UID?`<button class="tbb ai" onclick="aiOpen()" aria-label="Yordamchi">✨ Yordamchi</button>`:''}</div>`;
+const topbar=()=>`<div class="tbar"><button class="tbb" onclick="srOpen()" aria-label="Qidiruv">🔍</button><button class="tbb ${tab==='s'?'on':''}" onclick="go('s')" aria-label="Sozlamalar">⚙️</button></div>`;
 function navOff(){const n=document.getElementById('navc');if(n&&n.dataset.s){n.innerHTML='';n.dataset.s=''}}
 function drawNav(){
   let n=document.getElementById('navc');if(!n){n=document.createElement('div');n.id='navc';document.body.appendChild(n)}
-  const sig=tab+'|'+SO+'|'+(sb&&UID?1:0);if(n.dataset.s===sig)return;n.dataset.s=sig;
-  n.innerHTML=`<nav><div>${[['h','☀️','Bugun'],['q','📖','Qur‘on'],['o','✅','Odat'],['m','🎯','Maqsad'],['e','📚','O‘qish'],['p','💰','Pul'],['s','⚙️','Sozlama']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')"><span class="ni">${x[1]}</span><span>${x[2]}</span></button>`).join('')}</div></nav>`}
+  const ai=!!(sb&&UID),sig=tab+'|'+SO+'|'+(ai?1:0);if(n.dataset.s===sig)return;n.dataset.s=sig;
+  const T=[['h','☀️','Bugun'],['q','📖','Qur‘on'],['o','✅','Odat'],['m','🎯','Maqsad'],['e','📚','O‘qish'],['p','💰','Pul']];
+  const b=x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')"><span class="ni">${x[1]}</span><span>${x[2]}</span></button>`;
+  const mid=ai?`<button class="navai" onclick="aiOpen()" aria-label="Yordamchi (AI)">✨</button>`:'';
+  n.innerHTML=`<nav><div>${T.slice(0,3).map(b).join('')}${mid}${T.slice(3).map(b).join('')}</div></nav>`}
 function render(){
   const a=$('#app');
   if(sb&&!UID){navOff();if(!$('#lg'))a.innerHTML=authView();return}
