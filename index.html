@@ -109,6 +109,11 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .mg .hg{flex:1;min-width:0;border:0;border-radius:0;background:transparent}
 .mg th{height:56px;box-sizing:border-box}
 .mg td{box-sizing:border-box}
+.pbal{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.pbal div{background:rgba(128,128,128,.18);border-radius:14px;padding:10px 12px}.pbal span{display:block;font-size:12px;opacity:.85}.pbal b{font:700 19px Fraunces,serif;word-break:break-all}
+.cchips{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:6px 0 8px}.cchips button{padding:8px 2px;border-radius:12px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:600 11px Figtree,system-ui}.cchips button span{display:block;font-size:20px}.cchips .on{border-color:var(--ac);background:var(--c2)}
+.acc{display:flex;gap:8px;margin-bottom:8px}.acc button{flex:1;padding:12px;border-radius:14px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 15px Figtree,system-ui}.acc .on{border-color:var(--ac);background:var(--c2)}
+.dbt{background:var(--c1);border-radius:14px;padding:12px;margin-bottom:8px;border-left:4px solid var(--ac)}.dbt.lend{border-left-color:var(--go)}.dbt.late{border-left-color:var(--bad)}
+.bars2{display:flex;gap:2px;align-items:flex-end;height:80px}.bars2 i{flex:1;background:var(--ac);border-radius:3px 3px 0 0;opacity:.85;min-height:2px}
 </style>
 </head>
 <body>
@@ -148,7 +153,7 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
 let PTB=false,RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
@@ -319,32 +324,125 @@ function odatlar(){
   ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
   <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${suggCard()}`;
 }
-const CATS=['Ovqat','Transport','O‘qish','Salomatlik','Kiyim','Ko‘ngil ochish','Boshqa'],CIN=['Maosh','Dokon daromadi','Boshqa'];
+
+// ================= PUL =================
+const CATS=['Ovqat','Transport','O‘qish','Salomatlik','Kiyim','Ko‘ngil ochish','Aloqa','Uy-joy','Sadaqa','Boshqa'],CIN=['Maosh','Dokon daromadi','Sovg‘a','Boshqa'];
+const CI={'Ovqat':'🍽','Transport':'🚕','O‘qish':'📚','Salomatlik':'💊','Kiyim':'👕','Ko‘ngil ochish':'🎮','Aloqa':'📱','Uy-joy':'🏠','Sadaqa':'🤲','Boshqa':'➕','Maosh':'💼','Dokon daromadi':'🏪','Sovg‘a':'🎁'};
+const ACN={cash:'Naqd',card:'Karta'};
+let PV='b',FACC='cash',FTO='card',FD='',EID=0,PF={mo:0,ac:'all',k:'all',q:''};
 function sfn(v){return parseInt(String(v).replace(/[^0-9]/g,''),10)||0}
-function sGoal(f,v){const g=S.fin.goal;if(f==='t')g.t=v.trim();else g[f]=sfn(v);save()}
-function sAdd(){const v=sfn($('#gsv').value);if(!v)return;S.fin.goal.s+=v;save()}
+function finInit(){const f=S.fin;f.open=f.open||{p:{cash:0,card:0},d:{cash:0,card:0}};f.open.p=f.open.p||{cash:0,card:0};f.open.d=f.open.d||{cash:0,card:0};f.sg=f.sg||[];S.debts=S.debts||[];
+  if(f.goal&&f.goal.a>0){f.sg.push({id:Date.now(),t:f.goal.t||'Jamg‘arma maqsadi',a:f.goal.a,s:f.goal.s||0});f.goal={t:'',a:0,s:0}}}
+const dRem=d=>Math.max(0,d.a-d.pay.reduce((a,x)=>a+x.a,0));
+function bal(w){finInit();const o=S.fin.open[w]||{cash:0,card:0},v={cash:o.cash||0,card:o.card||0};
+  S.money.filter(m=>m.w===w).forEach(m=>{const ac=m.ac||'cash';if(m.k==='in')v[ac]+=m.a;else if(m.k==='out')v[ac]-=m.a;else if(m.k==='tr'){v[ac]-=m.a;v[m.to||'card']+=m.a}});
+  if(w==='p')S.debts.forEach(d=>{if(d.led!==false)v[d.ac||'cash']+=d.k==='borrow'?d.a:-d.a;d.pay.forEach(x=>{v[x.ac||'cash']+=d.k==='borrow'?-x.a:x.a})});
+  return{cash:v.cash,card:v.card,tot:v.cash+v.card}}
+const mKey=off=>{const d=new Date(new Date().getFullYear(),new Date().getMonth()+off,1);return{k:`${d.getFullYear()}-${pad(d.getMonth()+1)}`,d}};
+const mSum=(L,k,ac)=>L.filter(m=>m.k===k&&(!ac||(m.ac||'cash')===ac)).reduce((a,m)=>a+m.a,0);
+const mList=(w,k)=>S.money.filter(m=>m.w===w&&m.d.startsWith(k));
+function putM(o){const i=S.money.findIndex(x=>x.id===o.id);if(i>=0)S.money[i]=o;else S.money.push(o)}
+function addM(){const a=sfn(FA);if(!a)return;const d=FD||dk(),id=EID||Date.now();
+  if(K==='tr'){if(FACC===FTO)return;putM({id,d,k:'tr',a,ac:FACC,to:FTO,n:FN.trim(),w:W})}
+  else putM({id,d,k:K,a,ac:FACC,n:FN.trim(),w:W,c:(K==='out'?CATS:CIN)[FC]||'Boshqa'});
+  EID=0;FA='';FN='';FD='';save()}
+function pCancel(){EID=0;FA='';FN='';FD='';render()}
+function pEdit(id){const m=S.money.find(x=>x.id===id);if(!m)return;K=m.k;FACC=m.ac||'cash';FTO=m.to||'card';FA=String(m.a);FN=m.n||'';FD=m.d;EID=id;FC=Math.max(0,(m.k==='out'?CATS:CIN).indexOf(m.c));PV='b';render();scrollTo(0,0)}
+function dm(id){if(confirm('Yozuv o‘chirilsinmi?')){S.money=S.money.filter(m=>m.id!==id);if(EID===id)pCancel();else save()}}
+function pAcc(a){FACC=a;if(K==='tr'&&FTO===a)FTO=a==='cash'?'card':'cash';render()}
+function setOpen(ac,v){finInit();S.fin.open[W][ac]=sfn(v);save()}
+
+function pForm(){
+  const lst=K==='out'?CATS:CIN,chip=(a,fn,sel)=>`<button class="${sel?'on':''}" onclick="${fn}">${a}</button>`;
+  const kind=`<div class="seg"><button class="${K==='out'?'on':''}" onclick="K='out';FC=0;render()">Chiqim</button><button class="${K==='in'?'on':''}" onclick="K='in';FC=0;render()">Kirim</button><button class="${K==='tr'?'on':''}" onclick="K='tr';render()">O‘tkazma</button></div>`;
+  const acc=K==='tr'?`<div class="acc"><button class="${FACC==='cash'?'on':''}" onclick="FACC='cash';FTO='card';render()">Naqddan kartaga</button><button class="${FACC==='card'?'on':''}" onclick="FACC='card';FTO='cash';render()">Kartadan naqdga</button></div>`:`<div class="acc"><button class="${FACC==='cash'?'on':''}" onclick="pAcc('cash')">💵 Naqd</button><button class="${FACC==='card'?'on':''}" onclick="pAcc('card')">💳 Karta</button></div>`;
+  const cats=K==='tr'?'':`<div class="cchips">${lst.map((c,i)=>`<button class="${FC===i?'on':''}" onclick="FC=${i};render()"><span>${CI[c]||'•'}</span>${c}</button>`).join('')}</div>`;
+  return `<div class="goal" style="margin-top:12px"><b>${EID?'Yozuvni tahrirlash':'Yangi yozuv'}</b><div style="margin-top:10px">${kind}${acc}</div>
+  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${FA?num(+FA):''}" oninput="FA=String(sfn(this.value));this.value=sfn(this.value)?num(sfn(this.value)):''" style="font-size:20px;font-weight:700"></div>${cats}
+  <div class="in"><input placeholder="Izoh" value="${esc(FN)}" oninput="FN=this.value"></div><div class="in"><input type="date" value="${FD||dk()}" onchange="FD=this.value"></div>
+  <div class="in"><button class="btn" style="flex:1" onclick="addM()">${EID?'Saqlash':'Yozish'}</button>${EID?'<button class="btn s" onclick="pCancel()">Bekor</button>':''}</div></div>`}
+function mRow(m){
+  const ac=m.ac||'cash',tr=m.k==='tr',ic=tr?'🔁':(CI[m.c]||'•'),ti=tr?`${ACN[ac]} → ${ACN[m.to||'card']}`:(m.n||m.c||(m.k==='in'?'Kirim':'Chiqim'));
+  return `<div class="row" onclick="pEdit(${m.id})"><span style="font-size:22px">${ic}</span><span class="t">${esc(ti)}<br><span class="mu">${tr?esc(m.n||''):ACN[ac]+(m.n&&m.c?', '+esc(m.c):'')}</span></span><b class="${tr?'':m.k==='in'?'in-c':'out-c'}">${tr?'':m.k==='in'?'+':'−'}${num(m.a)}</b><button class="x" onclick="event.stopPropagation();dm(${m.id})">×</button></div>`}
+
+function pBosh(){
+  const B=bal(W),mk=mKey(0).k,L=mList(W,mk),inn=mSum(L,'in'),ou=mSum(L,'out'),dB=S.debts.filter(d=>d.st!=='closed');
+  const owe=dB.filter(d=>d.k==='borrow').reduce((a,d)=>a+dRem(d),0),lent=dB.filter(d=>d.k==='lend').reduce((a,d)=>a+dRem(d),0);
+  const recent=S.money.filter(m=>m.w===W).slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id).slice(0,6).map(mRow).join('');
+  return `<section class="hero"><p class="lab">Umumiy balans</p><h1 style="font-size:36px;word-break:break-all">${num(B.tot)} so‘m</h1><div class="pbal"><div><span>💵 Naqd</span><b>${num(B.cash)}</b></div><div><span>💳 Karta</span><b>${num(B.card)}</b></div></div></section>
+  <h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
+  <div class="sum"><div><span class="mu">Kirim</span><b class="in-c">${num(inn)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'in','cash'))}, karta ${num(mSum(L,'in','card'))}</span></div><div><span class="mu">Chiqim</span><b class="out-c">${num(ou)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'out','cash'))}, karta ${num(mSum(L,'out','card'))}</span></div><div class="w"><span class="mu">Oy balansi</span><b>${num(inn-ou)} so‘m</b></div></div>
+  ${W==='p'&&(owe||lent)?`<button class="row" onclick="PV='q';render()"><span class="t">Qarzlar<br><span class="mu">Men qarzdorman: ${num(owe)}. Menga qarzdor: ${num(lent)}</span></span></button>`:''}
+  ${pForm()}<h2>So‘nggi yozuvlar</h2>${recent||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
+
+function pTarix(){
+  const mk=mKey(PF.mo),mn=MON[mk.d.getMonth()];let L=mList(W,mk.k);
+  if(PF.ac!=='all')L=L.filter(m=>(m.ac||'cash')===PF.ac||(m.k==='tr'&&m.to===PF.ac));
+  if(PF.k!=='all')L=L.filter(m=>m.k===PF.k);
+  if(PF.q)L=L.filter(m=>sn((m.n||'')+' '+(m.c||'')).includes(sn(PF.q)));
+  L=L.slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id);const g={};L.forEach(m=>(g[m.d]=g[m.d]||[]).push(m));
+  const chips=(arr,key)=>`<div class="chips">${arr.map(([v,t])=>`<button class="${PF[key]===v?'on':''}" onclick="PF.${key}='${v}';render()">${t}</button>`).join('')}</div>`;
+  const days=Object.keys(g).sort().reverse().map(d=>{const dn=mSum(g[d],'in')-mSum(g[d],'out');return `<p class="mu" style="margin:14px 0 6px;display:flex;justify-content:space-between"><span>${+d.slice(8)}-${MON[+d.slice(5,7)-1]}</span><span>${dn>=0?'+':'−'}${num(Math.abs(dn))}</span></p>${g[d].map(mRow).join('')}`}).join('');
+  return `<div class="in"><button class="btn s" onclick="PF.mo--;render()">‹</button><button class="btn s" onclick="PF.mo=0;render()">${mn[0].toUpperCase()+mn.slice(1)} ${mk.d.getFullYear()}</button><button class="btn s" onclick="PF.mo++;render()">›</button></div>
+  ${chips([['all','Hammasi'],['cash','Naqd'],['card','Karta']],'ac')}${chips([['all','Barchasi'],['in','Kirim'],['out','Chiqim'],['tr','O‘tkazma']],'k')}
+  <div class="in"><input placeholder="Izoh yoki kategoriya bo‘yicha qidirish" value="${esc(PF.q)}" onchange="PF.q=this.value;render()"></div>
+  <p class="mu" style="margin:0">Kirim ${num(mSum(L,'in'))}, chiqim ${num(mSum(L,'out'))}. Yozuvni bossang, tahrirlanadi.</p>${days||'<p class="mu">Bu oyda yozuv yo‘q.</p>'}`}
+
+// ---- Qarzlar ----
+function dAdd(){const p=V('dpn'),a=sfn(V('dpa')),k=V('dpk')||'borrow';if(!p||!a)return;S.debts.push({id:Date.now(),p,k,a,d:dk(),due:V('dpd'),n:V('dpt'),ac:V('dpc')||'cash',led:V('dpl')!=='0',pay:[],st:'open'});save()}
+function dPay(id){const d=S.debts.find(x=>x.id===id),a=Math.min(sfn(V('dq'+id)),dRem(d));if(!a)return;d.pay.push({id:Date.now(),d:dk(),a,ac:V('dc'+id)||'cash'});if(dRem(d)<=0)d.st='closed';save()}
+function dClose(id){const d=S.debts.find(x=>x.id===id);d.st=d.st==='closed'?'open':'closed';save()}
+function dDel(id){if(confirm('Qarz yozuvi o‘chirilsinmi? Balansga ta‘siri ham bekor bo‘ladi.')){S.debts=S.debts.filter(x=>x.id!==id);save()}}
+function pQarz(){
+  if(W==='d')return `<p class="mu">Qarzlar shaxsiy hisobda yuritiladi.</p><button class="btn" onclick="W='p';render()">Shaxsiyga o‘tish</button>`;
+  const acs=`<option value="cash">Naqd</option><option value="card">Karta</option>`;
+  const card=d=>{const rem=dRem(d),paid=d.a-rem,n=d.due?dl(d.due):null,late=d.st!=='closed'&&n!==null&&n<0,bor=d.k==='borrow';
+    return `<div class="dbt ${bor?'':'lend'} ${late?'late':''}" style="${d.st==='closed'?'opacity:.6':''}"><div style="display:flex;justify-content:space-between;gap:8px"><b style="font:700 18px Fraunces,serif">${esc(d.p)}</b><button class="x" onclick="dDel(${d.id})">×</button></div>
+    <p class="mu" style="margin:2px 0 6px">${bor?'Men qarzdorman':'Menga qarzdor'}${d.n?', '+esc(d.n):''}</p><div class="bar"><i style="width:${d.a?paid/d.a*100:0}%"></i></div>
+    <p style="margin:6px 0 0"><b>${num(rem)}</b> <span class="mu">qoldi, jami ${num(d.a)}</span></p><p class="mu" style="margin:2px 0 8px;${late?'color:var(--bad)':''}">${d.st==='closed'?'Yopilgan':d.due?'Muddat: '+d.due.slice(8)+'.'+d.due.slice(5,7)+'.'+d.due.slice(0,4)+', '+dlTxt(n):'Muddat belgilanmagan'}</p>
+    ${d.st!=='closed'?`<div class="in"><input id="dq${d.id}" type="text" inputmode="numeric" placeholder="${bor?'Qaytardim':'Qaytarib berdi'}, so‘m"><select id="dc${d.id}" style="flex:0 0 96px">${acs}</select><button class="btn" onclick="dPay(${d.id})">+</button></div>`:''}
+    <div class="in" style="margin:0"><button class="btn s" style="flex:1" onclick="dClose(${d.id})">${d.st==='closed'?'Qayta ochish':'Yopish'}</button></div>${d.pay.length?`<p class="mu" style="margin:8px 0 0;font-size:12px">To‘lovlar: ${d.pay.map(x=>x.d.slice(8)+'.'+x.d.slice(5,7)+' '+num(x.a)).join(', ')}</p>`:''}</div>`};
+  const open=S.debts.filter(d=>d.st!=='closed').sort((a,b)=>(a.due||'9')>(b.due||'9')?1:-1),shut=S.debts.filter(d=>d.st==='closed');
+  const owe=open.filter(d=>d.k==='borrow'),lent=open.filter(d=>d.k==='lend'),sm=a=>a.reduce((s,d)=>s+dRem(d),0);
+  return `<div class="sum"><div><span class="mu">Men qarzdorman</span><b class="out-c">${num(sm(owe))}</b></div><div><span class="mu">Menga qarzdor</span><b class="in-c">${num(sm(lent))}</b></div></div>
+  <div class="goal"><b>Yangi qarz</b><div class="in" style="margin-top:10px"><select id="dpk"><option value="borrow">Men qarz oldim</option><option value="lend">Men qarz berdim</option></select></div>
+  <div class="in"><input id="dpn" placeholder="Kim bilan (ism)"></div><div class="in"><input id="dpa" type="text" inputmode="numeric" placeholder="Summa, so‘m"><select id="dpc" style="flex:0 0 96px">${acs}</select></div>
+  <div class="in"><input id="dpd" type="date"><span class="mu" style="align-self:center;white-space:nowrap">muddat</span></div><div class="in"><input id="dpt" placeholder="Izoh (ixtiyoriy)"></div>
+  <div class="in"><select id="dpl"><option value="1">Balansga ta‘sir qilsin</option><option value="0">Faqat yozib qo‘yish</option></select></div><button class="btn" onclick="dAdd()">Qo‘shish</button></div>
+  ${owe.length?`<h2>Men qarzdorman</h2>${owe.map(card).join('')}`:''}${lent.length?`<h2>Menga qarzdor</h2>${lent.map(card).join('')}`:''}${shut.length?`<h2>Yopilgan</h2>${shut.map(card).join('')}`:''}${!S.debts.length?'<p class="mu">Qarz yozuvi yo‘q.</p>':''}`}
+
+// ---- Hisobot ----
+function pHisob(){
+  const mk=mKey(PF.mo),pk=mKey(PF.mo-1),L=mList(W,mk.k),P=mList(W,pk.k),inn=mSum(L,'in'),ou=mSum(L,'out'),pou=mSum(P,'out'),nd=new Date(mk.d.getFullYear(),mk.d.getMonth()+1,0).getDate(),el=PF.mo===0?new Date().getDate():nd,mn=MON[mk.d.getMonth()];
+  const cat={};L.filter(m=>m.k==='out').forEach(m=>{const c=m.c||'Boshqa';cat[c]=(cat[c]||0)+m.a});const cs=Object.entries(cat).sort((a,b)=>b[1]-a[1]);
+  const day=[...Array(nd)].map((_,i)=>L.filter(m=>m.k==='out'&&m.d.endsWith('-'+pad(i+1))).reduce((a,m)=>a+m.a,0)),mx=Math.max(1,...day);
+  const top=L.filter(m=>m.k==='out').sort((a,b)=>b.a-a.a).slice(0,5).map(mRow).join('');
+  const tr=[5,4,3,2,1,0].map(o=>{const k=mKey(PF.mo-o).k,l=mList(W,k);return{l:MON[+k.slice(5)-1].slice(0,3),i:mSum(l,'in'),o:mSum(l,'out')}}),tm=Math.max(1,...tr.flatMap(x=>[x.i,x.o]));
+  const diff=pou?Math.round((ou-pou)/pou*100):null;
+  return `<div class="in"><button class="btn s" onclick="PF.mo--;render()">‹</button><button class="btn s" onclick="PF.mo=0;render()">${mn[0].toUpperCase()+mn.slice(1)} ${mk.d.getFullYear()}</button><button class="btn s" onclick="PF.mo++;render()">›</button></div>
+  <section class="hero"><p class="lab">Oylik xulosa</p><h1 style="font-size:32px">${inn-ou>=0?'+':'−'}${num(Math.abs(inn-ou))} so‘m</h1><p class="mu">Kirim ${num(inn)}, chiqim ${num(ou)}.${inn?` Jamg‘arish ulushi ${Math.round((inn-ou)/inn*100)}%.`:''}</p><div class="pbal"><div><span>💵 Naqd chiqim</span><b>${num(mSum(L,'out','cash'))}</b></div><div><span>💳 Karta chiqim</span><b>${num(mSum(L,'out','card'))}</b></div></div></section>
+  <div class="sum"><div><span class="mu">Kunlik o‘rtacha chiqim</span><b>${num(Math.round(ou/Math.max(1,el)))}</b></div><div><span class="mu">O‘tgan oyga nisbatan</span><b class="${diff>0?'out-c':'in-c'}">${diff===null?'—':(diff>0?'+':'')+diff+'%'}</b></div></div>
+  <h2>Chiqim kategoriyalari</h2>${cs.map(([c,v])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><span>${CI[c]||''} ${esc(c)}</span><span class="mu">${num(v)}, ${Math.round(v/Math.max(1,ou)*100)}%</span></div><div class="bar"><i style="width:${v/Math.max(1,ou)*100}%"></i></div></div>`).join('')||'<p class="mu">Bu oyda chiqim yo‘q.</p>'}
+  <h2>Kunlar bo‘yicha chiqim</h2><div class="bars2">${day.map(v=>`<i style="height:${Math.max(2,v/mx*80)}px"></i>`).join('')}</div>
+  <h2>Eng katta chiqimlar</h2>${top||'<p class="mu">Yo‘q.</p>'}
+  <h2>So‘nggi 6 oy</h2><div class="bars2" style="height:90px;gap:6px">${tr.map(x=>`<div style="flex:1;display:flex;gap:2px;align-items:flex-end;height:90px"><i style="height:${Math.max(2,x.i/tm*90)}px;background:var(--ac)"></i><i style="height:${Math.max(2,x.o/tm*90)}px;background:var(--bad)"></i></div>`).join('')}</div><div style="display:flex;gap:6px">${tr.map(x=>`<span class="mu" style="flex:1;text-align:center;font-size:11px">${x.l}</span>`).join('')}</div><p class="mu" style="margin:6px 0 0;font-size:12px">Yashil: kirim, qizil: chiqim.</p>`}
+
+// ---- Reja: byudjet, jamg'arma, boshlang'ich qoldiq ----
+function sgAddG(){const t=V('sgt'),a=sfn(V('sga'));if(!t||!a)return;finInit();S.fin.sg.push({id:Date.now(),t,a,s:0});save()}
+function sgPut(id){const g=S.fin.sg.find(x=>x.id===id),v=sfn(V('sgp'+id));if(!v)return;g.s+=v;save()}
+function sgDel(id){if(confirm('Maqsad o‘chirilsinmi?')){S.fin.sg=S.fin.sg.filter(x=>x.id!==id);save()}}
+function pReja(){
+  finInit();const o=S.fin.open[W],mk=mKey(0).k,po=mSum(mList('p',mk),'out'),bud=S.fin.budget||0,n0=new Date(),dl2=new Date(n0.getFullYear(),n0.getMonth()+1,0).getDate()-n0.getDate()+1;
+  const goals=S.fin.sg.map(g=>{const p=Math.min(100,g.s/g.a*100);return `<div class="goal"><div class="h"><b>${esc(g.t)}</b><button class="x" onclick="sgDel(${g.id})">×</button></div><div class="bar" style="margin:8px 0"><i style="width:${p}%"></i></div><p class="mu" style="margin:0 0 8px">${num(g.s)} / ${num(g.a)} (${Math.round(p)}%). Qoldi ${num(Math.max(0,g.a-g.s))}.</p><div class="in" style="margin:0"><input id="sgp${g.id}" type="text" inputmode="numeric" placeholder="Qo‘shilgan summa"><button class="btn" onclick="sgPut(${g.id})">+</button></div></div>`}).join('');
+  return `<h2>Boshlang‘ich qoldiq (${W==='p'?'shaxsiy':'dokon'})</h2><p class="mu" style="margin:0 0 8px">Hozir qancha pul bor? Balans shundan hisoblanadi.</p><div class="in"><span style="align-self:center;min-width:54px">💵 Naqd</span><input type="text" inputmode="numeric" value="${o.cash||''}" onchange="setOpen('cash',this.value)"></div><div class="in"><span style="align-self:center;min-width:54px">💳 Karta</span><input type="text" inputmode="numeric" value="${o.card||''}" onchange="setOpen('card',this.value)"></div>
+  <h2>Oylik byudjet (shaxsiy chiqim)</h2><div class="in"><input type="text" inputmode="numeric" placeholder="Oylik limit, so‘m" value="${bud||''}" onchange="S.fin.budget=sfn(this.value);save()"></div>${bud?`<div class="bar"><i style="width:${Math.min(100,po/bud*100)}%;${po>bud?'background:var(--bad)':''}"></i></div><p class="mu">Sarflandi ${num(po)} / ${num(bud)}. ${po>bud?'Limitdan '+num(po-bud)+' oshdi.':'Qoldi '+num(bud-po)+', kuniga taxminan '+num(Math.floor((bud-po)/dl2))+' so‘m.'}</p>`:'<p class="mu">Limit qo‘ysang, ilova qolgan summani va kunlik me‘yorni ko‘rsatadi.</p>'}
+  <h2>Jamg‘arma maqsadlari</h2>${goals}<div class="goal"><div class="in"><input id="sgt" placeholder="Nima uchun? Masalan: Prava kursi"></div><div class="in"><input id="sga" type="text" inputmode="numeric" placeholder="Kerakli summa, so‘m"><button class="btn" onclick="sgAddG()">Qo‘sh</button></div></div>`}
+
 function pul(){
-  const mo=dk().slice(0,7),fin=S.fin,g=fin.goal,L=S.money.filter(m=>m.w===W),ML=L.filter(m=>m.d.startsWith(mo));
-  const sk=(a,k)=>a.filter(m=>m.k===k).reduce((s,m)=>s+m.a,0),inn=sk(ML,'in'),ou=sk(ML,'out');
-  const P=S.money.filter(m=>m.w==='p'&&m.d.startsWith(mo)),D=S.money.filter(m=>m.w==='d'&&m.d.startsWith(mo)),pi=sk(P,'in'),po=sk(P,'out'),di=sk(D,'in'),dO=sk(D,'out');
-  const cat={};ML.filter(m=>m.k==='out').forEach(m=>{const c=m.c||'Boshqa';cat[c]=(cat[c]||0)+m.a});
-  const cats=Object.entries(cat).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><span>${esc(c)}</span><span class="mu">${num(v)}</span></div><div class="bar"><i style="width:${ou?v/ou*100:0}%"></i></div></div>`).join('');
-  const bud=fin.budget||0,n0=new Date(),dl=new Date(n0.getFullYear(),n0.getMonth()+1,0).getDate()-n0.getDate()+1,bp=bud?Math.min(100,po/bud*100):0,gp_=g.a?Math.min(100,g.s/g.a*100):0;
-  const lst=K==='out'?CATS:CIN;
-  const rows=L.slice().sort((a,b)=>b.id-a.id).slice(0,15).map(m=>`<div class="row"><span class="t">${esc(m.n||m.c||(m.k==='in'?'Kirim':'Chiqim'))}<br><span class="mu">${m.d.slice(8)}.${m.d.slice(5,7)}${m.c&&m.n?', '+esc(m.c):''}</span></span><b class="${m.k==='in'?'in-c':'out-c'}">${m.k==='in'?'+':'−'}${num(m.a)}</b><button class="x" onclick="dm(${m.id})">×</button></div>`).join('');
-  return `<div class="top"><p class="d">Pul</p><span class="mu">${MON[n0.getMonth()]} oyi</span></div>
-  <div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">Dokon</button></div>
-  <div class="sum"><div><span class="mu">Kirim</span><b class="in-c">${num(inn)}</b></div><div><span class="mu">Chiqim</span><b class="out-c">${num(ou)}</b></div><div class="w"><span class="mu">Oy balansi, so‘m</span><b>${num(inn-ou)}</b></div></div>
-  <div class="seg"><button class="${K==='out'?'on':''}" onclick="K='out';FC=0;render()">Chiqim</button><button class="${K==='in'?'on':''}" onclick="K='in';FC=0;render()">Kirim</button></div>
-  <div class="in"><select onchange="FC=+this.value">${lst.map((c,i)=>`<option value="${i}" ${i===FC?'selected':''}>${c}</option>`).join('')}</select></div>
-  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${esc(FA)}" oninput="FA=this.value"><input placeholder="Izoh" value="${esc(FN)}" oninput="FN=this.value"></div>
-  <button class="big" style="margin:0 0 14px" onclick="addM()">Yozish</button>${rows||'<p class="mu">Hali yozuv yo‘q. Birinchi kirim yoki chiqimni yozing.</p>'}
-  <h2>Kategoriya bo‘yicha chiqim</h2>${cats||'<p class="mu">Shu oy chiqim yo‘q.</p>'}
-  <h2>Oylik byudjet (shaxsiy)</h2><div class="in"><input type="text" inputmode="numeric" placeholder="Oylik chiqim limiti, so‘m" value="${bud||''}" onchange="S.fin.budget=sfn(this.value);save()"></div>${bud?`<div class="bar"><i style="width:${bp}%;${po>bud?'background:var(--bad)':''}"></i></div><p class="mu">Sarflandi ${num(po)} / ${num(bud)}. ${po>bud?'Limitdan '+num(po-bud)+' oshdi.':'Qoldi '+num(bud-po)+', kuniga taxminan '+num(Math.floor((bud-po)/dl))+' so‘m.'}</p>`:'<p class="mu">Limit qo‘ysang, ilova qolgan summani va kunlik me‘yorni ko‘rsatadi.</p>'}
-  <h2>Jamg‘arma maqsadi</h2><div class="in"><input placeholder="Nima uchun? Masalan: Prava kursi" value="${esc(g.t)}" onchange="sGoal('t',this.value)"></div><div class="in"><input type="text" inputmode="numeric" placeholder="Kerakli summa, so‘m" value="${g.a||''}" onchange="sGoal('a',this.value)"></div>
-  ${g.a?`<div class="bar"><i style="width:${gp_}%"></i></div><p class="mu">${esc(g.t||'Maqsad')}: ${num(g.s)} / ${num(g.a)} (${Math.round(gp_)}%). Qoldi ${num(Math.max(0,g.a-g.s))}.</p><div class="in"><input id="gsv" type="text" inputmode="numeric" placeholder="Jamg‘arilgan summa"><button class="btn" onclick="sAdd()">Qo‘sh</button></div>`:''}
-  <h2>Dokon va shaxsiy, shu oy</h2><div class="sum"><div><span class="mu">Dokon foydasi</span><b>${num(di-dO)}</b></div><div><span class="mu">Shaxsiy balans</span><b>${num(pi-po)}</b></div><div><span class="mu">Dokon kirim / chiqim</span><b style="font-size:15px">${num(di)} / ${num(dO)}</b></div><div><span class="mu">Shaxsiy kirim / chiqim</span><b style="font-size:15px">${num(pi)} / ${num(po)}</b></div></div>`;
-}
+  finInit();
+  const seg=[['b','Bosh'],['t','Tarix'],['q','Qarzlar'],['h','Hisobot'],['r','Reja']].map(x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">Dokon</button></div><div class="seg sc">${seg}</div>${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob():pReja()}`}
+
 function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
 }
@@ -380,8 +478,6 @@ function dt(i){S.tasks[cd()].splice(i,1);save()}
 function gp(i,v){S.goals[i].p=+v;save()}
 function addG(){const v=$('#ng').value.trim();if(!v)return;S.goals.push({t:v,why:$('#nw').value.trim(),dl:'',ms:[],p:0});save()}
 function dg(i){if(confirm('Maqsad o‘chirilsinmi?')){S.goals.splice(i,1);save()}}
-function addM(){const a=parseInt(String(FA).replace(/\D/g,''),10);if(!a)return;S.money.push({id:Date.now(),d:dk(),k:K,a,n:FN.trim(),w:W,c:(K==='out'?CATS:CIN)[FC]});FA='';FN='';save()}
-function dm(id){if(confirm('Yozuv o‘chirilsinmi?')){S.money=S.money.filter(m=>m.id!==id);save()}}
 
 // ---- Jadval (tahrirlanadigan) ----
 const bl=()=>S.bl||BL;
@@ -620,6 +716,7 @@ const addD=n=>new Date(Date.now()+n*864e5).toLocaleDateString('sv'),IV=[0,1,3,7,
 const V=id=>{const e=$('#'+id);return e?e.value.trim():''};
 function dueCard(){
   const u=S.un,it=[...u.tasks.filter(t=>!t.x&&t.due&&dl(t.due)<=3).map(t=>({t:t.t,n:dl(t.due),k:'Topshiriq'})),...u.exams.filter(e=>dl(e.d)>=0&&dl(e.d)<=7).map(e=>({t:e.s,n:dl(e.d),k:'Imtihon'}))].sort((a,b)=>a.n-b.n);
+  (S.debts||[]).filter(d=>d.st!=='closed'&&d.due&&dl(d.due)<=3).forEach(d=>it.push({t:(d.k==='borrow'?d.p+' ga qaytarish ':d.p+' dan olish ')+num(dRem(d)),n:dl(d.due),k:'Qarz'}));it.sort((a,b)=>a.n-b.n);
   if(!it.length)return '';
   return `<div class="goal" style="margin-top:12px;border-left:4px solid var(--bad)"><b style="font:700 18px Fraunces,serif">Yaqin muddatlar</b>${it.map(x=>`<p style="margin:6px 0 0">${x.k}: <b>${esc(x.t)}</b> <span class="mu">${dlTxt(x.n)}</span></p>`).join('')}</div>`}
 function oqish(){
@@ -958,6 +1055,7 @@ function srAll(){const o=[],add=(k,t,x,f)=>o.push({k,t,x:x||'',f});
   S.gym.log.forEach(g=>add('Zal',g.n,g.d,()=>{OT='z';go('o')}));
   bl().forEach(b=>add('Reja',b.t,hm(b.s),()=>go('h')));
   S.iso.log.forEach(x=>add('Isolation',x.t,x.d,()=>{OT='i';go('o')}));
+  (S.debts||[]).forEach(x=>add('Qarz',x.p,num(x.a),()=>{PV='q';go('p')}));
   return o}
 function srRes(){const q=sn(SQ).trim();if(q.length<2){SRL=[];return '<p class="mu">Kamida 2 ta harf yoz.</p>'}
   SRL=srAll().filter(r=>sn(r.t+' '+r.x).includes(q)).slice(0,40);
