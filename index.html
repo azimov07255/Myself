@@ -91,6 +91,9 @@ button{transition:transform .12s,background .2s}button:active{transform:scale(.9
 .nowl{display:flex;align-items:center;gap:8px;margin:0 0 10px;color:var(--go);font-weight:700;font-size:13px}.nowl::before,.nowl::after{content:'';height:2px;background:var(--go);flex:1;opacity:.6}
 .stars button{font-size:28px;background:none;border:0;color:var(--hmu);padding:2px 6px;opacity:.6}.stars .on{color:var(--go);opacity:1}.stars{display:flex;gap:2px;margin:4px 0 10px}
 .ug{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}.ug .btn{padding:10px 0;font-size:13px}
+.jm{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}.jm button{aspect-ratio:1;border-radius:8px;border:1px solid var(--ln);background:var(--c1);font-size:12px;color:var(--mu);padding:0}.jm .rd{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}.jm .cu{border-color:var(--go);color:var(--go);font-weight:700}
+.np{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.np button{padding:14px 4px;border-radius:14px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 15px Figtree,system-ui}.np .on{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}.np .bad{background:var(--bad);color:#fff;border-color:var(--bad)}
+.cell.qz{background:var(--bad);border-color:var(--bad)}
 </style>
 </head>
 <body>
@@ -130,9 +133,9 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
-let EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
+let CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
 let VD=null,WO=0,HMo=0,YS=-1,YA=1,YB=3,LJ=false,FL=25,FE=0,FS=1500,FR=null;
 let QT='y',LO=false,ED=null,ALLV=false;
@@ -190,6 +193,7 @@ function hozir(){
   const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${act(fn)}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
   const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,x.t)).join(''):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
   const rr=RULES.map(r=>chk(rd[r.id],`rl('${r.id}')`,r.t)).join('');
+  const nmB=PR.map(([pp,t])=>{const s_=((S.nm.d[k]||{})[pp])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${k}','${pp}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}</button>`}).join(''),qzT=Object.values(S.nm.debt).reduce((a,c)=>a+c,0);
   const tt=tasks.map((t,i)=>`<div class="row ${t.x?'done':''}"><span class="ck" onclick="tk(${i})">${t.x?'✓':''}</span><span class="t" onclick="tk(${i})">${esc(t.t)}</span><button class="x" onclick="dt(${i})">×</button></div>`).join('');
   const bs=new Date();bs.setDate(bs.getDate()+WO*7);const w0=(bs.getDay()+6)%7;
   const wk=[...Array(7)].map((_,i)=>{const x=new Date(bs.getFullYear(),bs.getMonth(),bs.getDate()-w0+i),kk=x.toLocaleDateString('sv');return `<button class="wd ${kk===k?'on':''} ${kk===T0?'t':''}" onclick="vd('${kk}')"><span>${DAYS[x.getDay()].slice(0,2)}</span><b>${x.getDate()}</b><i class="dot ${scoreOf(kk).p>0?'y':''}"></i></button>`}).join('');
@@ -213,6 +217,7 @@ function hozir(){
   <h2>Kun yo‘li</h2><div class="path">${path}</div><div class="h mu" style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px"><span>05:00</span><span>24:00</span></div>
   <h2>${ALLV?'Barcha rejalar':'Kun jadvali'}</h2>${sm}${rows}
   <div class="in"><button class="btn s" onclick="eb(-1)">Reja qo‘shish</button><button class="btn s" onclick="ALLV=!ALLV;render()">${ALLV?'Faqat bu kun':'Barcha rejalar'}</button></div>
+  <h2>Namozlar</h2><div class="np">${nmB}</div><p class="mu" style="margin:6px 0 0">Bir bosish: o‘qildi, ikki: qazo, uch: bekor.${qzT?` Qazo qarzi: ${qzT} ta.`:''}</p>
   <h2>Odatlar</h2>${hh}<h2>Kun qoidalari</h2>${rr}
   <h2>Qo‘shimcha vazifalar</h2>${tt}<div class="in"><input id="nt" placeholder="Yangi vazifa" onkeydown="if(event.key==='Enter')addT()"><button class="btn" onclick="addT()">Qo‘sh</button></div>
   ${isT?`<section class="hero" style="margin-top:20px"><p class="lab">Fokus taymer</p><h1 id="ft" style="font-size:54px">${fmtT(left)}</h1><p class="mu">Bugun: ${fm} daqiqa</p><div class="in" style="margin-top:10px">${[15,25,50].map(m=>`<button class="btn s" style="${FL===m?'outline:2px solid var(--hlab)':''}" onclick="fset(${m})">${m} daq</button>`).join('')}</div><button class="big" style="margin-top:0" onclick="fgo()">${FR?'To‘xtatish':'Boshlash'}</button><button class="ghost" style="color:var(--htx)" onclick="frs()">Qayta</button></section>`:''}
@@ -387,15 +392,15 @@ function addP(n){const q=S.q;let i=q.cur;while(n>0&&i<114){const a=Math.min(n,SL
 function gs(f,d,min){S.q[f]=Math.max(min,S.q[f]+d);save()}
 function rvPlan(){const q=S.q,o=q.ord;if(!o.length)return[];const a=[],j=q.rv%o.length;let s=0;for(let c=0;c<o.length&&s<q.rg;c++){const i=o[(j+c)%o.length];a.push(i);s+=Math.min(q.m[i]||0,SL(i))}return a}
 function rvDone(){const q=S.q,a=rvPlan();if(!a.length)return;const k=dk();q.rd[k]=r1((q.rd[k]||0)+a.reduce((s,i)=>s+Math.min(q.m[i]||0,SL(i)),0));q.rv=(q.rv+a.length)%q.ord.length;save()}
-function hd(n){const q=S.q,k=dk();q.hp=Math.max(0,q.hp+n);q.hd[k]=Math.max(0,(q.hd[k]||0)+n);if(q.hp>=604){q.hc++;q.hp-=604}save()}
+function hd(n){const q=S.q,k=dk();if(!q.hs)q.hs=k;q.hp=Math.max(0,q.hp+n);q.hd[k]=Math.max(0,(q.hd[k]||0)+n);if(q.hp>=604){q.hc++;q.hp-=604;(q.hh=q.hh||[]).push({d:k,days:Math.max(1,-dl(q.hs)+1)});q.hs=k;q.h0=q.hp}save()}
 const ZK=[['Subhanalloh','سُبْحَانَ ٱللَّٰهِ',33],['Alhamdulillah','ٱلْحَمْدُ لِلَّٰهِ',33],['Allohu akbar','ٱللَّٰهُ أَكْبَرُ',34],['La ilaha illalloh','لَا إِلَٰهَ إِلَّا ٱللَّٰهُ',100],['Astag’firulloh','أَسْتَغْفِرُ ٱللَّٰهَ',100],['Salovat','ٱللَّٰهُمَّ صَلِّ عَلَىٰ مُحَمَّدٍ',100]];
 function zt(){const z=S.z,k=dk(),c=z.c[k]=z.c[k]||{},t=z.tg||ZK[z.sel][2];c[z.sel]=(c[z.sel]||0)+1;if(navigator.vibrate)navigator.vibrate(c[z.sel]%t===0?[40,50,40]:12);save()}
 function ztg(n){S.z.tg=n;save()}
 function zr(){const z=S.z;if(confirm('Bugungi sanoq nolga tushirilsinmi?')){(z.c[dk()]=z.c[dk()]||{})[z.sel]=0;save()}}
 const stp=(f,min)=>`<div class="in" style="margin-top:10px"><button class="btn s" onclick="gs('${f}',-1,${min})">−</button><button class="btn s" onclick="gs('${f}',1,${min})">+</button></div>`;
 function quran(){
-  const seg=[['y','Yodlash'],['t','Takror'],['h','Hatm'],['z','Zikr']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg" style="margin-top:12px">${seg}</div>${QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():zikr()}`}
+  const seg=[['y','Yodlash'],['t','Takror'],['h','Hatm'],['z','Zikr'],['n','Namoz']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg" style="margin-top:12px">${seg}</div>${QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():zikr()}`}
 const J=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582,605];
 const AY=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 function juzMem(j){let s=0;SN.forEach((_,i)=>{const d=Math.min(S.q.m[i]||0,SL(i));if(d>0){const a=SP[i];s+=Math.max(0,Math.min(a+d,J[j+1])-Math.max(a,J[j]))}});return s}
@@ -439,10 +444,27 @@ function tak(){
   const fc=days.map(x=>`<div style="flex:1;text-align:center"><div style="height:60px;display:flex;align-items:flex-end"><div style="width:100%;height:${Math.max(3,x.c/mx*60)}px;background:${x.n===0?'var(--go)':'var(--ac)'};opacity:.85;border-radius:4px"></div></div><span class="mu" style="font-size:11px">${x.l}</span><br><span style="font-size:12px">${x.c}</span></div>`).join('');
   const list=q.ord.slice().sort((a,b)=>(rsOf(b).weak-rsOf(a).weak)||(rsOf(a).due>rsOf(b).due?1:-1)).map(i=>{const r=rsOf(i),n=dl(r.due);return `<div class="row ${plan.includes(i)?'now':''}"><span class="t">${SN[i]}<br><span class="mu">${r.weak?'zaif, ':''}keyingi takror: ${n<=0?'bugun':n===1?'ertaga':n+' kundan keyin'}</span></span><button class="x" style="font-size:16px;${r.weak?'color:var(--bad)':''}" onclick="wkT(${i})">${r.weak?'⚑':'⚐'}</button></div>`}).join('');
   return `<section class="hero"><p class="lab">Bugungi takror</p>${plan.length?`<h1 style="font-size:30px">${plan.length} ta sura</h1><p class="mu">Taxminan ${r1(acc)} bet. Har birini baholasang, ilova keyingi takror vaqtini o‘zi belgilaydi: zaiflar tez-tez, mustahkamlar kamroq chiqadi.${rest>0?` Navbatda yana ${rest} ta sura bor.`:''}</p>`:`<h1 style="font-size:28px">${q.ord.length?'Bugungi takror tugadi':'Hali takror yo‘q'}</h1><p class="mu">${q.ord.length?'Keyingi suralar o‘z vaqtida chiqadi.':'Yodlashda sura belgilasang, takror shu yerda chiqadi.'}</p>`}<p class="mu" style="margin-top:8px">Bugun takror qilingan: ${r1(q.rd[t]||0)} bet. Kunlik maqsad: ${q.rg} bet</p>${stp('rg',1)}</section>
-  ${cards}${q.ord.length?`<div style="margin-top:10px"><span class="chip bad">${weakN} zaif</span><span class="chip" style="color:var(--ac)">${strong} mustahkam</span><span class="chip">${q.ord.length} yodlangan sura</span></div><h2>Keyingi 7 kun yuki</h2><div style="display:flex;gap:4px">${fc}</div><h2>Yodlangan suralar</h2><p class="mu" style="margin:0 0 8px">Bayroqchani bossang, sura zaif deb belgilanadi va tez-tez takrorlanadi.</p>${list}`:''}`}
+  ${cards}${crCard()}${jzCard()}${q.ord.length?`<div style="margin-top:10px"><span class="chip bad">${weakN} zaif</span><span class="chip" style="color:var(--ac)">${strong} mustahkam</span><span class="chip">${q.ord.length} yodlangan sura</span></div><h2>Keyingi 7 kun yuki</h2><div style="display:flex;gap:4px">${fc}</div><h2>Yodlangan suralar</h2><p class="mu" style="margin:0 0 8px">Bayroqchani bossang, sura zaif deb belgilanadi va tez-tez takrorlanadi.</p>${list}`:''}`}
+function hSet(){const v=Math.round(+V('hpg'));if(!(v>=0&&v<=604))return;S.q.hp=v;if(!S.q.hs)S.q.hs=dk();save()}
+function hJz(j){if(confirm(j+'-poradan boshlanadi. Davom etilsinmi?')){S.q.hp=J[j-1]-1;if(!S.q.hs)S.q.hs=dk();save()}}
+function hPlan(d){const q=S.q;q.ht=d;q.hs=dk();q.h0=q.hp;q.hg=Math.max(1,Math.ceil((604-q.hp)/d));save()}
 function hatm(){
   const q=S.q,k=dk(),left=604-q.hp,days=Math.ceil(left/q.hg);let jn=1;for(let j=0;j<30;j++)if(q.hp+1>=J[j])jn=j+1;
-  return `<section class="hero"><p class="lab">Hatm</p><h1 style="font-size:30px">${q.hp} / 604 bet</h1><div class="bar" style="margin:10px 0"><i style="width:${q.hp/6.04}%"></i></div><p class="mu">Hozirgi pora: ${jn}-pora. Tugatilgan hatmlar: ${q.hc}. Kuniga ${q.hg} bet bilan hatmga ${days} kun qoldi. Bugun o‘qilgan: ${q.hd[k]||0} bet.</p><p class="mu" style="margin-top:8px">Kunlik maqsad: ${q.hg} bet</p>${stp('hg',1)}<button class="big" style="margin-top:6px" onclick="hd(${q.hg})">Bugun ${q.hg} bet o‘qidim</button><button class="ghost" style="color:var(--htx)" onclick="hd(1)">+1 bet</button><button class="ghost" style="color:var(--htx)" onclick="hd(-1)">−1 bet</button></section>`}
+  let cur=0,best=0,run=0;for(let i=119;i>=0;i--){if((q.hd[dAgo(i)]||0)>0){run++;best=Math.max(best,run)}else run=0}for(let i=0;i<120;i++){if((q.hd[dAgo(i)]||0)>0)cur++;else if(i>0)break}
+  let w7=0;for(let i=0;i<7;i++)w7+=q.hd[dAgo(i)]||0;const avg=w7/7,fin=avg>0?new Date(Date.now()+Math.ceil(left/avg)*864e5):null;
+  const exp=q.ht&&q.hs?Math.min(604,Math.round((q.h0||0)+(604-(q.h0||0))*Math.min(1,(-dl(q.hs)+1)/q.ht))):null;
+  const cells=[...Array(30)].map((_,x)=>{const j=x+1,s=J[x],e=J[x+1]-1;return `<button class="${q.hp>=e?'rd':q.hp>=s-1?'cu':''}" onclick="hJz(${j})">${j}</button>`}).join('');
+  const bars=[...Array(14)].map((_,i)=>{const v=q.hd[dAgo(13-i)]||0;return `<div style="flex:1;text-align:center"><div style="height:60px;display:flex;align-items:flex-end"><div style="width:100%;height:${Math.max(3,Math.min(60,v*3))}px;background:${i===13?'var(--go)':'var(--ac)'};opacity:.85;border-radius:4px"></div></div><span class="mu" style="font-size:10px">${v}</span></div>`}).join('');
+  const hist=(q.hh||[]).slice().reverse().map(x=>`<div class="row"><span class="t">${x.d}</span><span class="tm">${x.days} kunda</span></div>`).join('');
+  return `<section class="hero"><p class="lab">Hatm</p><h1 style="font-size:30px">${q.hp} / 604 bet</h1><div class="bar" style="margin:10px 0"><i style="width:${q.hp/6.04}%"></i></div><p class="mu">Hozirgi pora: ${jn}-pora. Tugatilgan hatmlar: ${q.hc}. Kuniga ${q.hg} bet bilan hatmga ${days} kun qoldi. Bugun o‘qilgan: ${q.hd[k]||0} bet.</p><p class="mu" style="margin-top:8px">Kunlik maqsad: ${q.hg} bet</p>${stp('hg',1)}<button class="big" style="margin-top:6px" onclick="hd(${q.hg})">Bugun ${q.hg} bet o‘qidim</button><div class="in" style="margin-top:8px">${[[1,'+1'],[5,'+5'],[10,'+10'],[20,'+1 pora']].map(x=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="hd(${x[0]})">${x[1]}</button>`).join('')}<button class="btn s" style="flex:1;padding:10px 0" onclick="hd(-1)">−1</button></div></section>
+  <div class="st"><div><b>${cur} kun</b>ketma-ket o‘qish</div><div><b>${best} kun</b>eng uzun seriya</div><div><b>${r1(avg)}</b>bet/kun (7 kun)</div></div>
+  ${fin?`<p class="mu" style="margin:10px 0 0">Shu tezlikda hatm taxminan ${fin.getDate()} ${MON[fin.getMonth()]} kuni tugaydi.</p>`:'<p class="mu" style="margin:10px 0 0">Bir necha kun o‘qisang, tugash sanasi hisoblanadi.</p>'}
+  <h2>Hatm rejasi</h2><p class="mu" style="margin:0 0 8px">Necha kunda tugatmoqchisan? Kunlik maqsad o‘zi hisoblanadi.</p><div class="chips">${[7,15,30,60,90].map(d=>`<button class="${q.ht===d?'on':''}" onclick="hPlan(${d})">${d} kun</button>`).join('')}</div>
+  ${exp!==null?`<p style="margin:8px 0 0">Reja bo‘yicha bugun <b>${exp}-bet</b>ga yetish kerak. Sen ${q.hp}-betdasan: ${q.hp>=exp?`${q.hp-exp} bet oldindasan`:`${exp-q.hp} bet ortdasan`}.</p>`:''}
+  <h2>Pora xaritasi</h2><div class="jm">${cells}</div><p class="mu" style="margin:6px 0 0">Yashil: o‘qilgan, sariq: hozirgi. Poraga bossang, o‘sha poradan boshlanadi.</p>
+  <h2>Joyni belgilash</h2><div class="in"><input id="hpg" type="number" inputmode="numeric" placeholder="Hozir nechanchi betdasan?" value="${q.hp||''}"><button class="btn" onclick="hSet()">Saqla</button></div>
+  <h2>So‘nggi 14 kun, bet</h2><div style="display:flex;gap:3px">${bars}</div>
+  ${hist?`<h2>Tugatilgan hatmlar</h2>${hist}`:''}`}
 function zikr(){
   const z=S.z,c=z.c[dk()]||{},x=ZK[z.sel],t=z.tg||x[2],v=c[z.sel]||0,rem=v%t,tot=Object.values(c).reduce((a,b)=>a+b,0);
   const chips=ZK.map((y,i)=>`<button class="${z.sel===i?'on':''}" onclick="S.z.sel=${i};render()">${y[0]}</button>`).join('');
@@ -672,6 +694,53 @@ function modesCard(){
   return `<h2>Reja rejimlari</h2><p class="mu">Kuning turiga qarab jadvalni almashtir. Hozirgi rejim: <b style="color:var(--tx)">${esc(S.md.cur)}</b>. Bugun ekranida rejim tugmalari chiqadi.</p>
   ${n.map(x=>`<div class="row ${x===S.md.cur?'now':''}"><span class="t">${esc(x)}</span>${x===S.md.cur?'<span class="tm">faol</span>':`<button class="btn s" style="padding:6px 10px" onclick="mdSw('${x}')">Almashtir</button><button class="x" onclick="mdDel('${x}')">×</button>`}</div>`).join('')}
   <p class="mu" style="margin:10px 0 6px">Yangi rejim qo‘shish:</p><div class="chips">${Object.keys(PRE).map(k=>`<button onclick="mdNew('${k}')">${PRE[k][0]}</button>`).join('')}<button onclick="mdNew()">Hozirgidan nusxa</button></div>`}
+
+// ---- Takror: o‘zim tanlagan suralar va pora ----
+const crRange=s=>[SP[s],s<113?Math.max(SP[s],SP[s+1]):604];
+function crAdd(){const q=S.q,s=CRS<0?q.cur:CRS,[lo,hi]=crRange(s);let a=Math.round(+V('cra')||lo),b=Math.round(+V('crb')||a);a=Math.max(lo,Math.min(hi,a));b=Math.max(a,Math.min(hi,b));q.cr=q.cr||{};(q.cr[dk()]=q.cr[dk()]||[]).push({s,a,b,x:0});save()}
+function crT(j){const q=S.q,k=dk(),e=q.cr[k][j],n=e.b-e.a+1;e.x=e.x?0:1;q.rd[k]=Math.max(0,r1((q.rd[k]||0)+(e.x?n:-n)));save()}
+function crD(j){const q=S.q,k=dk(),e=q.cr[k][j];if(e.x)q.rd[k]=Math.max(0,r1((q.rd[k]||0)-(e.b-e.a+1)));q.cr[k].splice(j,1);save()}
+function crCard(){
+  const q=S.q,s=CRS<0?q.cur:CRS,[lo,hi]=crRange(s),L=(q.cr||{})[dk()]||[];
+  const opts=SN.map((n,i)=>`<option value="${i}" ${i===s?'selected':''}>${i+1}. ${n}</option>`).join('');
+  const rows=L.map((e,j)=>`<div class="row ${e.x?'done':''}"><span class="ck" onclick="crT(${j})">${e.x?'✓':''}</span><span class="t" onclick="crT(${j})">${SN[e.s]}, ${e.a===e.b?e.a+'-bet':e.a+'–'+e.b+'-betlar'}</span><button class="x" onclick="crD(${j})">×</button></div>`).join('');
+  return `<h2>O‘zim tanlagan takror</h2><p class="mu" style="margin:0 0 8px">Xohlagan sura va betlaringni tanlab, bugungi takrorga qo‘sh.</p>${rows}<div class="in"><select onchange="CRS=+this.value;render()">${opts}</select></div><div class="in"><input id="cra" type="number" inputmode="numeric" placeholder="Betdan" value="${lo}"><input id="crb" type="number" inputmode="numeric" placeholder="Betgacha" value="${hi}"><button class="btn" onclick="crAdd()">Qo‘sh</button></div><p class="mu" style="margin:0">${SN[s]}: ${lo===hi?lo+'-bet':lo+'–'+hi+'-betlar'}.</p>`}
+const jzo=()=>S.q.jz=S.q.jz||{sel:[],per:1,ptr:0};
+function jzS(j){const z=jzo(),i=z.sel.indexOf(j);i<0?z.sel.push(j):z.sel.splice(i,1);if(z.ptr>=z.sel.length)z.ptr=0;save()}
+function jzP(d){const z=jzo();z.per=Math.max(1,Math.min(10,z.per+d));save()}
+function jzDone(){const q=S.q,z=jzo(),k=dk(),n=z.sel.length;if(!n)return;const s=z.sel.slice().sort((a,b)=>a-b),per=Math.min(z.per,n);let pg=0;for(let i=0;i<per;i++){const j=s[(z.ptr+i)%n];pg+=J[j]-J[j-1]}z.ptr=(z.ptr+per)%n;q.jd=q.jd||{};q.jd[k]=(q.jd[k]||0)+1;q.rd[k]=r1((q.rd[k]||0)+pg);save()}
+function jzCard(){
+  const q=S.q,z=jzo(),k=dk(),s=z.sel.slice().sort((a,b)=>a-b),n=s.length,per=Math.min(z.per,n||1),done=(q.jd||{})[k]||0;
+  const chips=[...Array(30)].map((_,x)=>`<button class="${z.sel.includes(x+1)?'on':''}" onclick="jzS(${x+1})">${x+1}</button>`).join('');
+  const today=n?[...Array(per)].map((_,i)=>s[(z.ptr+i)%n]):[];
+  return `<h2>Pora takrori</h2><p class="mu" style="margin:0 0 8px">Takror qilmoqchi bo‘lgan poralaringni tanla, ilova ularni kunma-kun aylantiradi.</p><div class="chips">${chips}</div>
+  <p class="mu" style="margin:8px 0 0">Kuniga ${z.per} pora${n?`. ${n} pora ${Math.ceil(n/per)} kunda aylanib chiqadi.`:''}</p><div class="in" style="margin-top:6px"><button class="btn s" onclick="jzP(-1)">−</button><button class="btn s" onclick="jzP(1)">+</button></div>
+  ${n?`<div class="goal"><b style="font:700 17px Fraunces,serif">Bugun: ${today.map(j=>j+'-pora').join(', ')}</b>${today.map(j=>`<p class="mu" style="margin:4px 0 0">${j}-pora, ${J[j-1]}–${J[j]-1}-betlar</p>`).join('')}<button class="big ${done?'ok':''}" style="margin-top:10px" onclick="jzDone()">${done?'Bajarildi, yana bir marta':'Takror qildim'}</button></div>`:''}`}
+
+// ---- Namoz va qazo jurnali ----
+const PR=[['fajr','Bomdod'],['dhuhr','Peshin'],['asr','Asr'],['maghrib','Shom'],['isha','Xufton'],['vitr','Vitr']];
+function nmS(k,p){if(k>dk())return;const N=S.nm,d=N.d[k]=N.d[k]||{},c=d[p]||0,nx=(c+1)%3;
+  if(c===2){N.debt[p]=Math.max(0,(N.debt[p]||0)-1);const i=N.log.findIndex(x=>x.d===k&&x.p===p&&x.k==='miss');if(i>=0)N.log.splice(i,1)}
+  if(nx===2){N.debt[p]=(N.debt[p]||0)+1;N.log.push({id:Date.now(),d:k,p,k:'miss',n:1})}
+  d[p]=nx;save()}
+function qzPay(p){const N=S.nm;if(!(N.debt[p]>0))return;N.debt[p]--;N.log.push({id:Date.now(),d:dk(),p,k:'paid',n:1});save()}
+function qzAdd(p){const n=parseInt(prompt('Nechta qazo namoz qo‘shilsin? (eski qazolar uchun)'),10);if(!(n>0))return;S.nm.debt[p]=(S.nm.debt[p]||0)+n;S.nm.log.push({id:Date.now(),d:dk(),p,k:'add',n});save()}
+function nmQ(n){const N=S.nm,k=dk();N.qb=N.qb||{};const v=Math.max(0,(N.qb[k]||0)+n);if(v===(N.qb[k]||0))return;N.qb[k]=v;hd(n)}
+function namoz(){
+  const T0=dk(),now=new Date(),N=S.nm,d0=new Date(now.getFullYear(),now.getMonth()+NMo,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate(),key=x=>`${y}-${pad(m+1)}-${pad(x)}`;
+  let tot=0,got=0,qz=0;
+  const today=PR.map(([p,t])=>{const s_=((N.d[T0]||{})[p])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${T0}','${p}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}</button>`}).join('');
+  const head=`<tr><th class="sk"></th>${[...Array(nd)].map((_,i)=>`<th class="${key(i+1)===T0?'td':''}">${i+1}</th>`).join('')}</tr>`;
+  const body=PR.map(([p,t])=>`<tr><td class="sk">${t}</td>${[...Array(nd)].map((_,i)=>{const kk=key(i+1),s_=((N.d[kk]||{})[p])||0,fu=kk>T0;if(!fu&&p!=='vitr'){tot++;if(s_===1)got++;if(s_===2)qz++}return `<td><button class="cell ${s_===1?'on':s_===2?'qz':''}" ${fu?'disabled':''} onclick="nmS('${kk}','${p}')"></button></td>`}).join('')}</tr>`).join('');
+  const debt=PR.reduce((a,[p])=>a+(N.debt[p]||0),0),qb=(N.qb||{})[T0]||0;
+  const rows=PR.map(([p,t])=>`<div class="row"><span class="t">${t}<br><span class="mu">${N.debt[p]||0} ta qazo</span></span><button class="btn s" style="padding:8px 12px" onclick="qzPay('${p}')">O‘qidim</button><button class="btn s" style="padding:8px 12px" onclick="qzAdd('${p}')">+</button></div>`).join('');
+  const lbl={miss:'qazo qilindi',paid:'qazo o‘qildi',add:'eski qazo qo‘shildi'},nmz=Object.fromEntries(PR);
+  const log=N.log.slice().reverse().slice(0,12).map(x=>`<div class="row"><span class="t">${nmz[x.p]}<br><span class="mu">${x.d.slice(8)}.${x.d.slice(5,7)}, ${lbl[x.k]}${x.k==='add'?' ('+x.n+' ta)':''}</span></span></div>`).join('');
+  return `<section class="hero"><p class="lab">Bugungi namozlar</p><div class="np" style="margin-top:8px">${today}</div><p class="mu" style="margin-top:8px">Bir bosish: o‘qildi, ikki: qazo, uch: bekor qilish.</p></section>
+  <h2>Namozda o‘qilgan Qur‘on</h2><p class="mu" style="margin:0 0 8px">Namozlarda o‘qigan betlaring odatiy hatm hisobiga qo‘shiladi.</p><div class="in"><button class="btn s" onclick="nmQ(-1)">−1</button><div class="row" style="flex:1;justify-content:center;margin:0"><b>Bugun ${qb} bet</b></div><button class="btn" onclick="nmQ(1)">+1 bet</button></div>
+  <h2>${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h2><div class="in"><button class="btn s" onclick="NMo--;render()">‹</button><button class="btn s" onclick="NMo=0;render()">Shu oy</button><button class="btn s" onclick="NMo++;render()">›</button></div>
+  <div class="sum"><div><span class="mu">O‘qilgan namozlar</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Shu oy qazo</span><b>${qz}</b></div></div><div class="hg"><table>${head}${body}</table></div><p class="mu" style="margin:6px 0 0">Yashil: o‘qildi. Qizil: qazo. Katakni bossang, holat almashadi.</p>
+  <h2>Qazo namozlar jurnali</h2><div class="sum"><div class="w"><span class="mu">Jami qazo qarzi</span><b>${debt} ta</b></div></div>${rows}${log?`<p class="mu" style="margin:12px 0 6px">So‘nggi yozuvlar</p>${log}`:''}`}
 
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
