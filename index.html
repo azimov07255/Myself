@@ -184,11 +184,14 @@ let QT='y',LO=false,ED=null,ALLV=false;
 let OW=null,OL='',OP='',ON='',OE='',OC=null;
 let S=blank(),UID=null,tab='h',W='p',K='out',FA='',FN='',tm=null;
 const KEY=()=>'trk_'+(UID||'local');
-function load(){try{return Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}'))}catch(e){return blank()}}
+const isObj=x=>x&&typeof x==='object'&&!Array.isArray(x);
+function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON.stringify(b[k]));else if(isObj(a[k])&&isObj(b[k]))fillDef(a[k],b[k])}return a}
+const norm=o=>fillDef(o,blank());
+function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&S.rem.on)remSoon();render()}
 let SYNC=navigator.onLine===false?'off':'ok';
 async function push(){if(!(sb&&UID))return;try{const r=await sb.from('app_state').upsert({user_id:UID,data:S,updated_at:new Date().toISOString()});if(r&&r.error)throw r.error;SYNC='ok';try{localStorage.removeItem('trk_dirty')}catch(e){}}catch(e){SYNC='wait';try{localStorage.setItem('trk_dirty','1')}catch(e2){}}}
-async function pull(){if(!sb||!UID)return;try{const r=await sb.from('app_state').select('data').eq('user_id',UID).maybeSingle();if(!r.error)PULLED=true;const d=r.data&&r.data.data;if(d&&(d.ts||0)>(S.ts||0))S=Object.assign(blank(),d);else if(S.ts)push()}catch(e){}}
+async function pull(){if(!sb||!UID)return;try{const r=await sb.from('app_state').select('data').eq('user_id',UID).maybeSingle();if(!r.error)PULLED=true;const d=r.data&&r.data.data;if(d&&(d.ts||0)>(S.ts||0))S=norm(Object.assign(blank(),d));else if(S.ts)push()}catch(e){}}
 
 function nowInfo(){
   const d=new Date(),n=d.getHours()*60+d.getMinutes(),today=bl().filter(b=>b.d.includes(d.getDay()));
@@ -678,7 +681,7 @@ function ritual(k,sc){
 
 // ---- Zaxira nusxa ----
 const bkMark=()=>{try{localStorage.setItem('trk_bk',dk())}catch(e){}};
-function bkApply(t){try{const d=JSON.parse(t);if(!d||typeof d!=='object'||!d.goals)throw 0;if(!confirm('Hozirgi ma‘lumot zaxiradagi bilan almashtiriladi. Davom etilsinmi?'))return;S=Object.assign(blank(),d);save();alert('Tiklandi.')}catch(e){alert('Zaxira noto‘g‘ri.')}}
+function bkApply(t){try{const d=JSON.parse(t);if(!d||typeof d!=='object'||!d.goals)throw 0;if(!confirm('Hozirgi ma‘lumot zaxiradagi bilan almashtiriladi. Davom etilsinmi?'))return;S=norm(Object.assign(blank(),d));save();alert('Tiklandi.')}catch(e){alert('Zaxira noto‘g‘ri.')}}
 function bkDl(){const b=new Blob([JSON.stringify(S)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='tizim-zaxira-'+dk()+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(a.href),4000);bkMark();render()}
 function bkCp(){const t=JSON.stringify(S);(navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>{bkMark();alert('Nusxalandi. Uni Telegram’dagi “Saqlangan xabarlar”ga yopishtirib qo‘ying.');render()}).catch(()=>prompt('Nusxalang:',t))}
 function bkLd(inp){const f=inp.files[0];if(!f)return;const r=new FileReader();r.onload=()=>bkApply(r.result);r.readAsText(f)}
