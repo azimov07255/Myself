@@ -67,7 +67,7 @@ input[type=date],select{flex:1;min-width:0;padding:12px 14px;border-radius:12px;
 textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:inherit;resize:vertical}
 .gr{font-size:28px;font-weight:800;line-height:1.1;margin:4px 0 6px}.qt{font-style:italic;margin:0}
 .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}.wd{background:var(--c1);border:1px solid var(--ln);border-radius:14px;padding:8px 0;text-align:center;font-size:12px;color:var(--mu)}.wd b{display:block;font:700 18px Fraunces,serif;color:var(--tx)}.wd.on{background:var(--ac);border-color:var(--ac)}.wd.on,.wd.on b{color:var(--on-ac)}.dot{display:block;width:5px;height:5px;border-radius:50%;margin:4px auto 0}.dot.y{background:var(--go)}.wd.on .dot.y{background:var(--on-ac)}
-.hg{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;border-radius:14px;background:var(--c1);border:1px solid var(--ln)}table{border-collapse:separate;border-spacing:0}th,td{padding:6px 3px;font-size:12px;color:var(--mu);font-weight:400;text-align:center;border-bottom:1px solid var(--ln)}tr:last-child td{border-bottom:0}th.td{color:var(--go);font-weight:700}.sk{position:sticky;left:0;background:var(--c1);text-align:left;min-width:150px;max-width:150px;padding:8px 10px;color:var(--tx);font-size:13px;line-height:1.25;z-index:2;box-shadow:6px 0 8px -6px rgba(0,0,0,.25)}.tdy{background:color-mix(in srgb,var(--go) 16%,transparent)}.we{background:rgba(128,128,128,.08)}
+.hg{overflow-x:auto;overflow-y:hidden;border-radius:14px;background:var(--c1);border:1px solid var(--ln)}table{border-collapse:separate;border-spacing:0}th,td{padding:6px 3px;font-size:12px;color:var(--mu);font-weight:400;text-align:center;border-bottom:1px solid var(--ln)}tr:last-child td{border-bottom:0}th.td{color:var(--go);font-weight:700}.sk{position:sticky;left:0;background:var(--c1);text-align:left;min-width:150px;max-width:150px;padding:8px 10px;color:var(--tx);font-size:13px;line-height:1.25;z-index:2;box-shadow:6px 0 8px -6px rgba(0,0,0,.25)}.tdy{background:color-mix(in srgb,var(--go) 16%,transparent)}.we{background:rgba(128,128,128,.08)}
 .cell{width:30px;height:30px;border-radius:50%;border:1px solid var(--ln);background:var(--c1);padding:0;display:grid;place-items:center}.cell.on{background:var(--hc,var(--ac));border-color:var(--hc,var(--ac))}.cell.on::after,.cell.qz::after{content:'✓';color:#fff;font-size:15px;line-height:1}.cell.qz::after{content:'✗'}.cell:disabled{opacity:.35}
 .mood{display:flex;justify-content:space-between}.mood button{font-size:26px;background:none;border:2px solid transparent;border-radius:50%;padding:4px;opacity:.55}.mood .on{opacity:1;border-color:var(--go)}
 .gl{width:28px;height:34px;border-radius:6px 6px 12px 12px;border:2px solid var(--ln);background:none;padding:0}.gl.on{background:var(--ac);border-color:var(--ac)}
@@ -100,6 +100,7 @@ button{transition:transform .12s,background .2s}button:active{transform:scale(.9
 .seg.sc{overflow-x:auto}.seg.sc button{flex:0 0 auto;padding:9px 14px;white-space:nowrap}
 .jm .qz{background:var(--bad);color:#fff;border-color:var(--bad)}
 .rd{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}.rdt{display:flex;align-items:center;gap:10px;padding:8px 12px}.rdc{flex:1;overflow:auto;background:#7c8794;-webkit-overflow-scrolling:touch}.rdc canvas{display:block;margin:0 auto;background:#fff;max-width:none}.rdb{display:flex;gap:8px;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);align-items:center}.rdb input{flex:0 0 74px!important;text-align:center}
+.hw{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.hw>div{padding:4px 0;border-radius:8px;display:grid;place-items:center}.hwh{color:var(--mu);margin:0 0 6px;padding:0 8px}.hwh b{color:var(--tx)}.hwh .td,.hwh .td b{color:var(--go)}.hcard{background:var(--c1);border:1px solid var(--ln);border-radius:14px;padding:10px 8px;margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -304,9 +305,9 @@ function odatlar(){
     const cs=[...Array(n)].map((_,q)=>{const k=key(q+1),on=(S.hb[k]||{})[x.id],fu=k>today;if(!fu){tot++;if(on)got++}return `<td class="${gCls(y,m,q+1,today)}"><button class="cell ${on?'on':''}" style="--hc:${col}" ${fu?'disabled':''} onclick="hbT('${x.id}','${k}')"></button></td>`}).join('');
     return `<tr><td class="sk">${x.e?`<span style="margin-right:6px">${x.e}</span>`:`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}${esc(x.t)}<br><span class="mu" style="font-size:12px">🔥 ${st}&nbsp; haftada ${wn} kun <button class="x" style="font-size:15px" onclick="delH(${hi})">×</button></span></td>${cs}</tr>`}).join('');
   return `<p class="mu" style="margin:0">Odatlar jadvali</p><h1 class="gr">${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h1><p class="mu" style="margin:0 0 4px">Bugun: ${now.getDate()}-${MON[now.getMonth()]}, ${DAYS[now.getDay()]}</p>
-  <div class="in"><button class="btn s" onclick="HMo--;render()">‹</button><button class="btn s" onclick="HMo=0;render()">Shu oy</button><button class="btn s" onclick="HMo++;render()">›</button></div>
+  ${habNav()}
   <div class="sum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
-  ${S.hab.length?`<div class="hg" data-k="j"><table>${gHead(y,m,n,today)}${body}</table></div>`:'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>'}
+  ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`<div class="hg" data-k="j"><table>${gHead(y,m,n,today)}${body}</table></div>`}
   <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${suggCard()}`;
 }
 const CATS=['Ovqat','Transport','O‘qish','Salomatlik','Kiyim','Ko‘ngil ochish','Boshqa'],CIN=['Maosh','Dokon daromadi','Boshqa'];
@@ -915,7 +916,7 @@ function nhCard(){
   <div class="in">${[0.5,1,2,3].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="nhAdd(${n})">+${n}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="nhAdd(0,1)">Navbatdagi surani to‘liq o‘qidim</button>
   <p class="mu" style="margin:8px 0 0">Bugun namozda: ${r1(tp)} bet</p>${rows}${N.hist.length?`<p class="mu" style="margin:10px 0 0">Tugatilgan hatmlar: ${N.hist.map(x=>x.d).join(', ')}</p>`:''}</div>`}
 
-let PM=0,PMO=false,PUPL={};
+let PM=0,PMO=false,PUPL={},HV='w',HW=0;
 let SO=false,SQ='',SRL=[];
 function ptMonth(){
   const P=S.pt,now=new Date(),d0=new Date(now.getFullYear(),now.getMonth()+PM,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate();
@@ -1016,9 +1017,9 @@ async function rdOpen(id){
     if(!buf&&b.cloud&&sb&&UID){toast('PDF bulutdan yuklab olinmoqda...');const r=await sb.storage.from('books').download(UID+'/'+id+'.pdf');if(r.error)throw r.error;buf=await r.data.arrayBuffer();await idbSet(id,buf)}
     if(!buf){alert('Bu qurilmada PDF topilmadi. Qayta yuklash uchun “PDF o‘chirish” va keyin “PDF qo‘shish” ni bos.');return}
     const lib=await loadPdfjs(),doc=await lib.getDocument({data:buf.slice(0)}).promise;
-    RD={id,doc,n:doc.numPages,page:1,zoom:1,tok:0};rdBuild(b);await rdShow(b.cur||1)
+    rdClose(true);RD={id,doc,n:doc.numPages,page:1,zoom:1,tok:0};rdBuild(b);await rdShow(b.cur||1)
   }catch(e){alert('PDF ochilmadi: '+(e.message||e))}}
-function rdBuild(b){rdClose(true);const d=document.createElement('div');d.id='rd';d.className='rd';
+function rdBuild(b){const old=document.getElementById('rd');if(old)old.remove();const d=document.createElement('div');d.id='rd';d.className='rd';
   d.innerHTML=`<div class="rdt"><button class="x" style="font-size:22px" onclick="rdClose()">✕</button><b style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.t)}</b><span id="rdn" class="mu"></span></div><div id="rdc" class="rdc"><canvas id="rdv"></canvas></div><div class="rdb"><button class="btn s" onclick="rdGo(-1)">‹</button><input id="rdp" type="number" inputmode="numeric" onchange="rdSet(this.value)"><button class="btn s" onclick="rdGo(1)">›</button><button class="btn s" onclick="rdZ(-0.25)">−</button><button class="btn s" onclick="rdZ(0.25)">+</button></div>`;
   document.body.appendChild(d);let x0=null;const c=d.querySelector('#rdc');
   c.addEventListener('touchstart',e=>{x0=e.touches.length===1?e.touches[0].clientX:null},{passive:true});
@@ -1035,6 +1036,18 @@ function rdGo(d){if(RD)rdShow(RD.page+d)}
 function rdSet(v){if(RD)rdShow(+v)}
 function rdZ(d){if(RD){RD.zoom=Math.max(0.75,Math.min(3,RD.zoom+d));rdShow(RD.page)}}
 function rdClose(silent){const e=document.getElementById('rd');if(e)e.remove();if(RD&&RD.doc){try{RD.doc.destroy()}catch(x){}}RD=null;if(!silent)render()}
+
+function habNav(){
+  const seg=`<div class="seg"><button class="${HV==='w'?'on':''}" onclick="HV='w';render()">Hafta</button><button class="${HV==='m'?'on':''}" onclick="HV='m';render()">Oy</button></div>`;
+  return seg+(HV==='w'?`<div class="in"><button class="btn s" onclick="HW--;render()">‹</button><button class="btn s" onclick="HW=0;render()">Shu hafta</button><button class="btn s" onclick="HW++;render()">›</button></div>`:`<div class="in"><button class="btn s" onclick="HMo--;render()">‹</button><button class="btn s" onclick="HMo=0;render()">Shu oy</button><button class="btn s" onclick="HMo++;render()">›</button></div>`)}
+function habWeek(today){
+  const b=new Date();b.setDate(b.getDate()+HW*7);const w0=(b.getDay()+6)%7;
+  const days=[...Array(7)].map((_,i)=>{const x=new Date(b.getFullYear(),b.getMonth(),b.getDate()-w0+i);return{k:x.toLocaleDateString('sv'),wd:x.getDay(),d:x.getDate()}});
+  const cl=d=>(d.k===today?'tdy':'')+(d.wd===0||d.wd===6?' we':'');
+  const head=`<div class="hw hwh">${days.map(d=>`<div class="${cl(d)}${d.k===today?' td':''}"><span style="font-size:11px">${DAYS[d.wd].slice(0,2)}</span><b style="font-size:15px">${d.d}</b></div>`).join('')}</div>`;
+  const rows=S.hab.map((x,hi)=>{const st=hst(x.id),col=HC[hi%HC.length],n=days.filter(d=>(S.hb[d.k]||{})[x.id]).length;
+    return `<div class="hcard"><div style="display:flex;align-items:center;gap:8px"><span style="flex:1;font-weight:600">${x.e?x.e+' ':`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}${esc(x.t)}</span><button class="x" onclick="delH(${hi})">×</button></div><p class="mu" style="margin:2px 0 6px;font-size:12px">🔥 ${st}&nbsp; haftada ${n} kun</p><div class="hw">${days.map(d=>{const on=(S.hb[d.k]||{})[x.id],fu=d.k>today;return `<div class="${cl(d)}"><button class="cell ${on?'on':''}" style="--hc:${col}" ${fu?'disabled':''} onclick="hbT('${x.id}','${d.k}')"></button></div>`}).join('')}</div></div>`}).join('');
+  return head+rows}
 
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
