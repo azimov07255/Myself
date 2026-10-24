@@ -95,6 +95,7 @@ button{transition:transform .12s,background .2s}button:active{transform:scale(.9
 .np{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.np button{padding:14px 4px;border-radius:14px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 15px Figtree,system-ui}.np .on{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}.np .bad{background:var(--bad);color:#fff;border-color:var(--bad)}
 .cell.qz{background:var(--bad);border-color:var(--bad)}
 .pc{background:rgba(128,128,128,.18);border-radius:12px;padding:8px 4px;text-align:center}.pc span{display:block;font-size:12px;opacity:.85}.pc b{font:700 19px Fraunces,serif}.pc.nx{outline:2px solid var(--hlab)}.np small{display:block;font-weight:400;font-size:12px;opacity:.85;margin-top:2px}
+.mt th,.mt td{padding:7px 6px;font-size:13px;min-width:48px}.mt th{background:#0e7a45;color:#fff;font-weight:600}.mt tr.tdr td{background:var(--ac);color:var(--on-ac);font-weight:700}
 </style>
 </head>
 <body>
@@ -853,36 +854,42 @@ function copyMonth(){const d0=new Date(new Date().getFullYear(),new Date().getMo
 const PK={fajr:'Fajr',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Maghrib',isha:'Isha'};
 const PCITY=[['Toshkent',41.2995,69.2401],['Samarqand',39.6542,66.9597],['Buxoro',39.7748,64.4286],['Andijon',40.7821,72.3442],['Farg‘ona',40.3842,71.7843],['Namangan',41.0011,71.6726],['Qo‘qon',40.5286,70.9425],['Qarshi',38.8606,65.7891],['Navoiy',40.0844,65.3792],['Jizzax',40.1158,67.8422],['Guliston',40.4897,68.7842],['Termiz',37.2242,67.2783],['Urganch',41.5506,60.6314],['Xiva',41.3783,60.3639],['Nukus',42.4531,59.6103]];
 const PNAMES=[['Fajr','Bomdod'],['Sunrise','Quyosh'],['Dhuhr','Peshin'],['Asr','Asr'],['Maghrib','Shom'],['Isha','Xufton']];
-function ptTimes(){const c=S.pt&&S.pt.cache;if(!c||c.date!==dk())return null;const o={};PNAMES.forEach(([k])=>{if(c.raw[k])o[k]=(t2m(c.raw[k])+((S.pt.tune||{})[k]||0)+1440)%1440});return o}
+const ptTz=()=>S.pt.loc==='gps'?-new Date().getTimezoneOffset()/60:5;
+// O‘zbekiston Musulmonlar idorasi uslubi (islom.uz Toshkent jadvaliga moslab sozlangan)
+function ptCalc(y,m,d,lat,lon,tz){
+  const D=Math.PI/180;
+  const jd=h=>{let Y=y,M=m;if(M<=2){Y--;M+=12}const A=Math.floor(Y/100),B=2-A+Math.floor(A/4);return Math.floor(365.25*(Y+4716))+Math.floor(30.6001*(M+1))+d+B-1524.5+h/24};
+  const sun=j=>{const T=(j-2451545)/36525,L0=(280.46646+T*(36000.76983+T*0.0003032))%360,M2=357.52911+T*(35999.05029-0.0001537*T),e=0.016708634-T*(0.000042037+0.0000001267*T),
+    C=Math.sin(M2*D)*(1.914602-T*(0.004817+0.000014*T))+Math.sin(2*M2*D)*(0.019993-0.000101*T)+Math.sin(3*M2*D)*0.000289,om=125.04-1934.136*T,lam=L0+C-0.00569-0.00478*Math.sin(om*D),
+    e0=23+(26+(21.448-T*(46.815+T*(0.00059-T*0.001813)))/60)/60,eps=e0+0.00256*Math.cos(om*D),dec=Math.asin(Math.sin(eps*D)*Math.sin(lam*D))/D,y2=Math.tan(eps*D/2)**2,
+    eot=4*(y2*Math.sin(2*L0*D)-2*e*Math.sin(M2*D)+4*e*y2*Math.sin(M2*D)*Math.cos(2*L0*D)-0.5*y2*y2*Math.sin(4*L0*D)-1.25*e*e*Math.sin(2*M2*D))/D;return[dec,eot]};
+  const j0=jd(0),ha=(al,dc)=>{const c=(Math.sin(al*D)-Math.sin(lat*D)*Math.sin(dc*D))/(Math.cos(lat*D)*Math.cos(dc*D));return Math.acos(Math.max(-1,Math.min(1,c)))/D};
+  const at=(t0,sg,fn)=>{let t=t0;for(let i=0;i<3;i++){const[dc,eo]=sun(j0+(t-tz*60)/1440);t=720-4*lon-eo+tz*60+sg*4*fn(dc)}return t};
+  const[d0,e0]=sun(j0+(720-tz*60)/1440),n=720-4*lon-e0+tz*60,R=x=>Math.floor(x+0.5);
+  const asr=dc=>ha(Math.atan(1/(2+Math.tan(Math.abs(lat-dc)*D)))/D,dc);
+  return{Fajr:R(at(n-300,-1,dc=>ha(-15.55,dc))),Sunrise:R(at(n-300,-1,dc=>ha(-0.833,dc))),Dhuhr:R(n),Asr:Math.ceil(at(n+200,1,asr)),Maghrib:R(at(n+300,1,dc=>ha(-0.833,dc))+5.8),Isha:Math.ceil(at(n+400,1,dc=>ha(-15.1,dc)))}}
+function ptRaw(date){const P=S.pt,dt=date||new Date();return ptCalc(dt.getFullYear(),dt.getMonth()+1,dt.getDate(),P.lat,P.lon,ptTz())}
+function ptTimes(){const P=S.pt;if(!P)return null;const r=ptRaw(),o={};PNAMES.forEach(([k])=>{o[k]=(r[k]+((P.tune||{})[k]||0)+1440)%1440});return o}
 const ptT=k=>{const t=ptTimes();return t&&k&&t[k]!==undefined?hm(t[k]):''};
 function ptNext(){const t=ptTimes();if(!t)return null;const d=new Date(),n=d.getHours()*60+d.getMinutes();
   for(const [k,nm] of PNAMES){if(k==='Sunrise')continue;if(t[k]>n)return{n:nm,t:t[k],left:t[k]-n}}
   return{n:'Bomdod',t:t.Fajr,left:t.Fajr+1440-n}}
-async function ptEnsure(){
-  const P=S.pt;if(!P||PTB||navigator.onLine===false)return;
-  const key=P.lat.toFixed(3)+','+P.lon.toFixed(3);if(P.cache&&P.cache.date===dk()&&P.cache.key===key)return;
-  PTB=true;
-  try{const d=new Date(),ds=pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear();
-    const r=await fetch('https://api.aladhan.com/v1/timings/'+ds+'?latitude='+P.lat+'&longitude='+P.lon+'&method=3&school=1');
-    const j=await r.json(),tm=j&&j.data&&j.data.timings;
-    if(tm){const raw={};PNAMES.forEach(([k])=>{if(tm[k])raw[k]=String(tm[k]).slice(0,5)});P.cache={date:dk(),key,raw};save();if(S.rem&&S.rem.on)remSoon()}
-  }catch(e){}
-  PTB=false}
+function ptEnsure(){const P=S.pt;if(P&&P.v!==2){P.v=2;P.tune={};P.cache=null;save()}}
 function ptLoc(v){const P=S.pt;
   if(v==='gps'){if(!navigator.geolocation){alert('Joylashuv aniqlanmadi.');return}
-    navigator.geolocation.getCurrentPosition(p=>{P.loc='gps';P.lat=p.coords.latitude;P.lon=p.coords.longitude;P.cache=null;save();ptEnsure()},()=>alert('Joylashuvga ruxsat berilmadi. Shaharni ro‘yxatdan tanla.'),{timeout:10000});return}
-  const c=PCITY.find(x=>x[0]===v);if(!c)return;P.loc=c[0];P.lat=c[1];P.lon=c[2];P.cache=null;save();ptEnsure()}
-function ptCal(){const P=S.pt,c=P.cache;if(!c)return;P.tune=P.tune||{};PNAMES.forEach(([k])=>{const v=V('pc_'+k);if(v&&c.raw[k])P.tune[k]=t2m(v)-t2m(c.raw[k])});save()}
+    navigator.geolocation.getCurrentPosition(p=>{P.loc='gps';P.lat=p.coords.latitude;P.lon=p.coords.longitude;save()},()=>alert('Joylashuvga ruxsat berilmadi. Shaharni ro‘yxatdan tanla.'),{timeout:10000});return}
+  const c=PCITY.find(x=>x[0]===v);if(!c)return;P.loc=c[0];P.lat=c[1];P.lon=c[2];save()}
+function ptCal(){const P=S.pt,r=ptRaw();P.tune=P.tune||{};PNAMES.forEach(([k])=>{const v=V('pc_'+k);if(v)P.tune[k]=t2m(v)-r[k]});save()}
 function ptRst(){S.pt.tune={};save()}
 function ptCard(){
   const P=S.pt,t=ptTimes(),nx=ptNext(),nm=PNAMES.map(([k,n])=>`<div class="pc ${nx&&t&&t[k]===nx.t&&n===nx.n?'nx':''}"><span>${n}</span><b>${t&&t[k]!==undefined?hm(t[k]):'--:--'}</b></div>`).join('');
   const opts=`<option value="gps" ${P.loc==='gps'?'selected':''}>Joylashuvim (GPS)</option>`+PCITY.map(c=>`<option value="${c[0]}" ${P.loc===c[0]?'selected':''}>${c[0]}</option>`).join('');
   const cal=PNAMES.map(([k,n])=>`<div class="in" style="margin-bottom:6px"><span style="align-self:center;min-width:64px">${n}</span><input id="pc_${k}" type="time" value="${t&&t[k]!==undefined?hm(t[k]):''}"></div>`).join('');
-  return `<section class="hero"><p class="lab">Namoz vaqtlari, ${P.loc==='gps'?'joylashuvim':P.loc}</p>${nx?`<h1 style="font-size:30px">${nx.n} ${hm(nx.t)}</h1><p class="mu">${fmt(nx.left).trim()} qoldi</p>`:`<h1 style="font-size:26px">Vaqtlar yuklanmoqda</h1><p class="mu">${navigator.onLine===false?'Internet yo‘q. Ulanganda yuklanadi.':'Bir lahza kuting.'}</p>`}
+  return `<section class="hero"><p class="lab">Namoz vaqtlari, ${P.loc==='gps'?'joylashuvim':P.loc}</p>${nx?`<h1 style="font-size:30px">${nx.n} ${hm(nx.t)}</h1><p class="mu">${fmt(nx.left).trim()} qoldi</p>`:`<h1 style="font-size:26px">Vaqt hisoblanmadi</h1>`}
   <div class="np" style="grid-template-columns:repeat(3,1fr);margin:10px 0">${nm}</div>
   <div class="in"><select onchange="ptLoc(this.value)">${opts}</select></div>
-  <details><summary class="mu" style="margin-bottom:8px">islom.uz bilan moslash</summary><p class="mu" style="margin:0 0 8px">Vaqtlar hisoblab chiqariladi. islom.uz ilovasida bugungi vaqtlarni ko‘rib, shu yerga yoz. Ilova farqni eslab qoladi va keyingi kunlarda ham shunga moslab ko‘rsatadi.</p>${cal}<div class="in"><button class="btn" style="flex:1" onclick="ptCal()">Moslash</button><button class="btn s" style="flex:1" onclick="ptRst()">Asliga qaytarish</button></div></details>
-  <p class="mu" style="margin:6px 0 0;font-size:12px">Hanafiy mazhab bo‘yicha hisoblangan. Manba: aladhan.com.</p></section>`}
+  <details><summary class="mu" style="margin-bottom:8px">Daqiqalarni qo‘lda to‘g‘rilash</summary><p class="mu" style="margin:0 0 8px">Joyingdagi masjid yoki islom.uz bilan farq bo‘lsa, kerakli vaqtni yoz. Ilova farqni eslab, keyingi kunlarda ham qo‘llaydi.</p>${cal}<div class="in"><button class="btn" style="flex:1" onclick="ptCal()">Moslash</button><button class="btn s" style="flex:1" onclick="ptRst()">Asliga qaytarish</button></div></details>
+  <p class="mu" style="margin:6px 0 0;font-size:12px">O‘zbekiston Musulmonlar idorasi uslubida, Hanafiy mazhab. Toshkent uchun islom.uz jadvaliga solishtirib sozlangan.</p></section>${ptMonth()}`}
 
 // ---- Namozda yodlaganlarim hatmi ----
 const nhList=()=>{const q=S.q,o=[];SN.forEach((n,i)=>{const d=Math.min(q.m[i]||0,SL(i));if(d>0)o.push({i,pg:d})});return o};
@@ -903,6 +910,13 @@ function nhCard(){
   <div class="chips">${PL.map(([p,t])=>`<button class="${N.pr===p?'on':''}" onclick="nhPr('${p}')">${t}</button>`).join('')}</div>
   <div class="in">${[0.5,1,2,3].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="nhAdd(${n})">+${n}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="nhAdd(0,1)">Navbatdagi surani to‘liq o‘qidim</button>
   <p class="mu" style="margin:8px 0 0">Bugun namozda: ${r1(tp)} bet</p>${rows}${N.hist.length?`<p class="mu" style="margin:10px 0 0">Tugatilgan hatmlar: ${N.hist.map(x=>x.d).join(', ')}</p>`:''}</div>`}
+
+let PM=0,PMO=false;
+function ptMonth(){
+  const P=S.pt,now=new Date(),d0=new Date(now.getFullYear(),now.getMonth()+PM,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate();
+  let rows='';if(PMO)for(let d=1;d<=nd;d++){const r=ptCalc(y,m+1,d,P.lat,P.lon,ptTz()),td=PM===0&&d===now.getDate();
+    rows+=`<tr class="${td?'tdr':''}"><td>${d}</td>${PNAMES.map(([k])=>`<td>${hm((r[k]+((P.tune||{})[k]||0)+1440)%1440)}</td>`).join('')}</tr>`}
+  return `<details ${PMO?'open':''} ontoggle="PMO=this.open" style="margin-top:12px"><summary class="mu" style="margin-bottom:8px">Oylik jadval (${P.loc==='gps'?'joylashuvim':P.loc})</summary>${PMO?`<div class="in"><button class="btn s" onclick="PM--;render()">‹</button><button class="btn s" onclick="PM=0;render()">Shu oy</button><button class="btn s" onclick="PM++;render()">›</button></div><p class="mu" style="margin:0 0 6px">${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</p><div class="hg" data-k="pm"><table class="mt"><tr><th>Kun</th>${PNAMES.map(([,n])=>`<th>${n}</th>`).join('')}</tr>${rows}</table></div>`:''}</details>`}
 
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
