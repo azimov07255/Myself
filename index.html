@@ -101,6 +101,14 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .jm .qz{background:var(--bad);color:#fff;border-color:var(--bad)}
 .rd{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}.rdt{display:flex;align-items:center;gap:10px;padding:8px 12px}.rdc{flex:1;overflow:auto;background:#7c8794;-webkit-overflow-scrolling:touch}.rdc canvas{display:block;margin:0 auto;background:#fff;max-width:none}.rdb{display:flex;gap:8px;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);align-items:center}.rdb input{flex:0 0 74px!important;text-align:center}
 .hw{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.hw>div{padding:4px 0;border-radius:8px;display:grid;place-items:center}.hwh{color:var(--mu);margin:0 0 6px;padding:0 8px}.hwh b{color:var(--tx)}.hwh .td,.hwh .td b{color:var(--go)}.hcard{background:var(--c1);border:1px solid var(--ln);border-radius:14px;padding:10px 8px;margin-bottom:8px}
+.mg{display:flex;border:1px solid var(--ln);border-radius:14px;background:var(--c1);overflow:hidden}
+.mn{flex:0 0 138px;border-right:1px solid var(--ln)}
+.mn .mh{height:56px;box-sizing:border-box;border-bottom:1px solid var(--ln)}
+.mn .mr{height:var(--rh);box-sizing:border-box;padding:6px 10px;border-bottom:1px solid var(--ln);overflow:hidden;font-size:13px;line-height:1.25;color:var(--tx)}
+.mn .mr:last-child{border-bottom:0}
+.mg .hg{flex:1;min-width:0;border:0;border-radius:0;background:transparent}
+.mg th{height:56px;box-sizing:border-box}
+.mg td{box-sizing:border-box}
 </style>
 </head>
 <body>
@@ -301,13 +309,14 @@ function odatlar(){
   let tot=0,got=0,best=0,bn='',perfect=0;
   const w0=new Date();w0.setDate(w0.getDate()-((w0.getDay()+6)%7));const wkKeys=[...Array(7)].map((_,i)=>new Date(w0.getFullYear(),w0.getMonth(),w0.getDate()+i).toLocaleDateString('sv'));
   for(let d=1;d<=n;d++){const k=key(d);if(k<=today&&S.hab.length&&S.hab.every(x=>(S.hb[k]||{})[x.id]))perfect++}
+  const NL=[];
   const body=S.hab.map((x,hi)=>{const st=hst(x.id);if(st>best){best=st;bn=x.t}const wn=wkKeys.filter(k=>(S.hb[k]||{})[x.id]).length,col=HC[hi%HC.length];
     const cs=[...Array(n)].map((_,q)=>{const k=key(q+1),on=(S.hb[k]||{})[x.id],fu=k>today;if(!fu){tot++;if(on)got++}return `<td class="${gCls(y,m,q+1,today)}"><button class="cell ${on?'on':''}" style="--hc:${col}" ${fu?'disabled':''} onclick="hbT('${x.id}','${k}')"></button></td>`}).join('');
-    return `<tr><td class="sk">${x.e?`<span style="margin-right:6px">${x.e}</span>`:`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}${esc(x.t)}<br><span class="mu" style="font-size:12px">🔥 ${st}&nbsp; haftada ${wn} kun <button class="x" style="font-size:15px" onclick="delH(${hi})">×</button></span></td>${cs}</tr>`}).join('');
+    NL.push(`<div class="mr">${x.e?`<span style="margin-right:6px">${x.e}</span>`:`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}${esc(x.t)}<br><span class="mu" style="font-size:12px">🔥 ${st}&nbsp; haftada ${wn} kun <button class="x" style="font-size:15px" onclick="delH(${hi})">×</button></span></div>`);return `<tr style="height:64px">${cs}</tr>`}).join('');
   return `<p class="mu" style="margin:0">Odatlar jadvali</p><h1 class="gr">${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h1><p class="mu" style="margin:0 0 4px">Bugun: ${now.getDate()}-${MON[now.getMonth()]}, ${DAYS[now.getDay()]}</p>
   ${habNav()}
   <div class="sum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
-  ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`<div class="hg" data-k="j"><table>${gHead(y,m,n,today)}${body}</table></div>`}
+  ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
   <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${suggCard()}`;
 }
 const CATS=['Ovqat','Transport','O‘qish','Salomatlik','Kiyim','Ko‘ngil ochish','Boshqa'],CIN=['Maosh','Dokon daromadi','Boshqa'];
@@ -750,8 +759,8 @@ function namoz(){
   const T0=dk(),now=new Date(),N=S.nm,d0=new Date(now.getFullYear(),now.getMonth()+NMo,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate(),key=x=>`${y}-${pad(m+1)}-${pad(x)}`;
   let tot=0,got=0,qz=0;
   const today=PR.map(([p,t])=>{const s_=((N.d[T0]||{})[p])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${T0}','${p}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}${ptT(PK[p])?`<small>${ptT(PK[p])}</small>`:''}</button>`}).join('');
-  const head=gHead(y,m,nd,T0);
-  const body=PR.map(([p,t])=>`<tr><td class="sk">${t}</td>${[...Array(nd)].map((_,i)=>{const kk=key(i+1),s_=((N.d[kk]||{})[p])||0,fu=kk>T0;if(!fu&&p!=='vitr'){tot++;if(s_===1)got++;if(s_===2)qz++}return `<td class="${gCls(y,m,i+1,T0)}"><button class="cell ${s_===1?'on':s_===2?'qz':''}" ${fu?'disabled':''} onclick="nmS('${kk}','${p}')"></button></td>`}).join('')}</tr>`).join('');
+  const head=gHead(y,m,nd,T0,1),NL2=PR.map(([p,t])=>`<div class="mr" style="display:flex;align-items:center">${t}</div>`);
+  const body=PR.map(([p,t])=>`<tr style="height:48px">${[...Array(nd)].map((_,i)=>{const kk=key(i+1),s_=((N.d[kk]||{})[p])||0,fu=kk>T0;if(!fu&&p!=='vitr'){tot++;if(s_===1)got++;if(s_===2)qz++}return `<td class="${gCls(y,m,i+1,T0)}"><button class="cell ${s_===1?'on':s_===2?'qz':''}" ${fu?'disabled':''} onclick="nmS('${kk}','${p}')"></button></td>`}).join('')}</tr>`).join('');
   const debt=PR.reduce((a,[p])=>a+(N.debt[p]||0),0),qb=(N.qb||{})[T0]||0;
   const rows=PR.map(([p,t])=>`<div class="row"><span class="t">${t}<br><span class="mu">${N.debt[p]||0} ta qazo</span></span><button class="btn s" style="padding:8px 12px" onclick="qzPay('${p}')">O‘qidim</button><button class="btn s" style="padding:8px 12px" onclick="qzAdd('${p}')">+</button></div>`).join('');
   const lbl={miss:'qazo qilindi',paid:'qazo o‘qildi',add:'eski qazo qo‘shildi'},nmz=Object.fromEntries(PR);
@@ -760,11 +769,12 @@ function namoz(){
   <h2>Namozda o‘qilgan Qur‘on</h2><p class="mu" style="margin:0 0 8px">Namozlarda o‘qigan betlaring odatiy hatm hisobiga qo‘shiladi.</p><div class="in"><button class="btn s" onclick="nmQ(-1)">−1</button><div class="row" style="flex:1;justify-content:center;margin:0"><b>Bugun ${qb} bet</b></div><button class="btn" onclick="nmQ(1)">+1 bet</button></div>
   ${nhCard()}
   <h2>${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h2><div class="in"><button class="btn s" onclick="NMo--;render()">‹</button><button class="btn s" onclick="NMo=0;render()">Shu oy</button><button class="btn s" onclick="NMo++;render()">›</button></div>
-  <div class="sum"><div><span class="mu">O‘qilgan namozlar</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Shu oy qazo</span><b>${qz}</b></div></div><div class="hg" data-k="n"><table>${head}${body}</table></div><p class="mu" style="margin:6px 0 0">Yashil: o‘qildi. Qizil: qazo. Katakni bossang, holat almashadi.</p>
+  <div class="sum"><div><span class="mu">O‘qilgan namozlar</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Shu oy qazo</span><b>${qz}</b></div></div>${mgrid(NL2,head,body,'n',48)}<p class="mu" style="margin:6px 0 0">Yashil: o‘qildi. Qizil: qazo. Katakni bossang, holat almashadi.</p>
   <h2>Qazo namozlar jurnali</h2><div class="sum"><div class="w"><span class="mu">Jami qazo qarzi</span><b>${debt} ta</b></div></div>${rows}${log?`<p class="mu" style="margin:12px 0 6px">So‘nggi yozuvlar</p>${log}`:''}`}
 
 const HC=['var(--ac)','var(--go)','#6f9fd8','#b27ad6','#d96f8f','#c9a227'];
-function gHead(y,m,nd,T0){return `<tr><th class="sk" style="background:var(--c1)"></th>${[...Array(nd)].map((_,i)=>{const d=i+1,kk=`${y}-${pad(m+1)}-${pad(d)}`,wd=new Date(y,m,d).getDay();return `<th class="${kk===T0?'td tdy':''}${wd===0||wd===6?' we':''}"><span style="font-size:11px">${DAYS[wd].slice(0,2)}</span><br><b style="font-size:15px">${d}</b></th>`}).join('')}</tr>`}
+function gHead(y,m,nd,T0,nn){return `<tr>${nn?'':'<th class="sk" style="background:var(--c1)"></th>'}${[...Array(nd)].map((_,i)=>{const d=i+1,kk=`${y}-${pad(m+1)}-${pad(d)}`,wd=new Date(y,m,d).getDay();return `<th class="${kk===T0?'td tdy':''}${wd===0||wd===6?' we':''}"><span style="font-size:11px">${DAYS[wd].slice(0,2)}</span><br><b style="font-size:15px">${d}</b></th>`}).join('')}</tr>`}
+function mgrid(names,head,body,k,rh){return `<div class="mg" style="--rh:${rh}px"><div class="mn"><div class="mh"></div>${names.join('')}</div><div class="hg" data-k="${k}"><table>${head}${body}</table></div></div>`}
 function gCls(y,m,d,T0){const kk=`${y}-${pad(m+1)}-${pad(d)}`,wd=new Date(y,m,d).getDay();return (kk===T0?'tdy':'')+(wd===0||wd===6?' we':'')}
 function fixGrid(hs){if(!document.querySelectorAll)return;document.querySelectorAll('.hg').forEach(e=>{const k=e.dataset.k;if(hs[k]!==undefined)e.scrollLeft=hs[k];else{const t=e.querySelector('th.td');if(t)e.scrollLeft=Math.max(0,t.offsetLeft-e.clientWidth/2+t.offsetWidth/2)}})}
 
