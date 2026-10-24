@@ -1431,10 +1431,30 @@ function aiClose(){const e=document.getElementById('ai');if(e)e.remove()}
 function aiNew(){if(AIT&&AIT.iv)clearInterval(AIT.iv);AIT=null;AIL=false;aiS().chat=[];qsave();aiRender()}
 function aiClear(){if(confirm('Suhbat tarixi o‘chirilsinmi?')){aiS().chat=[];save()}}
 function aiGo(i){if(AIL)return;let t;if(typeof i==='number')t=AIQ[i];else{const e=document.getElementById('aii');t=e?e.value.trim():'';if(e){e.value='';aiGrow(e)}}if(t)aiSend(t)}
+async function aiStream(msgs,ctx,onText){
+  let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
+  if(!s)throw new Error('Hisobga qayta kiring.');
+  let res;
+  try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,messages:msgs,context:ctx})})}
+  catch(e){const r=await aiCall(msgs,ctx);onText(r.text);return r.text}
+  if(!res.ok){let m='';try{const j=await res.json();m=j.error||j.message||''}catch(e){}
+    if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
+    throw new Error(m||('Server xatosi ('+res.status+').'))}
+  const ct=(res.headers&&res.headers.get&&res.headers.get('content-type'))||'';
+  if(ct.includes('application/json')){const j=await res.json();if(j&&j.text){onText(j.text);return j.text}throw new Error((j&&j.error)||'AI javob bermadi.')}
+  if(!res.body||!res.body.getReader){const t=await res.text();onText(t);return t}
+  const rd=res.body.getReader(),dec=new TextDecoder();let full='';
+  while(true){const{done,value}=await rd.read();if(done)break;full+=dec.decode(value,{stream:true});onText(full)}
+  full+=dec.decode();onText(full);return full}
 async function aiSend(text){
   const A=aiS();A.chat.push({r:'user',t:text});if(A.chat.length>40)A.chat.splice(0,A.chat.length-40);AIL=true;aiRender();qsave();
-  try{const hist=A.chat.filter(m=>m.r==='user'||m.r==='model').slice(-10).map(m=>({r:m.r,t:m.t})),r=await aiCall(hist,aiContext());
-    A.chat.push({r:'model',t:r.text});AIL=false;AIT={n:0};const len=r.text.length;AIT.iv=setInterval(()=>{AIT.n+=6;if(AIT.n>=len){clearInterval(AIT.iv);AIT=null}aiRender()},22);aiRender()}
+  const hist=A.chat.filter(m=>m.r==='user'||m.r==='model').slice(-10).map(m=>({r:m.r,t:m.t})),ctx=aiContext();
+  try{
+    const m={r:'model',t:''};let started=false,last=0;
+    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;A.chat.push(m);AIL=false}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}});
+    AIL=false;if(!started)A.chat.push(m);m.t=full;
+    if(!String(full).trim()){A.chat.pop();throw new Error('Bo‘sh javob keldi.')}
+    aiRender()}
   catch(e){AIL=false;A.chat.push({r:'err',t:e.message});aiRender()}
   qsave()}
 async function aiTip(){if(AITL)return;AITL=true;render();
