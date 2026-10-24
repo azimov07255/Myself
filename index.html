@@ -2,7 +2,7 @@
 <html lang="uz">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0a1a2c">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <title>Kunlik tizim</title>
@@ -52,7 +52,7 @@ input[type=text],input[type=password],input[type=number],input:not([type]){flex:
 .goal{background:var(--c1);border-radius:14px;padding:12px 14px;margin-bottom:8px}
 .goal .h{display:flex;justify-content:space-between;gap:8px}
 input[type=range]{width:100%;accent-color:var(--ac);margin:10px 0 0}
-nav{position:fixed;left:0;right:0;bottom:0;display:flex;justify-content:center;background:var(--bg);border-top:1px solid var(--ln);padding:6px 12px calc(env(safe-area-inset-bottom,0px) + 6px)}
+nav{position:fixed;z-index:50;left:0;right:0;bottom:0;display:flex;justify-content:center;background:var(--bg);border-top:1px solid var(--ln);padding:6px 12px calc(env(safe-area-inset-bottom,0px) + 6px)}
 nav div{display:flex;width:100%;max-width:480px;gap:6px}
 nav button{flex:1;padding:6px 0 5px;border:0;border-radius:12px;background:none;color:var(--mu);font:600 10px Figtree,system-ui;display:flex;flex-direction:column;align-items:center;gap:1px}.ni{font-size:19px;line-height:1.15}
 nav button.on{background:var(--c1);color:var(--go)}
@@ -143,6 +143,9 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .dots span{display:inline-block;width:7px;height:7px;margin:0 2px;border-radius:50%;background:var(--mu);animation:dt 1.2s infinite}.dots span:nth-child(2){animation-delay:.2s}.dots span:nth-child(3){animation-delay:.4s}@keyframes dt{0%,80%,100%{opacity:.25;transform:scale(.8)}40%{opacity:1;transform:scale(1.1)}}
 .aiq{display:flex;gap:6px;overflow-x:auto;padding:6px 12px;scrollbar-width:none}.aiq::-webkit-scrollbar{display:none}.aiq button{flex:0 0 auto;padding:8px 12px;border-radius:18px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:600 13px Figtree,system-ui;white-space:nowrap}
 .aif{display:flex;gap:8px;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 10px);align-items:flex-end}.aif textarea{flex:1;min-height:44px;max-height:120px;border-radius:22px;padding:11px 16px;resize:none}.aif .send{width:46px;height:46px;border-radius:50%;border:0;background:var(--ac);color:var(--on-ac);font-size:18px;flex:none}
+html,body{max-width:100%;overflow-x:hidden}
+.ai{left:0;right:0;top:0;bottom:0;width:100%;max-width:100%;box-sizing:border-box;overflow:hidden}.aih,.aic,.aiq,.aif{min-width:0;max-width:100%;box-sizing:border-box}.aih>div{min-width:0}.aif textarea{font-size:16px!important;min-width:0;box-sizing:border-box;width:auto}
+.tbar{display:flex;justify-content:flex-end;gap:8px;margin:0 0 6px}.tbb{height:36px;min-width:36px;padding:0 12px;border-radius:18px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:600 13px Figtree,system-ui}.tbb.ai{background:linear-gradient(135deg,var(--ac),var(--go));color:#fff;border:0}
 </style>
 </head>
 <body>
@@ -229,7 +232,7 @@ function hozir(){
   const act=(f)=>fu?'':f;
   let hero;
   if(isT&&I.b){const b=I.b,sl=b.id.startsWith('uyqu'),fr=Math.min(1,(I.nn-b.s)/(b.e-b.s)),R=2*Math.PI*30,nx=td.find(x=>x.b.s>=b.e&&!x.b.id.startsWith('uyqu'));
-    hero=`<section class="hero"><div style="display:flex;justify-content:space-between;gap:12px"><div><p class="lab">Hozir</p><h1>${esc(b.t)}</h1><p>${hm(b.s)} dan ${hm(b.e)} gacha</p></div><svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="30" fill="none" stroke="rgba(128,128,128,.3)" stroke-width="6"/><circle cx="38" cy="38" r="30" fill="none" stroke="var(--hlab)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${R*fr} ${R}" transform="rotate(-90 38 38)"/><text x="38" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="var(--htx)">${Math.round(fr*100)}%</text></svg></div><p class="mu">${fmt(b.e-I.nn)} qoldi. ${esc(b.n||'')}</p>${nx?`<p class="mu">Keyingisi: ${esc(nx.b.t)}, ${hm(nx.b.s)} da</p>`:''}${sl?'':`<button class="big ${dn[b.id]?'ok':''}" onclick="tg('${b.id}')">${dn[b.id]?'Bajarildi':'Bajardim'}</button>`}</section>`;
+    hero=`<section class="hero"><div style="display:flex;justify-content:space-between;gap:12px"><div><p class="lab">Hozir</p><h1>${esc(b.t)}</h1><p>${b.pt?hm(b.s)+' da':hm(b.s)+' dan '+hm(b.e)+' gacha'}</p></div>${b.pt?'<span style="font-size:46px">📍</span>':`<svg width="76" height="76" viewBox="0 0 76 76"><circle cx="38" cy="38" r="30" fill="none" stroke="rgba(128,128,128,.3)" stroke-width="6"/><circle cx="38" cy="38" r="30" fill="none" stroke="var(--hlab)" stroke-width="6" stroke-linecap="round" stroke-dasharray="${R*fr} ${R}" transform="rotate(-90 38 38)"/><text x="38" y="43" text-anchor="middle" font-size="14" font-weight="700" fill="var(--htx)">${Math.round(fr*100)}%</text></svg>`}</div><p class="mu">${b.pt?'':fmt(b.e-I.nn)+' qoldi. '}${esc(b.n||'')}</p>${nx?`<p class="mu">Keyingisi: ${esc(nx.b.t)}, ${hm(nx.b.s)} da</p>`:''}${sl?'':`<button class="big ${dn[b.id]?'ok':''}" onclick="tg('${b.id}')">${dn[b.id]?'Bajarildi':'Bajardim'}</button>`}</section>`;
   }else if(isT)hero=`<section class="hero"><p class="lab">Hozir</p><h1>Bo‘sh vaqt</h1><p class="mu">${I.nx?`Keyingisi: ${esc(I.nx.t)}, ${hm(I.nx.s)} da.`:'Bugungi jadval tugadi.'}</p></section>`;
   else hero=`<section class="hero"><p class="lab">${fu?'Kelgusi kun rejasi':'O‘tgan kun'}</p><h1>${d.getDate()} ${MON[d.getMonth()]}</h1><p>${DAYS[day]}</p><p class="mu">${tot} ta belgi, ${got} tasi bajarilgan, ball ${sc}%</p><button class="big" onclick="vd('${T0}')">Bugunga qaytish</button></section>`;
   const nmn=new Date(),nowM=nmn.getHours()*60+nmn.getMinutes(),part=s=>s<720?'Ertalab':s<1080?'Kunduzi':s<1320?'Kechqurun':'Tun';
@@ -238,12 +241,12 @@ function hozir(){
     const x=dn[b.id],sl=b.id.startsWith('uyqu'),cur=isT&&I.b&&I.b.id===b.id,ended=isT?(b.e<=nowM):!fu,miss=ended&&!x&&!sl&&!cur,f=act(`tg('${b.id}')`);
     if(!sl){if(x)cD++;else if(miss)cM++;else cL++}
     let st='';
-    if(x)st='Bajarildi';else if(cur)st=fmt(b.e-I.nn).trim()+' qoldi';else if(miss)st='O‘tkazib yuborilgan';else if(isT&&b.s>nowM&&b.s-nowM<=180)st=fmt(b.s-nowM).trim()+'dan keyin';
+    if(x)st='Bajarildi';else if(cur)st=b.pt?'Hozir vaqti keldi':fmt(b.e-I.nn).trim()+' qoldi';else if(miss)st='O‘tkazib yuborilgan';else if(isT&&b.s>nowM&&b.s-nowM<=180)st=fmt(b.s-nowM).trim()+'dan keyin';
     let o='';
     if(part(b.s)!==lastP){lastP=part(b.s);o+=`<p class="mu pt">${lastP}</p>`}
     if(isT&&!I.b&&!lineDone&&b.s>nowM){lineDone=true;o+=`<div class="nowl"><span>${hm(nowM)}</span></div>`}
     const fr=cur?Math.min(100,(I.nn-b.s)/(b.e-b.s)*100):0;
-    return o+`<div class="tl ${x?'done':cur?'now':miss?'miss':''}" style="animation-delay:${Math.min(ix++,10)*.05+.15}s"><div class="tt"><b>${hm(b.s)}</b><span>${fmt(b.e-b.s).trim()}</span></div><div class="tc"><span class="ck" onclick="${f}">${x?'✓':''}</span></div><div class="tb"><div style="display:flex;justify-content:space-between;gap:8px"><span class="t" onclick="${f}">${esc(b.t)}</span><button class="x" onclick="eb(${i})">✎</button></div>${st?`<p class="mu" style="margin:2px 0 0;font-size:13px${miss?';color:var(--bad)':''}">${st}</p>`:''}${ALLV?`<p class="mu" style="margin:2px 0 0;font-size:12px">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</p>`:''}${cur?`<div class="bar" style="margin-top:8px"><i style="width:${fr}%"></i></div>`:''}</div></div>`}).join('');
+    return o+`<div class="tl ${x?'done':cur?'now':miss?'miss':''}" style="animation-delay:${Math.min(ix++,10)*.05+.15}s"><div class="tt"><b>${hm(b.s)}</b><span>${b.pt?'📍 lahza':fmt(b.e-b.s).trim()}</span></div><div class="tc"><span class="ck" onclick="${f}">${x?'✓':''}</span></div><div class="tb"><div style="display:flex;justify-content:space-between;gap:8px"><span class="t" onclick="${f}">${esc(b.t)}</span><button class="x" onclick="eb(${i})">✎</button></div>${st?`<p class="mu" style="margin:2px 0 0;font-size:13px${miss?';color:var(--bad)':''}">${st}</p>`:''}${ALLV?`<p class="mu" style="margin:2px 0 0;font-size:12px">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</p>`:''}${cur&&!b.pt?`<div class="bar" style="margin-top:8px"><i style="width:${fr}%"></i></div>`:''}</div></div>`}).join('');
   const sm=`<div style="margin-bottom:4px"><span class="chip" style="color:var(--ac)">${cD} bajarildi</span><span class="chip">${cL} qoldi</span>${cM?`<span class="chip bad">${cM} o‘tkazildi</span>`:''}</div>`;
   const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${act(fn)}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
   const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,(x.e?x.e+' ':'')+x.t)).join(''):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
@@ -484,11 +487,12 @@ function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
 }
 
+const topbar=()=>`<div class="tbar"><button class="tbb" onclick="srOpen()" aria-label="Qidiruv">🔍</button>${sb&&UID?`<button class="tbb ai" onclick="aiOpen()" aria-label="Yordamchi">✨ Yordamchi</button>`:''}</div>`;
 function navOff(){const n=document.getElementById('navc');if(n&&n.dataset.s){n.innerHTML='';n.dataset.s=''}}
 function drawNav(){
   let n=document.getElementById('navc');if(!n){n=document.createElement('div');n.id='navc';document.body.appendChild(n)}
   const sig=tab+'|'+SO+'|'+(sb&&UID?1:0);if(n.dataset.s===sig)return;n.dataset.s=sig;
-  n.innerHTML=`<nav><div>${[['h','☀️','Bugun'],['q','📖','Qur‘on'],['o','✅','Odat'],['m','🎯','Maqsad'],['e','📚','O‘qish'],['p','💰','Pul'],['s','⚙️','Sozlama']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')"><span class="ni">${x[1]}</span><span>${x[2]}</span></button>`).join('')}</div></nav>${SO?'':`<button class="sbtn" onclick="srOpen()" aria-label="Qidiruv">🔍</button>`+(sb&&UID?`<button class="sbtn ai" onclick="aiOpen()" aria-label="Yordamchi">✨</button>`:'')}`}
+  n.innerHTML=`<nav><div>${[['h','☀️','Bugun'],['q','📖','Qur‘on'],['o','✅','Odat'],['m','🎯','Maqsad'],['e','📚','O‘qish'],['p','💰','Pul'],['s','⚙️','Sozlama']].map(x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')"><span class="ni">${x[1]}</span><span>${x[2]}</span></button>`).join('')}</div></nav>`}
 function render(){
   const a=$('#app');
   if(sb&&!UID){navOff();if(!$('#lg'))a.innerHTML=authView();return}
@@ -499,7 +503,7 @@ function render(){
   const ss=document.querySelectorAll?[...document.querySelectorAll('.seg.sc')].map(e=>({s:e.textContent.slice(0,30),l:e.scrollLeft})):[];
   const hs={};if(document.querySelectorAll)document.querySelectorAll('.hg').forEach(e=>{hs[e.dataset.k]=e.scrollLeft});
   const sy=window.scrollY||0;
-  a.innerHTML=stick(v);
+  a.innerHTML=stick((SO?'':topbar())+v);
   drawNav();
   fixGrid(hs);fixSeg(ss);
   if(sy>0)window.scrollTo(0,sy);
@@ -520,13 +524,24 @@ function dg(i){if(confirm('Maqsad o‘chirilsinmi?')){S.goals.splice(i,1);save()
 // ---- Jadval (tahrirlanadigan) ----
 const bl=()=>S.bl||BL;
 const t2m=s=>{const p=String(s||'0:0').split(':').map(Number);return p[0]*60+p[1]};
-function eb(i){BV='j';const b=i>=0?bl()[i]:null;ED=b?{i,t:b.t,n:b.n||'',s:hm(b.s),e:hm(b.e),d:[...b.d]}:{i:-1,t:'',n:'',s:'09:00',e:'10:00',d:[1,2,3,4,5]};render();scrollTo(0,0)}
+function eb(i){BV='j';const b=i>=0?bl()[i]:null;ED=b?{i,t:b.t,n:b.n||'',s:hm(b.s),e:hm(b.e),pt:!!b.pt,d:[...b.d]}:{i:-1,t:'',n:'',s:'09:00',e:'10:00',pt:0,d:[1,2,3,4,5]};render();scrollTo(0,0)}
 function ed(i){const d=ED.d,j=d.indexOf(i);j<0?d.push(i):d.splice(j,1);render()}
-function esv(){if(!ED.t.trim()||!ED.d.length)return;const s=t2m(ED.s);let e=t2m(ED.e);if(e<=s)e+=1440;const L=bl().map(b=>({...b})),o={id:ED.i>=0?L[ED.i].id:'n'+Date.now(),t:ED.t.trim(),n:ED.n,s,e,d:ED.d};if(ED.i>=0)L[ED.i]=o;else L.push(o);S.bl=L;ED=null;save()}
+function esv(){
+  if(!ED.t.trim())return alert('Reja nomini yozing.');
+  if(!ED.d.length)return alert('Kamida bitta kunni tanlang.');
+  if(!ED.s)return alert('Boshlanish vaqtini kiriting.');
+  if(!ED.pt&&!ED.e)return alert('Tugash vaqtini kiriting. Tugash vaqti bo‘lmaydigan reja uchun “Bir lahzalik”ni tanlang.');
+  const s=t2m(ED.s);let e;if(ED.pt)e=s+15;else{e=t2m(ED.e);if(e<=s)e+=1440}
+  const L=bl().map(b=>({...b})),o={id:ED.i>=0?L[ED.i].id:'n'+Date.now(),t:ED.t.trim(),n:ED.n,s,e,pt:!!ED.pt,d:ED.d};
+  if(ED.i>=0)L[ED.i]=o;else L.push(o);S.bl=L;ED=null;save()}
 function edl(){if(!confirm('Reja o‘chirilsinmi?'))return;const L=bl().map(b=>({...b}));L.splice(ED.i,1);S.bl=L;ED=null;save()}
 function edForm(){if(!ED)return '';
   const dys=[1,2,3,4,5,6,0].map(i=>`<button class="${ED.d.includes(i)?'on':''}" onclick="ed(${i})">${DAYS[i].slice(0,2)}</button>`).join('');
-  return `<div class="goal" style="border:1px solid var(--go);margin-top:14px"><b>${ED.i>=0?'Rejani tahrirlash':'Yangi reja'}</b><div class="in" style="margin-top:10px"><input placeholder="Nomi" value="${esc(ED.t)}" oninput="ED.t=this.value"></div><div class="in"><input type="time" value="${ED.s}" oninput="ED.s=this.value"><input type="time" value="${ED.e}" oninput="ED.e=this.value"></div><div class="in"><input placeholder="Izoh (ixtiyoriy)" value="${esc(ED.n)}" oninput="ED.n=this.value"></div><div class="seg">${dys}</div><div class="in"><button class="btn" onclick="esv()">Saqlash</button><button class="btn s" onclick="ED=null;render()">Bekor</button>${ED.i>=0?'<button class="btn s" onclick="edl()">O‘chirish</button>':''}</div></div>`}
+  const tin=(l,f,v)=>`<div style="flex:1;min-width:0"><span class="mu" style="font-size:12px">${l}</span><input type="time" style="width:100%" value="${v}" oninput="ED.${f}=this.value"></div>`;
+  return `<div class="goal" style="border:1px solid var(--go);margin-top:14px"><b>${ED.i>=0?'Rejani tahrirlash':'Yangi reja'}</b><div class="in" style="margin-top:10px"><input placeholder="Nomi, masalan: Uyg‘onish" value="${esc(ED.t)}" oninput="ED.t=this.value"></div>
+  <div class="seg" style="margin-bottom:8px"><button class="${ED.pt?'':'on'}" onclick="ED.pt=0;render()">⏱ Vaqt oralig‘i</button><button class="${ED.pt?'on':''}" onclick="ED.pt=1;render()">📍 Bir lahzalik</button></div>
+  <div class="in">${tin('Boshlanish','s',ED.s)}${ED.pt?'':tin('Tugash','e',ED.e)}</div>${ED.pt?'<p class="mu" style="margin:0 0 8px;font-size:13px">Tugash vaqti kerak bo‘lmagan reja uchun, masalan 05:00 da uyg‘onish.</p>':''}
+  <div class="in"><input placeholder="Izoh (ixtiyoriy)" value="${esc(ED.n)}" oninput="ED.n=this.value"></div><div class="seg">${dys}</div><div class="in"><button class="btn" onclick="esv()">Saqlash</button><button class="btn s" onclick="ED=null;render()">Bekor</button>${ED.i>=0?'<button class="btn s" onclick="edl()">O‘chirish</button>':''}</div></div>`}
 
 // ---- Uyg‘onish tizimi ----
 const dAgo=i=>new Date(Date.now()-i*864e5).toLocaleDateString('sv');
@@ -1386,10 +1401,18 @@ function aiContext(){
     ln('Shaxsiy pul (shu oy): kirim '+num(i)+', chiqim '+num(u)+(tc?', eng ko‘p sarf: '+tc[0]:'')+(S.fin.budget?', oylik limit '+num(S.fin.budget):''))});
   return o.join('\n')}
 async function aiCall(msgs,ctx){
-  const r=await sb.functions.invoke('ai-assistant',{body:{action:'chat',messages:msgs,context:ctx}});
+  let r;try{r=await sb.functions.invoke('ai-assistant',{body:{action:'chat',messages:msgs,context:ctx}})}catch(x){throw new Error('Serverga ulanib bo‘lmadi. Internetni tekshiring.')}
   if(!r.error&&r.data&&r.data.text)return r.data;
-  let m='AI javob bermadi. Birozdan keyin urinib ko‘ring.';try{if(r.error&&r.error.context){const j=await r.error.context.json();if(j&&j.error)m=j.error}else if(r.data&&r.data.error)m=r.data.error}catch(e){}
-  throw new Error(m)}
+  let m='';const e=r.error;
+  if(e&&e.context&&typeof e.context.json==='function'){
+    const st=e.context.status;let j=null;try{j=await (e.context.clone?e.context.clone():e.context).json()}catch(x){}
+    m=(j&&(j.error||j.message))||'';
+    if(st===404||(j&&j.code==='NOT_FOUND'))m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
+    else if(st===401&&!m)m='Hisobga qayta kiring.';
+    else if(!m)m='Server xatosi ('+(st||'?')+').'}
+  else if(e)m='Serverga ulanib bo‘lmadi: '+(e.message||'');
+  else if(r.data&&r.data.error)m=r.data.error;
+  throw new Error(m||'AI javob bermadi.')}
 function aiBuild(){const old=document.getElementById('ai');if(old)old.remove();const d=document.createElement('div');d.id='ai';d.className='ai';
   d.innerHTML=`<div class="aih"><button class="x" style="font-size:22px" onclick="aiClose()">✕</button><div style="flex:1"><b>✨ Yordamchi</b><div class="mu" style="font-size:12px">Kunlik tizim AI</div></div><button class="btn s" style="padding:7px 12px" onclick="aiNew()">Yangi suhbat</button></div><div id="aic" class="aic"></div><div id="aiq" class="aiq">${AIQ.map((q,i)=>`<button onclick="aiGo(${i})">${q}</button>`).join('')}</div><div class="aif"><textarea id="aii" rows="1" placeholder="Savol yoz..." oninput="aiGrow(this)"></textarea><button class="send" onclick="aiGo()">➤</button></div>`;
   document.body.appendChild(d)}
