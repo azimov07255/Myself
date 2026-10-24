@@ -1363,7 +1363,7 @@ const stick=html=>html.replace(/<h2([^>]*)>([^<]+)/g,(m,a,t)=>{const k=STKK.find
 
 // ================= AI YORDAMCHI =================
 const AIQ=['Bugun nimaga e‘tibor qarataman?','Haftamni tahlil qil','Ertangi kunni rejalashtir','Maqsadlarim bo‘yicha maslahat ber','Odatlarimni qanday yaxshilayman?','Qur‘on yodlash va takror bo‘yicha maslahat','IELTS uchun reja tuz','Meni ruhlantir'];
-let AIL=false,AIT=null,AITL=false;
+let AIL=false,AIT=null,AITL=false,AIW=null,AIT0=0;
 const aiS=()=>{S.ai=S.ai||{};S.ai.chat=S.ai.chat||[];S.ai.sh=S.ai.sh||{core:1,quran:1,study:1,health:1,money:0};S.ai.tip=S.ai.tip||{};return S.ai};
 const md=t=>{let s=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|\n)[-*•] (.+)/g,'$1<li>$2</li>').replace(/(^|\n)\d+\. (.+)/g,'$1<li>$2</li>');
   s=s.replace(/(<li>.*<\/li>)(\n?<li>.*<\/li>)*/g,m=>'<ul>'+m.replace(/\n/g,'')+'</ul>');return s.replace(/\n/g,'<br>')};
@@ -1424,19 +1424,20 @@ function aiBuild(){const old=document.getElementById('ai');if(old)old.remove();c
 function aiGrow(el){el.style.height='auto';el.style.height=Math.min(120,el.scrollHeight)+'px'}
 function aiRender(){const c=document.getElementById('aic');if(!c)return;const A=aiS(),ch=A.chat;
   const hi=`<div class="bb a">Assalomu alaykum${S.name?', '+esc(S.name):''}! Men sening shaxsiy yordamchingman. Kuning, odatlaring, Qur‘on, IELTS va maqsadlaring haqida ma‘lumotlaringni ko‘raman, shunga qarab maslahat beraman. Pastdagi savollardan birini tanla yoki o‘zing yoz.</div>`;
-  c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t):md(t)}</div>`}).join('')+(AIL?'<div class="bb a"><span class="dots"><span></span><span></span><span></span></span></div>':'');
+  c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t):md(t)+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s</span></div>`:'');
   c.scrollTop=c.scrollHeight}
 function aiOpen(msg){if(!sb||!UID){alert('AI yordamchi uchun hisobga kirgan bo‘lish kerak.');return}aiBuild();aiRender();if(msg)aiSend(msg)}
 function aiClose(){const e=document.getElementById('ai');if(e)e.remove()}
 function aiNew(){if(AIT&&AIT.iv)clearInterval(AIT.iv);AIT=null;AIL=false;aiS().chat=[];qsave();aiRender()}
 function aiClear(){if(confirm('Suhbat tarixi o‘chirilsinmi?')){aiS().chat=[];save()}}
 function aiGo(i){if(AIL)return;let t;if(typeof i==='number')t=AIQ[i];else{const e=document.getElementById('aii');t=e?e.value.trim():'';if(e){e.value='';aiGrow(e)}}if(t)aiSend(t)}
-async function aiStream(msgs,ctx,onText){
+async function aiStream(msgs,ctx,onText,onMeta){
   let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
   if(!s)throw new Error('Hisobga qayta kiring.');
-  let res;
-  try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,messages:msgs,context:ctx})})}
-  catch(e){const r=await aiCall(msgs,ctx);onText(r.text);return r.text}
+  let res;const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),45000);
+  try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,messages:msgs,context:ctx})})}
+  catch(e){clearTimeout(to);if(e&&e.name==='AbortError')throw new Error('AI 45 soniyada javob bermadi. Birozdan keyin urinib ko‘ring.');const r=await aiCall(msgs,ctx);onText(r.text);return r.text}
+  clearTimeout(to);try{const tm=res.headers&&res.headers.get&&res.headers.get('x-timing');if(tm&&onMeta)onMeta(tm)}catch(e){}
   if(!res.ok){let m='';try{const j=await res.json();m=j.error||j.message||''}catch(e){}
     if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
     throw new Error(m||('Server xatosi ('+res.status+').'))}
@@ -1447,12 +1448,13 @@ async function aiStream(msgs,ctx,onText){
   while(true){const{done,value}=await rd.read();if(done)break;full+=dec.decode(value,{stream:true});onText(full)}
   full+=dec.decode();onText(full);return full}
 async function aiSend(text){
-  const A=aiS();A.chat.push({r:'user',t:text});if(A.chat.length>40)A.chat.splice(0,A.chat.length-40);AIL=true;aiRender();qsave();
+  const A=aiS();A.chat.push({r:'user',t:text});if(A.chat.length>40)A.chat.splice(0,A.chat.length-40);AIL=true;AIT0=Date.now();clearInterval(AIW);AIW=setInterval(()=>{if(AIL)aiRender();else{clearInterval(AIW);AIW=null}},1000);aiRender();qsave();
   const hist=A.chat.filter(m=>m.r==='user'||m.r==='model').slice(-10).map(m=>({r:m.r,t:m.t})),ctx=aiContext();
   try{
-    const m={r:'model',t:''};let started=false,last=0;
-    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;A.chat.push(m);AIL=false}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}});
+    const m={r:'model',t:''};let started=false,last=0,meta='';
+    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;A.chat.push(m);AIL=false}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}},h=>{meta=h});
     AIL=false;if(!started)A.chat.push(m);m.t=full;
+    const g=/gemini=(\d+)/.exec(meta),sv=/auth=(\d+),db=(\d+)/.exec(meta);m.ms=((Date.now()-AIT0)/1000).toFixed(1)+' s'+(g?' (Gemini '+(g[1]/1000).toFixed(1)+' s'+(sv?', server '+((+sv[1]+ +sv[2])/1000).toFixed(1)+' s':'')+')':'');
     if(!String(full).trim()){A.chat.pop();throw new Error('Bo‘sh javob keldi.')}
     aiRender()}
   catch(e){AIL=false;A.chat.push({r:'err',t:e.message});aiRender()}
