@@ -67,7 +67,7 @@ input[type=date],select{flex:1;min-width:0;padding:12px 14px;border-radius:12px;
 textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:inherit;resize:vertical}
 .gr{font-size:28px;font-weight:800;line-height:1.1;margin:4px 0 6px}.qt{font-style:italic;margin:0}
 .wk{display:grid;grid-template-columns:repeat(7,1fr);gap:6px;margin-top:14px}.wd{background:var(--c1);border:1px solid var(--ln);border-radius:14px;padding:8px 0;text-align:center;font-size:12px;color:var(--mu)}.wd b{display:block;font:700 18px Fraunces,serif;color:var(--tx)}.wd.on{background:var(--ac);border-color:var(--ac)}.wd.on,.wd.on b{color:var(--on-ac)}.dot{display:block;width:5px;height:5px;border-radius:50%;margin:4px auto 0}.dot.y{background:var(--go)}.wd.on .dot.y{background:var(--on-ac)}
-.hg{overflow-x:auto;border-radius:14px;background:var(--c1);border:1px solid var(--ln)}table{border-collapse:separate;border-spacing:0}th,td{padding:6px 3px;font-size:12px;color:var(--mu);font-weight:400;text-align:center;border-bottom:1px solid var(--ln)}tr:last-child td{border-bottom:0}th.td{color:var(--go);font-weight:700}.sk{position:sticky;left:0;background:var(--c1);text-align:left;min-width:150px;max-width:150px;padding:8px 10px;color:var(--tx);font-size:14px;z-index:2;box-shadow:6px 0 8px -6px rgba(0,0,0,.25)}.tdy{background:color-mix(in srgb,var(--go) 16%,transparent)}.we{background:rgba(128,128,128,.08)}
+.hg{overflow-x:auto;overflow-y:hidden;overscroll-behavior-x:contain;touch-action:pan-x pan-y;border-radius:14px;background:var(--c1);border:1px solid var(--ln)}table{border-collapse:separate;border-spacing:0}th,td{padding:6px 3px;font-size:12px;color:var(--mu);font-weight:400;text-align:center;border-bottom:1px solid var(--ln)}tr:last-child td{border-bottom:0}th.td{color:var(--go);font-weight:700}.sk{position:sticky;left:0;background:var(--c1);text-align:left;min-width:150px;max-width:150px;padding:8px 10px;color:var(--tx);font-size:13px;line-height:1.25;z-index:2;box-shadow:6px 0 8px -6px rgba(0,0,0,.25)}.tdy{background:color-mix(in srgb,var(--go) 16%,transparent)}.we{background:rgba(128,128,128,.08)}
 .cell{width:30px;height:30px;border-radius:50%;border:1px solid var(--ln);background:var(--c1);padding:0;display:grid;place-items:center}.cell.on{background:var(--hc,var(--ac));border-color:var(--hc,var(--ac))}.cell.on::after,.cell.qz::after{content:'✓';color:#fff;font-size:15px;line-height:1}.cell.qz::after{content:'✗'}.cell:disabled{opacity:.35}
 .mood{display:flex;justify-content:space-between}.mood button{font-size:26px;background:none;border:2px solid transparent;border-radius:50%;padding:4px;opacity:.55}.mood .on{opacity:1;border-color:var(--go)}
 .gl{width:28px;height:34px;border-radius:6px 6px 12px 12px;border:2px solid var(--ln);background:none;padding:0}.gl.on{background:var(--ac);border-color:var(--ac)}
@@ -792,7 +792,7 @@ function ktFin(id){const b=ktB(id);if(b.n){ktLog(b,b.n-b.p);b.p=b.n}b.st='t';b.f
 function ktSt(id,st){const b=ktB(id);b.st=st;if(st==='o')b.fin='';save()}
 function ktSum(id,v){ktB(id).sum=v;save()}
 function ktR(id,v){ktB(id).r=v;save()}
-function ktDel(id){if(confirm('Kitob o‘chirilsinmi?')){S.kt.books=S.kt.books.filter(x=>x.id!==id);idbDel(id).catch(()=>{});rdClose();save()}}
+function ktDel(id){if(confirm('Kitob o‘chirilsinmi?')){S.kt.books=S.kt.books.filter(x=>x.id!==id);idbDel(id).catch(()=>{});cloudDel(id);rdClose();save()}}
 function ktGoal(v){S.kt.goal=Math.max(1,+v||20);save()}
 function kitob(){
   const K=S.kt,k=dk(),tp=K.log.filter(x=>x.d===k).reduce((a,x)=>a+x.n,0),goal=K.goal||20,mo=k.slice(0,7),mp=K.log.filter(x=>x.d.startsWith(mo)).reduce((a,x)=>a+x.n,0);
@@ -801,13 +801,13 @@ function kitob(){
   const area=(b)=>`<textarea placeholder="Xulosa: asosiy fikrlar va o‘rganganlarim" onchange="ktSum(${b.id},this.value)">${esc(b.sum||'')}</textarea>`;
   const reading=K.books.filter(b=>b.st==='o').map(b=>`<div class="goal"><div class="h"><b style="font:700 18px Fraunces,serif">${esc(b.t)}</b><button class="x" onclick="ktDel(${b.id})">×</button></div>${b.a?`<p class="mu" style="margin:0">${esc(b.a)}</p>`:''}<div class="bar" style="margin:8px 0"><i style="width:${b.n?Math.min(100,b.p/b.n*100):0}%"></i></div><p class="mu" style="margin:0 0 8px">${b.p}${b.n?' / '+b.n:''} bet</p>
     <div class="in"><input id="kp${b.id}" type="number" inputmode="numeric" placeholder="Hozirgi bet" value="${b.p||''}"><button class="btn" onclick="ktPg(${b.id})">Saqla</button></div>
-    <div class="in">${[5,10,20].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="ktQ(${b.id},${n})">+${n}</button>`).join('')}<button class="btn" style="flex:1;padding:10px 0" onclick="ktFin(${b.id})">Tugatdim</button></div>${b.pdf?`<div class="in"><button class="btn" style="flex:1" onclick="rdOpen(${b.id})">PDF o‘qish (${b.cur||1}-bet)</button><button class="btn s" onclick="ktPdfDel(${b.id})">PDF o‘chirish</button></div>`:`<label class="btn s" style="display:block;text-align:center;margin:6px 0;cursor:pointer">PDF qo‘shish<input type="file" accept="application/pdf" style="display:none" onchange="ktPdf(this,${b.id})"></label>`}${area(b)}</div>`).join('');
+    <div class="in">${[5,10,20].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="ktQ(${b.id},${n})">+${n}</button>`).join('')}<button class="btn" style="flex:1;padding:10px 0" onclick="ktFin(${b.id})">Tugatdim</button></div>${b.pdf?`<p class="mu" style="margin:4px 0;font-size:12px">${PUPL[b.id]?'Bulutga yuklanmoqda…':b.cloud?'Bulutda saqlangan: boshqa qurilmada ham ochiladi.':'Faqat shu telefonda saqlangan.'}</p>`:''}${b.pdf?`<div class="in"><button class="btn" style="flex:1" onclick="rdOpen(${b.id})">PDF o‘qish (${b.cur||1}-bet)</button><button class="btn s" onclick="ktPdfDel(${b.id})">PDF o‘chirish</button></div>`:`<label class="btn s" style="display:block;text-align:center;margin:6px 0;cursor:pointer">PDF qo‘shish<input type="file" accept="application/pdf" style="display:none" onchange="ktPdf(this,${b.id})"></label>`}${area(b)}</div>`).join('');
   const planned=K.books.filter(b=>b.st==='r').map(b=>`<div class="row"><span class="t">${esc(b.t)}<br><span class="mu">${esc(b.a||'')}${b.n?' '+b.n+' bet':''}</span></span><button class="btn s" style="padding:8px 12px" onclick="ktSt(${b.id},'o')">Boshlash</button><button class="x" onclick="ktDel(${b.id})">×</button></div>`).join('');
   const done=fin.slice().reverse().map(b=>`<div class="goal"><div class="h"><b style="font:700 17px Fraunces,serif">${esc(b.t)}</b><button class="x" onclick="ktDel(${b.id})">×</button></div><p class="mu" style="margin:0">${esc(b.a||'')} Tugatilgan: ${b.fin||''}</p><div class="stars" style="margin:6px 0 4px">${[1,2,3,4,5].map(n=>`<button class="${(b.r||0)>=n?'on':''}" style="color:var(--mu)" onclick="ktR(${b.id},${n})">★</button>`).join('')}</div>${area(b)}<button class="ghost" style="margin-top:6px" onclick="ktSt(${b.id},'o')">Qayta o‘qish</button></div>`).join('');
   return `<section class="hero"><p class="lab">Kitob o‘qish</p><h1 style="font-size:34px">${tp} / ${goal} bet</h1><div class="bar" style="margin:8px 0"><i style="width:${Math.min(100,tp/goal*100)}%"></i></div><p class="mu">Bugungi maqsad. ${st} kun ketma-ket o‘qigansan. Shu oy ${mp} bet, bu yil ${yr} ta kitob tugatilgan.</p></section>
   <div class="in" style="margin-top:8px"><input type="number" value="${goal}" onchange="ktGoal(this.value)"><span class="mu" style="align-self:center;white-space:nowrap">kunlik maqsad, bet</span></div>
   ${reading||'<p class="mu">Hozir o‘qilayotgan kitob yo‘q. Pastdan birinchi kitobingni qo‘sh.</p>'}
-  <h2>Kitob qo‘shish</h2><div class="in"><input id="kt" placeholder="Kitob nomi"></div><div class="in"><input id="ka" placeholder="Muallif"><input id="kn" type="number" placeholder="Betlar" style="max-width:90px"></div><div class="in"><button class="btn" style="flex:1" onclick="ktAdd('o')">O‘qishni boshlash</button><button class="btn s" style="flex:1" onclick="ktAdd('r')">Rejaga qo‘shish</button></div><label class="btn s" style="display:block;text-align:center;cursor:pointer">PDF yuklab o‘qishni boshlash<input type="file" accept="application/pdf" style="display:none" onchange="ktPdf(this)"></label><p class="mu" style="margin:6px 0 0;font-size:12px">PDF fayllar faqat shu telefonda saqlanadi, boshqa qurilmaga o‘tmaydi va zaxira nusxaga kirmaydi.</p>
+  <h2>Kitob qo‘shish</h2><div class="in"><input id="kt" placeholder="Kitob nomi"></div><div class="in"><input id="ka" placeholder="Muallif"><input id="kn" type="number" placeholder="Betlar" style="max-width:90px"></div><div class="in"><button class="btn" style="flex:1" onclick="ktAdd('o')">O‘qishni boshlash</button><button class="btn s" style="flex:1" onclick="ktAdd('r')">Rejaga qo‘shish</button></div><label class="btn s" style="display:block;text-align:center;cursor:pointer">PDF yuklab o‘qishni boshlash<input type="file" accept="application/pdf" style="display:none" onchange="ktPdf(this)"></label><p class="mu" style="margin:6px 0 0;font-size:12px">PDF telefonda saqlanadi va hisobga kirgan bo‘lsang, bulutga ham yuklanadi (har fayl 50 MB gacha). Zaxira nusxaga PDF kirmaydi.</p>
   ${planned?`<h2>O‘qish rejasi</h2>${planned}`:''}${done?`<h2>Tugatilgan kitoblar</h2>${done}`:''}`}
 
 // ---- Oylik hisobot ----
@@ -915,7 +915,7 @@ function nhCard(){
   <div class="in">${[0.5,1,2,3].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="nhAdd(${n})">+${n}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="nhAdd(0,1)">Navbatdagi surani to‘liq o‘qidim</button>
   <p class="mu" style="margin:8px 0 0">Bugun namozda: ${r1(tp)} bet</p>${rows}${N.hist.length?`<p class="mu" style="margin:10px 0 0">Tugatilgan hatmlar: ${N.hist.map(x=>x.d).join(', ')}</p>`:''}</div>`}
 
-let PM=0,PMO=false;
+let PM=0,PMO=false,PUPL={};
 let SO=false,SQ='',SRL=[];
 function ptMonth(){
   const P=S.pt,now=new Date(),d0=new Date(now.getFullYear(),now.getMonth()+PM,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate();
@@ -988,6 +988,13 @@ const IDBO=()=>new Promise((res,rej)=>{const r=indexedDB.open('trk-files',1);r.o
 async function idbSet(k,v){const d=await IDBO();return new Promise((res,rej)=>{const t=d.transaction('pdf','readwrite');t.objectStore('pdf').put(v,k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
 async function idbGet(k){const d=await IDBO();return new Promise((res,rej)=>{const q=d.transaction('pdf').objectStore('pdf').get(k);q.onsuccess=()=>res(q.result);q.onerror=()=>rej(q.error)})}
 async function idbDel(k){const d=await IDBO();return new Promise((res,rej)=>{const t=d.transaction('pdf','readwrite');t.objectStore('pdf').delete(k);t.oncomplete=()=>res();t.onerror=()=>rej(t.error)})}
+
+function toast(t){let e=document.getElementById('toast');if(!e){e=document.createElement('div');e.id='toast';e.style.cssText='position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 140px);background:#222;color:#fff;padding:10px 16px;border-radius:14px;z-index:200;font-size:14px;max-width:86%;text-align:center';document.body.appendChild(e)}e.textContent=t;e.style.display='block';clearTimeout(e._t);e._t=setTimeout(()=>{e.style.display='none'},3500)}
+async function cloudUp(b,buf){if(!sb||!UID)return;PUPL[b.id]=1;render();
+  try{const r=await sb.storage.from('books').upload(UID+'/'+b.id+'.pdf',new Blob([buf],{type:'application/pdf'}),{upsert:true,contentType:'application/pdf'});if(r.error)throw r.error;b.cloud=1;save();toast('PDF bulutga saqlandi')}
+  catch(e){toast('Bulutga yuklanmadi: '+(e.message||e)+'. PDF faqat shu telefonda qoldi.')}
+  delete PUPL[b.id];render()}
+function cloudDel(id){if(sb&&UID)sb.storage.from('books').remove([UID+'/'+id+'.pdf']).catch(()=>{})}
 let PDFL=null;
 function loadPdfjs(){return PDFL||(PDFL=new Promise((res,rej)=>{const s=document.createElement('script');s.src='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.min.js';s.onload=()=>{window.pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdn.jsdelivr.net/npm/pdfjs-dist@3.11.174/build/pdf.worker.min.js';res(window.pdfjsLib)};s.onerror=()=>{PDFL=null;rej(new Error('pdf.js yuklanmadi'))};document.head.appendChild(s)}))}
 async function ktPdf(inp,id){
@@ -996,16 +1003,18 @@ async function ktPdf(inp,id){
     let b=id?ktB(id):null;
     if(!b){b={id:Date.now(),t:f.name.replace(/\.pdf$/i,''),a:'',n,p:0,st:'o',fin:'',r:0,sum:'',pdf:1,cur:1};S.kt.books.push(b)}
     else{b.n=n;b.pdf=1;b.cur=b.cur||Math.max(1,b.p)}
-    await idbSet(b.id,buf);save();
+    await idbSet(b.id,buf);try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(x){}save();cloudUp(b,buf);
   }catch(e){alert('PDF ochilmadi: '+(e.message||e))}
   inp.value=''}
-async function ktPdfDel(id){if(!confirm('PDF fayl shu telefondan o‘chirilsinmi? Kitob va o‘qilgan betlar qoladi.'))return;try{await idbDel(id)}catch(e){}const b=ktB(id);if(b)b.pdf=0;save()}
+async function ktPdfDel(id){if(!confirm('PDF fayl o‘chirilsinmi? Kitob va o‘qilgan betlar qoladi.'))return;try{await idbDel(id)}catch(e){}const b=ktB(id);cloudDel(id);if(b){b.pdf=0;b.cloud=0}save()}
 // o‘qilgan betni hisoblash: ketma-ket (3 betgacha) o‘tish o‘qilgan deb yoziladi, katta sakrash faqat joyni eslab qoladi
 function pgTrack(b,p){b.cur=p;if(p>b.p){const d=p-b.p;if(d<=3)ktLog(b,d);b.p=p;if(b.n&&b.p>=b.n&&b.st==='o'){b.st='t';b.fin=dk()}}}
 let RD=null;
 async function rdOpen(id){
   const b=ktB(id);if(!b)return;
-  try{const buf=await idbGet(id);if(!buf){alert('Bu qurilmada PDF topilmadi. Uni qayta yuklang.');return}
+  try{let buf=await idbGet(id);
+    if(!buf&&b.cloud&&sb&&UID){toast('PDF bulutdan yuklab olinmoqda...');const r=await sb.storage.from('books').download(UID+'/'+id+'.pdf');if(r.error)throw r.error;buf=await r.data.arrayBuffer();await idbSet(id,buf)}
+    if(!buf){alert('Bu qurilmada PDF topilmadi. Qayta yuklash uchun “PDF o‘chirish” va keyin “PDF qo‘shish” ni bos.');return}
     const lib=await loadPdfjs(),doc=await lib.getDocument({data:buf.slice(0)}).promise;
     RD={id,doc,n:doc.numPages,page:1,zoom:1,tok:0};rdBuild(b);await rdShow(b.cur||1)
   }catch(e){alert('PDF ochilmadi: '+(e.message||e))}}
