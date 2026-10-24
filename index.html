@@ -114,9 +114,31 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .acc{display:flex;gap:8px;margin-bottom:8px}.acc button{flex:1;padding:12px;border-radius:14px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 15px Figtree,system-ui}.acc .on{border-color:var(--ac);background:var(--c2)}
 .dbt{background:var(--c1);border-radius:14px;padding:12px;margin-bottom:8px;border-left:4px solid var(--ac)}.dbt.lend{border-left-color:var(--go)}.dbt.late{border-left-color:var(--bad)}
 .bars2{display:flex;gap:2px;align-items:flex-end;height:80px}.bars2 i{flex:1;background:var(--ac);border-radius:3px 3px 0 0;opacity:.85;min-height:2px}
+
+#splash{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 40%,#17406a 0,#0a1a2c 64%);color:#e9eef2;transition:opacity .8s ease,visibility .8s;animation:spgone .01s 7s forwards}
+#splash.out{opacity:0;visibility:hidden}
+.sp-rings{position:absolute;top:50%;left:50%;width:0;height:0}.sp-rings i{position:absolute;left:-90px;top:-170px;width:180px;height:180px;border-radius:50%;border:1.5px solid rgba(226,184,87,.45);opacity:0;animation:sprg 2.4s 1.5s ease-out infinite}.sp-rings i:nth-child(2){animation-delay:2.3s}
+.sp-star{width:140px;height:140px;filter:drop-shadow(0 0 26px rgba(226,184,87,.4));animation:spfloat 3.2s ease-in-out infinite}
+.sp-star .ln{fill:none;stroke:#e2b857;stroke-width:1.4;stroke-linejoin:round;stroke-dasharray:330;stroke-dashoffset:330;animation:spdraw 1.5s .25s cubic-bezier(.5,0,.2,1) forwards}
+.sp-star .fl{fill:#e2b857;opacity:0;animation:spfill .8s 1.35s ease forwards}
+.sp-star .c1{fill:#0a1a2c;transform-box:fill-box;transform-origin:center;transform:scale(0);animation:sppop .55s 1.7s cubic-bezier(.2,1.7,.4,1) forwards}
+.sp-star .c2{fill:#46c4b2;transform-box:fill-box;transform-origin:center;transform:scale(0);animation:sppop .55s 1.9s cubic-bezier(.2,1.7,.4,1) forwards}
+.sp-t{font:800 42px Fraunces,Georgia,serif;margin:26px 0 6px;opacity:0;transform:translateY(16px);animation:spup .9s 2s ease forwards}
+.sp-b{margin:0;font:600 13px Figtree,system-ui,sans-serif;color:#e2b857;opacity:0;letter-spacing:.05em;animation:spby 1.3s 2.5s ease forwards}
+@keyframes spdraw{to{stroke-dashoffset:0}}@keyframes spfill{to{opacity:1}}@keyframes sppop{to{transform:scale(1)}}@keyframes spup{to{opacity:1;transform:none}}
+@keyframes spby{from{opacity:0;letter-spacing:.05em}to{opacity:1;letter-spacing:.42em}}@keyframes spfloat{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-6px) rotate(3deg)}}
+@keyframes sprg{0%{opacity:.7;transform:scale(.55)}100%{opacity:0;transform:scale(1.9)}}@keyframes spgone{to{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.sp-rings{display:none}#splash,#splash *{animation:none!important;opacity:1!important;stroke-dashoffset:0!important;transform:none!important}}
+.skb{margin-bottom:10px}.skb .h{display:flex;justify-content:space-between}.skb .bar{position:relative}.skb .bar b{position:absolute;top:-2px;bottom:-2px;width:2px;background:var(--go)}
+.qopt{display:block;width:100%;text-align:left;padding:13px 14px;margin-bottom:8px;border-radius:14px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 15px Figtree,system-ui}.qopt.ok{border-color:var(--ac);background:rgba(70,196,178,.18)}.qopt.no{border-color:var(--bad);background:rgba(229,118,107,.16)}
+.wta{min-height:260px;font-size:16px;line-height:1.5}.tmr{font:800 44px Fraunces,serif;text-align:center;margin:6px 0}
+.breath{width:150px;height:150px;border-radius:50%;margin:16px auto;background:radial-gradient(circle,var(--ac),transparent 70%);animation:brth 8s ease-in-out infinite}@keyframes brth{0%,100%{transform:scale(.6);opacity:.5}50%{transform:scale(1.1);opacity:1}}
 </style>
 </head>
 <body>
+<div id="splash" onclick="spHide()"><div class="sp-rings"><i></i><i></i></div>
+<svg class="sp-star" viewBox="0 0 120 120"><polygon class="fl" points="88.28,88.28 31.72,88.28 31.72,31.72 88.28,31.72"/><polygon class="fl" points="60.00,100.00 20.00,60.00 60.00,20.00 100.00,60.00"/><polygon class="ln" points="88.28,88.28 31.72,88.28 31.72,31.72 88.28,31.72"/><polygon class="ln" points="60.00,100.00 20.00,60.00 60.00,20.00 100.00,60.00"/><circle class="c1" cx="60" cy="60" r="19"/><circle class="c2" cx="60" cy="60" r="11"/></svg>
+<h1 class="sp-t">Kunlik tizim</h1><p class="sp-b">BY AZIMOV</p></div>
 <div id="app"></div>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.min.js"></script>
 <script>
@@ -153,9 +175,9 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7,ex:'',tests:[],dp:{},dr:''},un:{tasks:[],exams:[]},pr:{er:{},pm:18,st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
-let PTB=false,RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
+let IVW='b',IK='L',IQ=null,IQS='',WE={k:2,p:'',run:false,end:0,open:0},SPQ=null,IT=null,URG=null,PSim=null,PSel=[],PTB=false,RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
 let VD=null,WO=0,HMo=0,YS=-1,YA=1,YB=3,LJ=false,FL=25,FE=0,FS=1500,FR=null;
 let QT='y',LO=false,ED=null,ALLV=false;
@@ -730,19 +752,125 @@ function iDel(id){S.ie.words=S.ie.words.filter(w=>w.id!==id);save()}
 function iMock(){const b=parseFloat(V('mb'));if(!(b>=0&&b<=9))return;S.ie.mock.push({id:Date.now(),d:dk(),t:V('mt')||'Umumiy',b});save()}
 function iWr(){const t=V('wp');if(!t)return;S.ie.wr.push({id:Date.now(),d:dk(),k:V('wk'),t,n:+V('wn')||0});save()}
 const lst=(a,k)=>{S[a.split('.')[0]][a.split('.')[1]]=S[a.split('.')[0]][a.split('.')[1]].filter(x=>x.id!==k);save()};
+
+// ================= IELTS =================
+const LB=[[39,9],[37,8.5],[35,8],[32,7.5],[30,7],[26,6.5],[23,6],[18,5.5],[16,5],[13,4.5],[10,4],[8,3.5],[6,3],[4,2.5]];
+const RB=[[39,9],[37,8.5],[35,8],[33,7.5],[30,7],[27,6.5],[23,6],[19,5.5],[15,5],[13,4.5],[10,4],[8,3.5],[6,3],[4,2.5]];
+const rawBand=(k,r)=>{for(const[m,b]of(k==='L'?LB:RB))if(r>=m)return b;return 2};
+const ieRound=x=>Math.floor(x*2+0.5)/2;
+const SK={L:'Listening',R:'Reading',W:'Writing',S:'Speaking'};
+function ieSeries(){const o={L:[],R:[],W:[],S:[]};
+  S.ie.tests.forEach(t=>{Object.keys(SK).forEach(k=>{if(t.b&&t.b[k]!=null)o[k].push({d:t.d,b:t.b[k]})})});
+  S.ie.mock.forEach(m=>{const k={Listening:'L',Reading:'R',Writing:'W',Speaking:'S'}[m.t];if(k)o[k].push({d:m.d,b:m.b})});
+  Object.values(o).forEach(a=>a.sort((x,y)=>x.d.localeCompare(y.d)));return o}
+const ieCur=a=>a.length?r1(a.slice(-3).reduce((s,x)=>s+x.b,0)/Math.min(3,a.length)):null;
+function ieStat(){const s=ieSeries(),c={};let n=0,sum=0;Object.keys(SK).forEach(k=>{c[k]=ieCur(s[k]);if(c[k]!==null){sum+=c[k];n++}});return{s,c,ov:n?ieRound(sum/n):null}}
+const IPL=[['v','Lug‘at takrori'],['L','Listening mashqi'],['R','Reading mashqi'],['W','Writing yozish'],['S','Speaking mashqi']];
+const ieDp=()=>{S.ie.dp=S.ie.dp||{};return S.ie.dp[dk()]=S.ie.dp[dk()]||{}};
+function ieTick(k){const d=ieDp();d[k]=d[k]?0:1;save()}
+function ieStreak(){let n=0;for(let i=0;i<120;i++){const d=(S.ie.dp||{})[dAgo(i)]||{},c=Object.values(d).filter(Boolean).length;if(c>=3)n++;else if(i>0)break}return n}
+function qsave(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700)}
+
 function ielts(){
-  const ie=S.ie,due=wDue(),w=due[0],ln=ie.words.filter(x=>x.box>=4).length,secs=['Listening','Reading','Writing','Speaking','Umumiy'];
-  const study=ie.words.length?(w?`<section class="hero"><p class="lab">Lug‘at takrori, ${due.length} ta qoldi</p><h1 style="font-size:34px">${esc(w.w)}</h1>${IR?`<p style="font-size:20px;margin:6px 0 0">${esc(w.m||'Ma‘no yozilmagan')}</p><div class="in" style="margin-top:12px"><button class="btn s" style="flex:1" onclick="iAns(0)">Bilmadim</button><button class="btn" style="flex:1" onclick="iAns(1)">Bildim</button></div>`:'<button class="big" onclick="IR=1;render()">Ma‘nosini ko‘rsat</button>'}</section>`:'<section class="hero"><p class="lab">Lug‘at</p><h1 style="font-size:26px">Bugungi takror tugadi</h1><p class="mu">Keyingi so‘zlar o‘z vaqtida chiqadi.</p></section>'):'<p class="mu">Birinchi so‘zlaringni qo‘sh, ilova ularni o‘z vaqtida takrorlatadi.</p>';
-  const avg=secs.map(s=>{const a=ie.mock.filter(m=>m.t===s);return a.length?`<span class="chip">${s}: ${r1(a.reduce((x,m)=>x+m.b,0)/a.length)}</span>`:''}).join(''),lastU=ie.mock.filter(m=>m.t==='Umumiy').slice(-1)[0];
-  const ml=ie.mock.slice().reverse().slice(0,6).map(m=>`<div class="row"><span class="t">${m.t}<br><span class="mu">${m.d.slice(8)}.${m.d.slice(5,7)}</span></span><b>${m.b}</b><button class="x" onclick="lst('ie.mock',${m.id})">×</button></div>`).join('');
-  const wl=ie.wr.slice().reverse().slice(0,5).map(x=>`<div class="row"><span class="t">Task ${x.k}: ${esc(x.t)}<br><span class="mu">${x.d.slice(8)}.${x.d.slice(5,7)}${x.n?', '+x.n+' so‘z':''}</span></span><button class="x" onclick="lst('ie.wr',${x.id})">×</button></div>`).join('');
-  return `${study}<p class="mu" style="margin:10px 0">${ie.words.length} so‘z, ${ln} tasi yaxshi yodlangan, bugun ${due.length} ta takror.</p>
-  <div class="in"><input id="iw" placeholder="So‘z"><input id="im" placeholder="Ma‘nosi"><button class="btn" onclick="iAdd()">+</button></div>
+  const seg=[['b','Bosh'],['l','Lug‘at'],['m','Mashq'],['w','Writing'],['s','Speaking']].map(x=>`<button class="${IVW===x[0]?'on':''}" onclick="IVW='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="seg sc" style="margin-top:0">${seg}</div>${IVW==='b'?ieBosh():IVW==='l'?ieLug():IVW==='m'?ieMashq():IVW==='w'?ieWrite():ieSpeak()}`}
+
+function ieBosh(){
+  const st=ieStat(),T=S.ie.target||7,exd=S.ie.ex?dl(S.ie.ex):null,dp=ieDp(),due=wDue().length,str=ieStreak();
+  const gaps=Object.keys(SK).filter(k=>st.c[k]!==null).map(k=>({k,g:T-st.c[k]})).sort((a,b)=>b.g-a.g),foc=gaps[0];
+  const skl=Object.keys(SK).map(k=>{const c=st.c[k];return `<div class="skb"><div class="h"><span>${SK[k]}</span><span class="mu">${c===null?'ma‘lumot yo‘q':c+' / maqsad '+T}</span></div><div class="bar" style="margin-top:6px"><i style="width:${c===null?0:c/9*100}%"></i><b style="left:${T/9*100}%"></b></div></div>`}).join('');
+  const plan=IPL.map(([k,t])=>`<button class="row ${dp[k]?'done':''}" onclick="ieTick('${k}')"><span class="ck">${dp[k]?'✓':''}</span><span class="t">${t}${k==='v'?` <span class="mu">(${due} ta navbatda)</span>`:''}</span></button>`).join('');
+  const mocks=S.ie.tests.filter(t=>t.k==='M').map(t=>({d:t.d,o:ieRound(Object.values(t.b).reduce((a,x)=>a+x,0)/Object.keys(t.b).length)})),n=mocks.length;
+  const line=n>1?`<svg viewBox="0 0 300 70" width="100%" height="70"><polyline fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${mocks.map((m,i)=>`${i*300/(n-1)},${66-(m.o-4)/5*60}`).join(' ')}"/></svg>`:'';
+  return `<section class="hero"><p class="lab">IELTS</p><h1 style="font-size:46px">${st.ov===null?'—':st.ov}<span style="font-size:22px"> / ${T}</span></h1><p class="mu">Taxminiy umumiy ball (so‘nggi natijalaringdan)${exd!==null?`. Imtihongacha: ${exd>=0?exd+' kun, '+Math.ceil(exd/7)+' hafta':'o‘tib ketdi'}`:''}.</p>${foc&&foc.g>0?`<p style="margin-top:6px">Eng ko‘p e‘tibor: <b>${SK[foc.k]}</b>, maqsadgacha ${r1(foc.g)} ball.</p>`:''}</section>
+  <div class="st"><div><b>${str} kun</b>ketma-ket mashq</div><div><b>${due}</b>lug‘at navbatda</div><div><b>${S.ie.words.length}</b>so‘z</div></div>
+  <h2>Bugungi reja</h2>${plan}<h2>Ko‘nikmalar</h2>${skl}${line?`<h2>Mock natijalari o‘sishi</h2>${line}`:''}
+  <h2>Sozlamalar</h2><div class="in"><span style="align-self:center;min-width:92px">Maqsad ball</span><input type="number" step="0.5" min="4" max="9" value="${T}" onchange="S.ie.target=+this.value||7;save()"></div><div class="in"><span style="align-self:center;min-width:92px">Imtihon sanasi</span><input type="date" value="${S.ie.ex||''}" onchange="S.ie.ex=this.value;save()"></div>`}
+
+function ieQuiz(){const W=S.ie.words.filter(w=>w.m);if(W.length<4){IQ={err:1};render();return}
+  const w=W[Math.floor(Math.random()*W.length)],o=W.filter(x=>x.id!==w.id).sort(()=>Math.random()-.5).slice(0,3),opts=[...o,w].sort(()=>Math.random()-.5);
+  IQ={w,opts,ans:null,sc:(IQ&&IQ.sc)||0,n:(IQ&&IQ.n)||0};render()}
+function ieAns(i){if(IQ.ans!==null)return;IQ.ans=i;IQ.n++;if(IQ.opts[i].id===IQ.w.id)IQ.sc++;render()}
+function ieLug(){
+  const ie=S.ie,due=wDue(),w=due[0],ln=ie.words.filter(x=>x.box>=4).length,nw=ie.words.filter(x=>x.box===0).length;
+  const study=ie.words.length?(w?`<section class="hero"><p class="lab">Takror, ${due.length} ta qoldi</p><h1 style="font-size:34px">${esc(w.w)}</h1>${IR?`<p style="font-size:20px;margin:6px 0 0">${esc(w.m||'Ma‘no yozilmagan')}</p><div class="in" style="margin-top:12px"><button class="btn s" style="flex:1" onclick="iAns(0)">Bilmadim</button><button class="btn" style="flex:1" onclick="iAns(1)">Bildim</button></div>`:'<button class="big" onclick="IR=1;render()">Ma‘nosini ko‘rsat</button>'}</section>`:'<section class="hero"><p class="lab">Lug‘at</p><h1 style="font-size:26px">Bugungi takror tugadi</h1><p class="mu">Keyingi so‘zlar o‘z vaqtida chiqadi.</p></section>'):'<p class="mu">Birinchi so‘zlaringni qo‘sh, ilova ularni o‘z vaqtida takrorlatadi.</p>';
+  let quiz='';
+  if(IQ&&IQ.err)quiz='<p class="mu">Test uchun ma‘nosi yozilgan kamida 4 ta so‘z kerak.</p>';
+  else if(IQ&&IQ.w){const q=IQ;quiz=`<div class="goal"><div class="h"><b>Test</b><span class="mu">${q.sc} / ${q.n}</span></div><p style="font:700 24px Fraunces,serif;margin:8px 0">${esc(q.w.w)}</p>${q.opts.map((o,i)=>`<button class="qopt ${q.ans!==null?(o.id===q.w.id?'ok':i===q.ans?'no':''):''}" onclick="ieAns(${i})">${esc(o.m)}</button>`).join('')}${q.ans!==null?'<button class="btn" style="width:100%" onclick="ieQuiz()">Keyingi savol</button>':''}</div>`}
+  const list=ie.words.filter(x=>!IQS||sn(x.w+' '+x.m).includes(sn(IQS))).slice(-30).reverse().map(x=>`<div class="row"><span class="t">${esc(x.w)}<br><span class="mu">${esc(x.m||'')}</span></span><span class="tm">${['yangi','1','2','3','4','✓'][x.box]||''}</span><button class="x" onclick="iDel(${x.id})">×</button></div>`).join('');
+  return `${study}<div class="st"><div><b>${ie.words.length}</b>jami</div><div><b>${nw}</b>yangi</div><div><b>${ln}</b>yodlangan</div></div>
+  <h2>Test rejimi</h2><p class="mu" style="margin:0 0 8px">So‘zning to‘g‘ri ma‘nosini 4 ta variantdan top.</p>${quiz||''}<button class="btn s" style="width:100%;margin-bottom:6px" onclick="ieQuiz()">${IQ&&IQ.w?'Yangi savol':'Testni boshlash'}</button>
+  <h2>So‘z qo‘shish</h2><div class="in"><input id="iw" placeholder="So‘z"><input id="im" placeholder="Ma‘nosi"><button class="btn" onclick="iAdd()">+</button></div>
   <details><summary class="mu" style="margin-bottom:8px">Ko‘p so‘z qo‘shish (har qatorda: so‘z - ma‘no)</summary><textarea id="ib" placeholder="abundant - mo‘l&#10;mitigate - yumshatmoq"></textarea><button class="btn" style="margin-top:6px" onclick="iBulk()">Qo‘shish</button></details>
-  <h2>Mock test ballari</h2>${lastU?`<div class="bar"><i style="width:${Math.min(100,lastU.b/ie.target*100)}%"></i></div><p class="mu">Oxirgi umumiy ball ${lastU.b}, maqsad ${ie.target}.</p>`:''}<div>${avg}</div>
-  <div class="in"><select id="mt">${secs.map(s=>`<option>${s}</option>`).join('')}</select><input id="mb" type="number" step="0.5" min="0" max="9" placeholder="Ball"><button class="btn" onclick="iMock()">Yoz</button></div>
-  <div class="in"><input type="number" step="0.5" value="${ie.target}" onchange="S.ie.target=+this.value||7;save()"><span class="mu" style="align-self:center">maqsad ball</span></div>${ml}
-  <h2>Writing kundaligi</h2><div class="in"><select id="wk"><option>2</option><option>1</option></select><input id="wp" placeholder="Mavzu"><input id="wn" type="number" placeholder="So‘z" style="max-width:80px"><button class="btn" onclick="iWr()">+</button></div>${wl||'<p class="mu">Hali yozilmagan.</p>'}`}
+  <h2>So‘zlar ro‘yxati</h2><div class="in"><input placeholder="Qidirish" value="${esc(IQS)}" onchange="IQS=this.value;render()"></div>${list||'<p class="mu">Hali so‘z yo‘q.</p>'}`}
+
+function ieAdd(){
+  const k=IK,d=V('ied')||dk(),src=V('iesr'),min=+V('iem')||0,b={},raw={};
+  if(k==='L'||k==='R'||k==='M'){const lr=k==='M'?[['L','ia'],['R','ib']]:[[k,'ia']];for(const[kk,id]of lr){const r=V(id);if(r===''||+r<0||+r>40)return alert('To‘g‘ri javoblar soni 0 dan 40 gacha bo‘lsin.');raw[kk]=+r;b[kk]=rawBand(kk,+r)}}
+  if(k==='W'||k==='M'){const x=parseFloat(V('iw'));if(!(x>=0&&x<=9))return alert('Writing ballini 0–9 oralig‘ida yoz.');b.W=x}
+  if(k==='S'||k==='M'){const x=parseFloat(V(k==='M'?'is2':'iw'));if(!(x>=0&&x<=9))return alert('Speaking ballini 0–9 oralig‘ida yoz.');b.S=x}
+  S.ie.tests.push({id:Date.now(),d,k,src,min,b,raw});
+  if(d===dk())Object.keys(b).forEach(x=>{ieDp()[x]=1});save()}
+function ieDel(id){S.ie.tests=S.ie.tests.filter(t=>t.id!==id);save()}
+function ieMashq(){
+  const kb=[['L','Listening'],['R','Reading'],['W','Writing'],['S','Speaking'],['M','To‘liq mock']].map(x=>`<button class="${IK===x[0]?'on':''}" onclick="IK='${x[0]}';render()">${x[1]}</button>`).join('');
+  const n=(id,ph,st)=>`<input id="${id}" type="number" inputmode="decimal" ${st?`step="${st}"`:''} placeholder="${ph}">`;
+  const inputs=IK==='L'||IK==='R'?`<div class="in">${n('ia','To‘g‘ri javoblar, 40 dan')}</div><p class="mu" style="margin:0 0 8px;font-size:12px">Ball Academic jadvali bo‘yicha taxminiy hisoblanadi.</p>`
+   :IK==='M'?`<div class="in">${n('ia','Listening, 40 dan')}${n('ib','Reading, 40 dan')}</div><div class="in">${n('iw','Writing ball','0.5')}${n('is2','Speaking ball','0.5')}</div>`
+   :`<div class="in">${n('iw',SK[IK]+' ball (0–9)','0.5')}</div>`;
+  const L=S.ie.tests.slice().reverse().slice(0,12).map(t=>{const ks=Object.keys(t.b),ov=t.k==='M'?ieRound(Object.values(t.b).reduce((a,x)=>a+x,0)/ks.length):null;
+    return `<div class="row"><span class="t">${t.k==='M'?'Mock, umumiy '+ov:SK[t.k]+' '+t.b[t.k]}<br><span class="mu">${t.d.slice(8)}.${t.d.slice(5,7)}${t.src?', '+esc(t.src):''}${t.raw&&t.raw[t.k]!==undefined?', '+t.raw[t.k]+'/40':''}${t.k==='M'?', '+ks.map(k=>k+' '+t.b[k]).join(' '):''}${t.min?', '+t.min+' daq':''}</span></span><button class="x" onclick="ieDel(${t.id})">×</button></div>`}).join('');
+  return `<p class="mu" style="margin:0 0 8px">Har mashq yoki mock natijasini yoz, ilova o‘sishingni hisoblab boradi.</p><div class="seg sc">${kb}</div>${inputs}
+  <div class="in"><input id="iesr" placeholder="Manba, masalan: Cambridge 17, Test 2"></div><div class="in"><input id="ied" type="date" value="${dk()}"><input id="iem" type="number" inputmode="numeric" placeholder="Daqiqa" style="max-width:100px"></div><button class="big" style="margin:0 0 12px" onclick="ieAdd()">Yozish</button>
+  <h2>So‘nggi natijalar</h2>${L||'<p class="mu">Hali natija yo‘q.</p>'}`}
+
+const WP2=['Some people believe that studying abroad is the best way to get a high-quality education, while others think local universities are just as good. Discuss both views and give your opinion.','In many countries, young people spend more time on social media than with their families. What are the causes of this, and is it a positive or negative development?','Some argue that governments should spend money on public transport rather than building new roads. To what extent do you agree or disagree?','Many people now work from home instead of going to an office. What are the advantages and disadvantages of this trend?','Some people think children should learn practical skills at school, such as cooking and money management, rather than only academic subjects. Do you agree or disagree?','Environmental problems are too big for individuals to solve, so only governments and large companies can make a difference. To what extent do you agree?','Fast food is becoming more popular around the world, and this is causing health problems. What can be done to solve this?','Some people believe that technology has made our lives more complicated, not easier. Discuss both views and give your opinion.','Older people have a lot of experience, so they should be given more responsibility in the workplace. Do you agree or disagree?','In some countries, a growing number of people choose to live alone. Why is this happening, and is it a positive or negative trend?','Some people say that international tourism brings more problems than benefits to local communities. Discuss both views and give your opinion.','Reading books for pleasure is becoming less common among young people. Why do you think this is happening, and what can be done to encourage reading?'];
+const WP1=['Describe a line graph showing how the percentage of households with internet access changed in three countries over twenty years.','Summarise a bar chart comparing the average weekly hours that men and women in four countries spend on housework.','Describe a process diagram showing how plastic bottles are collected and recycled.','Describe two maps of a town centre before and after a major redevelopment.','Compare two pie charts showing the sources of electricity in one country in 1990 and in 2020.','Summarise a table comparing the monthly spending of students in four cities on housing, food and transport.'];
+function wK(k){if(WE.run)return;WE.k=k;WE.p='';render()}
+function wPick(){const L=WE.k===2?WP2:WP1;WE.p=L[Math.floor(Math.random()*L.length)];render()}
+function wTimer(){if(WE.run){clearInterval(WE.iv);WE.run=false;render();return}
+  WE.end=Date.now()+(WE.k===2?40:20)*60000;WE.run=true;
+  WE.iv=setInterval(()=>{const e=document.getElementById('wtm'),l=Math.max(0,Math.ceil((WE.end-Date.now())/1000));if(e)e.textContent=fmtT(l);if(l<=0){clearInterval(WE.iv);WE.run=false;if(navigator.vibrate)navigator.vibrate([300,100,300]);render()}},500);render()}
+const wcount=t=>(t.trim().match(/\S+/g)||[]).length;
+function wInput(el){S.ie.dr=el.value;qsave();const n=wcount(el.value),c=document.getElementById('wcn'),min=WE.k===2?250:150;if(c){c.textContent=n+' so‘z (kamida '+min+')';c.style.color=n>=min?'var(--ac)':'var(--bad)'}}
+function wSave(){const text=(S.ie.dr||'').trim(),n=wcount(text);if(n<20){alert('Avval matn yoz.');return}
+  const r=['wta','wcc','wlr','wgr'].map(id=>parseFloat(V(id))||0),have=r.filter(x=>x>0),sc=have.length?ieRound(have.reduce((a,x)=>a+x,0)/have.length):0,mins=WE.run?Math.round((WE.k===2?40:20)-(WE.end-Date.now())/60000):0;
+  if(WE.run){clearInterval(WE.iv);WE.run=false}
+  S.ie.wr.push({id:Date.now(),d:dk(),k:WE.k,t:WE.p||'Mavzusiz',x:text,n,sc,min:mins});
+  if(sc){S.ie.tests.push({id:Date.now()+1,d:dk(),k:'W',src:'Essay (Task '+WE.k+')',min:mins,b:{W:sc},raw:{}})}
+  ieDp().W=1;S.ie.dr='';WE.p='';save()}
+function wOpen(id){WE.open=WE.open===id?0:id;render()}
+function wDel(id){if(confirm('Insho o‘chirilsinmi?')){S.ie.wr=S.ie.wr.filter(x=>x.id!==id);save()}}
+function ieWrite(){
+  const min=WE.k===2?250:150,n=wcount(S.ie.dr||''),tl=Math.max(0,WE.run?Math.ceil((WE.end-Date.now())/1000):(WE.k===2?2400:1200));
+  const sel=id=>`<select id="${id}" style="flex:1"><option value="">${id==='wta'?'Task':id==='wcc'?'Coherence':id==='wlr'?'Lexical':'Grammar'}</option>${[9,8.5,8,7.5,7,6.5,6,5.5,5,4.5,4].map(x=>`<option>${x}</option>`).join('')}</select>`;
+  const old=S.ie.wr.slice().reverse().slice(0,8).map(e=>`<div class="goal"><div class="h"><b>Task ${e.k}${e.sc?', taxminiy '+e.sc:''}</b><span><button class="x" style="font-size:14px" onclick="wOpen(${e.id})">${WE.open===e.id?'yopish':'ochish'}</button><button class="x" onclick="wDel(${e.id})">×</button></span></div><p class="mu" style="margin:2px 0">${e.d.slice(8)}.${e.d.slice(5,7)}, ${e.n} so‘z${e.min?', '+e.min+' daq':''}</p><p style="margin:4px 0;font-size:14px">${esc(e.t||'').slice(0,110)}${(e.t||'').length>110?'…':''}</p>${WE.open===e.id&&e.x?`<p style="white-space:pre-wrap;font-size:15px;line-height:1.5;margin:8px 0 0">${esc(e.x)}</p>`:''}</div>`).join('');
+  return `<div class="seg"><button class="${WE.k===2?'on':''}" onclick="wK(2)">Task 2 (40 daq)</button><button class="${WE.k===1?'on':''}" onclick="wK(1)">Task 1 (20 daq)</button></div>
+  <div class="goal"><div class="h"><b>Mavzu</b><button class="btn s" style="padding:6px 12px" onclick="wPick()">${WE.p?'Boshqa mavzu':'Mavzu tanlash'}</button></div><p style="margin:8px 0 0;line-height:1.45">${WE.p?esc(WE.p):'<span class="mu">“Mavzu tanlash” ni bos yoki o‘z mavzungda yoz.</span>'}</p></div>
+  <div class="tmr" id="wtm">${fmtT(tl)}</div><button class="big ${WE.run?'ok':''}" style="margin:0 0 10px" onclick="wTimer()">${WE.run?'Taymerni to‘xtatish':'Taymerni boshlash'}</button>
+  <textarea class="wta" placeholder="Inshoni shu yerga yoz..." oninput="wInput(this)">${esc(S.ie.dr||'')}</textarea><p id="wcn" class="mu" style="margin:6px 0 10px;color:${n>=min?'var(--ac)':'var(--bad)'}">${n} so‘z (kamida ${min})</p>
+  <p class="mu" style="margin:0 0 6px">O‘zingni bahola (ixtiyoriy):</p><div class="in">${sel('wta')}${sel('wcc')}</div><div class="in">${sel('wlr')}${sel('wgr')}</div><button class="btn" style="width:100%" onclick="wSave()">Inshoni saqlash</button>
+  <h2>Yozilgan inshoalar</h2>${old||'<p class="mu">Hali insho yo‘q.</p>'}`}
+
+const SP1=['Do you work or are you a student?','What do you like most about your hometown?','How often do you use public transport?','What kind of food do you enjoy cooking or eating?','Do you prefer mornings or evenings? Why?','How do you usually spend your weekends?','What are your hobbies?','Do you like reading books?','How important is music in your life?','What kind of weather do you like?','What do you use your phone for?','Tell me about your family.','Do you enjoy shopping?','What do you do to stay healthy?','Do you like travelling? Why?','What did you do yesterday?','Is there a festival you enjoy in your country?','Do you prefer to study alone or with others?','How do you keep in touch with friends?','What would you like to learn in the future?'];
+const SP2=['Describe a person who has influenced you. You should say: who the person is, how you know them, what they did, and explain why they influenced you.','Describe a book you enjoyed reading. You should say: what it was, why you read it, what it was about, and explain why you liked it.','Describe a place you visited that you would like to visit again. You should say: where it is, when you went, what you did there, and explain why you want to go back.','Describe a skill you learned that was useful. You should say: what the skill is, how you learned it, how long it took, and explain why it was useful.','Describe a memorable meal you had. You should say: where you had it, who was with you, what you ate, and explain why it was memorable.','Describe a time when you helped someone. You should say: who you helped, how you helped, why they needed help, and explain how you felt.','Describe a goal you want to achieve in the future. You should say: what the goal is, when you want to achieve it, how you plan to do it, and explain why it is important to you.','Describe a teacher you remember well. You should say: who the teacher was, what they taught, what they were like, and explain why you remember them.'];
+const SP3=['Why do some people find it hard to learn new skills?','How has technology changed the way people read?','Do you think teachers are more important than parents in a child‘s development?','What makes a place worth visiting for tourists?','Should governments invest more in public libraries?','Why do people set goals, and why do many fail to achieve them?','How do role models affect young people?','What are the advantages of learning from experience rather than from books?'];
+function spPick(part){if(IT)clearInterval(IT.iv);IT=null;const L=part===1?SP1:part===2?SP2:SP3;SPQ={part,q:L[Math.floor(Math.random()*L.length)],ph:0};render()}
+function spTimer(sec,label,next){if(IT)clearInterval(IT.iv);IT={end:Date.now()+sec*1000,label};
+  IT.iv=setInterval(()=>{const l=Math.max(0,Math.ceil((IT.end-Date.now())/1000)),e=document.getElementById('itm');if(e)e.textContent=fmtT(l);if(l<=0){clearInterval(IT.iv);if(navigator.vibrate)navigator.vibrate([250,120,250]);IT=null;if(next){SPQ.ph=2;spTimer(120,'Gapiring')}else render()}},500);render()}
+function spStop(){if(IT)clearInterval(IT.iv);IT=null;render()}
+function spRate(b){S.ie.tests.push({id:Date.now(),d:dk(),k:'S',src:'Speaking, Part '+SPQ.part,b:{S:b},raw:{}});ieDp().S=1;SPQ=null;if(IT)clearInterval(IT.iv);IT=null;save()}
+function ieSpeak(){
+  const q=SPQ,tl=IT?Math.max(0,Math.ceil((IT.end-Date.now())/1000)):0;
+  const pick=`<div class="seg"><button onclick="spPick(1)">Part 1</button><button onclick="spPick(2)">Part 2</button><button onclick="spPick(3)">Part 3</button></div>`;
+  let card='<p class="mu">Qismni tanla, tasodifiy savol chiqadi. Javobni ovoz chiqarib ayt va oxirida o‘zingni baho.</p>';
+  if(q){card=`<div class="goal"><b>Part ${q.part}</b><p style="margin:8px 0;font-size:17px;line-height:1.45">${esc(q.q)}</p>
+   ${IT?`<div class="tmr" id="itm">${fmtT(tl)}</div><p class="mu" style="text-align:center;margin:0 0 8px">${IT.label}</p><button class="btn s" style="width:100%" onclick="spStop()">To‘xtatish</button>`
+   :q.part===2?`<button class="btn" style="width:100%;margin-bottom:6px" onclick="SPQ.ph=1;spTimer(60,'Tayyorlanish: 1 daqiqa',1)">1 daqiqa tayyorlanish, keyin 2 daqiqa gapirish</button>`
+   :`<button class="btn" style="width:100%;margin-bottom:6px" onclick="spTimer(${q.part===1?30:60},'Gapiring')">${q.part===1?'30':'60'} soniya javob berish</button>`}
+   <p class="mu" style="margin:8px 0 6px">O‘zingni bahola (ball):</p><div class="chips">${[5,5.5,6,6.5,7,7.5,8].map(b=>`<button onclick="spRate(${b})">${b}</button>`).join('')}</div></div>`}
+  const hist=S.ie.tests.filter(t=>t.k==='S').slice(-6).reverse().map(t=>`<div class="row"><span class="t">${t.b.S}<br><span class="mu">${t.d.slice(8)}.${t.d.slice(5,7)}, ${esc(t.src||'')}</span></span></div>`).join('');
+  return `${pick}${card}<h2>So‘nggi baholar</h2>${hist||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
 
 function uAdd(){const t=V('ut');if(!t)return;S.un.tasks.push({id:Date.now(),t,s:V('us'),due:V('ud'),x:0});save()}
 function uEx(){const s=V('ue'),d=V('ued');if(!s||!d)return;S.un.exams.push({id:Date.now(),s,d});save()}
@@ -755,16 +883,29 @@ function univer(){
   <div class="in"><input id="ut" placeholder="Topshiriq"><input id="us" placeholder="Fan" style="max-width:110px"></div><div class="in"><input id="ud" type="date"><button class="btn" onclick="uAdd()">Qo‘sh</button></div>${rows||'<p class="mu">Topshiriq yo‘q.</p>'}
   <h2>Imtihonlar</h2><div class="in"><input id="ue" placeholder="Fan"><input id="ued" type="date"><button class="btn" onclick="uEx()">+</button></div>${ex||'<p class="mu">Imtihon sanasi qo‘shilmagan.</p>'}`}
 
-function pAdd(){const c=+V('pc'),t=+V('pt');if(!t||c<0||c>t)return;S.pr.tests.push({id:Date.now(),d:dk(),c,t});save()}
+const PTOP=['Yo‘l belgilari','Chorrahalar','Tezlik','Quvib o‘tish','To‘xtash va to‘xtab turish','Svetofor va ishoralar','Yo‘l chiziqlari','Birinchi yordam','Huquq va javobgarlik','Boshqa'];
+function pAdd(){const c=+V('pc'),t=+V('pt');if(!t||c<0||c>t)return;S.pr.tests.push({id:Date.now(),d:dk(),c,t});S.pr.er=S.pr.er||{};PSel.forEach(x=>{S.pr.er[x]=(S.pr.er[x]||0)+1});PSel=[];save()}
 function pS(i){S.pr.st[i].x=S.pr.st[i].x?0:1;save()}
+function pTop(i){const t=PTOP[i],j=PSel.indexOf(t);j<0?PSel.push(t):PSel.splice(j,1);render()}
+function psSim(){if(PSim&&PSim.run){clearInterval(PSim.iv);PSim=null;render();return}
+  PSim={run:1,end:Date.now()+25*60000};PSim.iv=setInterval(()=>{const l=Math.max(0,Math.ceil((PSim.end-Date.now())/1000)),e=document.getElementById('ptm');if(e)e.textContent=fmtT(l);if(l<=0){clearInterval(PSim.iv);PSim=null;if(navigator.vibrate)navigator.vibrate([300,100,300]);render()}},500);render()}
 function prava(){
-  const p=S.pr,dn=p.st.filter(x=>x.x).length,ts=p.tests.slice(-10),avg=ts.length?Math.round(ts.reduce((a,x)=>a+x.c/x.t,0)/ts.length*100):0;
+  const p=S.pr;p.er=p.er||{};p.pm=p.pm||18;const dn=p.st.filter(x=>x.x).length,ts=p.tests.slice(-10),avg=ts.length?Math.round(ts.reduce((a,x)=>a+x.c/x.t,0)/ts.length*100):0;
+  const passN=ts.filter(x=>x.t>=20&&x.c>=p.pm).length,last=p.tests[p.tests.length-1];
   const sp=ts.length>1?`<svg viewBox="0 0 300 60" width="100%" height="60"><polyline fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${ts.map((x,i)=>`${i*300/(ts.length-1)},${58-x.c/x.t*54}`).join(' ')}"/></svg>`:'';
+  const er=Object.entries(p.er).sort((a,b)=>b[1]-a[1]),mx=Math.max(1,...er.map(x=>x[1]));
+  const tl=PSim?Math.max(0,Math.ceil((PSim.end-Date.now())/1000)):1500;
   return `<section class="hero"><p class="lab">Prava</p><h1 style="font-size:34px">${dn} / ${p.st.length} bosqich</h1><div class="bar" style="margin:8px 0"><i style="width:${dn/p.st.length*100}%"></i></div><p class="mu">${p.exam?'Imtihongacha: '+dlTxt(dl(p.exam))+'.':'Imtihon sanasini quyida belgila.'}</p></section>
+  <div class="st"><div><b>${avg}%</b>o‘rtacha natija</div><div><b>${passN}/${ts.length}</b>o‘tish balidan yuqori</div><div><b>${p.tests.length}</b>jami test</div></div>
+  <h2>Imtihon simulyatori</h2><p class="mu" style="margin:0 0 8px">25 daqiqa ichida testni tugat. Savollarni o‘zing ishlatayotgan test ilovasidan ishla, bu yerda esa vaqt hisobini yurit.</p><div class="tmr" id="ptm">${fmtT(tl)}</div><button class="big ${PSim?'ok':''}" style="margin:0 0 8px" onclick="psSim()">${PSim?'To‘xtatish':'Simulyatorni boshlash'}</button>
+  <h2>Natija yozish</h2><div class="in"><input id="pc" type="number" inputmode="numeric" placeholder="To‘g‘ri javob"><input id="pt" type="number" inputmode="numeric" placeholder="Jami savol" value="20"><button class="btn" onclick="pAdd()">Yoz</button></div>
+  <p class="mu" style="margin:0 0 6px">Xato qilgan mavzularingni belgila (zaif joylar hisoblanadi):</p><div class="chips">${PTOP.map((t,i)=>`<button class="${PSel.includes(t)?'on':''}" onclick="pTop(${i})">${t}</button>`).join('')}</div>
+  <div class="in"><span style="align-self:center;min-width:120px">O‘tish bali</span><input type="number" value="${p.pm}" onchange="S.pr.pm=+this.value||18;save()"></div>
+  ${last?`<p class="mu">Oxirgi natija: ${last.c} / ${last.t} (${Math.round(last.c/last.t*100)}%).</p>`:''}${sp}
+  ${er.length?`<h2>Zaif mavzular</h2>${er.map(([t,n])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><span>${esc(t)}</span><span class="mu">${n} marta</span></div><div class="bar"><i style="width:${n/mx*100}%;background:var(--bad)"></i></div></div>`).join('')}`:''}
   <h2>Bosqichlar</h2>${p.st.map((x,i)=>`<button class="row ${x.x?'done':''}" onclick="pS(${i})"><span class="ck">${x.x?'✓':''}</span><span class="t">${esc(x.t)}</span></button>`).join('')}
   <div class="in"><input type="date" value="${p.exam}" onchange="S.pr.exam=this.value;save()"><span class="mu" style="align-self:center;white-space:nowrap">imtihon sanasi</span></div>
-  <h2>Test mashqlari</h2><p class="mu" style="margin:0">${ts.length?`So‘nggi ${ts.length} ta testda o‘rtacha ${avg}%.`:'Test natijangni yoz, o‘sish grafigi chiqadi.'}</p>${sp}
-  <div class="in"><input id="pc" type="number" placeholder="To‘g‘ri javob"><input id="pt" type="number" placeholder="Jami savol" value="20"><button class="btn" onclick="pAdd()">Yoz</button></div>${p.tests.slice().reverse().slice(0,6).map(x=>`<div class="row"><span class="t">${x.c} / ${x.t}<br><span class="mu">${x.d.slice(8)}.${x.d.slice(5,7)}</span></span><b>${Math.round(x.c/x.t*100)}%</b><button class="x" onclick="lst('pr.tests',${x.id})">×</button></div>`).join('')}`}
+  <h2>So‘nggi natijalar</h2>${p.tests.slice().reverse().slice(0,8).map(x=>`<div class="row"><span class="t">${x.c} / ${x.t}<br><span class="mu">${x.d.slice(8)}.${x.d.slice(5,7)}</span></span><b>${Math.round(x.c/x.t*100)}%</b><button class="x" onclick="lst('pr.tests',${x.id})">×</button></div>`).join('')}`}
 
 // ---- Isolation ----
 function isoM(){S.iso.m[dk()]=+V('im2')||0;save()}
@@ -779,8 +920,8 @@ function iso(){
   return `<section class="hero"><p class="lab">Isolation</p><h1 style="font-size:40px">${cur} kun</h1><p class="mu">Ketma-ket Instagramsiz kunlar. Eng uzun seriya: ${Math.max(best,cur)} kun. Chalg‘ishni yengganlar: ${wins} marta.</p><p class="mu" style="margin-top:6px">Kunni belgilash uchun Bugun ekranidagi “Instagramsiz kun” qoidasidan foydalan.</p></section>
   <h2>Bugungi ekran vaqti</h2><div class="bar"><i style="width:${Math.min(100,m/Math.max(I.lim,1)*100)}%;${m>I.lim?'background:var(--bad)':''}"></i></div><p class="mu">${m} / ${I.lim} daqiqa${m>I.lim?'. Limitdan oshdi.':''}</p>
   <div class="in"><input id="im2" type="number" placeholder="Bugun necha daqiqa?" value="${m||''}"><button class="btn" onclick="isoM()">Yoz</button></div><div class="in"><input type="number" value="${I.lim}" onchange="S.iso.lim=+this.value||60;save()"><span class="mu" style="align-self:center">kunlik limit, daqiqa</span></div>
-  <h2>So‘nggi 14 kun</h2><div style="display:flex;gap:3px">${bars}</div>
-  <h2>Chalg‘ish jurnali</h2><p class="mu" style="margin:0 0 8px">Kirgingiz kelganda sababini yoz va natijani belgila.</p><div class="in"><input id="it" placeholder="Nega kirgim keldi?"></div><div class="in"><button class="btn" style="flex:1" onclick="isoAdd(1)">Yengdim</button><button class="btn s" style="flex:1" onclick="isoAdd(0)">Yutqazdim</button></div>${lg}`}
+  <h2>So‘nggi 14 kun</h2><p class="mu" style="margin:0 0 8px">7 kunlik o‘rtacha: ${Math.round([...Array(7)].reduce((a,_,i)=>a+(I.m[dAgo(i)]||0),0)/7)} daqiqa</p><div style="display:flex;gap:3px">${bars}</div>
+  ${urgeCard()}<h2>Chalg‘ish jurnali</h2><p class="mu" style="margin:0 0 8px">Kirgingiz kelganda sababini yoz va natijani belgila.</p><div class="in"><input id="it" placeholder="Nega kirgim keldi?"></div><div class="in"><button class="btn" style="flex:1" onclick="isoAdd(1)">Yengdim</button><button class="btn s" style="flex:1" onclick="isoAdd(0)">Yutqazdim</button></div>${lg}`}
 
 // ---- Brend, Telegram, tanishuv, rejimlar ----
 const OWNER_TG='';   // Telegram username, @ belgisiz (masalan: azimov_uz). Bo‘sh qolsa, tugma chiqmaydi.
@@ -1164,6 +1305,18 @@ function habWeek(today){
   const rows=S.hab.map((x,hi)=>{const st=hst(x.id),col=HC[hi%HC.length],n=days.filter(d=>(S.hb[d.k]||{})[x.id]).length;
     return `<div class="hcard"><div style="display:flex;align-items:center;gap:8px"><span style="flex:1;font-weight:600">${x.e?x.e+' ':`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}${esc(x.t)}</span><button class="x" onclick="delH(${hi})">×</button></div><p class="mu" style="margin:2px 0 6px;font-size:12px">🔥 ${st}&nbsp; haftada ${n} kun</p><div class="hw">${days.map(d=>{const on=(S.hb[d.k]||{})[x.id],fu=d.k>today;return `<div class="${cl(d)}"><button class="cell ${on?'on':''}" style="--hc:${col}" ${fu?'disabled':''} onclick="hbT('${x.id}','${d.k}')"></button></div>`}).join('')}</div></div>`}).join('');
   return head+rows}
+
+function spHide(){const s=document.getElementById('splash');if(!s||s._h)return;s._h=1;s.classList.add('out');setTimeout(()=>{if(s.remove)s.remove()},900)}
+try{const rm=matchMedia('(prefers-reduced-motion:reduce)').matches;setTimeout(spHide,rm?900:3700)}catch(e){setTimeout(spHide,3700)}
+
+function urgeStart(){URG={end:Date.now()+5*60000};URG.iv=setInterval(()=>{const l=Math.max(0,Math.ceil((URG.end-Date.now())/1000)),e=document.getElementById('utm');if(e)e.textContent=fmtT(l);if(l<=0){clearInterval(URG.iv);URG.done=1;if(navigator.vibrate)navigator.vibrate([250,120,250]);render()}},500);render()}
+function urgeEnd(win){if(URG)clearInterval(URG.iv);if(win!==null)S.iso.log.push({id:Date.now(),d:dk(),t:'5 daqiqa kutish usuli',w:win});URG=null;save()}
+const UTIPS=['Chuqur nafas ol: 4 soniya nafas ol, 6 soniya chiqar.','Bir stakan suv ich.','Telefonni boshqa xonaga qo‘y.','Bir oz yur yoki cho‘zil.','O‘zingdan so‘ra: zerikdingmi, charchadingmi yoki yolg‘izmisan?'];
+function urgeCard(){
+  if(!URG)return `<div class="goal" style="border-left:4px solid var(--go)"><b>Kirgging keldimi?</b><p class="mu" style="margin:4px 0 10px">Chalg‘ish istagi odatda 5–10 daqiqada pasayadi. Shu vaqtni kutib ko‘r.</p><button class="btn" style="width:100%" onclick="urgeStart()">5 daqiqa kutaman</button></div>`;
+  if(URG.done)return `<div class="goal" style="border-left:4px solid var(--ac)"><b>5 daqiqa o‘tdi</b><p class="mu" style="margin:4px 0 10px">Hali ham kirging kelyaptimi? Natijani yoz.</p><div class="in" style="margin:0"><button class="btn" style="flex:1" onclick="urgeEnd(1)">Yengdim</button><button class="btn s" style="flex:1" onclick="urgeEnd(0)">Yutqazdim</button></div></div>`;
+  const l=Math.max(0,Math.ceil((URG.end-Date.now())/1000)),tip=UTIPS[Math.min(4,Math.floor((300-l)/60))];
+  return `<div class="goal" style="border-left:4px solid var(--ac);text-align:center"><b>Kuting va nafas oling</b><div class="breath"></div><div class="tmr" id="utm">${fmtT(l)}</div><p style="margin:0 0 10px">${tip}</p><button class="btn s" style="width:100%" onclick="urgeEnd(null)">Bekor qilish</button></div>`}
 
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
