@@ -94,6 +94,7 @@ button{transition:transform .12s,background .2s}button:active{transform:scale(.9
 .jm{display:grid;grid-template-columns:repeat(10,1fr);gap:4px}.jm button{aspect-ratio:1;border-radius:8px;border:1px solid var(--ln);background:var(--c1);font-size:12px;color:var(--mu);padding:0}.jm .rd{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}.jm .cu{border-color:var(--go);color:var(--go);font-weight:700}
 .np{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.np button{padding:14px 4px;border-radius:14px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 15px Figtree,system-ui}.np .on{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}.np .bad{background:var(--bad);color:#fff;border-color:var(--bad)}
 .cell.qz{background:var(--bad);border-color:var(--bad)}
+.pc{background:rgba(128,128,128,.18);border-radius:12px;padding:8px 4px;text-align:center}.pc span{display:block;font-size:12px;opacity:.85}.pc b{font:700 19px Fraunces,serif}.pc.nx{outline:2px solid var(--hlab)}.np small{display:block;font-weight:400;font-size:12px;opacity:.85;margin-top:2px}
 </style>
 </head>
 <body>
@@ -133,9 +134,9 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7},un:{tasks:[],exams:[]},pr:{st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[]},fin:{budget:0,goal:{t:'',a:0,s:0}},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
-let RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
+let PTB=false,RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
 let VD=null,WO=0,HMo=0,YS=-1,YA=1,YB=3,LJ=false,FL=25,FE=0,FS=1500,FR=null;
 let QT='y',LO=false,ED=null,ALLV=false;
@@ -193,7 +194,7 @@ function hozir(){
   const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${act(fn)}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
   const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,(x.e?x.e+' ':'')+x.t)).join(''):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
   const rr=RULES.map(r=>chk(rd[r.id],`rl('${r.id}')`,r.t)).join('');
-  const nmB=PR.map(([pp,t])=>{const s_=((S.nm.d[k]||{})[pp])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${k}','${pp}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}</button>`}).join(''),qzT=Object.values(S.nm.debt).reduce((a,c)=>a+c,0);
+  const nmB=PR.map(([pp,t])=>{const s_=((S.nm.d[k]||{})[pp])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${k}','${pp}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}${ptT(PK[pp])?`<small>${ptT(PK[pp])}</small>`:''}</button>`}).join(''),qzT=Object.values(S.nm.debt).reduce((a,c)=>a+c,0);
   const tt=tasks.map((t,i)=>`<div class="row ${t.x?'done':''}"><span class="ck" onclick="tk(${i})">${t.x?'✓':''}</span><span class="t" onclick="tk(${i})">${esc(t.t)}</span><button class="x" onclick="dt(${i})">×</button></div>`).join('');
   const bs=new Date();bs.setDate(bs.getDate()+WO*7);const w0=(bs.getDay()+6)%7;
   const wk=[...Array(7)].map((_,i)=>{const x=new Date(bs.getFullYear(),bs.getMonth(),bs.getDate()-w0+i),kk=x.toLocaleDateString('sv');return `<button class="wd ${kk===k?'on':''} ${kk===T0?'t':''}" onclick="vd('${kk}')"><span>${DAYS[x.getDay()].slice(0,2)}</span><b>${x.getDate()}</b><i class="dot ${scoreOf(kk).p>0?'y':''}"></i></button>`}).join('');
@@ -217,7 +218,7 @@ function hozir(){
   <h2>Kun yo‘li</h2><div class="path">${path}</div><div class="h mu" style="display:flex;justify-content:space-between;font-size:12px;margin-top:4px"><span>05:00</span><span>24:00</span></div>
   <h2>${ALLV?'Barcha rejalar':'Kun jadvali'}</h2>${sm}${rows}
   <div class="in"><button class="btn s" onclick="eb(-1)">Reja qo‘shish</button><button class="btn s" onclick="ALLV=!ALLV;render()">${ALLV?'Faqat bu kun':'Barcha rejalar'}</button></div>
-  <h2>Namozlar</h2><div class="np">${nmB}</div><p class="mu" style="margin:6px 0 0">Bir bosish: o‘qildi, ikki: qazo, uch: bekor.${qzT?` Qazo qarzi: ${qzT} ta.`:''}</p>
+  <h2>Namozlar</h2>${ptNext()?`<p class="mu" style="margin:0 0 8px">Keyingi namoz: <b style="color:var(--tx)">${ptNext().n} ${hm(ptNext().t)}</b>, ${fmt(ptNext().left).trim()} qoldi</p>`:''}<div class="np">${nmB}</div><p class="mu" style="margin:6px 0 0">Bir bosish: o‘qildi, ikki: qazo, uch: bekor.${qzT?` Qazo qarzi: ${qzT} ta.`:''}</p>
   <h2>Odatlar</h2>${hh}<h2>Kun qoidalari</h2>${rr}
   <h2>Qo‘shimcha vazifalar</h2>${tt}<div class="in"><input id="nt" placeholder="Yangi vazifa" onkeydown="if(event.key==='Enter')addT()"><button class="btn" onclick="addT()">Qo‘sh</button></div>
   ${isT?`<section class="hero" style="margin-top:20px"><p class="lab">Fokus taymer</p><h1 id="ft" style="font-size:54px">${fmtT(left)}</h1><p class="mu">Bugun: ${fm} daqiqa</p><div class="in" style="margin-top:10px">${[15,25,50].map(m=>`<button class="btn s" style="${FL===m?'outline:2px solid var(--hlab)':''}" onclick="fset(${m})">${m} daq</button>`).join('')}</div><button class="big" style="margin-top:0" onclick="fgo()">${FR?'To‘xtatish':'Boshlash'}</button><button class="ghost" style="color:var(--htx)" onclick="frs()">Qayta</button></section>`:''}
@@ -552,6 +553,7 @@ function remRows(){
   if(r.blk)bl().forEach(b=>{if(b.s-r.off<0||b.s>=1440)return;rows.push({hhmm:hm(b.s-r.off),days:b.d,title:b.t,body:r.off?r.off+' daqiqadan keyin boshlanadi':'Boshlanish vaqti keldi',tz})});
   if(r.close)rows.push({hhmm:r.ct,days:A,title:'Kunni yopish vaqti',body:'Bugunni baholang va ertangi 3 ta asosiy ishni yozing.',tz});
   if(r.wake&&S.wk.start){const t=tgtFor(new Date().getHours()>=12?dAgo(-1):dk());rows.push({hhmm:hm(t),days:A,title:'Turish vaqti',body:'Bugungi maqsad: '+hm(t)+'. Tur va namozga tayyorlan.',tz})}
+  if(r.nz){const tt=ptTimes(),no=r.noff!==undefined?r.noff:10;if(tt)[['Fajr','Bomdod'],['Dhuhr','Peshin'],['Asr','Asr'],['Maghrib','Shom'],['Isha','Xufton']].forEach(([k,n])=>{if(tt[k]!==undefined)rows.push({hhmm:hm(tt[k]-no+1440),days:A,title:n+' namozi',body:no?no+' daqiqadan keyin vaqti kiradi':'Vaqti kirdi',tz})})}
   r.custom.forEach(c=>rows.push({hhmm:c.time,days:A,title:c.t,body:'',tz}));
   return rows}
 async function syncRem(force){
@@ -572,6 +574,7 @@ async function pushOff(){try{const reg=await navigator.serviceWorker.ready,sub=a
 function testN(){navigator.serviceWorker.ready.then(r=>r.showNotification('Kunlik tizim',{body:'Sinov: bildirishnoma ishlayapti.',icon:'icon-192.png'})).catch(()=>alert('Yuborib bo‘lmadi.'))}
 function remT(f){S.rem[f]=!S.rem[f];save()}
 function remOff(v){S.rem.off=+v;save()}
+function remNo(v){S.rem.noff=+v;save()}
 function remCt(v){if(v){S.rem.ct=v;save()}}
 function addRem(){const t=$('#rt').value,x=$('#rx').value.trim();if(!t||!x)return;S.rem.custom.push({id:Date.now(),time:t,t:x});save()}
 function delRem(i){S.rem.custom.splice(i,1);save()}
@@ -582,6 +585,7 @@ function remCard(){
   return `<h2>Eslatmalar</h2><p class="mu">Bildirishnoma yoqilgan (ruxsat: ${np==='granted'?'berilgan':np}).</p>
   ${chk(r.blk,'blk','Har bir reja boshlanganda')}<div class="in"><select onchange="remOff(this.value)">${[0,5,10,15].map(m=>`<option value="${m}" ${r.off===m?'selected':''}>${m?m+' daqiqa oldin':'Aynan boshlanganda'}</option>`).join('')}</select></div>
   ${chk(r.wake,'wake','Turish vaqti (uyg‘onish maqsadi)')}${chk(r.close,'close','Kunni yopish')}<div class="in"><input type="time" value="${r.ct}" onchange="remCt(this.value)"></div>
+  ${chk(r.nz,'nz','Namoz vaqtlari')}<div class="in"><select onchange="remNo(this.value)">${[0,5,10,15,20].map(m=>`<option value="${m}" ${(r.noff!==undefined?r.noff:10)===m?'selected':''}>${m?m+' daqiqa oldin':'Aynan vaqti kirganda'}</option>`).join('')}</select></div>
   <p class="mu" style="margin:8px 0">O‘zingning eslatmang:</p>${r.custom.map((c,i)=>`<div class="row"><span class="t">${esc(c.t)}</span><span class="tm">${c.time}</span><button class="x" onclick="delRem(${i})">×</button></div>`).join('')}
   <div class="in"><input type="time" id="rt" value="08:00" style="flex:0 0 120px"><input id="rx" placeholder="Masalan: 33 ta zikr" onkeydown="if(event.key==='Enter')addRem()"><button class="btn" onclick="addRem()">+</button></div>
   <div class="in"><button class="btn s" onclick="testN()">Sinab ko‘rish</button><button class="btn s" onclick="pushOff()">O‘chirish</button></div>`}
@@ -731,15 +735,16 @@ function nmQ(n){const N=S.nm,k=dk();N.qb=N.qb||{};const v=Math.max(0,(N.qb[k]||0
 function namoz(){
   const T0=dk(),now=new Date(),N=S.nm,d0=new Date(now.getFullYear(),now.getMonth()+NMo,1),y=d0.getFullYear(),m=d0.getMonth(),nd=new Date(y,m+1,0).getDate(),key=x=>`${y}-${pad(m+1)}-${pad(x)}`;
   let tot=0,got=0,qz=0;
-  const today=PR.map(([p,t])=>{const s_=((N.d[T0]||{})[p])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${T0}','${p}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}</button>`}).join('');
+  const today=PR.map(([p,t])=>{const s_=((N.d[T0]||{})[p])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${T0}','${p}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}${ptT(PK[p])?`<small>${ptT(PK[p])}</small>`:''}</button>`}).join('');
   const head=gHead(y,m,nd,T0);
   const body=PR.map(([p,t])=>`<tr><td class="sk">${t}</td>${[...Array(nd)].map((_,i)=>{const kk=key(i+1),s_=((N.d[kk]||{})[p])||0,fu=kk>T0;if(!fu&&p!=='vitr'){tot++;if(s_===1)got++;if(s_===2)qz++}return `<td class="${gCls(y,m,i+1,T0)}"><button class="cell ${s_===1?'on':s_===2?'qz':''}" ${fu?'disabled':''} onclick="nmS('${kk}','${p}')"></button></td>`}).join('')}</tr>`).join('');
   const debt=PR.reduce((a,[p])=>a+(N.debt[p]||0),0),qb=(N.qb||{})[T0]||0;
   const rows=PR.map(([p,t])=>`<div class="row"><span class="t">${t}<br><span class="mu">${N.debt[p]||0} ta qazo</span></span><button class="btn s" style="padding:8px 12px" onclick="qzPay('${p}')">O‘qidim</button><button class="btn s" style="padding:8px 12px" onclick="qzAdd('${p}')">+</button></div>`).join('');
   const lbl={miss:'qazo qilindi',paid:'qazo o‘qildi',add:'eski qazo qo‘shildi'},nmz=Object.fromEntries(PR);
   const log=N.log.slice().reverse().slice(0,12).map(x=>`<div class="row"><span class="t">${nmz[x.p]}<br><span class="mu">${x.d.slice(8)}.${x.d.slice(5,7)}, ${lbl[x.k]}${x.k==='add'?' ('+x.n+' ta)':''}</span></span></div>`).join('');
-  return `<section class="hero"><p class="lab">Bugungi namozlar</p><div class="np" style="margin-top:8px">${today}</div><p class="mu" style="margin-top:8px">Bir bosish: o‘qildi, ikki: qazo, uch: bekor qilish.</p></section>
+  return `${ptCard()}<section class="hero" style="margin-top:12px"><p class="lab">Bugungi namozlar</p><div class="np" style="margin-top:8px">${today}</div><p class="mu" style="margin-top:8px">Bir bosish: o‘qildi, ikki: qazo, uch: bekor qilish.</p></section>
   <h2>Namozda o‘qilgan Qur‘on</h2><p class="mu" style="margin:0 0 8px">Namozlarda o‘qigan betlaring odatiy hatm hisobiga qo‘shiladi.</p><div class="in"><button class="btn s" onclick="nmQ(-1)">−1</button><div class="row" style="flex:1;justify-content:center;margin:0"><b>Bugun ${qb} bet</b></div><button class="btn" onclick="nmQ(1)">+1 bet</button></div>
+  ${nhCard()}
   <h2>${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h2><div class="in"><button class="btn s" onclick="NMo--;render()">‹</button><button class="btn s" onclick="NMo=0;render()">Shu oy</button><button class="btn s" onclick="NMo++;render()">›</button></div>
   <div class="sum"><div><span class="mu">O‘qilgan namozlar</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Shu oy qazo</span><b>${qz}</b></div></div><div class="hg" data-k="n"><table>${head}${body}</table></div><p class="mu" style="margin:6px 0 0">Yashil: o‘qildi. Qizil: qazo. Katakni bossang, holat almashadi.</p>
   <h2>Qazo namozlar jurnali</h2><div class="sum"><div class="w"><span class="mu">Jami qazo qarzi</span><b>${debt} ta</b></div></div>${rows}${log?`<p class="mu" style="margin:12px 0 6px">So‘nggi yozuvlar</p>${log}`:''}`}
@@ -844,6 +849,61 @@ function copyMonth(){const d0=new Date(new Date().getFullYear(),new Date().getMo
   const t=MON[s.m]+' '+s.y+' hisoboti\n'+mRows(s).map(r=>r[0]+': '+r[1]).join('\n')+(RMN?'\nPul balansi: '+num(s.pin-s.pout)+' so‘m':'')+'\nKunlik tizim by AZIMOV';
   (navigator.clipboard?navigator.clipboard.writeText(t):Promise.reject()).then(()=>alert('Nusxalandi.')).catch(()=>prompt('Nusxalang:',t))}
 
+// ---- Namoz vaqtlari ----
+const PK={fajr:'Fajr',dhuhr:'Dhuhr',asr:'Asr',maghrib:'Maghrib',isha:'Isha'};
+const PCITY=[['Toshkent',41.2995,69.2401],['Samarqand',39.6542,66.9597],['Buxoro',39.7748,64.4286],['Andijon',40.7821,72.3442],['Farg‘ona',40.3842,71.7843],['Namangan',41.0011,71.6726],['Qo‘qon',40.5286,70.9425],['Qarshi',38.8606,65.7891],['Navoiy',40.0844,65.3792],['Jizzax',40.1158,67.8422],['Guliston',40.4897,68.7842],['Termiz',37.2242,67.2783],['Urganch',41.5506,60.6314],['Xiva',41.3783,60.3639],['Nukus',42.4531,59.6103]];
+const PNAMES=[['Fajr','Bomdod'],['Sunrise','Quyosh'],['Dhuhr','Peshin'],['Asr','Asr'],['Maghrib','Shom'],['Isha','Xufton']];
+function ptTimes(){const c=S.pt&&S.pt.cache;if(!c||c.date!==dk())return null;const o={};PNAMES.forEach(([k])=>{if(c.raw[k])o[k]=(t2m(c.raw[k])+((S.pt.tune||{})[k]||0)+1440)%1440});return o}
+const ptT=k=>{const t=ptTimes();return t&&k&&t[k]!==undefined?hm(t[k]):''};
+function ptNext(){const t=ptTimes();if(!t)return null;const d=new Date(),n=d.getHours()*60+d.getMinutes();
+  for(const [k,nm] of PNAMES){if(k==='Sunrise')continue;if(t[k]>n)return{n:nm,t:t[k],left:t[k]-n}}
+  return{n:'Bomdod',t:t.Fajr,left:t.Fajr+1440-n}}
+async function ptEnsure(){
+  const P=S.pt;if(!P||PTB||navigator.onLine===false)return;
+  const key=P.lat.toFixed(3)+','+P.lon.toFixed(3);if(P.cache&&P.cache.date===dk()&&P.cache.key===key)return;
+  PTB=true;
+  try{const d=new Date(),ds=pad(d.getDate())+'-'+pad(d.getMonth()+1)+'-'+d.getFullYear();
+    const r=await fetch('https://api.aladhan.com/v1/timings/'+ds+'?latitude='+P.lat+'&longitude='+P.lon+'&method=3&school=1');
+    const j=await r.json(),tm=j&&j.data&&j.data.timings;
+    if(tm){const raw={};PNAMES.forEach(([k])=>{if(tm[k])raw[k]=String(tm[k]).slice(0,5)});P.cache={date:dk(),key,raw};save();if(S.rem&&S.rem.on)remSoon()}
+  }catch(e){}
+  PTB=false}
+function ptLoc(v){const P=S.pt;
+  if(v==='gps'){if(!navigator.geolocation){alert('Joylashuv aniqlanmadi.');return}
+    navigator.geolocation.getCurrentPosition(p=>{P.loc='gps';P.lat=p.coords.latitude;P.lon=p.coords.longitude;P.cache=null;save();ptEnsure()},()=>alert('Joylashuvga ruxsat berilmadi. Shaharni ro‘yxatdan tanla.'),{timeout:10000});return}
+  const c=PCITY.find(x=>x[0]===v);if(!c)return;P.loc=c[0];P.lat=c[1];P.lon=c[2];P.cache=null;save();ptEnsure()}
+function ptCal(){const P=S.pt,c=P.cache;if(!c)return;P.tune=P.tune||{};PNAMES.forEach(([k])=>{const v=V('pc_'+k);if(v&&c.raw[k])P.tune[k]=t2m(v)-t2m(c.raw[k])});save()}
+function ptRst(){S.pt.tune={};save()}
+function ptCard(){
+  const P=S.pt,t=ptTimes(),nx=ptNext(),nm=PNAMES.map(([k,n])=>`<div class="pc ${nx&&t&&t[k]===nx.t&&n===nx.n?'nx':''}"><span>${n}</span><b>${t&&t[k]!==undefined?hm(t[k]):'--:--'}</b></div>`).join('');
+  const opts=`<option value="gps" ${P.loc==='gps'?'selected':''}>Joylashuvim (GPS)</option>`+PCITY.map(c=>`<option value="${c[0]}" ${P.loc===c[0]?'selected':''}>${c[0]}</option>`).join('');
+  const cal=PNAMES.map(([k,n])=>`<div class="in" style="margin-bottom:6px"><span style="align-self:center;min-width:64px">${n}</span><input id="pc_${k}" type="time" value="${t&&t[k]!==undefined?hm(t[k]):''}"></div>`).join('');
+  return `<section class="hero"><p class="lab">Namoz vaqtlari, ${P.loc==='gps'?'joylashuvim':P.loc}</p>${nx?`<h1 style="font-size:30px">${nx.n} ${hm(nx.t)}</h1><p class="mu">${fmt(nx.left).trim()} qoldi</p>`:`<h1 style="font-size:26px">Vaqtlar yuklanmoqda</h1><p class="mu">${navigator.onLine===false?'Internet yo‘q. Ulanganda yuklanadi.':'Bir lahza kuting.'}</p>`}
+  <div class="np" style="grid-template-columns:repeat(3,1fr);margin:10px 0">${nm}</div>
+  <div class="in"><select onchange="ptLoc(this.value)">${opts}</select></div>
+  <details><summary class="mu" style="margin-bottom:8px">islom.uz bilan moslash</summary><p class="mu" style="margin:0 0 8px">Vaqtlar hisoblab chiqariladi. islom.uz ilovasida bugungi vaqtlarni ko‘rib, shu yerga yoz. Ilova farqni eslab qoladi va keyingi kunlarda ham shunga moslab ko‘rsatadi.</p>${cal}<div class="in"><button class="btn" style="flex:1" onclick="ptCal()">Moslash</button><button class="btn s" style="flex:1" onclick="ptRst()">Asliga qaytarish</button></div></details>
+  <p class="mu" style="margin:6px 0 0;font-size:12px">Hanafiy mazhab bo‘yicha hisoblangan. Manba: aladhan.com.</p></section>`}
+
+// ---- Namozda yodlaganlarim hatmi ----
+const nhList=()=>{const q=S.q,o=[];SN.forEach((n,i)=>{const d=Math.min(q.m[i]||0,SL(i));if(d>0)o.push({i,pg:d})});return o};
+function nhPos(p){let c=0;for(const x of nhList()){if(p<c+x.pg-1e-9)return{i:x.i,left:c+x.pg-p,off:p-c,pg:x.pg};c+=x.pg}return null}
+function nhAdd(n,sura){const N=S.nh,T=nhList().reduce((a,x)=>a+x.pg,0);if(!T)return;let a=n;if(sura){const pos=nhPos(N.p);if(!pos)return;a=pos.left}
+  N.log.push({id:Date.now(),d:dk(),pr:N.pr,n:a});N.p+=a;while(N.p>=T-1e-9){N.c++;N.hist.push({d:dk()});N.p=Math.max(0,N.p-T)}save()}
+function nhPr(p){S.nh.pr=p;save()}
+function nhDel(id){const N=S.nh,x=N.log.find(y=>y.id===id);if(!x)return;N.log=N.log.filter(y=>y.id!==id);N.p=Math.max(0,N.p-x.n);save()}
+function nhCard(){
+  const N=S.nh,L=nhList(),T=L.reduce((a,x)=>a+x.pg,0),k=dk();
+  if(!T)return `<h2>Namozda yodlaganlarim hatmi</h2><p class="mu">Avval Qur‘on → Yodlash bo‘limida suralarni belgila. Keyin namozda ovoz chiqarib o‘qiganlaringni shu yerda hatm qilasan.</p>`;
+  const pos=nhPos(N.p),PL=[['fajr','Bomdod'],['dhuhr','Peshin'],['asr','Asr'],['maghrib','Shom'],['isha','Xufton'],['nafl','Nafl']],nmz=Object.fromEntries(PL);
+  const td=N.log.filter(x=>x.d===k),tp=td.reduce((a,x)=>a+x.n,0);
+  const rows=td.slice().reverse().map(x=>`<div class="row"><span class="t">${nmz[x.pr]||''}<br><span class="mu">${r1(x.n)} bet</span></span><button class="x" onclick="nhDel(${x.id})">×</button></div>`).join('');
+  return `<h2>Namozda yodlaganlarim hatmi</h2><p class="mu" style="margin:0 0 8px">Yodlagan suralaringni namozda ovoz chiqarib o‘qib, aylanib hatm qilasan. Tartib mushaf bo‘yicha.</p>
+  <div class="goal"><div class="h"><b style="font:700 19px Fraunces,serif">${r1(N.p)} / ${r1(T)} bet</b><span class="mu">${N.c} ta hatm</span></div><div class="bar" style="margin:8px 0"><i style="width:${Math.min(100,N.p/T*100)}%"></i></div>
+  ${pos?`<p style="margin:0 0 8px">Navbatdagi sura: <b>${SN[pos.i]}</b> <span class="mu">(shu suradan ${r1(pos.left)} bet qoldi)</span></p>`:''}
+  <div class="chips">${PL.map(([p,t])=>`<button class="${N.pr===p?'on':''}" onclick="nhPr('${p}')">${t}</button>`).join('')}</div>
+  <div class="in">${[0.5,1,2,3].map(n=>`<button class="btn s" style="flex:1;padding:10px 0" onclick="nhAdd(${n})">+${n}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="nhAdd(0,1)">Navbatdagi surani to‘liq o‘qidim</button>
+  <p class="mu" style="margin:8px 0 0">Bugun namozda: ${r1(tp)} bet</p>${rows}${N.hist.length?`<p class="mu" style="margin:10px 0 0">Tugatilgan hatmlar: ${N.hist.map(x=>x.d).join(', ')}</p>`:''}</div>`}
+
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
   try{return await r.error.context.json()}catch(e){return{error:'Funksiya topilmadi yoki ishlamadi'}}}
@@ -903,13 +963,13 @@ async function auth(up){
 }
 async function start(id,em){UID=id;try{localStorage.setItem('trk_uid',id);if(em)localStorage.setItem('trk_em',em)}catch(e){}S=load();await loadProf();if(!lockMsg()){await pull();if(S.ts&&!S.sg)sgMig();try{if(localStorage.getItem('trk_dirty'))push()}catch(e){}}render()}
 (async()=>{
-  if(!sb){S=load();render()}
+  if(!sb){S=load();render();ptEnsure()}
   else{
     let ok=false;
-    try{const r=await sb.auth.getSession();if(r.data&&r.data.session){ok=true;await start(r.data.session.user.id,r.data.session.user.email)}}catch(e){}
+    try{const r=await sb.auth.getSession();if(r.data&&r.data.session){ok=true;await start(r.data.session.user.id,r.data.session.user.email);ptEnsure()}}catch(e){}
     if(!ok){let u=null;try{u=localStorage.getItem('trk_uid')}catch(e){}if(u&&navigator.onLine===false)await start(u);else render()}
   }
-  setInterval(()=>{const a=document.activeElement;if(!a||!/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))render()},30000);
+  setInterval(()=>{ptEnsure();const a=document.activeElement;if(!a||!/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))render()},30000);
   window.addEventListener('online',()=>{SYNC='ok';let d=null;try{d=localStorage.getItem('trk_dirty')}catch(e){}if(d)push();render()});
   window.addEventListener('offline',()=>{SYNC='off';render()});
   if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
