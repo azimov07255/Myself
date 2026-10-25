@@ -179,6 +179,19 @@ html.ovl,html.ovl body{overflow:hidden;overscroll-behavior:none}html.ovl body{po
 .cal.rm .c{height:56px;font-size:16px}.cal.rm .c small{font-size:9px;margin-top:3px;opacity:.75}.cal .c.g{background:var(--go);color:var(--on-go);border-color:var(--go)}.cal .c.ld:not(.d):not(.g):not(.m){border-color:var(--go)}.cal .c.fu{opacity:.4;pointer-events:none}
 .cal .c sup{position:absolute;top:3px;right:5px;font-size:10px;line-height:1}.cal .c em{position:absolute;top:2px;left:5px;font:700 10px Figtree,sans-serif;color:var(--go);font-style:normal;text-transform:none}.cal .c.d em,.cal .c.g em{color:inherit}
 .rtl{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ln);text-align:left}.rtl:last-child{border-bottom:0}.rtl .tdot{font-size:18px;flex:0 0 auto;margin:0;width:auto}
+.fbe{padding:10px 12px;border-radius:12px;background:var(--c1);margin-bottom:8px}.fbo{color:var(--bad);text-decoration:line-through;text-decoration-thickness:1.5px;overflow-wrap:anywhere}.fbc{color:var(--ac);font-weight:600;margin:3px 0;overflow-wrap:anywhere}
+.srcs{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.srcs a{font-size:12px;padding:6px 10px;border-radius:14px;background:var(--c2);color:var(--tx);text-decoration:none}
+.vcs{display:grid;gap:8px;margin-top:8px}.vc{display:flex;gap:10px;align-items:center;text-decoration:none;color:var(--tx);background:var(--c2);border-radius:12px;padding:6px}.vc img{width:96px;height:54px;object-fit:cover;border-radius:8px;flex:0 0 96px}
+.un-l{display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:14px;background:var(--c1);border-left:5px solid var(--c);margin-bottom:8px}.un-l.now{box-shadow:0 0 0 2px var(--c)}
+.un-t{display:flex;flex-direction:column;align-items:center;min-width:46px;font-size:12px}.un-t b{font:700 15px Figtree,sans-serif}.un-b{flex:1;min-width:0}.un-b b{overflow-wrap:anywhere}
+.un-m{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:10px 0 6px}.un-m div{background:var(--c2);border-radius:12px;padding:8px 10px}.un-m span{display:block;font-size:12px}.un-m b{font:800 22px Fraunces,serif}
+.un-ex{display:flex;gap:12px;align-items:flex-start}.un-cd{min-width:56px;text-align:center;background:var(--c2);border-radius:14px;padding:8px 4px}.un-cd b{display:block;font:800 28px Fraunces,serif;line-height:1}.un-cd span{font-size:11px;color:var(--mu)}
+.chip-on{font-size:11px;font-weight:700;padding:4px 10px;border-radius:12px;background:var(--ac);color:var(--on-ac)}
+.qab{position:fixed;left:10px;right:10px;bottom:calc(env(safe-area-inset-bottom,0px) + 88px);z-index:60;background:var(--hbg);color:var(--htx);border-radius:16px;padding:8px 8px 8px 14px;display:flex;gap:6px;align-items:center;box-shadow:0 6px 18px rgba(0,0,0,.3)}.qab .qa-t{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:600;font-size:14px}.qab button{width:40px;height:40px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:inherit;font-size:16px;padding:0}
+.qa-p{background:var(--hbg);color:var(--htx);border-radius:24px;padding:18px;margin-bottom:12px}.qa-n{font:800 22px Fraunces,serif;margin:4px 0 10px;overflow-wrap:anywhere}.qa-c{display:flex;justify-content:space-between;align-items:center;margin:12px 0}.qa-c button{width:52px;height:52px;border-radius:50%;border:0;background:rgba(255,255,255,.14);color:inherit;font-size:15px;font-weight:700;padding:0}.qa-c .qa-pp{width:68px;height:68px;font-size:26px;background:#e2b857;color:#1b2a22}
+.qa-r{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:8px}.qa-r>span{font-size:12px;opacity:.75;min-width:78px}.qa-r button{padding:6px 12px;border-radius:14px;border:1px solid rgba(255,255,255,.25);background:transparent;color:inherit;font:600 13px Figtree,sans-serif}.qa-r button.on{background:#e2b857;color:#1b2a22;border-color:#e2b857}
+.qa-i{display:flex;gap:12px;align-items:center}.qa-i.on{border:1.5px solid var(--ac)}.qa-pl{width:44px;height:44px;flex:0 0 44px;border-radius:50%;border:0;background:var(--ac);color:var(--on-ac);font-size:16px;padding:0}
+.dz-ar{font-family:'Amiri','Scheherazade New','Geeza Pro','Noto Naskh Arabic','Traditional Arabic',serif;font-size:25px;line-height:2.1;margin:10px 0 4px;text-align:right}.dz-tr{margin:4px 0;font-style:italic;line-height:1.5;font-size:15px}.dz-uz{margin:4px 0;font-size:13.5px;line-height:1.5}.dz-b{font-weight:700;color:var(--ac)}.dz.dn{opacity:.6}
 </style>
 </head>
 <body>
@@ -221,7 +234,7 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,ai:{chat:[],sh:{core:1,quran:1,study:1,health:1,money:0},tip:{}},debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7,ex:'',tests:[],dp:{},dr:''},un:{tasks:[],exams:[]},pr:{er:{},pm:18,st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[],ex:[],plan:{},pass:null,past:[],food:{goal:{kcal:2500,p:150,f:70,c:300},log:{}}},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,ai:{chat:[],sh:{core:1,quran:1,study:1,health:1,money:0},tip:{}},debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7,ex:'',tests:[],dp:{},dr:''},un:{tasks:[],exams:[],subj:[],tt:{},gr:{},ab:{}},qa:{list:[],rate:1,rep:'off'},dz:{d:{}},pr:{er:{},pm:18,st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[],ex:[],plan:{},pass:null,past:[],food:{goal:{kcal:2500,p:150,f:70,c:300},log:{}}},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
 let BV='j',SDO={},IVW='b',IK='L',IQ=null,IQS='',WE={k:2,p:'',run:false,end:0,open:0},SPQ=null,IT=null,URG=null,PSim=null,PSel=[],PTB=false,RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
@@ -314,7 +327,7 @@ function hozir(){
   return `<div class="top"><div>${head}</div>
   <svg width="64" height="64" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
   <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${mdBar()}
-  ${dueCard()}${rzCard()}${edForm()}${hero}${rit}${wkTop}${topC}${mgRow}${aiCard()}
+  ${dueCard()}${uniCard()}${zkCard()}${rzCard()}${edForm()}${hero}${rit}${wkTop}${topC}${mgRow}${aiCard()}
   <div class="seg" style="margin-top:16px">${bvs}</div>${BV==='j'?jadval:BV==='m'?kunlik:BV==='h'?holat:tahlil}`;
 }
 
@@ -610,8 +623,8 @@ function ztg(n){S.z.tg=n;save()}
 function zr(){const z=S.z;if(confirm('Bugungi sanoq nolga tushirilsinmi?')){(z.c[dk()]=z.c[dk()]||{})[z.sel]=0;save()}}
 const stp=(f,min)=>`<div class="in" style="margin-top:10px"><button class="btn s" onclick="gs('${f}',-1,${min})">−</button><button class="btn s" onclick="gs('${f}',1,${min})">+</button></div>`;
 function quran(){
-  const seg=[['y','🧠 Yodlash'],['t','🔁 Takror'],['h','📖 Hatm'],['z','📿 Zikr'],['n','🕌 Namoz'],['r','🌙 Ramazon']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg sc" style="margin-top:12px">${seg}</div>${QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():QT==='r'?ramazon():zikr()}`}
+  const seg=[['y','🧠 Yodlash'],['t','🔁 Takror'],['h','📖 Hatm'],['z','📿 Zikr'],['n','🕌 Namoz'],['r','🌙 Ramazon'],['d','🤲 Duolar'],['a','🎧 Tinglash']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg sc" style="margin-top:12px">${seg}</div>${QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():QT==='r'?ramazon():QT==='d'?duolar():QT==='a'?qaView():zikr()}`}
 const J=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582,605];
 const AY=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 function juzMem(j){let s=0;SN.forEach((_,i)=>{const d=Math.min(S.q.m[i]||0,SL(i));if(d>0){const a=SP[i];s+=Math.max(0,Math.min(a+d,J[j+1])-Math.max(a,J[j]))}});return s}
@@ -900,19 +913,20 @@ function wInput(el){S.ie.dr=el.value;qsave();const n=wcount(el.value),c=document
 function wSave(){const text=(S.ie.dr||'').trim(),n=wcount(text);if(n<20){alert('Avval matn yoz.');return}
   const r=['wta','wcc','wlr','wgr'].map(id=>parseFloat(V(id))||0),have=r.filter(x=>x>0),sc=have.length?ieRound(have.reduce((a,x)=>a+x,0)/have.length):0,mins=WE.run?Math.round((WE.k===2?40:20)-(WE.end-Date.now())/60000):0;
   if(WE.run){clearInterval(WE.iv);WE.run=false}
-  S.ie.wr.push({id:Date.now(),d:dk(),k:WE.k,t:WE.p||'Mavzusiz',x:text,n,sc,min:mins});
-  if(sc){S.ie.tests.push({id:Date.now()+1,d:dk(),k:'W',src:'Essay (Task '+WE.k+')',min:mins,b:{W:sc},raw:{}})}
-  ieDp().W=1;S.ie.dr='';WE.p='';save()}
+  const aiB=WFB?(+WFB.band||0):0,use=sc||aiB;S.ie.wr.push({id:Date.now(),d:dk(),k:WE.k,t:WE.p||'Mavzusiz',x:text,n,sc:use,min:mins,fb:WFB||undefined});
+  if(use){S.ie.tests.push({id:Date.now()+1,d:dk(),k:'W',src:'Essay (Task '+WE.k+')'+(sc?'':' (AI)'),min:mins,b:{W:use},raw:{}})}
+  ieDp().W=1;S.ie.dr='';WE.p='';WFB=null;save()}
 function wOpen(id){WE.open=WE.open===id?0:id;render()}
 function wDel(id){if(confirm('Insho o‘chirilsinmi?')){S.ie.wr=S.ie.wr.filter(x=>x.id!==id);save()}}
 function ieWrite(){
   const min=WE.k===2?250:150,n=wcount(S.ie.dr||''),tl=Math.max(0,WE.run?Math.ceil((WE.end-Date.now())/1000):(WE.k===2?2400:1200));
   const sel=id=>`<select id="${id}" style="flex:1"><option value="">${id==='wta'?'Task':id==='wcc'?'Coherence':id==='wlr'?'Lexical':'Grammar'}</option>${[9,8.5,8,7.5,7,6.5,6,5.5,5,4.5,4].map(x=>`<option>${x}</option>`).join('')}</select>`;
-  const old=S.ie.wr.slice().reverse().slice(0,8).map(e=>`<div class="goal"><div class="h"><b>Task ${e.k}${e.sc?', taxminiy '+e.sc:''}</b><span><button class="x" style="font-size:14px" onclick="wOpen(${e.id})">${WE.open===e.id?'yopish':'ochish'}</button><button class="x" onclick="wDel(${e.id})">×</button></span></div><p class="mu" style="margin:2px 0">${e.d.slice(8)}.${e.d.slice(5,7)}, ${e.n} so‘z${e.min?', '+e.min+' daq':''}</p><p style="margin:4px 0;font-size:14px">${esc(e.t||'').slice(0,110)}${(e.t||'').length>110?'…':''}</p>${WE.open===e.id&&e.x?`<p style="white-space:pre-wrap;font-size:15px;line-height:1.5;margin:8px 0 0">${esc(e.x)}</p>`:''}</div>`).join('');
+  const old=S.ie.wr.slice().reverse().slice(0,8).map(e=>`<div class="goal"><div class="h"><b>Task ${e.k}${e.sc?', taxminiy '+e.sc:''}${e.fb?' 🤖':''}</b><span><button class="x" style="font-size:14px" onclick="wOpen(${e.id})">${WE.open===e.id?'yopish':'ochish'}</button><button class="x" onclick="wDel(${e.id})">×</button></span></div><p class="mu" style="margin:2px 0">${e.d.slice(8)}.${e.d.slice(5,7)}, ${e.n} so‘z${e.min?', '+e.min+' daq':''}</p><p style="margin:4px 0;font-size:14px">${esc(e.t||'').slice(0,110)}${(e.t||'').length>110?'…':''}</p>${WE.open===e.id&&e.x?`<p style="white-space:pre-wrap;font-size:15px;line-height:1.5;margin:8px 0 0">${esc(e.x)}</p>${e.fb?ieFb(e.fb,String(e.id)):''}`:''}</div>`).join('');
   return `<div class="seg"><button class="${WE.k===2?'on':''}" onclick="wK(2)">Task 2 (40 daq)</button><button class="${WE.k===1?'on':''}" onclick="wK(1)">Task 1 (20 daq)</button></div>
   <div class="goal"><div class="h"><b>Mavzu</b><button class="btn s" style="padding:6px 12px" onclick="wPick()">${WE.p?'Boshqa mavzu':'Mavzu tanlash'}</button></div><p style="margin:8px 0 0;line-height:1.45">${WE.p?esc(WE.p):'<span class="mu">“Mavzu tanlash” ni bos yoki o‘z mavzungda yoz.</span>'}</p></div>
   <div class="tmr" id="wtm">${fmtT(tl)}</div><button class="big ${WE.run?'ok':''}" style="margin:0 0 10px" onclick="wTimer()">${WE.run?'Taymerni to‘xtatish':'Taymerni boshlash'}</button>
   <textarea class="wta" placeholder="Inshoni shu yerga yoz..." oninput="wInput(this)">${esc(S.ie.dr||'')}</textarea><p id="wcn" class="mu" style="margin:6px 0 10px;color:${n>=min?'var(--ac)':'var(--bad)'}">${n} so‘z (kamida ${min})</p>
+  <button class="big" style="margin:0 0 6px" onclick="wAI()">${WBUSY?'AI tekshirmoqda… (30-60 soniya)':'🤖 AI tekshirsin va tushuntirsin'}</button>${WFB?ieFb(WFB,'w'):''}
   <p class="mu" style="margin:0 0 6px">O‘zingni bahola (ixtiyoriy):</p><div class="in">${sel('wta')}${sel('wcc')}</div><div class="in">${sel('wlr')}${sel('wgr')}</div><button class="btn" style="width:100%" onclick="wSave()">Inshoni saqlash</button>
   <h2>Yozilgan inshoalar</h2>${old||'<p class="mu">Hali insho yo‘q.</p>'}`}
 
@@ -932,20 +946,80 @@ function ieSpeak(){
    ${IT?`<div class="tmr" id="itm">${fmtT(tl)}</div><p class="mu" style="text-align:center;margin:0 0 8px">${IT.label}</p><button class="btn s" style="width:100%" onclick="spStop()">To‘xtatish</button>`
    :q.part===2?`<button class="btn" style="width:100%;margin-bottom:6px" onclick="SPQ.ph=1;spTimer(60,'Tayyorlanish: 1 daqiqa',1)">1 daqiqa tayyorlanish, keyin 2 daqiqa gapirish</button>`
    :`<button class="btn" style="width:100%;margin-bottom:6px" onclick="spTimer(${q.part===1?30:60},'Gapiring')">${q.part===1?'30':'60'} soniya javob berish</button>`}
-   <p class="mu" style="margin:8px 0 6px">O‘zingni bahola (ball):</p><div class="chips">${[5,5.5,6,6.5,7,7.5,8].map(b=>`<button onclick="spRate(${b})">${b}</button>`).join('')}</div></div>`}
-  const hist=S.ie.tests.filter(t=>t.k==='S').slice(-6).reverse().map(t=>`<div class="row"><span class="t">${t.b.S}<br><span class="mu">${t.d.slice(8)}.${t.d.slice(5,7)}, ${esc(t.src||'')}</span></span></div>`).join('');
-  return `${pick}${card}<h2>So‘nggi baholar</h2>${hist||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
+   <button class="btn ${SREC?'':'s'}" id="sprb" style="width:100%;margin:8px 0 0" onclick="spRec()">${SBUSY?'AI tinglamoqda… (30-60 soniya)':SREC?'⏹ Tugatish (0 s)':'🎙 Javobni yozib, AI ga tekshirtirish'}</button>
+    <p class="mu" style="margin:8px 0 6px">O‘zingni bahola (ball):</p><div class="chips">${[5,5.5,6,6.5,7,7.5,8].map(b=>`<button onclick="spRate(${b})">${b}</button>`).join('')}</div></div>`}
+  const hist=S.ie.tests.filter(t=>t.k==='S').slice(-6).reverse().map(t=>`<div class="row"><span class="t">${t.b.S}<br><span class="mu">${t.d.slice(8)}.${t.d.slice(5,7)}, ${esc(t.src||'')}</span></span>${t.fb?`<button class="x" style="font-size:14px" onclick="SOP=SOP===${t.id}?0:${t.id};render()">${SOP===t.id?'yopish':'AI izohi'}</button>`:''}</div>${SOP===t.id&&t.fb?ieFb(t.fb,String(t.id)):''}`).join('');
+  return `${pick}${card}${SFB?ieFb(SFB,'s')+`<button class="big" style="margin:8px 0 0" onclick="spSaveAI()">Natijani saqlash (${esc(String(SFB.band))})</button>`:''}<h2>So‘nggi baholar</h2>${hist||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
 
-function uAdd(){const t=V('ut');if(!t)return;S.un.tasks.push({id:Date.now(),t,s:V('us'),due:V('ud'),x:0});save()}
-function uEx(){const s=V('ue'),d=V('ued');if(!s||!d)return;S.un.exams.push({id:Date.now(),s,d});save()}
+// ---- UNIVER: dars jadvali, fanlar, baho va davomat, topshiriq, imtihon ----
+const UPAL=['#46c4b2','#e2b857','#d96f8f','#6f9fd8','#b27ad6','#e8855a','#7fb069','#c9a227'],UKIND=['Ma‘ruza','Amaliy','Laboratoriya','Seminar'];
+let UV='b',UD=new Date().getDay();
+const uSubj=id=>S.un.subj.find(x=>x.id===id),uCol=n=>{const s=S.un.subj.find(x=>x.n===n);return s?s.col:'var(--ln)'};
+function uSub(id){return S.un.subj.length?`<select id="${id}" style="flex:1;min-width:0">${S.un.subj.map(s=>`<option value="${s.id}">${esc(s.n)}</option>`).join('')}</select>`:`<input id="${id}" placeholder="Fan nomi" style="flex:1;min-width:0">`}
+const uName=v=>{const s=uSubj(v);return s?s.n:String(v||'').trim()};
+function sbAdd(){const n=V('sbn');if(!n)return alert('Fan nomini yozing.');S.un.subj.push({id:'s'+Date.now(),n,cr:+V('sbc')||0,t:V('sbt'),lim:Math.round(+V('sbl'))||0,col:UPAL[S.un.subj.length%UPAL.length]});save()}
+function sbDel(id){if(!confirm('Fan va uning darslari, baholari o‘chirilsinmi?'))return;S.un.subj=S.un.subj.filter(x=>x.id!==id);Object.keys(S.un.tt).forEach(d=>{S.un.tt[d]=S.un.tt[d].filter(x=>x.sid!==id)});delete S.un.gr[id];delete S.un.ab[id];save()}
+function ttAdd(){const sid=V('tts'),s=V('ttst'),e=V('ttse');if(!uSubj(sid))return alert('Avval Fanlar bo‘limida fan qo‘shing.');if(!s||!e||t2m(e)<=t2m(s))return alert('Boshlanish va tugash vaqtini to‘g‘ri yozing.');
+  const L=S.un.tt[UD]=S.un.tt[UD]||[];L.push({id:Date.now(),sid,s,e,r:V('ttr'),k:V('ttk')||UKIND[0]});L.sort((a,b)=>t2m(a.s)-t2m(b.s));save()}
+function ttDel(d,id){S.un.tt[d]=(S.un.tt[d]||[]).filter(x=>x.id!==id);save()}
+function grAdd(sid){const n=V('grn'+sid),sc=parseFloat(V('grs'+sid)),mx=parseFloat(V('grm'+sid))||100;if(!(sc>=0)||sc>mx)return alert('Ballni to‘g‘ri yozing.');(S.un.gr[sid]=S.un.gr[sid]||[]).push({id:Date.now(),n:n||'Baho',sc,mx});save()}
+function grDel(sid,id){S.un.gr[sid]=(S.un.gr[sid]||[]).filter(x=>x.id!==id);save()}
+function abAdd(sid,d){S.un.ab[sid]=Math.max(0,(S.un.ab[sid]||0)+d);save()}
+function uAdd(){const t=V('ut');if(!t)return;S.un.tasks.push({id:Date.now(),t,s:uName(V('us')),due:V('ud'),x:0,imp:V('up')==='1'?1:0});save()}
+function uEx(){const s=uName(V('ue')),d=V('ued');if(!s||!d)return alert('Fan va sanani yozing.');S.un.exams.push({id:Date.now(),s,d,tm:V('uet'),r:V('uer'),p:0});save()}
 function uT(id){const t=S.un.tasks.find(x=>x.id===id);t.x=t.x?0:1;save()}
+function exPrep(id,v){const e=S.un.exams.find(x=>x.id===id);if(e){e.p=+v||0;qsave()}}
+const uAvg=sid=>{const g=S.un.gr[sid]||[],m=g.reduce((a,x)=>a+x.mx,0);return m?Math.round(g.reduce((a,x)=>a+x.sc,0)/m*100):null};
+const uLessons=d=>(S.un.tt[d]||[]).slice().sort((a,b)=>t2m(a.s)-t2m(b.s));
+function uLRow(L,del){const s=uSubj(L.sid)||{n:'Fan',col:'var(--ln)'},now=new Date(),m=now.getHours()*60+now.getMinutes(),cur=del===undefined&&false;
+  return `<div class="un-l" style="--c:${s.col}"><div class="un-t"><b>${L.s}</b><span class="mu">${L.e}</span></div><div class="un-b"><b>${esc(s.n)}</b><div class="mu" style="font-size:12px">${esc(L.k||'')}${L.r?' · '+esc(L.r):''}</div></div>${del?`<button class="x" onclick="ttDel(${del},${L.id})">×</button>`:''}</div>`}
+function uniCard(){const L=uLessons(new Date().getDay());if(!L.length)return '';const n=new Date(),m=n.getHours()*60+n.getMinutes();
+  const cur=L.find(x=>m>=t2m(x.s)&&m<t2m(x.e)),nxt=L.find(x=>t2m(x.s)>m);
+  const msg=cur?`Hozir: ${esc(uName(cur.sid))} (${cur.e} gacha)`:nxt?`Keyingi: ${esc(uName(nxt.sid))}, ${nxt.s} da`:'Bugungi darslar tugadi';
+  return `<button class="row" style="margin-top:12px;border-left-color:var(--ac)" onclick="EV='u';UV='b';go('e')"><span class="t"><b>🎓 Bugun ${L.length} ta dars</b><br><span class="mu">${msg}</span></span></button>`}
+function uView(){
+  const u=S.un,T0=dk(),now=new Date(),m=now.getHours()*60+now.getMinutes();
+  if(UV==='b'){
+    const L=uLessons(now.getDay()),cur=L.find(x=>m>=t2m(x.s)&&m<t2m(x.e)),nxt=L.find(x=>t2m(x.s)>m);
+    const open=u.tasks.filter(t=>!t.x),soon=open.filter(t=>t.due&&dl(t.due)<=2).sort((a,b)=>a.due>b.due?1:-1),ex=u.exams.filter(e=>dl(e.d)>=0).sort((a,b)=>a.d>b.d?1:-1)[0];
+    const lines=L.map(x=>{const s=uSubj(x.sid)||{n:'Fan',col:'var(--ln)'},on=cur&&cur.id===x.id,past=m>=t2m(x.e);return `<div class="un-l ${on?'now':''}" style="--c:${s.col};${past?'opacity:.5':''}"><div class="un-t"><b>${x.s}</b><span class="mu">${x.e}</span></div><div class="un-b"><b>${esc(s.n)}</b><div class="mu" style="font-size:12px">${esc(x.k||'')}${x.r?' · '+esc(x.r):''}</div></div>${on?'<span class="chip-on">hozir</span>':nxt&&nxt.id===x.id?`<span class="mu" style="font-size:12px">${fmt(t2m(x.s)-m).trim()} dan keyin</span>`:''}</div>`}).join('');
+    return `<section class="hero"><p class="lab">${DAYS[now.getDay()]}</p><h1 style="font-size:30px">${L.length?L.length+' ta dars':'Bugun dars yo‘q'}</h1><p class="mu">${cur?'Hozir: '+esc(uName(cur.sid)):nxt?'Keyingi: '+esc(uName(nxt.sid))+', '+nxt.s:L.length?'Bugungi darslar tugadi':'Dam olish yoki mustaqil tayyorgarlik kuni.'}</p></section>
+    <div class="st"><div><b>${open.length}</b>topshiriq</div><div><b>${soon.length}</b>tez orada</div><div><b>${ex?dl(ex.d):'—'}</b>${ex?'kun: imtihon':'imtihon yo‘q'}</div></div>
+    ${lines?`<h2>Bugungi darslar</h2>${lines}`:''}
+    ${soon.length?`<h2>Muddati yaqin</h2>${soon.map(t=>`<div class="row"><span class="ck" onclick="uT(${t.id})"></span><span class="t" onclick="uT(${t.id})">${esc(t.t)}<br><span class="mu" style="color:var(--bad)">${t.s?esc(t.s)+', ':''}${dlTxt(dl(t.due))}</span></span></div>`).join('')}`:''}
+    ${!u.subj.length?'<div class="bn wr">Boshlash uchun <b>Fanlar</b> bo‘limida fanlaringni qo‘sh, keyin <b>Jadval</b>da darslarni yoz.</div>':''}`}
+  if(UV==='j'){
+    const strip=[1,2,3,4,5,6,0].map(d=>`<button class="${UD===d?'on':''}" onclick="UD=${d};render()"><span style="display:block;font-size:11px;font-weight:600">${DAYS[d].slice(0,2)}${d===now.getDay()?' •':''}</span><b style="font-size:16px">${uLessons(d).length||'·'}</b></button>`).join('');
+    const L=uLessons(UD);
+    return `<div class="wkp">${strip}</div><h2>${DAYS[UD]}</h2>${L.map(x=>uLRow(x,UD)).join('')||'<p class="mu">Bu kunga dars qo‘yilmagan.</p>'}
+    <details class="goal" style="margin-top:10px"${L.length?'':' open'}><summary style="font-weight:600">+ Dars qo‘shish</summary><div style="margin-top:10px"><div class="in">${uSub('tts')}</div>
+    <div class="fg"><label><span class="mu">Boshlanishi</span><input id="ttst" type="time" value="09:00"></label><label><span class="mu">Tugashi</span><input id="ttse" type="time" value="10:20"></label></div>
+    <div class="in"><select id="ttk" style="flex:1;min-width:0">${UKIND.map(k=>`<option>${k}</option>`).join('')}</select><input id="ttr" placeholder="Xona" style="flex:1;min-width:0"></div><button class="big" style="margin:4px 0 0" onclick="ttAdd()">Darsni qo‘shish</button></div></details>`}
+  if(UV==='f'){
+    const cards=u.subj.map(s=>{const a=uAvg(s.id),ab=u.ab[s.id]||0,lim=s.lim||0,pc=lim?Math.min(100,ab/lim*100):0,bad=lim&&ab>=lim*0.8,g=(u.gr[s.id]||[]);
+      return `<div class="goal" style="border-left:5px solid ${s.col}"><div class="h" style="align-items:flex-start"><div style="min-width:0"><b style="font-size:17px">${esc(s.n)}</b><div class="mu" style="font-size:12px">${s.t?esc(s.t):'o‘qituvchi yozilmagan'}${s.cr?' · '+s.cr+' kredit':''}</div></div><button class="x" onclick="sbDel('${s.id}')">×</button></div>
+      <div class="un-m"><div><span class="mu">O‘rtacha ball</span><b>${a===null?'—':a+'%'}</b></div><div><span class="mu">Qoldirilgan dars</span><b style="${bad?'color:var(--bad)':''}">${ab}${lim?' / '+lim:''}</b></div></div>
+      ${a!==null?`<div class="bar"><i style="width:${a}%;background:${s.col}"></i></div>`:''}
+      <div class="in" style="margin:10px 0 0;align-items:center"><span class="mu" style="flex:1">Davomat${lim?'':' (limit qo‘yilmagan)'}</span><button class="btn s" style="padding:6px 14px" onclick="abAdd('${s.id}',-1)">−</button><button class="btn" style="padding:6px 14px" onclick="abAdd('${s.id}',1)">+ qoldirdim</button></div>
+      ${lim?`<div class="bar" style="margin-top:6px"><i style="width:${pc}%;background:${bad?'var(--bad)':'var(--ac)'}"></i></div>${bad?`<p style="color:var(--bad);margin:6px 0 0;font-size:13px">⚠️ Limitga yaqinlashding: ${lim-ab>0?(lim-ab)+' ta qoldi':'limit tugadi'}.</p>`:''}`:''}
+      ${g.length?`<div class="chips" style="margin-top:10px">${g.map(x=>`<button onclick="grDel('${s.id}',${x.id})" title="O‘chirish">${esc(x.n)}: ${x.sc}/${x.mx} ×</button>`).join('')}</div>`:''}
+      <details style="margin-top:8px"><summary class="mu">+ Baho qo‘shish</summary><div class="in" style="margin-top:8px"><input id="grn${s.id}" placeholder="Nomi (Nazorat 1)" style="flex:2;min-width:0"><input id="grs${s.id}" type="number" inputmode="decimal" placeholder="Ball" style="flex:1;min-width:0"><input id="grm${s.id}" type="number" inputmode="decimal" placeholder="100" style="flex:1;min-width:0"></div><button class="btn" style="width:100%" onclick="grAdd('${s.id}')">Qo‘shish</button></details></div>`}).join('');
+    return `${cards||'<p class="mu">Hali fan yo‘q. Quyida qo‘sh.</p>'}
+    <details class="goal"${u.subj.length?'':' open'}><summary style="font-weight:600">+ Fan qo‘shish</summary><div style="margin-top:10px"><div class="in"><input id="sbn" placeholder="Fan nomi, masalan: Matematika"></div><div class="in"><input id="sbt" placeholder="O‘qituvchi (ixtiyoriy)"></div>
+    <div class="fg"><label><span class="mu">Kredit</span><input id="sbc" type="number" inputmode="numeric" placeholder="4"></label><label><span class="mu">Dars qoldirish limiti</span><input id="sbl" type="number" inputmode="numeric" placeholder="10"></label></div><button class="big" style="margin:4px 0 0" onclick="sbAdd()">Fanni qo‘shish</button></div></details>`}
+  if(UV==='t'){
+    const T=u.tasks.slice().sort((a,b)=>(a.x-b.x)||((a.due||'9')>(b.due||'9')?1:-1)),row=t=>{const n=t.due?dl(t.due):null,hot=!t.x&&n!==null&&n<=1;return `<div class="row ${t.x?'done':''}" style="border-left:4px solid ${uCol(t.s)}"><span class="ck" onclick="uT(${t.id})">${t.x?'✓':''}</span><span class="t" onclick="uT(${t.id})">${t.imp?'⭐ ':''}${esc(t.t)}<br><span class="mu" style="${hot?'color:var(--bad)':''}">${t.s?esc(t.s)+', ':''}${n===null?'muddatsiz':dlTxt(n)}</span></span><button class="x" onclick="lst('un.tasks',${t.id})">×</button></div>`};
+    const od=T.filter(t=>!t.x&&t.due&&dl(t.due)<0),td=T.filter(t=>!t.x&&t.due&&dl(t.due)>=0&&dl(t.due)<=7),lt=T.filter(t=>!t.x&&(!t.due||dl(t.due)>7)),dn=T.filter(t=>t.x);
+    const grp=(t,L)=>L.length?`<h2>${t} (${L.length})</h2>${L.map(row).join('')}`:'';
+    return `<div class="goal"><div class="in" style="margin:0">${uSub('us')}</div><div class="in"><input id="ut" placeholder="Topshiriq" style="flex:1;min-width:0"></div><div class="fg"><label><span class="mu">Muddati</span><input id="ud" type="date"></label><label><span class="mu">Muhimligi</span><select id="up" style="width:100%;margin-top:4px"><option value="0">Oddiy</option><option value="1">⭐ Muhim</option></select></label></div><button class="big" style="margin:4px 0 0" onclick="uAdd()">Topshiriqni qo‘shish</button></div>
+    ${grp('Muddati o‘tgan',od)}${grp('Shu hafta',td)}${grp('Keyinroq',lt)}${grp('Bajarilgan',dn)}${T.length?'':'<p class="mu">Topshiriq yo‘q.</p>'}`}
+  const E=u.exams.slice().sort((a,b)=>a.d>b.d?1:-1),up=E.filter(e=>dl(e.d)>=0),pa=E.filter(e=>dl(e.d)<0);
+  const card=e=>{const n=dl(e.d),pst=n<0;return `<div class="goal un-ex" style="border-left:5px solid ${uCol(e.s)};${pst?'opacity:.55':''}"><div class="un-cd"><b>${pst?'✓':n}</b><span>${pst?'o‘tdi':n===0?'bugun':'kun'}</span></div><div class="un-b"><b>${esc(e.s)}</b><div class="mu" style="font-size:12px">${e.d.slice(8)}.${e.d.slice(5,7)}${e.tm?', '+e.tm:''}${e.r?' · '+esc(e.r):''}</div>${pst?'':`<div style="display:flex;align-items:center;gap:8px;margin-top:6px"><input type="range" min="0" max="100" step="5" value="${e.p||0}" oninput="this.nextElementSibling.textContent=this.value+'%';exPrep(${e.id},this.value)" style="flex:1;accent-color:var(--ac)"><span class="mu" style="min-width:38px;text-align:right">${e.p||0}%</span></div><div class="mu" style="font-size:11px">tayyorgarlik</div>`}</div><button class="x" onclick="lst('un.exams',${e.id})">×</button></div>`};
+  return `<div class="goal"><div class="in" style="margin:0">${uSub('ue')}</div><div class="fg"><label><span class="mu">Sana</span><input id="ued" type="date"></label><label><span class="mu">Vaqt</span><input id="uet" type="time"></label></div><div class="in"><input id="uer" placeholder="Xona (ixtiyoriy)"></div><button class="big" style="margin:4px 0 0" onclick="uEx()">Imtihonni qo‘shish</button></div>
+  ${up.length?`<h2>Kelayotgan imtihonlar</h2>${up.map(card).join('')}`:'<p class="mu">Kelayotgan imtihon yo‘q.</p>'}${pa.length?`<h2>O‘tgan</h2>${pa.map(card).join('')}`:''}`}
 function univer(){
-  const u=S.un,T=u.tasks.slice().sort((a,b)=>(a.x-b.x)||((a.due||'9')>(b.due||'9')?1:-1)),E=u.exams.slice().sort((a,b)=>a.d>b.d?1:-1);
-  const rows=T.map(t=>{const n=t.due?dl(t.due):null,hot=!t.x&&n!==null&&n<=1;return `<div class="row ${t.x?'done':''}"><span class="ck" onclick="uT(${t.id})">${t.x?'✓':''}</span><span class="t" onclick="uT(${t.id})">${esc(t.t)}<br><span class="mu" style="${hot?'color:var(--bad)':''}">${t.s?esc(t.s)+', ':''}${n===null?'muddatsiz':dlTxt(n)}</span></span><button class="x" onclick="lst('un.tasks',${t.id})">×</button></div>`}).join('');
-  const ex=E.map(e=>`<div class="row"><span class="t">${esc(e.s)}<br><span class="mu">${e.d.slice(8)}.${e.d.slice(5,7)}, ${dlTxt(dl(e.d))}</span></span><button class="x" onclick="lst('un.exams',${e.id})">×</button></div>`).join('');
-  return `<p class="mu" style="margin:0">Univer</p><h1 class="gr">Topshiriqlar va imtihonlar</h1>
-  <div class="in"><input id="ut" placeholder="Topshiriq"><input id="us" placeholder="Fan" style="max-width:110px"></div><div class="in"><input id="ud" type="date"><button class="btn" onclick="uAdd()">Qo‘sh</button></div>${rows||'<p class="mu">Topshiriq yo‘q.</p>'}
-  <h2>Imtihonlar</h2><div class="in"><input id="ue" placeholder="Fan"><input id="ued" type="date"><button class="btn" onclick="uEx()">+</button></div>${ex||'<p class="mu">Imtihon sanasi qo‘shilmagan.</p>'}`}
+  const seg=[['b','📅 Bugun'],['j','🗓 Jadval'],['f','📘 Fanlar'],['t','✍️ Topshiriq'],['e','🎯 Imtihon']].map(x=>`<button class="${UV===x[0]?'on':''}" onclick="UV='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<p class="mu" style="margin:0">Univer</p><h1 class="gr">Universitet</h1><div class="seg sc" style="margin-top:8px">${seg}</div>${uView()}`}
 
 const PTOP=['Yo‘l belgilari','Chorrahalar','Tezlik','Quvib o‘tish','To‘xtash va to‘xtab turish','Svetofor va ishoralar','Yo‘l chiziqlari','Birinchi yordam','Huquq va javobgarlik','Boshqa'];
 function pAdd(){const c=+V('pc'),t=+V('pt');if(!t||c<0||c>t)return;S.pr.tests.push({id:Date.now(),d:dk(),c,t});S.pr.er=S.pr.er||{};PSel.forEach(x=>{S.pr.er[x]=(S.pr.er[x]||0)+1});PSel=[];save()}
@@ -1413,7 +1487,7 @@ const STKK=Object.keys(STK).sort((a,b)=>b.length-a.length);
 const stick=html=>html.replace(/<h2([^>]*)>([^<]+)/g,(m,a,t)=>{const k=STKK.find(x=>t.startsWith(x));return k?`<h2${a}>${STK[k]} ${t}`:m});
 
 // ================= AI YORDAMCHI =================
-const AIQ=['Bugun nimaga e‘tibor qarataman?','Haftamni tahlil qil','Ertangi kunni rejalashtir','Maqsadlarim bo‘yicha maslahat ber','Odatlarimni qanday yaxshilayman?','Qur‘on yodlash va takror bo‘yicha maslahat','IELTS uchun reja tuz','Meni ruhlantir'];
+const AIQ=['Bugun nimaga e‘tibor qarataman?','Haftamni tahlil qil','Ertangi kunni rejalashtir','Maqsadlarim bo‘yicha maslahat ber','Odatlarimni qanday yaxshilayman?','Qur‘on yodlash va takror bo‘yicha maslahat','IELTS uchun reja tuz','IELTS Writing Task 2 bo‘yicha video top','Meni ruhlantir'];
 let AIL=false,AIT=null,AITL=false,AIW=null,AIT0=0;
 const aiS=()=>{S.ai=S.ai||{};S.ai.chat=S.ai.chat||[];S.ai.sh=S.ai.sh||{core:1,quran:1,study:1,health:1,money:0};S.ai.tip=S.ai.tip||{};return S.ai};
 const md=t=>{let s=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|\n)[-*•] (.+)/g,'$1<li>$2</li>').replace(/(^|\n)\d+\. (.+)/g,'$1<li>$2</li>');
@@ -1456,26 +1530,28 @@ function aiContext(){
   if(sh.money)T(()=>{const mk=k.slice(0,7),L=S.money.filter(m=>m.w==='p'&&m.d.startsWith(mk)),i=L.filter(m=>m.k==='in').reduce((a,m)=>a+m.a,0),u=L.filter(m=>m.k==='out').reduce((a,m)=>a+m.a,0),c={};L.filter(m=>m.k==='out').forEach(m=>{c[m.c||'Boshqa']=(c[m.c||'Boshqa']||0)+m.a});const tc=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
     ln('Shaxsiy pul (shu oy): kirim '+num(i)+', chiqim '+num(u)+(tc?', eng ko‘p sarf: '+tc[0]:'')+(S.fin.budget?', oylik limit '+num(S.fin.budget):''))});
   return o.join('\n')}
-async function aiCall(msgs,ctx){
-  let r;try{r=await sb.functions.invoke('ai-assistant',{body:{action:'chat',messages:msgs,context:ctx}})}catch(x){throw new Error('Serverga ulanib bo‘lmadi. Internetni tekshiring.')}
-  if(!r.error&&r.data&&r.data.text)return r.data;
-  let m='';const e=r.error;
-  if(e&&e.context&&typeof e.context.json==='function'){
-    const st=e.context.status;let j=null;try{j=await (e.context.clone?e.context.clone():e.context).json()}catch(x){}
-    m=(j&&(j.error||j.message))||'';
-    if(st===404||(j&&j.code==='NOT_FOUND'))m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
-    else if(st===401&&!m)m='Hisobga qayta kiring.';
-    else if(!m)m='Server xatosi ('+(st||'?')+').'}
-  else if(e)m='Serverga ulanib bo‘lmadi: '+(e.message||'');
-  else if(r.data&&r.data.error)m=r.data.error;
-  throw new Error(m||'AI javob bermadi.')}
+async function fnPost(body,ms){
+  let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
+  if(!s)throw new Error('Hisobga qayta kiring.');
+  const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),ms||60000);let res;
+  try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify(body)})}
+  catch(e){clearTimeout(to);throw new Error(e&&e.name==='AbortError'?'AI juda sekin javob berdi. Qayta urinib ko‘ring.':'Serverga ulanib bo‘lmadi. Internetni tekshiring.')}
+  clearTimeout(to);let j=null;try{j=JSON.parse(await res.text())}catch(e){}
+  if(!res.ok){let m=(j&&(j.error||j.message))||'';
+    if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya borligini tekshiring.';
+    else if(res.status===401&&!m)m='Hisobga qayta kiring.';
+    else if(/Savol topilmadi/.test(m)&&body.action&&body.action!=='chat')m='Server eski versiyada. Supabase’da ai-assistant funksiyasini yangi kod bilan qayta Deploy qiling.';
+    throw new Error(m||'Server xatosi ('+res.status+').')}
+  if(!j)throw new Error('Serverdan tushunarsiz javob keldi.');
+  if(j.error)throw new Error(j.error);return j}
+async function aiCall(msgs,ctx){const d=await fnPost({action:'chat',messages:msgs,context:ctx},60000);if(!d.text)throw new Error('AI javob bermadi.');return d}
 function aiBuild(){const old=document.getElementById('ai');if(old)old.remove();const d=document.createElement('div');d.id='ai';d.className='ai';
   d.innerHTML=`<div class="aih"><button class="x" style="font-size:22px" onclick="aiClose()">✕</button><div style="flex:1"><b>✨ Yordamchi</b><div class="mu" style="font-size:12px">Kunlik tizim AI</div></div><button class="btn s" style="padding:7px 12px" onclick="aiNew()">Yangi suhbat</button></div><div id="aic" class="aic"></div><div id="aiq" class="aiq">${AIQ.map((q,i)=>`<button onclick="aiGo(${i})">${q}</button>`).join('')}</div><div class="aif"><button class="mic" id="aimic" onclick="aiMic()" aria-label="Ovozli kiritish">🎤</button><textarea id="aii" rows="1" placeholder="Savol yoz..." oninput="aiGrow(this)" onfocus="setTimeout(()=>{const c=document.getElementById('aic');if(c)c.scrollTop=c.scrollHeight},350)"></textarea><button class="send" onclick="aiGo()">➤</button></div>`;
   document.body.appendChild(d)}
 function aiGrow(el){el.style.height='auto';el.style.height=Math.min(120,el.scrollHeight)+'px'}
 function aiRender(){const c=document.getElementById('aic');if(!c)return;const A=aiS(),ch=A.chat;
   const hi=`<div class="bb a">Assalomu alaykum${S.name?', '+esc(S.name):''}! Men sening shaxsiy yordamchingman. Kuning, odatlaring, Qur‘on, IELTS va maqsadlaring haqida ma‘lumotlaringni ko‘raman, shunga qarab maslahat beraman. Pastdagi savollardan birini tanla yoki o‘zing yoz.</div>`;
-  c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t):md(m.r==='model'?aiActs(t).clean:t)+(m.r==='model'&&!AIT?aiCards(m,i):'')+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s</span></div>`:'');
+  c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t):md(m.r==='model'?aiActs(t).clean:t)+(m.r==='model'&&!AIT?aiCards(m,i)+aiExtra(m):'')+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s</span></div>`:'');
   c.scrollTop=c.scrollHeight}
 // Oyna ochiq paytda orqadagi sahifa qotiriladi, oyna esa klaviatura ustidagi ko‘rinadigan maydonga moslanadi (iOS)
 let OVL=null;
@@ -1492,18 +1568,18 @@ function aiClose(){ovUnlock();const e=document.getElementById('ai');if(e)e.remov
 function aiNew(){if(AIT&&AIT.iv)clearInterval(AIT.iv);AIT=null;AIL=false;aiS().chat=[];qsave();aiRender()}
 function aiClear(){if(confirm('Suhbat tarixi o‘chirilsinmi?')){aiS().chat=[];save()}}
 function aiGo(i){if(AIL)return;let t;if(typeof i==='number')t=AIQ[i];else{const e=document.getElementById('aii');t=e?e.value.trim():'';if(e){e.value='';aiGrow(e)}}if(t)aiSend(t)}
-async function aiStream(msgs,ctx,onText,onMeta){
+async function aiStream(msgs,ctx,onText,onMeta,opt){
   let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
   if(!s)throw new Error('Hisobga qayta kiring.');
   let res;const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),45000);
-  try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,messages:msgs,context:ctx})})}
+  try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,web:!!(opt&&opt.web),messages:msgs,context:ctx})})}
   catch(e){clearTimeout(to);if(e&&e.name==='AbortError')throw new Error('AI 45 soniyada javob bermadi. Birozdan keyin urinib ko‘ring.');const r=await aiCall(msgs,ctx);onText(r.text);return r.text}
   clearTimeout(to);try{const tm=res.headers&&res.headers.get&&res.headers.get('x-timing');if(tm&&onMeta)onMeta(tm)}catch(e){}
   if(!res.ok){let m='';try{const j=await res.json();m=j.error||j.message||''}catch(e){}
     if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
     throw new Error(m||('Server xatosi ('+res.status+').'))}
   const ct=(res.headers&&res.headers.get&&res.headers.get('content-type'))||'';
-  if(ct.includes('application/json')){const j=await res.json();if(j&&j.text){onText(j.text);return j.text}throw new Error((j&&j.error)||'AI javob bermadi.')}
+  if(ct.includes('application/json')){const j=await res.json();if(j&&j.text){onText(j.text);if(opt&&opt.onSrc)opt.onSrc(j.sources||[]);return j.text}throw new Error((j&&j.error)||'AI javob bermadi.')}
   if(!res.body||!res.body.getReader){const t=await res.text();onText(t);return t}
   const rd=res.body.getReader(),dec=new TextDecoder();let full='';
   while(true){const{done,value}=await rd.read();if(done)break;full+=dec.decode(value,{stream:true});onText(full)}
@@ -1513,7 +1589,10 @@ async function aiSend(text){
   const hist=A.chat.filter(m=>m.r==='user'||m.r==='model').slice(-10).map(m=>({r:m.r,t:m.t})),ctx=aiContext();
   try{
     const m={r:'model',t:''};let started=false,last=0,meta='',tf=0;
-    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;tf=Date.now()-AIT0;A.chat.push(m);AIL=false}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}},h=>{meta=h});
+    const web=/video|youtube|yutub|havola|link|qidir|internet|saytdan|manba|izla|yangilik|news|top(ib)?\s+ber|topib/i.test(text),vid=/video|youtube|yutub/i.test(text),vq=text.replace(/video(lar)?|youtube|yutub|havola(si)?|link(ini)?|topib|top\b|ber\b|qidir|izla|menga|iltimos|tashla|bo‘yicha|haqida/gi,' ').replace(/\s+/g,' ').trim()||text;
+    let vidData=null,mref=null;const setVid=()=>{if(mref&&vidData){mref.vid=vidData;aiRender()}};
+    if(vid){fnPost({action:'videos',q:vq.slice(0,100)},25000).then(d=>{vidData=d;setVid()}).catch(()=>{vidData={videos:[]};setVid()})}
+    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;tf=Date.now()-AIT0;A.chat.push(m);AIL=false;mref=m;if(vid){m.vq=vq;setVid()}}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}},h=>{meta=h},{web,onSrc:s=>{if(mref&&s.length)mref.src=s;else m.src=s}});
     AIL=false;if(!started)A.chat.push(m);m.t=full;
     const g=/gemini=(\d+)/.exec(meta),sv=/auth=(\d+),db=(\d+)/.exec(meta),th=/think=(\w+)/.exec(meta);m.ms=((Date.now()-AIT0)/1000).toFixed(1)+' s ('+(tf?'birinchi so‘z '+(tf/1000).toFixed(1)+' s':'')+(g?', Gemini '+(g[1]/1000).toFixed(1)+' s':'')+(sv?', server '+((+sv[1]+ +sv[2])/1000).toFixed(1)+' s':'')+(th?', o‘ylash: '+th[1]:'')+')';
     if(!String(full).trim()){A.chat.pop();throw new Error('Bo‘sh javob keldi.')}
@@ -1530,6 +1609,11 @@ async function aiModels(){try{const r=await sb.functions.invoke('ai-assistant',{
 function aiSet(){const sh=aiS().sh,row=(k,t)=>`<button class="row ${sh[k]?'done':''}" onclick="aiSh('${k}')"><span class="ck">${sh[k]?'✓':''}</span><span class="t">${t}</span></button>`;
   return `<p class="mu" style="margin:0 0 8px">Yordamchi javob berish uchun tanlangan bo‘limlarning <b>umumiy raqamlarini</b> Google Gemini'ga yuboradi. Shaxsiy yozuvlar (kun xulosasi, izohlar, qarzlar) yuborilmaydi. Chatga o‘zing yozgan matn esa yuboriladi.</p>${row('core','Kun, odat va maqsadlar')}${row('quran','Qur‘on va namoz')}${row('study','IELTS, Univer, Prava, kitob')}${row('health','Zal, kayfiyat, Isolation')}${row('money','Pul (oylik umumiy kirim va chiqim)')}<button class="ghost" onclick="aiClear()">Suhbat tarixini tozalash</button>${Array.isArray(OW)?'<button class="ghost" onclick="aiModels()">Mavjud modellarni ko‘rish</button>':''}`}
 
+function aiExtra(m){let o='';
+  if(m.vid&&m.vid.videos&&m.vid.videos.length)o+=`<div class="vcs">${m.vid.videos.map(v=>`<a class="vc" href="https://www.youtube.com/watch?v=${esc(v.id)}" target="_blank" rel="noopener">${v.th?`<img src="${esc(v.th)}" alt="">`:''}<span><b style="font-size:13px;line-height:1.3;display:block">${esc(v.t||'Video')}</b><span class="mu" style="font-size:12px">${esc(v.ch||'')}</span></span></a>`).join('')}</div>`;
+  else if(m.vq)o+=`<div class="srcs"><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(m.vq)}" target="_blank" rel="noopener">▶ YouTube’da qidirish: ${esc(m.vq.slice(0,40))}</a></div>`;
+  if(m.src&&m.src.length)o+=`<div class="srcs">${m.src.map(s=>{let t=s.t;if(!t){try{t=new URL(s.u).hostname}catch(e){t='manba'}}return `<a href="${esc(s.u)}" target="_blank" rel="noopener">🔗 ${esc(t.slice(0,32))}</a>`}).join('')}</div>`;
+  return o}
 // ---- AI amallari: AI taklif qiladi, foydalanuvchi tasdiqlaydi ----
 function aiActs(text){const acts=[];let clean=String(text).replace(/\[\[ACTION\s*([\s\S]*?)\]\]/g,(m,j)=>{try{const o=JSON.parse(j.trim());if(o&&o.type)acts.push(o)}catch(e){}return ''});
   clean=clean.replace(/\[\[ACTION[\s\S]*$/,'').replace(/\n{3,}/g,'\n\n').trim();return{clean,acts}}
@@ -1726,13 +1810,10 @@ function psPast(){const A=S.gym.past||[];if(!A.length)return '';
 // ---- Ovqat: AI bilan kaloriya va makrolar ----
 const FDMS=['Nonushta','Tushlik','Kechki ovqat','Snack'];
 function b64(buf){const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)}
-async function fnAI(body){let r;try{r=await sb.functions.invoke('ai-assistant',{body})}catch(x){throw new Error('Serverga ulanib bo‘lmadi.')}
-  if(!r.error&&r.data&&r.data.text)return r.data;let m='';const e=r.error;
-  if(e&&e.context&&e.context.json){try{const j=await (e.context.clone?e.context.clone():e.context).json();m=j.error||j.message||''}catch(x){}if(e.context.status===404)m='AI funksiyasi topilmadi.'}else if(r.data&&r.data.error)m=r.data.error;
-  throw new Error(m||'AI javob bermadi.')}
+async function fnAI(body){const d=await fnPost(body,body.action==='ielts'?95000:60000);if(!d.text)throw new Error('AI javob bermadi.');return d}
 function parseJson(t){let s=String(t||'').replace(/```json|```/g,'').trim();const a=s.indexOf('{'),b=s.lastIndexOf('}');if(a<0||b<a)return null;try{return JSON.parse(s.slice(a,b+1))}catch(e){return null}}
 function shrink(f,max){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.8).split(',')[1])};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Rasm ochilmadi'))};img.src=u})}
-async function fdPic(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;try{FDI=await shrink(f,1024);render()}catch(e){alert(e.message)}}
+async function fdPic(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;try{FDI=await shrink(f,900);render()}catch(e){alert(e.message)}}
 async function fdAI(){const t=V('fdt');if(!t&&!FDI)return alert('Ovqat nomini yozing yoki rasm yuboring.');if(!sb||!UID)return alert('AI uchun hisobga kirgan bo‘lish kerak.');
   FDL=true;FDR=null;render();
   try{const d=await fnAI({action:'food',text:t,image:FDI||undefined,mime:'image/jpeg'}),j=parseJson(d.text);
@@ -1768,10 +1849,10 @@ function zFood(){
   <details style="margin-top:12px"><summary class="mu">Kunlik maqsadlar</summary><div class="in" style="margin-top:8px">${[['kcal','kkal'],['p','oqsil g'],['f','yog‘ g'],['c','uglevod g']].map(([f,l])=>`<div style="flex:1;min-width:0"><span class="mu" style="font-size:11px">${l}</span><input type="number" inputmode="numeric" style="width:100%" value="${G[f]}" onchange="fdGoal('${f}',this.value)"></div>`).join('')}</div></details>`}
 
 // ---- Ovozli kiritish: yozib olinadi, WAV ga o‘tkaziladi, Gemini matnga aylantiradi ----
-async function toWav(blob){
+async function toWav(blob,sr0){
   const AC=window.AudioContext||window.webkitAudioContext,ctx=new AC(),buf=await blob.arrayBuffer();
   const dec=await new Promise((res,rej)=>{const p=ctx.decodeAudioData(buf,res,rej);if(p&&p.catch)p.catch(rej)});try{ctx.close&&ctx.close()}catch(e){}
-  const sr=16000,len=Math.max(1,Math.ceil(dec.duration*sr)),OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext,off=new OAC(1,len,sr),src=off.createBufferSource();src.buffer=dec;src.connect(off.destination);src.start();
+  const sr=sr0||16000,len=Math.max(1,Math.ceil(dec.duration*sr)),OAC=window.OfflineAudioContext||window.webkitOfflineAudioContext,off=new OAC(1,len,sr),src=off.createBufferSource();src.buffer=dec;src.connect(off.destination);src.start();
   const d=(await off.startRendering()).getChannelData(0),o=new DataView(new ArrayBuffer(44+d.length*2)),w=(p,s)=>{for(let i=0;i<s.length;i++)o.setUint8(p+i,s.charCodeAt(i))};
   w(0,'RIFF');o.setUint32(4,36+d.length*2,true);w(8,'WAVE');w(12,'fmt ');o.setUint32(16,16,true);o.setUint16(20,1,true);o.setUint16(22,1,true);o.setUint32(24,sr,true);o.setUint32(28,sr*2,true);o.setUint16(32,2,true);o.setUint16(34,16,true);w(36,'data');o.setUint32(40,d.length*2,true);
   for(let i=0;i<d.length;i++){const s=Math.max(-1,Math.min(1,d[i]));o.setInt16(44+i*2,s<0?s*0x8000:s*0x7fff,true)}
@@ -1827,6 +1908,150 @@ async function shareYear(){
   const blob=await new Promise(r=>c.toBlob(r,'image/png')),f=new File([blob],'yillik-hisobot-'+y+'.png',{type:'image/png'});
   try{if(navigator.canShare&&navigator.canShare({files:[f]})){await navigator.share({files:[f],title:'Yillik hisobot'});return}}catch(e){if(e&&e.name==='AbortError')return}
   const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=f.name;document.body.appendChild(a);a.click();a.remove()}
+
+// ---- IELTS: AI tekshiruvi (Writing va Speaking) ----
+let WFB=null,WBUSY=false,SFB=null,SBUSY=false,SREC=null,SOP=0;
+function fbGet(src){return src==='w'?WFB:src==='s'?SFB:((S.ie.wr.find(x=>String(x.id)===String(src))||{}).fb||(S.ie.tests.find(x=>String(x.id)===String(src))||{}).fb)||null}
+function fbWord(src,i){const f=fbGet(src),v=f&&f.vocab&&f.vocab[i];if(!v||!v.w)return;
+  if(S.ie.words.some(x=>sn(x.w)===sn(v.w))){toast('Bu so‘z lug‘atda bor');return}
+  S.ie.words.push({id:Date.now()+i,w:String(v.w).trim(),m:String(v.m||'').trim(),box:0,due:dk(),t:0});toast('Lug‘atga qo‘shildi ✓');save()}
+function ieFb(f,src){
+  if(!f)return '';
+  const crit=(f.criteria||[]).map(c=>`<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between;gap:8px"><b>${esc(c.k)}</b><b>${esc(String(c.b))}</b></div><div class="bar" style="margin:4px 0"><i style="width:${Math.min(100,(+c.b||0)/9*100)}%"></i></div><span class="mu" style="font-size:13px">${esc(c.n||'')}</span></div>`).join('');
+  const errs=(f.errors||[]).map(e=>`<div class="fbe"><div class="fbo">${esc(e.o||'')}</div><div class="fbc">${esc(e.c||'')}</div><div class="mu" style="font-size:13px">${esc(e.w||'')}</div></div>`).join('');
+  const ul=a=>(a&&a.length)?`<ul style="margin:6px 0 0;padding-left:20px;line-height:1.5">${a.map(x=>`<li>${esc(x)}</li>`).join('')}</ul>`:'';
+  const vocab=(f.vocab||[]).map((v,i)=>`<div class="row"><span class="t"><b>${esc(v.w||'')}</b><br><span class="mu">${esc(v.m||'')}</span></span><button class="btn s" style="padding:6px 10px" onclick="fbWord('${src}',${i})">+ Lug‘at</button></div>`).join('');
+  return `<section class="hero" style="margin-top:12px"><p class="lab">🤖 AI bahosi (taxminiy)</p><h1 style="font-size:56px;margin:2px 0">${esc(String(f.band))}</h1><p class="mu">Rasmiy imtihonda ball farq qilishi mumkin. Bu mashq uchun yo‘l ko‘rsatkich.</p></section>
+  ${f.transcript?`<details class="goal" style="margin-top:8px"><summary style="font-weight:600">Sen aytganing (transkript)</summary><p style="margin:8px 0 0;white-space:pre-wrap;line-height:1.5">${esc(f.transcript)}</p></details>`:''}
+  <h2>Mezonlar bo‘yicha</h2><div class="goal">${crit}</div>
+  ${errs?`<h2>Xatolar va tuzatishlar</h2>${errs}`:''}
+  ${(f.strengths&&f.strengths.length)?`<h2>Yaxshi tomonlar</h2><div class="goal">${ul(f.strengths)}</div>`:''}
+  ${(f.improve&&f.improve.length)?`<h2>Nimani yaxshilash kerak</h2><div class="goal">${ul(f.improve)}</div>`:''}
+  ${f.better?`<h2>Yaxshilangan variant</h2><div class="goal" style="white-space:pre-wrap;line-height:1.55">${esc(f.better)}</div>`:''}
+  ${vocab?`<h2>Foydali so‘zlar</h2>${vocab}`:''}`}
+async function wAI(){const text=(S.ie.dr||'').trim(),n=wcount(text);
+  if(n<40){alert('Avval inshoni yozing (kamida 40 so‘z).');return}if(!sb||!UID){alert('AI uchun hisobga kirgan bo‘lish kerak.');return}
+  WBUSY=true;WFB=null;render();
+  try{const d=await fnAI({action:'ielts',kind:'writing',task:WE.k,prompt:WE.p||'',text}),f=parseJson(d.text);if(!f||!f.band)throw new Error('AI javobini tushunib bo‘lmadi. Qayta urinib ko‘ring.');WFB=f}
+  catch(e){alert(e.message)}
+  WBUSY=false;render()}
+function spMax(){return SPQ?(SPQ.part===2?120:SPQ.part===3?90:60):60}
+async function spRec(){
+  if(SREC){SREC.mr.stop();return}
+  if(!SPQ)return;if(!sb||!UID){alert('AI uchun hisobga kirgan bo‘lish kerak.');return}
+  if(!navigator.mediaDevices||!window.MediaRecorder){alert('Bu qurilmada ovoz yozish ishlamaydi.');return}
+  let st;try{st=await navigator.mediaDevices.getUserMedia({audio:true})}catch(e){alert('Mikrofonga ruxsat berilmadi. Telefon sozlamalarida ruxsat bering.');return}
+  const ch=[],mr=new MediaRecorder(st),t0=Date.now(),part=SPQ.part,question=SPQ.q;SFB=null;
+  mr.ondataavailable=e=>{if(e.data&&e.data.size)ch.push(e.data)};
+  const iv=setInterval(()=>{const s=Math.floor((Date.now()-t0)/1000),b=document.getElementById('sprb');if(b)b.textContent='⏹ Tugatish ('+s+' s)';if(s>=spMax())mr.stop()},500);
+  mr.onstop=async()=>{clearInterval(iv);st.getTracks().forEach(x=>x.stop());SREC=null;SBUSY=true;render();
+    try{const blob=new Blob(ch,{type:mr.mimeType||'audio/mp4'});if(blob.size<4000)throw new Error('Ovoz juda qisqa, qayta urinib ko‘ring.');
+      const d=await fnAI({action:'ielts',kind:'speaking',part,question,audio:b64(await toWav(blob,12000)),mime:'audio/wav'}),f=parseJson(d.text);
+      if(!f||!f.band)throw new Error('AI javobini tushunib bo‘lmadi. Qayta urinib ko‘ring.');SFB=f}
+    catch(e){alert(e.message||'Tekshirib bo‘lmadi.')}
+    SBUSY=false;render()};
+  SREC={mr,t0};mr.start();render()}
+function spSaveAI(){if(!SFB||!SPQ)return;const b=+SFB.band||0;S.ie.tests.push({id:Date.now(),d:dk(),k:'S',src:'Speaking, Part '+SPQ.part+' (AI)',b:{S:b},raw:{},fb:SFB});ieDp().S=1;SPQ=null;SFB=null;if(IT)clearInterval(IT.iv);IT=null;save()}
+
+// ================= QUR'ON AUDIO PLEYERI =================
+let QA={id:null,url:null,a:null,b:null,sl:null,drag:0};
+const qaItem=()=>S.qa.list.find(x=>x.id===QA.id);
+function qaEl(){let a=document.getElementById('qau');
+  if(!a){a=document.createElement('audio');a.id='qau';a.preload='metadata';a.setAttribute('playsinline','');document.body.appendChild(a);
+    a.addEventListener('timeupdate',qaTick);a.addEventListener('ended',qaEnd);a.addEventListener('play',qaSync);a.addEventListener('pause',qaSync);
+    a.addEventListener('loadedmetadata',()=>{const t=qaItem();if(t&&a.duration&&isFinite(a.duration)){t.dur=Math.round(a.duration);qsave()}
+      if(QA.resume>2&&a.duration&&QA.resume<a.duration-3)a.currentTime=QA.resume;QA.resume=0;qaSync()})}
+  return a}
+function qaSync(){qaBarUpd();if(tab==='q'&&QT==='a')render()}
+function qaTick(){const a=qaEl(),t=qaItem();if(!t)return;
+  if(QA.b!=null&&a.currentTime>=QA.b)a.currentTime=QA.a||0;
+  const n=Date.now();if(n-(QA.sv||0)>5000){QA.sv=n;t.pos=Math.floor(a.currentTime);qsave()}
+  const e=document.getElementById('qaT');if(e)e.textContent=fmtT(Math.floor(a.currentTime))+' / '+fmtT(Math.floor(a.duration||t.dur||0));
+  const r=document.getElementById('qaR');if(r&&!QA.drag){r.max=Math.floor(a.duration||t.dur||0);r.value=Math.floor(a.currentTime)}}
+function qaEnd(){const a=qaEl(),t=qaItem();if(!t)return;const m=S.qa.rep;
+  if(m==='one'){a.currentTime=0;a.play().catch(()=>{});return}
+  t.pos=0;if(m==='all'){qaStep(1,true);return}qsave();qaSync()}
+async function qaAdd(inp){const fs=[...(inp.files||[])];inp.value='';
+  for(const f of fs){const big=f.size>50*1024*1024;if(big)alert(f.name+': 50 MB dan katta, faqat shu telefonda saqlanadi (bulutga yuklanmaydi).');
+    const id='a'+Date.now()+Math.floor(Math.random()*1000);
+    try{await idbSet(id,{b:await f.arrayBuffer(),t:f.type||'audio/mpeg'})}catch(e){alert('Saqlab bo‘lmadi: '+f.name);continue}
+    S.qa.list.push({id,n:f.name.replace(/\.[a-z0-9]+$/i,''),sz:f.size,t:f.type||'audio/mpeg',pos:0,dur:0,cloud:0});save();
+    if(sb&&UID&&!big)qaUp(id,f)}}
+async function qaUp(id,f){const t=S.qa.list.find(x=>x.id===id);if(!t)return;PUPL[id]=1;render();
+  try{const r=await sb.storage.from('books').upload(UID+'/a/'+id,f,{upsert:true,contentType:f.type||'audio/mpeg'});if(r.error)throw r.error;t.cloud=1;save()}catch(e){toast('Bulutga yuklanmadi: '+(e.message||e))}
+  delete PUPL[id];render()}
+async function qaPlay(id){const t=S.qa.list.find(x=>x.id===id);if(!t)return;const a=qaEl();
+  if(QA.id===id&&a.src){if(a.paused)a.play().catch(()=>{});else a.pause();return}
+  let rec=null;try{rec=await idbGet(id)}catch(e){}
+  if(!rec&&t.cloud&&sb&&UID){toast('Yuklab olinmoqda...');const r=await sb.storage.from('books').download(UID+'/a/'+id);if(!r.error){const b=await r.data.arrayBuffer();rec={b,t:t.t};try{await idbSet(id,rec)}catch(e){}}}
+  if(!rec){alert('Bu qurilmada fayl topilmadi.');return}
+  if(QA.url)try{URL.revokeObjectURL(QA.url)}catch(e){}
+  QA={id,url:URL.createObjectURL(new Blob([rec.b],{type:rec.t||'audio/mpeg'})),a:null,b:null,sl:QA.sl,drag:0,resume:t.pos||0};
+  a.src=QA.url;a.playbackRate=S.qa.rate||1;a.play().catch(()=>{});
+  if('mediaSession' in navigator){try{navigator.mediaSession.metadata=new MediaMetadata({title:t.n,artist:'Kunlik tizim'});
+    const A=(k,f)=>navigator.mediaSession.setActionHandler(k,f);A('play',()=>a.play());A('pause',()=>a.pause());A('seekbackward',()=>qaSeek(-15));A('seekforward',()=>qaSeek(15));A('previoustrack',()=>qaStep(-1));A('nexttrack',()=>qaStep(1))}catch(e){}}
+  render()}
+function qaToggle(){const a=qaEl();if(!a.src)return;if(a.paused)a.play().catch(()=>{});else a.pause()}
+function qaSeek(d){const a=qaEl();a.currentTime=Math.max(0,Math.min((a.duration||1e9),a.currentTime+d))}
+function qaSeekTo(v){qaEl().currentTime=+v||0}
+function qaRate(r){S.qa.rate=r;qaEl().playbackRate=r;save()}
+function qaRep(m){S.qa.rep=m;save()}
+function qaStep(d,auto){const L=S.qa.list;if(!L.length)return;let i=L.findIndex(x=>x.id===QA.id);i=i<0?0:i+d;if(i>=L.length){if(!auto&&d>0)return;i=0}if(i<0)i=0;qaPlay(L[i].id)}
+function qaAB(){const a=qaEl();if(QA.a==null){QA.a=a.currentTime;QA.b=null}else if(QA.b==null){if(a.currentTime>QA.a+0.5)QA.b=a.currentTime;else QA.a=a.currentTime}else{QA.a=null;QA.b=null}render()}
+function qaSleep(min){if(QA.sl&&QA.sl.tm)clearTimeout(QA.sl.tm);if(!min){QA.sl=null;render();return}QA.sl={end:Date.now()+min*60000,tm:setTimeout(()=>{qaEl().pause();QA.sl=null;render()},min*60000)};render()}
+function qaDel(id){if(!confirm('Audio o‘chirilsinmi?'))return;if(QA.id===id){qaEl().pause();qaEl().removeAttribute('src');QA={id:null,url:null,a:null,b:null,sl:null,drag:0};qaBarUpd()}
+  S.qa.list=S.qa.list.filter(x=>x.id!==id);idbDel(id).catch(()=>{});if(sb&&UID)sb.storage.from('books').remove([UID+'/a/'+id]).catch(()=>{});save()}
+function qaRename(id){const t=S.qa.list.find(x=>x.id===id),n=prompt('Audio nomi:',t.n);if(n&&n.trim()){t.n=n.trim();save()}}
+function qaStop(){const a=qaEl();a.pause();a.removeAttribute('src');QA={id:null,url:null,a:null,b:null,sl:QA.sl,drag:0};qaBarUpd();if(tab==='q'&&QT==='a')render()}
+function qaBarUpd(){let b=document.getElementById('qab');const a=document.getElementById('qau'),t=QA.id&&a&&a.src?qaItem():null,show=t&&!(tab==='q'&&QT==='a');
+  if(!show){if(b)b.remove();return}
+  if(!b){b=document.createElement('div');b.id='qab';b.className='qab';document.body.appendChild(b)}
+  const html=`<span class="qa-t" onclick="QT='a';go('q')">🎧 ${esc(t.n)}</span><button onclick="qaToggle()" aria-label="Ijro">${a.paused?'▶':'⏸'}</button><button onclick="qaStop()" aria-label="Yopish">✕</button>`;
+  if(b._h!==html){b._h=html;b.innerHTML=html}}
+function qaView(){
+  const L=S.qa.list,a=document.getElementById('qau'),cur=QA.id?qaItem():null,playing=!!(cur&&a&&a.src&&!a.paused),mb=n=>(n/1048576).toFixed(1)+' MB';
+  const sl=QA.sl?Math.max(0,Math.ceil((QA.sl.end-Date.now())/60000)):0;
+  const player=cur?`<div class="qa-p"><p class="lab" style="margin:0;color:var(--hlab)">${playing?'IJRO ETILMOQDA':'PAUZA'}</p><h2 class="qa-n">${esc(cur.n)}</h2>
+    <input id="qaR" type="range" min="0" max="${Math.floor(cur.dur||0)}" value="${Math.floor((a&&a.currentTime)||cur.pos||0)}" oninput="QA.drag=1" onchange="qaSeekTo(this.value);QA.drag=0" style="width:100%;accent-color:#e2b857">
+    <div style="display:flex;justify-content:space-between;font-size:12px;opacity:.8"><span id="qaT">${fmtT(Math.floor((a&&a.currentTime)||0))} / ${fmtT(Math.floor(cur.dur||0))}</span>${QA.a!=null?`<span>🔁 ${fmtT(Math.floor(QA.a))}${QA.b!=null?' – '+fmtT(Math.floor(QA.b)):' – …'}</span>`:''}</div>
+    <div class="qa-c"><button onclick="qaStep(-1)" aria-label="Oldingi">⏮</button><button onclick="qaSeek(-15)">−15</button><button class="qa-pp" onclick="qaToggle()">${playing?'⏸':'▶'}</button><button onclick="qaSeek(15)">+15</button><button onclick="qaStep(1)" aria-label="Keyingi">⏭</button></div>
+    <div class="qa-r"><span>Tezlik</span>${[0.75,1,1.25,1.5].map(r=>`<button class="${S.qa.rate===r?'on':''}" onclick="qaRate(${r})">${r}×</button>`).join('')}</div>
+    <div class="qa-r"><span>Takror</span>${[['off','Yo‘q'],['one','Bitta'],['all','Hammasi']].map(x=>`<button class="${S.qa.rep===x[0]?'on':''}" onclick="qaRep('${x[0]}')">${x[1]}</button>`).join('')}</div>
+    <div class="qa-r"><span>Yodlash</span><button class="${QA.a!=null?'on':''}" onclick="qaAB()">${QA.a==null?'A nuqta':QA.b==null?'B nuqta':'Bekor qilish'}</button><small style="opacity:.75">oraliqni takrorlab eshitish</small></div>
+    <div class="qa-r"><span>Uyqu taymeri</span>${[15,30,60].map(m=>`<button onclick="qaSleep(${m})">${m} daq</button>`).join('')}${sl?`<button class="on" onclick="qaSleep(0)">${sl} daq ✕</button>`:''}</div></div>`:'';
+  const rows=L.map(x=>{const on=QA.id===x.id,pc=x.dur?Math.min(100,(x.pos||0)/x.dur*100):0;
+    return `<div class="goal qa-i ${on?'on':''}"><button class="qa-pl" onclick="qaPlay('${x.id}')">${on&&playing?'⏸':'▶'}</button><div style="flex:1;min-width:0"><b style="overflow-wrap:anywhere">${esc(x.n)}</b><div class="mu" style="font-size:12px">${x.dur?fmtT(x.dur)+' · ':''}${mb(x.sz||0)} · ${PUPL[x.id]?'bulutga yuklanmoqda…':x.cloud?'bulutda':'faqat shu telefonda'}</div>${pc>1?`<div class="bar" style="margin-top:6px"><i style="width:${pc}%"></i></div>`:''}</div><button class="x" style="font-size:15px" onclick="qaRename('${x.id}')">✎</button><button class="x" onclick="qaDel('${x.id}')">×</button></div>`}).join('');
+  return `<p class="mu" style="margin:0 0 8px">Qur’on tilovati va darslarni yuklab, istalgan paytda eshit. Pozitsiyang eslab qolinadi, ekran qulflansa ham eshitish davom etadi.</p>
+  <label class="big" style="display:block;text-align:center;margin:0 0 10px;cursor:pointer">＋ Audio qo‘shish<input type="file" accept="audio/*,.mp3,.m4a,.aac,.wav,.ogg" multiple style="display:none" onchange="qaAdd(this)"></label>
+  ${player}${rows?`<h2>Audiolarim (${L.length})</h2>${rows}`:'<div class="bn wr">Hali audio yo‘q. Yuqoridagi tugma bilan mp3 yoki m4a fayllarni tanla (har biri 50 MB gacha bulutga ham saqlanadi).</div>'}`}
+setInterval(qaBarUpd,800);
+
+// ================= DUOLAR VA KUNLIK ZIKR =================
+const DU=[{"id": "ak", "c": ["sb", "sh", "nm", "uy"], "k": 1, "t": "Oyatul Kursi (Baqara, 255)", "ar": "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ", "tr": "Allohu la ilaha illa huval hayyul qayyum, la ta’xuzuhu sinatun va la navm, lahu ma fis-samavati va ma fil-arz, man zal-lazi yashfa’u ‘indahu illa bi iznih, ya’lamu ma bayna aydihim va ma xalfahum, va la yuhituna bi shay’im min ‘ilmihi illa bima sha’, vasi’a kursiyyuhus-samavati val-arz, va la ya’uduhu hifzuhuma, va huval ‘aliyyul ‘azim.", "uz": "Alloh — Undan o‘zga iloh yo‘q, tirik va doimiy turuvchi. Uni na mudroq, na uyqu tutadi. Osmonlar va yerdagi hamma narsa Unikidir. Uning iznisiz kim Uning huzurida shafoat qila oladi? U ularning oldidagi va ortidagi narsalarni biladi. Ular Uning ilmidan U xohlagan narsadangina bilib oladilar. Kursiysi osmonlar va yerni qamrab olgan, ularni saqlash Uni charchatmaydi. U Oliy va Ulug‘dir."}, {"id": "ik", "c": ["sb", "sh", "uy"], "k": 3, "t": "Ixlos surasi", "ar": "قُلْ هُوَ اللَّهُ أَحَدٌ ۝ اللَّهُ الصَّمَدُ ۝ لَمْ يَلِدْ وَلَمْ يُولَدْ ۝ وَلَمْ يَكُنْ لَهُ كُفُوًا أَحَدٌ", "tr": "Qul huvallohu ahad. Allohus-samad. Lam yalid va lam yulad. Va lam yakun lahu kufuvan ahad.", "uz": "Ayt: U Alloh — yagonadir. Alloh behojatdir. U tug‘madi va tug‘ilmadi. Va Unga hech kim teng emas."}, {"id": "fl", "c": ["sb", "sh", "uy"], "k": 3, "t": "Falaq surasi", "ar": "قُلْ أَعُوذُ بِرَبِّ الْفَلَقِ ۝ مِنْ شَرِّ مَا خَلَقَ ۝ وَمِنْ شَرِّ غَاسِقٍ إِذَا وَقَبَ ۝ وَمِنْ شَرِّ النَّفَّاثَاتِ فِي الْعُقَدِ ۝ وَمِنْ شَرِّ حَاسِدٍ إِذَا حَسَدَ", "tr": "Qul a’uzu birabbil-falaq. Min sharri ma xalaq. Va min sharri g‘osiqin iza vaqab. Va min sharrin-naffasati fil-‘uqad. Va min sharri hasidin iza hasad.", "uz": "Ayt: Tong Parvardigoriga sig‘inaman — U yaratgan narsalarning yomonligidan, qorong‘i tushganda kirgan zulmat yomonligidan, tugunlarga puflovchilarning yomonligidan va hasad qilganda hasadchining yomonligidan."}, {"id": "ns", "c": ["sb", "sh", "uy"], "k": 3, "t": "Nos surasi", "ar": "قُلْ أَعُوذُ بِرَبِّ النَّاسِ ۝ مَلِكِ النَّاسِ ۝ إِلَٰهِ النَّاسِ ۝ مِنْ شَرِّ الْوَسْوَاسِ الْخَنَّاسِ ۝ الَّذِي يُوَسْوِسُ فِي صُدُورِ النَّاسِ ۝ مِنَ الْجِنَّةِ وَالنَّاسِ", "tr": "Qul a’uzu birabbin-nas. Malikin-nas. Ilahin-nas. Min sharril-vasvasil-xannas. Allazi yuvasvisu fi suduril-nas. Minal jinnati van-nas.", "uz": "Ayt: Odamlar Parvardigoriga, odamlar Podshohiga, odamlar Ilohiga sig‘inaman — vasvasachi yashirinuvchi (shayton)ning yomonligidan; u odamlarning ko‘ksiga vasvasa soladi; jinlardan ham, odamlardan ham."}, {"id": "sa", "c": ["sb"], "k": 1, "t": "Ertalabki zikr", "ar": "أَصْبَحْنَا وَأَصْبَحَ الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", "tr": "Asbahna va asbahal-mulku lillah, val-hamdu lillah, la ilaha illallohu vahdahu la sharika lah.", "uz": "Biz tong ottirdik, mulk ham Allohniki bo‘lgan holda tong otdi. Hamd Allohgadir. Allohdan o‘zga iloh yo‘q, U yagonadir, Uning sherigi yo‘q."}, {"id": "ss", "c": ["sh"], "k": 1, "t": "Kechqurunggi zikr", "ar": "أَمْسَيْنَا وَأَمْسَى الْمُلْكُ لِلَّهِ، وَالْحَمْدُ لِلَّهِ، لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ", "tr": "Amsayna va amsal-mulku lillah, val-hamdu lillah, la ilaha illallohu vahdahu la sharika lah.", "uz": "Biz kechga yetdik, mulk ham Allohniki bo‘lgan holda kech kirdi. Hamd Allohgadir. Allohdan o‘zga iloh yo‘q, U yagonadir, Uning sherigi yo‘q."}, {"id": "sb2", "c": ["sb"], "k": 1, "t": "Ertalab: Allohumma bika asbahna", "ar": "اللَّهُمَّ بِكَ أَصْبَحْنَا وَبِكَ أَمْسَيْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ النُّشُورُ", "tr": "Allohumma bika asbahna va bika amsayna va bika nahya va bika namutu va ilaykan-nushur.", "uz": "Ey Alloh, Sening ehsoning bilan tong ottirdik, Sening ehsoning bilan kech kirdirdik, Sen bilan tirilamiz, Sen bilan o‘lamiz va qaytish Senga."}, {"id": "sh2", "c": ["sh"], "k": 1, "t": "Kechqurun: Allohumma bika amsayna", "ar": "اللَّهُمَّ بِكَ أَمْسَيْنَا وَبِكَ أَصْبَحْنَا وَبِكَ نَحْيَا وَبِكَ نَمُوتُ وَإِلَيْكَ الْمَصِيرُ", "tr": "Allohumma bika amsayna va bika asbahna va bika nahya va bika namutu va ilaykal-masir.", "uz": "Ey Alloh, Sening ehsoning bilan kech kirdirdik, Sening ehsoning bilan tong ottirdik, Sen bilan tirilamiz, Sen bilan o‘lamiz va qaytish Senga."}, {"id": "si", "c": ["sb", "sh"], "k": 1, "t": "Sayyidul istig‘for", "ar": "اللَّهُمَّ أَنْتَ رَبِّي لَا إِلَٰهَ إِلَّا أَنْتَ، خَلَقْتَنِي وَأَنَا عَبْدُكَ، وَأَنَا عَلَىٰ عَهْدِكَ وَوَعْدِكَ مَا اسْتَطَعْتُ، أَعُوذُ بِكَ مِنْ شَرِّ مَا صَنَعْتُ، أَبُوءُ لَكَ بِنِعْمَتِكَ عَلَيَّ، وَأَبُوءُ بِذَنْبِي فَاغْفِرْ لِي فَإِنَّهُ لَا يَغْفِرُ الذُّنُوبَ إِلَّا أَنْتَ", "tr": "Allohumma anta Rabbi, la ilaha illa ant, xalaqtani va ana ‘abduk, va ana ‘ala ‘ahdika va va‘dika mastata‘t, a‘uzu bika min sharri ma sana‘t, abu’u laka bini‘matika ‘alayya va abu’u bizanbi, fag‘firli fa innahu la yag‘firuz-zunuba illa ant.", "uz": "Ey Alloh, Sen mening Rabbimsan, Sendan o‘zga iloh yo‘q. Sen meni yaratding, men Sening bandangman va imkonim boricha ahdu va’dangda turibman. Qilgan yomonliklarimdan Sendan panoh so‘rayman. Menga bergan ne’matingni tan olaman va gunohimni tan olaman. Meni kechir, chunki gunohlarni Sendan o‘zga hech kim kechira olmaydi."}, {"id": "hs", "c": ["sb", "sh"], "k": 7, "t": "Hasbiyallohu", "ar": "حَسْبِيَ اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ ۖ عَلَيْهِ تَوَكَّلْتُ ۖ وَهُوَ رَبُّ الْعَرْشِ الْعَظِيمِ", "tr": "Hasbiyallohu la ilaha illa huva ‘alayhi tavakkaltu va huva Rabbul-‘arshil-‘azim.", "uz": "Menga Alloh yetarlidir, Undan o‘zga iloh yo‘q. Faqat Unga tavakkul qildim, U ulug‘ Arsh Rabbidir. (Tavba, 129)"}, {"id": "bz", "c": ["sb", "sh"], "k": 3, "t": "Zarar yetmaslik duosi", "ar": "بِسْمِ اللَّهِ الَّذِي لَا يَضُرُّ مَعَ اسْمِهِ شَيْءٌ فِي الْأَرْضِ وَلَا فِي السَّمَاءِ وَهُوَ السَّمِيعُ الْعَلِيمُ", "tr": "Bismillahillazi la yadurru ma‘asmihi shay’un fil-arzi va la fis-sama’i va huvas-sami‘ul-‘alim.", "uz": "Ismi bilan boshlaganda yerda ham, osmonda ham hech narsa zarar yetkaza olmaydigan Alloh nomi bilan. U eshituvchi va biluvchidir."}, {"id": "sv", "c": ["sb", "sh"], "k": 100, "t": "Subhanalloh va bihamdih", "ar": "سُبْحَانَ اللَّهِ وَبِحَمْدِهِ", "tr": "Subhanallohi va bihamdih.", "uz": "Allohni poklayman va Unga hamd aytaman."}, {"id": "tl", "c": ["sb"], "k": 10, "t": "Tahlil", "ar": "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", "tr": "La ilaha illallohu vahdahu la sharika lah, lahul-mulku va lahul-hamdu va huva ‘ala kulli shay’in qadir.", "uz": "Allohdan o‘zga iloh yo‘q, U yagonadir, sherigi yo‘q. Mulk Unikidir, hamd Unga xosdir va U hamma narsaga qodirdir."}, {"id": "n1", "c": ["nm"], "k": 3, "t": "Istig‘for", "ar": "أَسْتَغْفِرُ اللَّهَ", "tr": "Astag‘firulloh.", "uz": "Allohdan mag‘firat so‘rayman."}, {"id": "n2", "c": ["nm"], "k": 1, "t": "Allohumma antas-salam", "ar": "اللَّهُمَّ أَنْتَ السَّلَامُ وَمِنْكَ السَّلَامُ، تَبَارَكْتَ يَا ذَا الْجَلَالِ وَالْإِكْرَامِ", "tr": "Allohumma antas-salam va minkas-salam, tabarakta ya zal-jalali val-ikram.", "uz": "Ey Alloh, Sen Salomsan (aybu nuqsondan xolisan), salomatlik Sendandir. Ey ulug‘lik va ikrom egasi, Sen barakotlisan."}, {"id": "n3", "c": ["nm"], "k": 33, "t": "Subhanalloh", "ar": "سُبْحَانَ اللَّهِ", "tr": "Subhanalloh.", "uz": "Alloh pokdir (har qanday nuqsondan)."}, {"id": "n4", "c": ["nm"], "k": 33, "t": "Alhamdulillah", "ar": "الْحَمْدُ لِلَّهِ", "tr": "Alhamdulillah.", "uz": "Hamd Allohgadir."}, {"id": "n5", "c": ["nm"], "k": 33, "t": "Allohu akbar", "ar": "اللَّهُ أَكْبَرُ", "tr": "Allohu akbar.", "uz": "Alloh ulug‘dir."}, {"id": "n6", "c": ["nm"], "k": 1, "t": "Tahlil bilan yuzni to‘ldirish", "ar": "لَا إِلَٰهَ إِلَّا اللَّهُ وَحْدَهُ لَا شَرِيكَ لَهُ، لَهُ الْمُلْكُ وَلَهُ الْحَمْدُ وَهُوَ عَلَىٰ كُلِّ شَيْءٍ قَدِيرٌ", "tr": "La ilaha illallohu vahdahu la sharika lah, lahul-mulku va lahul-hamdu va huva ‘ala kulli shay’in qadir.", "uz": "Allohdan o‘zga iloh yo‘q, U yagonadir, sherigi yo‘q. Mulk Unikidir, hamd Unga xosdir va U hamma narsaga qodirdir."}, {"id": "u1", "c": ["uy"], "k": 1, "t": "Uxlashdan oldin", "ar": "بِاسْمِكَ اللَّهُمَّ أَمُوتُ وَأَحْيَا", "tr": "Bismika Allohumma amutu va ahya.", "uz": "Ey Alloh, Sening noming bilan o‘laman va tirilaman."}, {"id": "u2", "c": ["uy"], "k": 33, "t": "Subhanalloh (uyqudan oldin)", "ar": "سُبْحَانَ اللَّهِ", "tr": "Subhanalloh.", "uz": "Alloh pokdir."}, {"id": "u3", "c": ["uy"], "k": 33, "t": "Alhamdulillah (uyqudan oldin)", "ar": "الْحَمْدُ لِلَّهِ", "tr": "Alhamdulillah.", "uz": "Hamd Allohgadir."}, {"id": "u4", "c": ["uy"], "k": 34, "t": "Allohu akbar (uyqudan oldin)", "ar": "اللَّهُ أَكْبَرُ", "tr": "Allohu akbar.", "uz": "Alloh ulug‘dir."}, {"id": "k1", "c": ["kn"], "k": 1, "t": "Uyg‘onganda", "ar": "الْحَمْدُ لِلَّهِ الَّذِي أَحْيَانَا بَعْدَ مَا أَمَاتَنَا وَإِلَيْهِ النُّشُورُ", "tr": "Alhamdu lillahil-lazi ahyana ba‘da ma amatana va ilayhin-nushur.", "uz": "Bizni o‘ldirgandan keyin tiriltirgan Allohga hamd bo‘lsin, qaytish ham Unga."}, {"id": "k2", "c": ["kn"], "k": 1, "t": "Ovqatdan oldin", "ar": "بِسْمِ اللَّهِ", "tr": "Bismillah.", "uz": "Alloh nomi bilan. (Boshida unutsang: “Bismillahi avvalahu va axirah”.)"}, {"id": "k3", "c": ["kn"], "k": 1, "t": "Ovqatdan keyin", "ar": "الْحَمْدُ لِلَّهِ الَّذِي أَطْعَمَنِي هَٰذَا وَرَزَقَنِيهِ مِنْ غَيْرِ حَوْلٍ مِنِّي وَلَا قُوَّةٍ", "tr": "Alhamdu lillahil-lazi at‘amani haza va razaqanihi min g‘ayri havlin minni va la quvva.", "uz": "Menga buni yedirgan va men hech kuch-quvvatsiz bo‘lgan holda rizq qilib bergan Allohga hamd bo‘lsin."}, {"id": "k4", "c": ["kn"], "k": 1, "t": "Uydan chiqayotganda", "ar": "بِسْمِ اللَّهِ، تَوَكَّلْتُ عَلَى اللَّهِ، وَلَا حَوْلَ وَلَا قُوَّةَ إِلَّا بِاللَّهِ", "tr": "Bismillahi tavakkaltu ‘alallohi va la havla va la quvvata illa billah.", "uz": "Alloh nomi bilan, Allohga tavakkul qildim. Kuch va quvvat faqat Alloh bilandir."}, {"id": "k5", "c": ["kn"], "k": 1, "t": "Uyga kirayotganda", "ar": "بِسْمِ اللَّهِ وَلَجْنَا، وَبِسْمِ اللَّهِ خَرَجْنَا، وَعَلَىٰ رَبِّنَا تَوَكَّلْنَا", "tr": "Bismillahi valajna va bismillahi xarajna va ‘ala Rabbina tavakkalna.", "uz": "Alloh nomi bilan kirdik, Alloh nomi bilan chiqdik va Rabbimizga tavakkul qildik."}, {"id": "k6", "c": ["kn"], "k": 1, "t": "Masjidga kirganda", "ar": "اللَّهُمَّ افْتَحْ لِي أَبْوَابَ رَحْمَتِكَ", "tr": "Allohummaftah li abvaba rahmatik.", "uz": "Ey Alloh, menga rahmating eshiklarini och."}, {"id": "k7", "c": ["kn"], "k": 1, "t": "Masjiddan chiqqanda", "ar": "اللَّهُمَّ إِنِّي أَسْأَلُكَ مِنْ فَضْلِكَ", "tr": "Allohumma inni as’aluka min fadlik.", "uz": "Ey Alloh, Sendan fazlingni so‘rayman."}, {"id": "k8", "c": ["kn"], "k": 1, "t": "Safar duosi (Zuxruf, 13-14)", "ar": "سُبْحَانَ الَّذِي سَخَّرَ لَنَا هَٰذَا وَمَا كُنَّا لَهُ مُقْرِنِينَ وَإِنَّا إِلَىٰ رَبِّنَا لَمُنْقَلِبُونَ", "tr": "Subhanallazi sahxara lana haza va ma kunna lahu muqrinin va inna ila Rabbina lamunqalibun.", "uz": "Buni bizga bo‘ysundirgan Zot pokdir, biz uni bo‘ysundirishga qodir emas edik. Albatta, biz Rabbimizga qaytuvchimiz."}, {"id": "k9", "c": ["kn"], "k": 100, "t": "Istig‘for", "ar": "أَسْتَغْفِرُ اللَّهَ وَأَتُوبُ إِلَيْهِ", "tr": "Astag‘firulloha va atubu ilayh.", "uz": "Allohdan mag‘firat so‘rayman va Unga tavba qilaman."}, {"id": "k10", "c": ["kn"], "k": 10, "t": "Salovat", "ar": "اللَّهُمَّ صَلِّ وَسَلِّمْ عَلَىٰ نَبِيِّنَا مُحَمَّدٍ", "tr": "Allohumma solli va sallim ‘ala nabiyyina Muhammad.", "uz": "Ey Alloh, payg‘ambarimiz Muhammadga salovat va salom yo‘lla."}, {"id": "k11", "c": ["kn"], "k": 1, "t": "G‘am va dangasalikdan panoh", "ar": "اللَّهُمَّ إِنِّي أَعُوذُ بِكَ مِنَ الْهَمِّ وَالْحَزَنِ، وَالْعَجْزِ وَالْكَسَلِ، وَالْبُخْلِ وَالْجُبْنِ، وَضَلَعِ الدَّيْنِ وَغَلَبَةِ الرِّجَالِ", "tr": "Allohumma inni a‘uzu bika minal-hammi val-huzn, val-‘ajzi val-kasal, val-buxli val-jubn, va dala‘id-dayni va g‘alabatir-rijal.", "uz": "Ey Alloh, g‘amdan va xafalikdan, ojizlikdan va dangasalikdan, baxillikdan va qo‘rqoqlikdan, qarz og‘irligidan va odamlarning ustun kelishidan Sendan panoh so‘rayman."}, {"id": "i1", "c": ["il"], "k": 1, "t": "Ilm ziyodasi (Toha, 114)", "ar": "رَبِّ زِدْنِي عِلْمًا", "tr": "Rabbi zidni ‘ilma.", "uz": "Rabbim, ilmimni ziyoda qil."}, {"id": "i2", "c": ["il"], "k": 1, "t": "Foydali ilm", "ar": "اللَّهُمَّ انْفَعْنِي بِمَا عَلَّمْتَنِي، وَعَلِّمْنِي مَا يَنْفَعُنِي، وَزِدْنِي عِلْمًا", "tr": "Allohummanfa‘ni bima ‘allamtani va ‘allimni ma yanfa‘uni va zidni ‘ilma.", "uz": "Ey Alloh, menga o‘rgatganing bilan manfaat ber, menga manfaatli narsani o‘rgat va ilmimni ziyoda qil."}, {"id": "i3", "c": ["il"], "k": 1, "t": "Imtihon va gapirish oldidan (Toha, 25-28)", "ar": "رَبِّ اشْرَحْ لِي صَدْرِي ۝ وَيَسِّرْ لِي أَمْرِي ۝ وَاحْلُلْ عُقْدَةً مِنْ لِسَانِي ۝ يَفْقَهُوا قَوْلِي", "tr": "Rabbish-rah li sadri va yassir li amri vahlul ‘uqdatam-min lisani yafqahu qavli.", "uz": "Rabbim, ko‘ksimni yoz, ishimni oson qil va tilimdagi tugunni yech, nutqimni anglashsin."}, {"id": "i4", "c": ["il"], "k": 1, "t": "Dunyo va oxirat yaxshiligi (Baqara, 201)", "ar": "رَبَّنَا آتِنَا فِي الدُّنْيَا حَسَنَةً وَفِي الْآخِرَةِ حَسَنَةً وَقِنَا عَذَابَ النَّارِ", "tr": "Rabbana atina fid-dunya hasanatan va fil-axirati hasanatan va qina ‘azaban-nar.", "uz": "Rabbimiz, bizga dunyoda ham yaxshilik ber, oxiratda ham yaxshilik ber va bizni do‘zax azobidan saqla."}, {"id": "i5", "c": ["il"], "k": 1, "t": "Ota-ona uchun (Isro, 24)", "ar": "رَبِّ ارْحَمْهُمَا كَمَا رَبَّيَانِي صَغِيرًا", "tr": "Rabbir hamhuma kama rabbayani sag‘ira.", "uz": "Rabbim, ularni (ota-onamni) men kichikligimda tarbiyalagan kabi rahm qil."}, {"id": "i6", "c": ["il"], "k": 1, "t": "Amal qabul bo‘lishi (Baqara, 127)", "ar": "رَبَّنَا تَقَبَّلْ مِنَّا ۖ إِنَّكَ أَنْتَ السَّمِيعُ الْعَلِيمُ", "tr": "Rabbana taqabbal minna innaka antas-sami‘ul-‘alim.", "uz": "Rabbimiz, bizdan qabul qil, albatta Sen eshituvchi va biluvchisan."}, {"id": "i7", "c": ["il"], "k": 1, "t": "Qiyinchilikda (Anbiyo, 87)", "ar": "لَا إِلَٰهَ إِلَّا أَنْتَ سُبْحَانَكَ إِنِّي كُنْتُ مِنَ الظَّالِمِينَ", "tr": "La ilaha illa anta subhanaka inni kuntu minaz-zolimin.", "uz": "Sendan o‘zga iloh yo‘q, Sen pok-muqaddassan, albatta men zolimlardan bo‘ldim."}];
+const DUC=[['sb','🌅 Ertalab'],['sh','🌇 Kechqurun'],['nm','🕌 Namozdan keyin'],['uy','🌙 Uyqu'],['kn','☀️ Kundalik'],['il','📖 Ilm va umumiy']];
+let DV=new Date().getHours()<14?'sb':'sh',DS=true;
+const dzDay=()=>S.dz.d[dk()]||{},dzN=(id,c)=>dzDay()[id+'@'+c]||0,dzList=c=>DU.filter(x=>x.c.includes(c)),dzDone=c=>dzList(c).filter(x=>dzN(x.id,c)>=x.k).length;
+function dzTap(id,c){const d=DU.find(x=>x.id===id),D=S.dz.d[dk()]=S.dz.d[dk()]||{},k=id+'@'+c,v=D[k]||0;
+  if(v>=d.k)delete D[k];else{D[k]=v+1;try{navigator.vibrate&&navigator.vibrate(10)}catch(e){}}
+  const old=Object.keys(S.dz.d).sort();while(old.length>90)delete S.dz.d[old.shift()];save()}
+function dzFin(id,c){const d=DU.find(x=>x.id===id),D=S.dz.d[dk()]=S.dz.d[dk()]||{};D[id+'@'+c]=d.k;save()}
+function dzReset(c){if(!confirm('Bugungi hisob nolga tushirilsinmi?'))return;const D=dzDay();dzList(c).forEach(x=>{delete D[x.id+'@'+c]});save()}
+function dzStreak(c){let n=0;for(let i=0;i<90;i++){const D=S.dz.d[dAgo(i)]||{},L=dzList(c),ok=L.length&&L.every(x=>(D[x.id+'@'+c]||0)>=x.k);if(ok)n++;else if(i>0)break}return n}
+function zkCard(){const hr=new Date().getHours(),c=hr<12?'sb':hr>=15?'sh':'';if(!c)return '';const L=dzList(c),dn=dzDone(c);if(dn>=L.length)return '';
+  return `<button class="row" style="margin-top:12px;border-left-color:var(--go)" onclick="DV='${c}';QT='d';go('q')"><span class="t"><b>🤲 ${c==='sb'?'Ertalabki':'Kechki'} zikr</b><br><span class="mu">${dn} / ${L.length} bajarildi</span></span></button>`}
+function duolar(){
+  const L=dzList(DV),dn=dzDone(DV),C=2*Math.PI*40,pct=L.length?dn/L.length:0,cat=DUC.find(x=>x[0]===DV),st=dzStreak(DV);
+  const chips=DUC.map(x=>`<button class="${DV===x[0]?'on':''}" onclick="DV='${x[0]}';render()">${x[1]} <small>${dzDone(x[0])}/${dzList(x[0]).length}</small></button>`).join('');
+  const cards=L.map(d=>{const n=dzN(d.id,DV),done=n>=d.k,pc=Math.min(100,n/d.k*100);
+    return `<div class="goal dz ${done?'dn':''}"><div class="h"><b>${esc(d.t)}</b><span class="dz-b">${done?'✓':n+' / '+d.k}</span></div>
+    <div class="dz-ar" dir="rtl" lang="ar">${esc(d.ar)}</div>${DS?`<p class="dz-tr">${esc(d.tr)}</p>`:''}<p class="mu dz-uz">${esc(d.uz)}</p>
+    ${d.k>1?`<div class="bar" style="margin:8px 0"><i style="width:${pc}%"></i></div>`:''}
+    <div class="in" style="margin:6px 0 0"><button class="${done?'btn s':'big'}" style="margin:0;flex:1;padding:13px 8px" onclick="dzTap('${d.id}','${DV}')">${done?'✓ Tayyor (qayta boshlash)':d.k>1?'+1 ('+n+' / '+d.k+')':'✓ O‘qidim'}</button>${d.k>5&&!done?`<button class="btn s" style="padding:13px 12px" onclick="dzFin('${d.id}','${DV}')">Hammasi</button>`:''}</div></div>`}).join('');
+  return `<section class="rzh" style="margin-top:6px"><div class="rzh-top"><div style="min-width:0"><p class="lab">🤲 KUNLIK ZIKR VA DUOLAR</p><h2 class="rzh-n">${cat[1].replace(/^\S+\s/,'')}</h2><p class="mu">${dn===L.length?'Bugungi hammasi bajarildi. Alhamdulillah!':dn+' / '+L.length+' bajarildi'}${st>1?' · 🔥 '+st+' kun ketma-ket':''}</p></div>
+    <div class="rzr"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="9"/><circle cx="50" cy="50" r="40" fill="none" stroke="#e2b857" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span>${dn}<small>/${L.length}</small></span></b></div></div></section>
+  <div class="chips" style="margin-top:12px;flex-wrap:nowrap;overflow-x:auto">${chips}</div>
+  <div class="in" style="margin:8px 0"><button class="btn s" style="flex:1" onclick="DS=!DS;render()">${DS?'Talaffuzni yashirish':'Talaffuzni ko‘rsatish'}</button><button class="btn s" onclick="dzReset('${DV}')">Nolga tushirish</button></div>
+  ${cards}<p class="mu" style="font-size:12px;margin:10px 2px">Matnlar ishonchli manbalardagi mashhur zikr va duolardan olingan. Har doim ustoz yoki ishonchli kitob bilan solishtirib o‘qigin.</p>`}
 
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
