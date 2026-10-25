@@ -1580,7 +1580,7 @@ async function fnPost(body,ms){
     if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya borligini tekshiring.';
     else if(res.status===401&&!m)m='Hisobga qayta kiring.';
     else if(/Savol topilmadi/.test(m)&&body.action&&body.action!=='chat')m='Server eski versiyada. Supabase’da ai-assistant funksiyasini yangi kod bilan qayta Deploy qiling.';
-    throw new Error(m||'Server xatosi ('+res.status+').')}
+    throw new Error((m||'Server xatosi ('+res.status+').')+(res.status===429&&j&&j.detail?' ['+j.detail+']':''))}
   if(!j)throw new Error('Serverdan tushunarsiz javob keldi.');
   if(j.error)throw new Error(j.error);return j}
 async function aiCall(msgs,ctx){const d=await fnPost({action:'chat',messages:msgs,context:ctx},60000);if(!d.text)throw new Error('AI javob bermadi.');return d}
@@ -1614,7 +1614,7 @@ async function aiStream(msgs,ctx,onText,onMeta,opt){
   try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,web:!!(opt&&opt.web),messages:msgs,context:ctx})})}
   catch(e){clearTimeout(to);if(e&&e.name==='AbortError')throw new Error('AI 45 soniyada javob bermadi. Birozdan keyin urinib ko‘ring.');const r=await aiCall(msgs,ctx);onText(r.text);return r.text}
   clearTimeout(to);try{const tm=res.headers&&res.headers.get&&res.headers.get('x-timing');if(tm&&onMeta)onMeta(tm)}catch(e){}
-  if(!res.ok){let m='';try{const j=await res.json();m=j.error||j.message||''}catch(e){}
+  if(!res.ok){let m='';try{const j=await res.json();m=(j.error||j.message||'')+(res.status===429&&j.detail?' ['+j.detail+']':'')}catch(e){}
     if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
     throw new Error(m||('Server xatosi ('+res.status+').'))}
   const ct=(res.headers&&res.headers.get&&res.headers.get('content-type'))||'';
@@ -1628,7 +1628,7 @@ async function aiSend(text){
   const hist=A.chat.filter(m=>m.r==='user'||m.r==='model').slice(-10).map(m=>({r:m.r,t:m.t})),ctx=aiContext();
   try{
     const m={r:'model',t:''};let started=false,last=0,meta='',tf=0;
-    const web=/video|youtube|yutub|havola|link|qidir|internet|saytdan|manba|izla|yangilik|news|top(ib)?\s+ber|topib/i.test(text),vid=/video|youtube|yutub/i.test(text),vq=text.replace(/video(lar)?|youtube|yutub|havola(si)?|link(ini)?|topib|top\b|ber\b|qidir|izla|menga|iltimos|tashla|bo‘yicha|haqida/gi,' ').replace(/\s+/g,' ').trim()||text;
+    const web=/video|youtube|yutub|havola|link|qidir|internet|saytdan|manba|izla|yangilik|news/i.test(text),vid=/video|youtube|yutub/i.test(text),vq=text.replace(/video(lar)?|youtube|yutub|havola(si)?|link(ini)?|topib|top\b|ber\b|qidir|izla|menga|iltimos|tashla|bo‘yicha|haqida/gi,' ').replace(/\s+/g,' ').trim()||text;
     let vidData=null,mref=null;const setVid=()=>{if(mref&&vidData){mref.vid=vidData;aiRender()}};
     if(vid){fnPost({action:'videos',q:vq.slice(0,100)},25000).then(d=>{vidData=d;setVid()}).catch(()=>{vidData={videos:[]};setVid()})}
     const full=await aiStream(hist,ctx,t=>{if(!started){started=true;tf=Date.now()-AIT0;A.chat.push(m);AIL=false;mref=m;if(vid){m.vq=vq;setVid()}}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}},h=>{meta=h},{web,onSrc:s=>{if(mref&&s.length)mref.src=s;else m.src=s}});
@@ -1638,11 +1638,12 @@ async function aiSend(text){
     aiRender()}
   catch(e){AIL=false;A.chat.push({r:'err',t:e.message});aiRender()}
   qsave()}
-async function aiTip(){if(AITL)return;AITL=true;render();
+let AITERR='';
+async function aiTip(){if(AITL)return;AITL=true;AITERR='';render();
   try{const r=await aiCall([{r:'user',t:'Bugun uchun menga 3 ta eng muhim, aniq va qisqa maslahat ber. Ma‘lumotlarimga qarab yoz. Oxirida bitta ruhlantiruvchi gap qo‘sh.'}],aiContext());aiS().tip[dk()]=r.text}
-  catch(e){aiS().tip[dk()]='⚠️ '+e.message}AITL=false;save()}
-function aiCard(){if(!sb||!UID)return '';const t=aiS().tip[dk()];
-  return `<div class="goal" style="margin-top:12px;border-left:4px solid var(--ac)"><div class="h"><b style="font:700 18px Fraunces,serif">✨ Yordamchi</b><button class="x" style="font-size:14px" onclick="aiOpen()">Suhbat</button></div>${AITL?'<p class="mu" style="margin:8px 0 0">Maslahat tayyorlanmoqda…</p>':t?`<div style="margin:8px 0;font-size:14.5px;line-height:1.5">${md(t)}</div><button class="btn s" style="padding:6px 12px" onclick="aiTip()">Yangilash</button>`:`<p class="mu" style="margin:4px 0 10px">Ma‘lumotlaringga qarab bugungi eng muhim maslahatlarni oladi.</p><button class="btn" style="width:100%" onclick="aiTip()">Bugungi maslahatni olish</button>`}</div>`}
+  catch(e){AITERR=e.message}AITL=false;save()}
+function aiCard(){if(!sb||!UID)return '';const t0=aiS().tip[dk()],t=t0&&!/^⚠️/.test(t0)?t0:'';
+  return `<div class="goal" style="margin-top:12px;border-left:4px solid var(--ac)"><div class="h"><b style="font:700 18px Fraunces,serif">✨ Yordamchi</b><button class="x" style="font-size:14px" onclick="aiOpen()">Suhbat</button></div>${AITL?'<p class="mu" style="margin:8px 0 0">Maslahat tayyorlanmoqda…</p>':t?`<div style="margin:8px 0;font-size:14.5px;line-height:1.5">${md(t)}</div><button class="btn s" style="padding:6px 12px" onclick="aiTip()">Yangilash</button>`:`<p class="mu" style="margin:4px 0 10px">Ma‘lumotlaringga qarab bugungi eng muhim maslahatlarni oladi.</p><button class="btn" style="width:100%" onclick="aiTip()">Bugungi maslahatni olish</button>${AITERR?`<p style="color:var(--bad);margin:8px 0 0;font-size:13px">⚠️ ${esc(AITERR)}</p>`:''}`}</div>`}
 function aiSh(k){const sh=aiS().sh;sh[k]=sh[k]?0:1;save()}
 async function aiModels(){try{const r=await sb.functions.invoke('ai-assistant',{body:{action:'models'}});if(r.error)throw new Error('Funksiya javob bermadi');const m=(r.data&&r.data.models)||[];alert('Mavjud modellar ('+m.length+'):\n'+m.filter(x=>/flash|pro/i.test(x)).slice(0,25).join('\n')+'\n\nBittasini Supabase secret GEMINI_MODEL sifatida yozishing mumkin.')}catch(e){alert('Modellarni olib bo‘lmadi: '+e.message)}}
 function aiSet(){const sh=aiS().sh,row=(k,t)=>`<button class="row ${sh[k]?'done':''}" onclick="aiSh('${k}')"><span class="ck">${sh[k]?'✓':''}</span><span class="t">${t}</span></button>`;
