@@ -198,6 +198,7 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .in input[type=date],.in input[type=time]{flex:1}
 .un-ed{background:var(--c2);border-radius:14px;padding:12px;margin:8px 0}.un-ed label{display:block;margin-bottom:8px;min-width:0}.un-ed input,.un-ed select{width:100%;margin-top:4px;box-sizing:border-box}.un-ed .in input{width:auto}.ucs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.ucb{width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);color:#fff;font-weight:700;padding:0}
 .qab .qa-g{opacity:.55;font-size:18px;line-height:1}.qab.qbc{padding:0;border-radius:50%;justify-content:center}.qab .qa-bub{width:100%;height:100%;border-radius:50%;background:transparent;font-size:20px;pointer-events:none}
+.dgp{background:var(--c2);border-radius:12px;padding:10px 12px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 8px}
 </style>
 </head>
 <body>
@@ -254,9 +255,64 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&S.rem.on)remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
+const APP_VER='2026.10.26-1';
+const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
+let REV=null,NORPC=false,SYNCING=false,PUSHQ=false,MERGED=0,LPL=0;
+const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),idArr=a=>Array.isArray(a)&&a.every(x=>isObj(x)&&x.id!==undefined);
+// Uch tomonlama birlashtirish: B = oxirgi sinxronlangan nusxa, L = shu qurilma, R = server. O‘chirishlar ham hisobga olinadi.
+function mrg(B,L,R){
+  if(same(L,R))return L;
+  if(same(B,L))return R;
+  if(same(B,R))return L;
+  if(isObj(L)&&isObj(R)){const b=isObj(B)?B:{},o={};
+    for(const k of new Set([...Object.keys(L),...Object.keys(R)])){const inL=k in L,inR=k in R,inB=k in b;
+      if(inL&&inR)o[k]=mrg(b[k],L[k],R[k]);
+      else if(inL){if(inB&&same(b[k],L[k]))continue;o[k]=L[k]}
+      else{if(inB&&same(b[k],R[k]))continue;o[k]=R[k]}}
+    return o}
+  if(idArr(L)&&idArr(R)){const Bb=idArr(B)?B:[],mb=new Map(Bb.map(x=>[x.id,x])),ml=new Map(L.map(x=>[x.id,x])),mr=new Map(R.map(x=>[x.id,x])),out=[];
+    for(const id of [...R.map(x=>x.id),...L.filter(x=>!mr.has(x.id)).map(x=>x.id)]){const inL=ml.has(id),inR=mr.has(id),inB=mb.has(id);
+      if(inL&&inR)out.push(mrg(mb.get(id),ml.get(id),mr.get(id)));
+      else if(inR){if(inB&&same(mb.get(id),mr.get(id)))continue;out.push(mr.get(id))}
+      else{if(inB&&same(mb.get(id),ml.get(id)))continue;out.push(ml.get(id))}}
+    return out}
+  return L}
+function dedupeHab(s){const seen=new Set();s.hab=(s.hab||[]).filter(x=>{const k=hnorm(x.t||'');if(seen.has(k))return false;seen.add(k);return true})}
+const baseKey=()=>'trk_base_'+UID,getBase=()=>{try{return JSON.parse(lsGet(baseKey())||'null')}catch(e){return null}};
+function setBase(s){lsSet(baseKey(),JSON.stringify(s));lsSet('trk_rev_'+UID,String(REV));lsSet('trk_sts_'+UID,String(s.ts||0))}
+const isNoRpc=e=>e&&(e.code==='PGRST202'||/Could not find the function|save_state|schema cache/i.test(e.message||''));
 let SYNC=navigator.onLine===false?'off':'ok';
-async function push(){if(!(sb&&UID))return;try{const r=await sb.from('app_state').upsert({user_id:UID,data:S,updated_at:new Date().toISOString()});if(r&&r.error)throw r.error;SYNC='ok';try{localStorage.removeItem('trk_dirty')}catch(e){}}catch(e){SYNC='wait';try{localStorage.setItem('trk_dirty','1')}catch(e2){}}}
-async function pull(){if(!sb||!UID)return;try{const r=await sb.from('app_state').select('data').eq('user_id',UID).maybeSingle();if(!r.error)PULLED=true;const d=r.data&&r.data.data;if(d&&(d.ts||0)>(S.ts||0))S=norm(Object.assign(blank(),d));else if(S.ts)push()}catch(e){}}
+async function push(){
+  if(!(sb&&UID))return;if(SYNCING){PUSHQ=true;return}SYNCING=true;
+  try{for(let i=0;i<4;i++){
+      const snap=JSON.parse(JSON.stringify(S));
+      if(NORPC){const r=await sb.from('app_state').upsert({user_id:UID,data:snap,updated_at:new Date().toISOString()});if(r&&r.error)throw r.error;SYNC='ok';lsRm('trk_dirty');break}
+      const r=await sb.rpc('save_state',{p_data:snap,p_base:REV});
+      if(r.error){if(isNoRpc(r.error)){NORPC=true;continue}throw r.error}
+      const d=r.data;
+      if(d&&d.ok){REV=d.rev;setBase(snap);SYNC='ok';lsRm('trk_dirty');break}
+      const R=norm(Object.assign(blank(),(d&&d.data)||{})),m=mrg(getBase()||{},S,R);   // asos bo‘lmasa, hech narsa yo‘qolmaydi (birlashtiriladi)
+      S=norm(Object.assign(blank(),m));dedupeHab(S);S.ts=Date.now();REV=d.rev;lsSet(KEY(),JSON.stringify(S));MERGED=1}}
+  catch(e){SYNC='wait';lsSet('trk_dirty','1')}
+  SYNCING=false;
+  if(MERGED){MERGED=0;try{toast('Boshqa qurilmadagi o‘zgarishlar qo‘shildi')}catch(e){}render()}
+  if(PUSHQ){PUSHQ=false;push()}}
+async function pull(){
+  if(!sb||!UID)return false;
+  try{let r=null;
+    if(!NORPC){r=await sb.from('app_state').select('data,rev').eq('user_id',UID).maybeSingle();if(r.error&&/rev/.test(r.error.message||'')){NORPC=true;r=null}}
+    if(!r)r=await sb.from('app_state').select('data').eq('user_id',UID).maybeSingle();
+    if(r.error)return false;PULLED=true;
+    const row=r.data,d=row&&row.data;
+    if(!d||!Object.keys(d).length){if(S.ts)push();return false}
+    const srv=row.rev!=null?row.rev:null;
+    if(NORPC||srv==null){if((d.ts||0)>(S.ts||0)){S=norm(Object.assign(blank(),d));return true}if(S.ts)push();return false}
+    const sts=+lsGet('trk_sts_'+UID)||0,unsynced=(S.ts||0)>sts,R=norm(Object.assign(blank(),d));
+    if(REV===srv){if(unsynced)push();return false}
+    if(REV==null){REV=srv;if((d.ts||0)>(S.ts||0)){S=R;setBase(S);lsSet(KEY(),JSON.stringify(S));return true}push();return false}
+    if(!unsynced){S=R;REV=srv;setBase(S);lsSet(KEY(),JSON.stringify(S));return true}
+    S=norm(Object.assign(blank(),mrg(getBase()||{},S,R)));dedupeHab(S);S.ts=Date.now();REV=srv;lsSet(KEY(),JSON.stringify(S));push();return true
+  }catch(e){return false}}
 
 function nowInfo(){
   const d=new Date(),n=d.getHours()*60+d.getMinutes(),today=bl().filter(b=>b.d.includes(d.getDay()));
@@ -548,7 +604,8 @@ function drawNav(){
   const b=x=>`<button class="${tab===x[0]?'on':''}" onclick="go('${x[0]}')"><span class="ni">${x[1]}</span><span>${x[2]}</span></button>`;
   const mid=ai?`<button class="navai" onclick="aiOpen()" aria-label="Yordamchi (AI)">✨</button>`:'';
   n.innerHTML=`<nav><div>${T.slice(0,3).map(b).join('')}${mid}${T.slice(3).map(b).join('')}</div></nav>`}
-function render(){
+function render(){try{renderCore()}catch(e){try{reportErr('render: '+e.message,e.stack)}catch(x){}const a=$('#app');if(a)a.innerHTML=errView(e)}}
+function renderCore(){
   const a=$('#app');
   if(sb&&!UID){navOff();if(!$('#lg'))a.innerHTML=authView();return}
   if(sb&&UID&&lockMsg()){navOff();a.innerHTML=lockView();return}
@@ -733,7 +790,7 @@ function sozlama(){const t=getTh();
   <h2>Ko‘rinish</h2><div class="seg">${[['auto','Tizim'],['light','Yorug‘'],['dark','Qorong‘u']].map(x=>`<button class="${t===x[0]?'on':''}" onclick="setTh('${x[0]}')">${x[1]}</button>`).join('')}</div><p class="mu">Tizim tanlansa, telefonning kunduz va tun rejimiga qarab o‘zi almashadi. Bu tanlov faqat shu qurilmada saqlanadi.</p>
   <h2>Profil</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div>
   <h2>Hisob</h2><p class="mu" style="margin:0 0 6px">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':'Kirilmagan.'):'Hozircha faqat shu telefonda saqlanadi.'}</p><p class="mu" style="margin:0 0 6px">${SYNC==='ok'?'Sinxronlash: hamma narsa saqlangan.':SYNC==='wait'?'Sinxronlash: internet kelganda yuboriladi.':'Internet yo‘q. Ma‘lumot shu telefonda saqlanadi va keyin sinxronlanadi.'}</p>${PROF?`<p style="margin:0 0 6px">⭐ ${subLine()}</p>${PROF.lifetime?'':tgBtn('Obunani uzaytirish')}`:''}${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}
-  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${grp('bk','💾 Zaxira nusxa',bk)}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
+  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)',errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
   <p class="mu" style="text-align:center;margin-top:28px;letter-spacing:.14em;font-size:12px">KUNLIK TIZIM BY AZIMOV</p>`}
 
 applyTheme();try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTh()==='auto')applyTheme()})}catch(e){}
@@ -2122,6 +2179,40 @@ const cloudOk=bytes=>cloudMB()+bytes/1048576<=CLOUD_MB;
 function cloudBar(){const u=cloudMB(),pc=Math.min(100,u/CLOUD_MB*100);
   return `<div class="goal" style="padding:10px 14px"><div class="h"><span>☁️ Bulut hajmi</span><span class="mu">${u.toFixed(u<10?1:0)} / ${CLOUD_MB} MB</span></div><div class="bar" style="margin-top:6px"><i style="width:${pc}%;${pc>85?'background:var(--bad)':''}"></i></div><p class="mu" style="font-size:12px;margin:6px 0 0">Limit to‘lsa, yangi fayllar faqat shu telefonda saqlanadi. Eskisini o‘chirsang, joy bo‘shaydi.</p></div>`}
 
+// ---- Xatolarni yig‘ish va xavfsiz chizish ----
+let ERRN=0;const ERRSEEN={};
+function reportErr(msg,stack){try{if(!sb||!UID||ERRN>=5)return;const key=String(msg).slice(0,120);if(ERRSEEN[key])return;ERRSEEN[key]=1;ERRN++;
+  sb.from('client_errors').insert({user_id:UID,ver:APP_VER,tab:tab+(tab==='q'?':'+QT:tab==='o'?':'+OT:tab==='e'?':'+EV:''),msg:String(msg).slice(0,300),stack:String(stack||'').slice(0,1200),ua:(navigator.userAgent||'').slice(0,160),standalone:!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches))}).then(()=>{},()=>{})}catch(e){}}
+window.addEventListener('error',e=>reportErr(e.message,(e.error&&e.error.stack)||(e.filename+':'+e.lineno)));
+window.addEventListener('unhandledrejection',e=>reportErr('promise: '+((e.reason&&e.reason.message)||e.reason),e.reason&&e.reason.stack));
+function errView(e){return `<div class="auth"><h1>Kechirasan</h1><p class="mu">Bu ekranni ochishda xatolik chiqdi. Ma‘lumotlaring joyida, hech narsa yo‘qolmagan.</p><button class="big" onclick="tab='h';SO=false;render()">Bosh sahifaga o‘tish</button><button class="btn s" style="width:100%;margin-top:8px" onclick="location.reload()">Ilovani qayta yuklash</button><p class="mu" style="font-size:11px;margin-top:14px;overflow-wrap:anywhere">${esc(String(e&&e.message||e).slice(0,160))}</p></div>`}
+// ---- Doimiy xotira va diagnostika ----
+let DG={p:null,u:0,q:0};
+function ensurePersist(){try{if(navigator.storage&&navigator.storage.persist){navigator.storage.persisted().then(p=>{DG.p=p;if(!p)navigator.storage.persist().then(x=>{DG.p=x})}).catch(()=>{});if(navigator.storage.estimate)navigator.storage.estimate().then(e=>{DG.u=e.usage||0;DG.q=e.quota||0}).catch(()=>{})}}catch(e){}}
+function diagText(){const sts=+lsGet('trk_sts_'+UID)||0,standalone=!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
+  return ['Versiya: '+APP_VER,'Sinxron: '+(SYNC==='ok'?'saqlangan':SYNC==='wait'?'kutmoqda':'oflayn')+(NORPC?' (eski rejim)':''),'Server nusxasi (rev): '+(REV==null?'—':REV),'Oxirgi sinxron: '+(sts?new Date(sts).toLocaleString('sv'):'—'),'O‘rnatilgan ilova: '+(standalone?'ha':'yo‘q (brauzer)'),'Doimiy xotira: '+(DG.p==null?'noma‘lum':DG.p?'yoqilgan':'yoqilmagan'),'Xotira: '+(DG.u/1048576).toFixed(1)+' MB / '+Math.round(DG.q/1048576)+' MB','Bildirishnoma: '+(typeof Notification!=='undefined'?Notification.permission:'yo‘q'),'Internet: '+(navigator.onLine===false?'yo‘q':'bor'),'Qurilma: '+(navigator.userAgent||'').slice(0,90)].join('\n')}
+function diagCard(){ensurePersist();return `<pre class="dgp">${esc(diagText())}</pre><div class="in"><button class="btn s" style="flex:1" onclick="try{navigator.clipboard.writeText(diagText());toast('Nusxalandi')}catch(e){}">Nusxalash</button><button class="btn s" style="flex:1" onclick="pull().then(c=>{toast(c?'Yangilandi':'Hammasi yangi');render()})">Hozir sinxronlash</button></div>`}
+// ---- Avtomatik zaxiralar (serverda) ----
+let HIST=null,HISTERR='',ERRL=null;
+async function histLoad(){if(!sb||!UID)return;HIST=[];HISTERR='';const r=await sb.from('app_state_history').select('id,day,kind,created_at').order('created_at',{ascending:false}).limit(20);if(r.error){HISTERR=r.error.message||'xato'}else HIST=r.data||[];render()}
+const sumS=d=>'Odatlar: '+((d.hab||[]).length)+', lug‘at so‘zlari: '+(((d.ie||{}).words||[]).length)+', pul yozuvlari: '+((d.money||[]).length)+', belgilangan kunlar: '+Object.keys(d.done||{}).length;
+async function histRestore(id){const r=await sb.from('app_state_history').select('data,day,kind').eq('id',id).maybeSingle();if(r.error||!r.data){alert('Zaxirani o‘qib bo‘lmadi.');return}
+  const d=r.data.data;if(!confirm(r.data.day+' dagi zaxira tiklansinmi?\n'+sumS(d)+'\n\nHozirgi holating shu telefonda saqlab qo‘yiladi (qaytarish mumkin).'))return;
+  try{lsSet('trk_prerestore',JSON.stringify(S))}catch(e){}
+  S=norm(Object.assign(blank(),d));save();toast('Zaxira tiklandi')}
+function histUndo(){const v=lsGet('trk_prerestore');if(!v)return;if(!confirm('Tiklashdan oldingi holatga qaytarilsinmi?'))return;try{S=norm(Object.assign(blank(),JSON.parse(v)));lsRm('trk_prerestore');save();toast('Qaytarildi')}catch(e){alert('Qaytarib bo‘lmadi.')}}
+function histCard(){if(!sb||!UID)return '<p class="mu">Hisobga kirgach ishlaydi.</p>';
+  const L=(HIST||[]).map(x=>`<div class="row"><span class="t"><b>${esc(x.day)}</b> ${x.kind==='shrink'?'(ma‘lumot kamayganda olingan)':''}<br><span class="mu" style="font-size:12px">${new Date(x.created_at).toLocaleString('sv').slice(0,16)}</span></span><button class="btn s" style="padding:6px 12px" onclick="histRestore(${x.id})">Tiklash</button></div>`).join('');
+  return `<p class="mu" style="margin:0 0 8px">Server har kuni avtomatik zaxira oladi (oxirgi 10 kun). Biror narsa buzilsa yoki o‘chib ketsa, shu yerdan tiklaysan.</p>
+  ${HIST===null?'<button class="btn" style="width:100%" onclick="histLoad()">Zaxiralarni ko‘rsat</button>':HISTERR?`<p style="color:var(--bad);font-size:13px">Zaxira jadvali hali yoqilmagan (reliability.sql ishga tushirilmagan).</p>`:L||'<p class="mu">Hali zaxira yo‘q. Ma‘lumot o‘zgargach, birinchi zaxira paydo bo‘ladi.</p>'}
+  ${lsGet('trk_prerestore')?'<button class="btn s" style="width:100%;margin-top:8px" onclick="histUndo()">Tiklashdan oldingi holatga qaytish</button>':''}`}
+// ---- Xatolar paneli (faqat egasi uchun) ----
+async function loadErrs(){const r=await sb.from('client_errors').select('*').order('created_at',{ascending:false}).limit(80);ERRL=r.error?[]:r.data;render()}
+async function clearErrs(){if(!confirm('Hamma xatolar o‘chirilsinmi?'))return;await sb.from('client_errors').delete().neq('id',0);ERRL=[];render()}
+function errCard(){if(!Array.isArray(OW))return '';const g={};(ERRL||[]).forEach(e=>{const k=e.msg;(g[k]=g[k]||{n:0,last:e.created_at,ver:e.ver,tab:e.tab,ua:e.ua,st:e.stack}).n++});
+  const rows=Object.entries(g).sort((a,b)=>b[1].n-a[1].n).map(([m,x])=>`<div class="fbe"><b style="overflow-wrap:anywhere">${esc(m)}</b><div class="mu" style="font-size:12px">${x.n} marta · ${esc(x.tab||'')} · v${esc(x.ver||'')} · ${new Date(x.last).toLocaleString('sv').slice(0,16)}<br>${esc((x.ua||'').slice(0,70))}</div></div>`).join('');
+  return `<p class="mu" style="margin:0 0 8px">Foydalanuvchilar telefonida chiqqan xatolar (guruhlangan).</p><div class="in"><button class="btn" style="flex:1" onclick="loadErrs()">Yuklash</button><button class="btn s" onclick="clearErrs()">Tozalash</button></div>${ERRL===null?'':rows||'<p class="mu">Xato yo‘q. 🎉</p>'}`}
+
 async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
   try{return await r.error.context.json()}catch(e){return{error:'Funksiya topilmadi yoki ishlamadi'}}}
@@ -2184,7 +2275,7 @@ async function auth(up){
   if(r.error)return err(/invalid/i.test(r.error.message)?'Login yoki parol noto‘g‘ri.':r.error.message);
     await start(r.data.session.user.id,r.data.session.user.email);
 }
-async function start(id,em){UID=id;try{localStorage.setItem('trk_uid',id);if(em)localStorage.setItem('trk_em',em)}catch(e){}S=load();await loadProf();if(!lockMsg()){await pull();if(S.ts&&!S.sg)sgMig();try{if(localStorage.getItem('trk_dirty'))push()}catch(e){}}render()}
+async function start(id,em){UID=id;REV=(()=>{const v=lsGet('trk_rev_'+id);return v==null?null:+v})();ensurePersist();try{localStorage.setItem('trk_uid',id);if(em)localStorage.setItem('trk_em',em)}catch(e){}S=load();await loadProf();if(!lockMsg()){await pull();if(S.ts&&!S.sg)sgMig();try{if(localStorage.getItem('trk_dirty'))push()}catch(e){}}render()}
 (async()=>{
   if(!sb){S=load();render();ptEnsure()}
   else{
@@ -2194,7 +2285,8 @@ async function start(id,em){UID=id;try{localStorage.setItem('trk_uid',id);if(em)
   }
   ['touchstart','touchmove','scroll'].forEach(ev=>window.addEventListener(ev,()=>{LT=Date.now()},{passive:true}));
   setInterval(()=>{ptEnsure();if(Date.now()-LT<3000)return;if(tab!=='h'&&tab!=='q')return;const a=document.activeElement;if(!a||!/^(INPUT|TEXTAREA|SELECT)$/.test(a.tagName))render()},30000);
-  window.addEventListener('online',()=>{SYNC='ok';let d=null;try{d=localStorage.getItem('trk_dirty')}catch(e){}if(d)push();render()});
+  window.addEventListener('online',()=>{SYNC='ok';let d=null;try{d=localStorage.getItem('trk_dirty')}catch(e){}if(d)push();else pull().then(c=>{if(c)render()});render()});
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&sb&&UID&&Date.now()-LPL>20000){LPL=Date.now();pull().then(c=>{if(c)render()})}});
   window.addEventListener('offline',()=>{SYNC='off';render()});
   if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))navigator.serviceWorker.register('sw.js').catch(()=>{});
 })();
