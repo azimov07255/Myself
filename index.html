@@ -99,7 +99,7 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .sbtn{position:fixed;right:14px;bottom:calc(env(safe-area-inset-bottom,0px) + 76px);width:46px;height:46px;border-radius:50%;border:1px solid var(--ln);background:var(--c1);font-size:20px;z-index:20;box-shadow:0 4px 14px rgba(0,0,0,.25);padding:0}
 .seg.sc{overflow-x:auto;position:relative;scrollbar-width:none}.seg.sc::-webkit-scrollbar{display:none}.seg.sc button{flex:0 0 auto;padding:9px 14px;white-space:nowrap}
 .jm .qz{background:var(--bad);color:#fff;border-color:var(--bad)}
-.rd{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}.rdt{display:flex;align-items:center;gap:10px;padding:8px 12px}.rdc{flex:1;overflow:auto;background:#7c8794;-webkit-overflow-scrolling:touch}.rdc canvas{display:block;margin:0 auto;background:#fff;max-width:none}.rdb{display:flex;gap:8px;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);align-items:center}.rdb input{flex:0 0 74px!important;text-align:center}
+.rdo{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}.rdt{display:flex;align-items:center;gap:10px;padding:8px 12px}.rdc{flex:1;overflow:auto;background:#7c8794;-webkit-overflow-scrolling:touch}.rdc canvas{display:block;margin:0 auto;background:#fff;max-width:none}.rdb{display:flex;gap:8px;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);align-items:center}.rdb input{flex:0 0 74px!important;text-align:center}
 .hw{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.hw>div{padding:4px 0;border-radius:8px;display:grid;place-items:center}.hwh{color:var(--mu);margin:0 0 6px;padding:0 8px}.hwh b{color:var(--tx)}.hwh .td,.hwh .td b{color:var(--go)}.hcard{background:var(--c1);border:1px solid var(--ln);border-radius:14px;padding:10px 8px;margin-bottom:8px}
 .mg{display:flex;border:1px solid var(--ln);border-radius:14px;background:var(--c1);overflow:hidden}
 .mn{flex:0 0 138px;border-right:1px solid var(--ln)}
@@ -150,11 +150,35 @@ html,body{max-width:100%;overflow-x:hidden}
 nav>div{align-items:flex-end}.navai{flex:0 0 58px!important;width:58px;height:58px;margin:-24px 4px 2px!important;padding:0!important;border-radius:50%!important;background:linear-gradient(135deg,var(--ac),var(--go))!important;color:#fff!important;font-size:25px!important;display:grid!important;place-items:center;border:4px solid var(--bg)!important;box-shadow:0 6px 18px rgba(0,0,0,.35)}
 .act{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:8px;padding:9px 11px;border-radius:12px;background:var(--c2);font-size:14px}.act span{flex:1;min-width:0}
 .bdg{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}.bd{background:var(--c1);border-radius:14px;padding:12px 6px;text-align:center;font-size:12px;border:1px solid transparent;color:var(--mu)}.bd i{display:block;font-size:28px;font-style:normal;filter:grayscale(1);opacity:.35;margin-bottom:4px}.bd.on{border-color:var(--go);color:var(--tx)}.bd.on i{filter:none;opacity:1}.bd small{display:block;opacity:.8;margin-top:2px}
-.wkp{display:grid;grid-template-columns:repeat(7,1fr);gap:6px}.wkp button{padding:8px 0;border-radius:12px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 18px Figtree,sans-serif;line-height:1.3}.wkp button.on{border-color:var(--ac);background:var(--c2)}
-.pg{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}.pg i{display:block}.pc2{aspect-ratio:1;border-radius:10px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 14px Figtree,sans-serif;padding:0}.pc2 small{display:block;font-size:11px;line-height:1}.pc2.pd{background:var(--ac);color:#fff;border-color:var(--ac)}.pc2.pm{background:rgba(214,70,70,.15);border-color:var(--bad)}.pc2.pp{border-color:var(--go)}.pc2.pt{box-shadow:0 0 0 2px var(--tx)}
+.wkp{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.wkp button{padding:8px 0;border-radius:12px;border:2px solid var(--ln);background:var(--c1);color:var(--tx);font:600 18px Figtree,sans-serif;line-height:1.3}.wkp button.on{border-color:var(--ac);background:var(--c2)}
 .exth{width:52px;height:52px;border-radius:12px;object-fit:cover;background:var(--c2);display:grid;place-items:center;font-size:24px;flex:0 0 52px}
 .mic{flex:0 0 44px;height:44px;min-width:44px;padding:0;border-radius:50%;border:1px solid var(--ln);background:var(--c1);font-size:18px;color:var(--tx)}.mic.rec{background:var(--bad);color:#fff;font-size:13px;animation:micp 1s infinite}@keyframes micp{50%{opacity:.6}}
 details>summary{cursor:pointer;padding:6px 0}
+.tk{position:relative;margin-top:14px;padding:20px 20px 16px;border-radius:26px;color:var(--htx);background:radial-gradient(circle at 100% 0,rgba(226,184,87,.30),transparent 52%),radial-gradient(circle at 0 100%,rgba(70,196,178,.20),transparent 46%),var(--hbg);overflow:hidden}
+.tk .lab{margin:0;font-weight:700;letter-spacing:.08em;font-size:12px;color:var(--hlab)}.tk .mu{color:var(--hmu);font-size:13px;margin:0}
+.tk-h{display:flex;align-items:center;justify-content:space-between;gap:12px}.tk-n{font:800 26px Fraunces,serif;margin:4px 0 2px;line-height:1.1;overflow-wrap:anywhere}
+.tk-r{position:relative;width:104px;height:104px;flex:0 0 104px}.tk-r svg{width:100%;height:100%;transform:rotate(-90deg)}.tk-r b{position:absolute;inset:0;display:grid;place-items:center;font:800 32px Fraunces,serif;line-height:1}.tk-r small{font:600 12px Figtree,sans-serif;opacity:.7;margin-left:2px}
+.tk-cut{position:relative;margin:16px -20px 14px;border-top:2px dashed rgba(255,255,255,.3)}.tk-cut:before,.tk-cut:after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg)}.tk-cut:before{left:-10px}.tk-cut:after{right:-10px}
+.tk-s{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;text-align:center}.tk-s b{display:block;font:800 26px Fraunces,serif}.tk-s span{font-size:12px;color:var(--hmu)}
+.bn{padding:12px 14px;border-radius:16px;margin-top:12px;font-size:14px;line-height:1.45}.bn.ok{background:rgba(70,196,178,.14);border:1px solid var(--ac)}.bn.wr{background:rgba(226,184,87,.18);border:1px solid var(--go)}.bn.bd{background:rgba(229,118,107,.14);border:1px solid var(--bad)}
+.stp{display:grid;gap:8px}.stp div{aspect-ratio:1;border-radius:50%;display:grid;place-items:center;font:700 14px Figtree,sans-serif;border:2px dashed var(--ln);color:var(--mu);background:var(--c1);min-width:0}
+.stp .d{background:var(--ac);border:2px solid var(--ac);color:var(--on-ac);font-size:18px}.stp .p{border-color:var(--go);color:var(--go)}.stp .b{border-color:var(--bad);background:rgba(229,118,107,.12);font-size:15px}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px}.cal .w{text-align:center;font-size:11px;color:var(--mu);padding-bottom:2px}.cal i{display:block;height:44px}
+.cal .c{position:relative;height:44px;border-radius:12px;border:1.5px solid var(--ln);background:var(--c1);display:flex;flex-direction:column;align-items:center;justify-content:center;font:600 15px Figtree,sans-serif;line-height:1;cursor:pointer;user-select:none;-webkit-user-select:none;min-width:0}
+.cal .c small{font-size:10px;margin-top:2px;line-height:1}.cal .c em{position:absolute;top:3px;font:700 8px Figtree,sans-serif;text-transform:uppercase;color:var(--mu)}
+.cal .c.mm{padding-top:9px}.cal .c em{left:0;right:0;text-align:center}.cal .c.past{opacity:.5}.cal .c.d{background:var(--ac);color:var(--on-ac);border-color:var(--ac);opacity:1}.cal .c.d em{color:var(--on-ac)}.cal .c.m{background:rgba(229,118,107,.15);border-color:var(--bad);color:var(--bad);opacity:1}.cal .c.p{border:2px dashed var(--go);opacity:1}.cal .c.t{box-shadow:0 0 0 2px var(--tx)}
+.lg{display:flex;flex-wrap:wrap;gap:6px 14px;font-size:12px;color:var(--mu);margin-top:10px}.lg span:before{content:"";display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:5px;vertical-align:-1px;background:var(--c)}
+.fg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-bottom:6px}.fg label{min-width:0;display:block}.fg input{width:100%;margin-top:4px;box-sizing:border-box}
+.exr{display:flex;gap:10px;align-items:center;min-width:0}.exr b{min-width:0;overflow-wrap:anywhere}.exw{position:relative;display:block;width:52px;height:52px;flex:0 0 52px}.exw .exth{width:52px;height:52px}.exw.vd:after{content:"▶";position:absolute;inset:0;display:grid;place-items:center;color:#fff;font-size:17px;text-shadow:0 1px 5px rgba(0,0,0,.7);pointer-events:none}
+.fg3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0}.fg3 label{min-width:0;display:block}.fg3 input{width:100%;margin-top:4px;box-sizing:border-box}
+html.ovl,html.ovl body{overflow:hidden;overscroll-behavior:none}html.ovl body{position:fixed;left:0;right:0;width:100%}.aic{overscroll-behavior:contain}.ai{overscroll-behavior:none}
+.rzh{position:relative;margin-top:14px;padding:20px;border-radius:26px;color:#f3ecd2;overflow:hidden;background:radial-gradient(1.5px 1.5px at 12% 22%,rgba(255,255,255,.8),transparent),radial-gradient(1.5px 1.5px at 38% 14%,rgba(255,255,255,.6),transparent),radial-gradient(2px 2px at 63% 30%,rgba(255,255,255,.7),transparent),radial-gradient(1.5px 1.5px at 82% 12%,rgba(255,255,255,.6),transparent),radial-gradient(circle at 96% 6%,rgba(226,184,87,.38),transparent 40%),linear-gradient(165deg,#0d2240,#17406a 62%,#1c4d5c)}
+.rzh .lab{margin:0;font-weight:700;font-size:13px;color:#e2b857}.rzh .mu{color:#b9cde0;font-size:13px;margin:0}.rzh-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.rzh-n{font:800 26px Fraunces,serif;margin:4px 0 4px;line-height:1.1}
+.rzr{position:relative;width:96px;height:96px;flex:0 0 96px}.rzr svg{width:100%;height:100%;transform:rotate(-90deg)}.rzr b{position:absolute;inset:0;display:grid;place-items:center;font:800 30px Fraunces,serif;line-height:1}.rzr small{font:600 11px Figtree,sans-serif;opacity:.7;margin-left:1px}
+.rzt{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-top:16px}.rzt div{background:rgba(255,255,255,.09);border-radius:16px;padding:10px 12px}.rzt span{display:block;font-size:12px;color:#b9cde0}.rzt b{font:800 26px Fraunces,serif}
+.cal.rm .c{height:56px;font-size:16px}.cal.rm .c small{font-size:9px;margin-top:3px;opacity:.75}.cal .c.g{background:var(--go);color:var(--on-go);border-color:var(--go)}.cal .c.ld:not(.d):not(.g):not(.m){border-color:var(--go)}.cal .c.fu{opacity:.4;pointer-events:none}
+.cal .c sup{position:absolute;top:3px;right:5px;font-size:10px;line-height:1}.cal .c em{position:absolute;top:2px;left:5px;font:700 10px Figtree,sans-serif;color:var(--go);font-style:normal;text-transform:none}.cal .c.d em,.cal .c.g em{color:inherit}
+.rtl{display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--ln);text-align:left}.rtl:last-child{border-bottom:0}.rtl .tdot{font-size:18px;flex:0 0 auto;margin:0;width:auto}
 </style>
 </head>
 <body>
@@ -1269,18 +1293,37 @@ function rzCard(){
   if(I.on){const t=ptTimes(),f=S.rz.fast[k]||0;
     return `<section class="hero" style="margin-top:12px"><p class="lab">Ramazon, ${I.n}-kun</p><h1 style="font-size:26px">${rzLeftTxt()||'Ramazon muborak'}</h1>${t?`<p class="mu">Saharlik: ${hm(t.Fajr)} gacha. Iftor: ${hm(t.Maghrib)}.</p>`:''}<button class="big ${f===1?'ok':''}" onclick="fzT('${k}')">${f===1?'Bugun ro‘za tutdim':f===2?'Qazo ro‘za (bekor qilish)':'Bugun ro‘za tutdim'}</button></section>`}
   return `<button class="row" style="margin-top:12px;border-left-color:var(--go)" onclick="QT='r';go('q')"><span class="t"><b>Ramazonga ${I.left} kun qoldi</b><br><span class="mu">Taxminan ${I.start.slice(8)}.${I.start.slice(5,7)}.${I.start.slice(0,4)}</span></span></button>`}
+function fzSet(k,v){if(k>dk())return;const R=S.rz,c=R.fast[k]||0;if(c===v)v=0;
+  if(c===2){R.debt=Math.max(0,R.debt-1);const x=R.log.findIndex(y=>y.d===k&&y.k==='miss');if(x>=0)R.log.splice(x,1)}
+  if(v===2){R.debt++;R.log.push({id:Date.now(),d:k,k:'miss',n:1})}
+  if(v)R.fast[k]=v;else delete R.fast[k];save()}
 function ramazon(){
   const I=rzInfo(),R=S.rz,T0=dk(),hj=hijri(new Date()),t=ptTimes();
-  const grid=(m,cls)=>[...Array(30)].map((_,i)=>{const k=rzDay(I.start,i),st=m(k),fu=k>T0;return `<button class="${st===1?'rd':st===2?'qz':''} ${k===T0?'cu':''}" ${fu?'disabled style="opacity:.45"':''} onclick="${cls}('${k}')">${i+1}</button>`}).join('');
-  const lbl={miss:'qazo bo‘ldi',paid:'qazo o‘qildi',add:'eski qazo qo‘shildi'},log=R.log.slice().reverse().slice(0,10).map(x=>`<div class="row"><span class="t">${x.d.slice(8)}.${x.d.slice(5,7)}<br><span class="mu">${lbl[x.k]}${x.k==='add'?' ('+x.n+' ta)':''}</span></span></div>`).join('');
-  const done=Object.values(R.fast).filter(v=>v===1).length;
-  return `<section class="hero"><p class="lab">${hj?hj.d+' '+HMN[hj.m-1]+' '+hj.y+' hijriy':'Ramazon'}</p>${I.on?`<h1 style="font-size:34px">${I.n}-kun</h1><p class="mu">${rzLeftTxt()}</p>`:I.left>0?`<h1 style="font-size:34px">${I.left} kun qoldi</h1><p class="mu">Ramazon taxminan ${I.start.slice(8)}.${I.start.slice(5,7)}.${I.start.slice(0,4)} kuni boshlanadi.</p>`:`<h1 style="font-size:30px">Ramazon tugadi</h1>`}${t?`<p class="mu" style="margin-top:6px">Bugun: saharlik ${hm(t.Fajr)} gacha, iftor ${hm(t.Maghrib)}.</p>`:''}</section>
-  <h2>Boshlanish sanasi</h2><p class="mu" style="margin:0 0 8px">Sana hisob bo‘yicha taxminiy. Rasman e‘lon qilingach, shu yerga yoz.</p><div class="in"><input type="date" value="${R.start||I.start}" onchange="rzSet(this.value)"><button class="btn s" onclick="rzSet('')">Hisobga qaytish</button></div>
-  <h2>Ro‘za jurnali (${done}/30)</h2><p class="mu" style="margin:0 0 8px">Bir bosish: tutdim, ikki: qazo, uch: bekor.</p><div class="jm" style="grid-template-columns:repeat(6,1fr)">${grid(k=>R.fast[k]||0,'fzT')}</div>
-  <h2>Taroveh</h2><div class="jm" style="grid-template-columns:repeat(6,1fr)">${grid(k=>R.tar[k]?1:0,'tvT')}</div>
-  <h2>Hatm rejasi</h2><p class="mu" style="margin:0 0 8px">Ramazonda 30 kunda hatm: kuniga taxminan 21 bet. Tugma Hatm bo‘limidagi rejani yoqadi.</p><button class="btn s" onclick="hPlan(30);QT='h';render()">30 kunlik hatm rejasini yoqish</button>
-  <h2>Ramazon jadvali</h2><p class="mu" style="margin:0 0 8px">Saharlik, taroveh va iftorga mos kun jadvali. Reja rejimlariga qo‘shiladi, keyin o‘zgartirsang bo‘ladi.</p><button class="btn s" onclick="mdNew('ramazon')">Ramazon rejimini qo‘shish</button>
-  <h2>Qazo ro‘zalar jurnali</h2><div class="sum"><div class="w"><span class="mu">Jami qazo ro‘za</span><b>${R.debt} ta</b></div></div><div class="in"><button class="btn s" style="flex:1" onclick="rzPay()">Qazoni tutdim (−1)</button><button class="btn s" style="flex:1" onclick="rzAdd()">+ qo‘shish</button></div>${log}`}
+  const done=Object.values(R.fast).filter(v=>v===1).length,qaz=Object.values(R.fast).filter(v=>v===2).length,tv=Object.keys(R.tar).filter(k=>R.tar[k]).length;
+  const C=2*Math.PI*40,pct=Math.min(1,done/30),f0=R.fast[T0]||0;
+  const title=I.on?`Ramazon, ${I.n}-kun`:I.left>0?`${I.left} kun qoldi`:'Ramazon tugadi';
+  const sub=I.on?(rzLeftTxt()||'Ramazon muborak'):I.left>0?`Taxminan ${I.start.slice(8)}.${I.start.slice(5,7)}.${I.start.slice(0,4)} kuni boshlanadi`:'Qabul bo‘lsin';
+  const hero=`<div class="rzh"><div class="rzh-top"><div style="min-width:0"><p class="lab">🌙 ${hj?hj.d+' '+HMN[hj.m-1]+' '+hj.y:'Ramazon'}</p><h2 class="rzh-n">${title}</h2><p class="mu">${sub}</p></div>
+    <div class="rzr"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="40" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="9"/><circle cx="50" cy="50" r="40" fill="none" stroke="#e2b857" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span>${done}<small>/30</small></span></b></div></div>
+    ${t?`<div class="rzt"><div><span>Saharlik tugashi</span><b>${hm(t.Fajr)}</b></div><div><span>Iftor</span><b>${hm(t.Maghrib)}</b></div></div>`:''}</div>`;
+  const cta=I.on&&T0>=I.start?`<div class="in" style="margin-top:12px"><button class="big ${f0===1?'ok':''}" style="margin:0;flex:1;padding:14px 8px" onclick="fzSet('${T0}',1)">${f0===1?'✓ Ro‘za tutildi':'✅ Ro‘za tutdim'}</button><button class="btn ${f0===2?'':'s'}" style="flex:1;padding:14px 8px" onclick="fzSet('${T0}',2)">${f0===2?'Qazo bo‘ldi ✓':'Tutolmadim (qazo)'}</button></div>`:'';
+  const last10=I.on&&I.n>=21?`<div class="bn wr">🌙 Oxirgi 10 kecha. Qadr kechasini toq kechalardan (21, 23, 25, 27, 29) izla.</div>`:`<div class="bn ok" style="margin-top:12px">✨ Qadr kechasini izla: oxirgi 10 kunning toq kechalari (21, 23, 25, 27, 29) ✦ bilan belgilangan.</div>`;
+  const off=(new Date(I.start+'T12:00').getDay()+6)%7;
+  const grid=(m,cls,fill)=>`<div class="cal rm">${['Du','Se','Ch','Pa','Ju','Sh','Ya'].map(x=>`<span class="w">${x}</span>`).join('')}${Array(off).fill('<i></i>').join('')}${[...Array(30)].map((_,i)=>{const k=rzDay(I.start,i),s=m(k),fu=k>T0,dd=k.slice(8)+'.'+k.slice(5,7),ten=i>=20;
+    return `<div class="c ${s===1?fill:s===2?'m':''} ${k===T0?'t':''} ${fu?'fu':''} ${ten?'ld':''}" ${fu?'':`onclick="${cls}('${k}')"`}>${ten&&i%2===0?'<em>✦</em>':''}${s===1?'<sup>✓</sup>':s===2?'<sup>✗</sup>':''}${i+1}<small>${dd}</small></div>`}).join('')}</div>`;
+  const lbl={miss:['🔴','Qazo bo‘ldi'],paid:['🟢','Qazo ro‘za tutildi'],add:['🟡','Eski qazo qo‘shildi']},paid=R.log.filter(x=>x.k==='paid').length;
+  const log=R.log.slice().reverse().slice(0,8).map(x=>`<div class="rtl"><span class="tdot">${lbl[x.k][0]}</span><div><b>${lbl[x.k][1]}${x.k==='add'?' (+'+x.n+')':''}</b><br><span class="mu" style="font-size:12px">${dShort(x.d)}</span></div></div>`).join('');
+  return `${hero}${cta}
+  <div class="st"><div><b>${done}</b>ro‘za tutildi</div><div><b>${qaz}</b>qazo</div><div><b>${tv}</b>taroveh</div></div>${last10}
+  <h2>Ro‘za jurnali</h2><div class="goal" style="padding:12px 10px">${grid(k=>R.fast[k]||0,'fzT','d')}
+    <div class="lg" style="justify-content:center"><span style="--c:var(--ac)">tutdim</span><span style="--c:var(--bad)">qazo</span><span style="--c:var(--go)">oxirgi 10 kun</span></div><p class="mu" style="margin:6px 0 0;text-align:center;font-size:12px">Kunni bossang: tutdim, yana bossang: qazo, yana: bekor.</p></div>
+  <h2>Taroveh</h2><div class="goal" style="padding:12px 10px">${grid(k=>R.tar[k]?1:0,'tvT','g')}<p class="mu" style="margin:8px 0 0;text-align:center;font-size:12px">${tv} / 30 kun o‘qildi</p></div>
+  <h2>Hatm rejasi</h2><div class="goal"><div style="display:flex;align-items:center;gap:14px"><div style="font:800 34px Fraunces,serif;color:var(--ac)">~21</div><div><b>bet kuniga</b><div class="mu" style="font-size:13px">Ramazonda 30 kunda hatm. Tugma Hatm bo‘limidagi rejani yoqadi.</div></div></div><button class="btn s" style="width:100%;margin-top:10px" onclick="hPlan(30);QT='h';render()">30 kunlik hatm rejasini yoqish</button></div>
+  <h2>Ramazon kun tartibi</h2><div class="goal"><div class="mu" style="font-size:13px">Saharlik, taroveh va iftorga mos kun jadvali. Reja rejimlariga qo‘shiladi, keyin o‘zgartirsang bo‘ladi.</div><button class="btn s" style="width:100%;margin-top:10px" onclick="mdNew('ramazon')">Ramazon rejimini qo‘shish</button></div>
+  <h2>Qazo ro‘zalar</h2><div class="goal" style="text-align:center;padding:16px"><div style="font:800 46px Fraunces,serif;line-height:1;color:${R.debt>0?'var(--bad)':'var(--ac)'}">${R.debt}</div><div class="mu">${R.debt>0?'ta qazo ro‘za qoldi':'qazo ro‘za qolmadi'}${paid?' · '+paid+' tasi tutildi':''}</div>
+    <div class="in" style="margin:12px 0 0"><button class="btn" style="flex:1" onclick="rzPay()">Qazoni tutdim (−1)</button><button class="btn s" style="flex:1" onclick="rzAdd()">+ Qo‘shish</button></div></div>
+  ${log?`<div class="goal" style="padding:6px 14px">${log}</div>`:''}
+  <details class="goal" style="margin-top:8px"><summary style="font-weight:600">Boshlanish sanasi</summary><p class="mu" style="margin:8px 0">Sana hisob bo‘yicha taxminiy. Rasman e‘lon qilingach, shu yerga yoz.</p><div class="in"><input type="date" value="${R.start||I.start}" onchange="rzSet(this.value)"><button class="btn s" onclick="rzSet('')">Hisobga qaytish</button></div></details>`}
 PRE.ramazon=['Ramazon kuni',[mkb('sah','Saharlik',M(4,30),M(5,15),'Sahar va niyat.'),mkb('qur','Bomdod va Qur‘on',M(5,30),M(7)),mkb('ish','Ish yoki dars',M(9),M(15)),mkb('hat','Qur‘on hatmi',M(15),M(16,30)),mkb('dam','Dam olish',M(16,30),M(17,30)),mkb('ift','Iftor',M(17,30),M(18,30),'Iftor va ovqat.'),mkb('tar','Taroveh',M(20),M(21,30)),mkb('uyqu1','Uxlash',M(22,30),M(28,30),'Saharlikka turish.')]];
 
 // ---- PDF kitoblar (qurilmada saqlanadi) ----
@@ -1318,7 +1361,7 @@ async function rdOpen(id){
     const lib=await loadPdfjs(),doc=await lib.getDocument({data:buf.slice(0)}).promise;
     rdClose(true);RD={id,doc,n:doc.numPages,page:1,zoom:1,tok:0};rdBuild(b);await rdShow(b.cur||1)
   }catch(e){alert('PDF ochilmadi: '+(e.message||e))}}
-function rdBuild(b){const old=document.getElementById('rd');if(old)old.remove();const d=document.createElement('div');d.id='rd';d.className='rd';
+function rdBuild(b){const old=document.getElementById('rd');if(old)old.remove();const d=document.createElement('div');d.id='rd';d.className='rdo';
   d.innerHTML=`<div class="rdt"><button class="x" style="font-size:22px" onclick="rdClose()">✕</button><b style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${esc(b.t)}</b><span id="rdn" class="mu"></span></div><div id="rdc" class="rdc"><canvas id="rdv"></canvas></div><div class="rdb"><button class="btn s" onclick="rdGo(-1)">‹</button><input id="rdp" type="number" inputmode="numeric" onchange="rdSet(this.value)"><button class="btn s" onclick="rdGo(1)">›</button><button class="btn s" onclick="rdZ(-0.25)">−</button><button class="btn s" onclick="rdZ(0.25)">+</button></div>`;
   document.body.appendChild(d);let x0=null;const c=d.querySelector('#rdc');
   c.addEventListener('touchstart',e=>{x0=e.touches.length===1?e.touches[0].clientX:null},{passive:true});
@@ -1427,15 +1470,25 @@ async function aiCall(msgs,ctx){
   else if(r.data&&r.data.error)m=r.data.error;
   throw new Error(m||'AI javob bermadi.')}
 function aiBuild(){const old=document.getElementById('ai');if(old)old.remove();const d=document.createElement('div');d.id='ai';d.className='ai';
-  d.innerHTML=`<div class="aih"><button class="x" style="font-size:22px" onclick="aiClose()">✕</button><div style="flex:1"><b>✨ Yordamchi</b><div class="mu" style="font-size:12px">Kunlik tizim AI</div></div><button class="btn s" style="padding:7px 12px" onclick="aiNew()">Yangi suhbat</button></div><div id="aic" class="aic"></div><div id="aiq" class="aiq">${AIQ.map((q,i)=>`<button onclick="aiGo(${i})">${q}</button>`).join('')}</div><div class="aif"><button class="mic" id="aimic" onclick="aiMic()" aria-label="Ovozli kiritish">🎤</button><textarea id="aii" rows="1" placeholder="Savol yoz..." oninput="aiGrow(this)"></textarea><button class="send" onclick="aiGo()">➤</button></div>`;
+  d.innerHTML=`<div class="aih"><button class="x" style="font-size:22px" onclick="aiClose()">✕</button><div style="flex:1"><b>✨ Yordamchi</b><div class="mu" style="font-size:12px">Kunlik tizim AI</div></div><button class="btn s" style="padding:7px 12px" onclick="aiNew()">Yangi suhbat</button></div><div id="aic" class="aic"></div><div id="aiq" class="aiq">${AIQ.map((q,i)=>`<button onclick="aiGo(${i})">${q}</button>`).join('')}</div><div class="aif"><button class="mic" id="aimic" onclick="aiMic()" aria-label="Ovozli kiritish">🎤</button><textarea id="aii" rows="1" placeholder="Savol yoz..." oninput="aiGrow(this)" onfocus="setTimeout(()=>{const c=document.getElementById('aic');if(c)c.scrollTop=c.scrollHeight},350)"></textarea><button class="send" onclick="aiGo()">➤</button></div>`;
   document.body.appendChild(d)}
 function aiGrow(el){el.style.height='auto';el.style.height=Math.min(120,el.scrollHeight)+'px'}
 function aiRender(){const c=document.getElementById('aic');if(!c)return;const A=aiS(),ch=A.chat;
   const hi=`<div class="bb a">Assalomu alaykum${S.name?', '+esc(S.name):''}! Men sening shaxsiy yordamchingman. Kuning, odatlaring, Qur‘on, IELTS va maqsadlaring haqida ma‘lumotlaringni ko‘raman, shunga qarab maslahat beraman. Pastdagi savollardan birini tanla yoki o‘zing yoz.</div>`;
   c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t):md(m.r==='model'?aiActs(t).clean:t)+(m.r==='model'&&!AIT?aiCards(m,i):'')+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s</span></div>`:'');
   c.scrollTop=c.scrollHeight}
-function aiOpen(msg){if(!sb||!UID){alert('AI yordamchi uchun hisobga kirgan bo‘lish kerak.');return}aiBuild();aiRender();if(msg)aiSend(msg)}
-function aiClose(){const e=document.getElementById('ai');if(e)e.remove()}
+// Oyna ochiq paytda orqadagi sahifa qotiriladi, oyna esa klaviatura ustidagi ko‘rinadigan maydonga moslanadi (iOS)
+let OVL=null;
+function ovLock(el){ovUnlock();const y=window.scrollY||window.pageYOffset||0,v=window.visualViewport;
+  const fit=()=>{const w=window.visualViewport;if(!w||!el.isConnected)return;el.style.height=w.height+'px';el.style.top=w.offsetTop+'px';el.style.bottom='auto';
+    const c=el.querySelector('.aic');if(c&&document.activeElement&&document.activeElement.tagName==='TEXTAREA')c.scrollTop=c.scrollHeight};
+  const tm=e=>{if(!(e.target.closest&&e.target.closest('.aic,.aiq,textarea')))e.preventDefault()};
+  OVL={el,y,v,fit,tm};document.documentElement.classList.add('ovl');document.body.style.top=(-y)+'px';
+  if(v){v.addEventListener('resize',fit);v.addEventListener('scroll',fit)}el.addEventListener('touchmove',tm,{passive:false});fit()}
+function ovUnlock(){if(!OVL)return;const o=OVL;OVL=null;if(o.v){o.v.removeEventListener('resize',o.fit);o.v.removeEventListener('scroll',o.fit)}
+  try{o.el.removeEventListener('touchmove',o.tm)}catch(e){}document.documentElement.classList.remove('ovl');document.body.style.top='';window.scrollTo(0,o.y)}
+function aiOpen(msg){if(!sb||!UID){alert('AI yordamchi uchun hisobga kirgan bo‘lish kerak.');return}aiBuild();ovLock(document.getElementById('ai'));aiRender();if(msg)aiSend(msg)}
+function aiClose(){ovUnlock();const e=document.getElementById('ai');if(e)e.remove()}
 function aiNew(){if(AIT&&AIT.iv)clearInterval(AIT.iv);AIT=null;AIL=false;aiS().chat=[];qsave();aiRender()}
 function aiClear(){if(confirm('Suhbat tarixi o‘chirilsinmi?')){aiS().chat=[];save()}}
 function aiGo(i){if(AIL)return;let t;if(typeof i==='number')t=AIQ[i];else{const e=document.getElementById('aii');t=e?e.value.trim():'';if(e){e.value='';aiGrow(e)}}if(t)aiSend(t)}
@@ -1534,7 +1587,7 @@ const zEx=id=>S.gym.ex.find(x=>x.id===id);
 function zal(){
   const seg=[['r','🏋️ Reja'],['a','🎟 Abonement'],['m','📚 Mashqlar'],['o','🍽 Ovqat'],['j','📝 Jurnal']].map(x=>`<button class="${ZV===x[0]?'on':''}" onclick="ZV='${x[0]}';render()">${x[1]}</button>`).join('');
   return `<div class="seg sc" style="margin-top:0">${seg}</div>${ZV==='r'?zReja():ZV==='a'?zPass():ZV==='m'?zLib():ZV==='o'?zFood():zalOld()}`}
-const exTh=e=>e.m?(e.m.th?`<img class="exth" src="${e.m.th}" onclick="exView('${e.id}')">`:`<span class="exth" onclick="exView('${e.id}')">${e.m.k==='video'?'🎬':'🖼'}</span>`):'';
+const exTh=e=>e.m?`<span class="exw ${e.m.k==='video'?'vd':''}" onclick="exView('${e.id}')">${e.m.th?`<img class="exth" src="${e.m.th}">`:`<span class="exth">${e.m.k==='video'?'🎬':'🖼'}</span>`}</span>`:'';
 
 // ---- Mashqlar kutubxonasi (rasm/video bilan) ----
 function exThumb2(f,kind){return new Promise((res,rej)=>{const u=URL.createObjectURL(f);
@@ -1555,7 +1608,7 @@ async function exView(id){const e=zEx(id);if(!e||!e.m)return;let rec=null;try{re
   if(!rec&&e.m.cloud&&sb&&UID){toast('Yuklab olinmoqda...');const r=await sb.storage.from('books').download(UID+'/x/'+id);if(!r.error){const b=await r.data.arrayBuffer();rec={b,t:e.m.t};try{await idbSet('x'+id,rec)}catch(x){}}}
   if(!rec){alert('Bu qurilmada fayl topilmadi. Mashq kartasida qayta yuklang.');return}
   exClose();const url=URL.createObjectURL(new Blob([rec.b],{type:rec.t||(e.m.k==='video'?'video/mp4':'image/jpeg')}));
-  const d=document.createElement('div');d.id='xv';d.className='rd';d.style.zIndex=120;
+  const d=document.createElement('div');d.id='xv';d.className='rdo';d.style.zIndex=120;
   d.innerHTML=`<div class="rdt"><button class="x" style="font-size:22px" onclick="exClose()">✕</button><b style="flex:1">${esc(e.n)}</b></div><div class="rdc" style="display:flex;align-items:center;justify-content:center;background:#000">${e.m.k==='video'?`<video src="${url}" controls autoplay playsinline loop style="max-width:100%;max-height:100%"></video>`:`<img src="${url}" style="max-width:100%;max-height:100%">`}</div>`;
   d._u=url;document.body.appendChild(d)}
 function exClose(){const d=document.getElementById('xv');if(d){try{URL.revokeObjectURL(d._u)}catch(e){}d.remove()}}
@@ -1569,7 +1622,7 @@ function zLib(){
     <label class="btn s" style="display:block;text-align:center;margin-top:8px;cursor:pointer;padding:8px">${e.m?'Videoni/rasmni almashtirish':'🎬 Video yoki rasm qo‘shish'}<input type="file" accept="video/*,image/*" style="display:none" onchange="exPick(this,'${e.id}')"></label></div>`).join('');
   return `<p class="mu" style="margin:0 0 8px">Mashqlaringni bir marta yoz, videosini yoki rasmini yukla. Keyin haftalik rejaga qo‘shib, har safar shu yerdan ko‘rib bajarasan.</p>
   <div class="goal"><b>Yangi mashq</b><div class="in" style="margin-top:8px"><input id="exn" placeholder="Nomi, masalan: Bench press"></div><div class="chips">${g}</div>
-  <div class="in"><input id="exs" type="number" inputmode="numeric" placeholder="Set" value="3"><input id="exr" type="number" inputmode="numeric" placeholder="Takror" value="10"><input id="exw" type="number" inputmode="decimal" placeholder="kg"></div>
+  <div class="fg3"><label><span class="mu">Set</span><input id="exs" type="number" inputmode="numeric" value="3"></label><label><span class="mu">Takror</span><input id="exr" type="number" inputmode="numeric" value="10"></label><label><span class="mu">Vazn, kg</span><input id="exw" type="number" inputmode="decimal" placeholder="0"></label></div>
   <div class="in"><input id="exo" placeholder="Izoh (texnika, eslatma)"></div>
   <label class="btn s" style="display:block;text-align:center;cursor:pointer;margin-bottom:8px">🎬 Video yoki rasm tanlash (ixtiyoriy)<input id="exf" type="file" accept="video/*,image/*" style="display:none" onchange="toast('Fayl tanlandi')"></label><button class="btn" style="width:100%" onclick="exAdd()">Mashqni saqlash</button></div>
   <h2>Kutubxona (${S.gym.ex.length})</h2>${L||'<p class="mu">Hali mashq yo‘q.</p>'}`}
@@ -1591,14 +1644,14 @@ function zwEnd(){const Z=ZWK,n=Z.items.filter(it=>it.done.length);if(!n.length){
 function zReja(){
   if(ZWK){const Z=ZWK,tl=ZRTm?Math.max(0,Math.ceil((ZRTm.end-Date.now())/1000)):0,total=Z.items.reduce((a,it)=>a+it.s,0),dn=Z.items.reduce((a,it)=>a+it.done.length,0);
     return `<section class="hero"><p class="lab">Mashg‘ulot davom etmoqda</p><h1 style="font-size:34px">${dn} / ${total} set</h1><div class="bar" style="margin:8px 0"><i style="width:${total?dn/total*100:0}%"></i></div>${ZRTm?`<p class="mu" style="margin:0">Dam olish</p><div class="tmr" id="zrt" style="margin:0">${fmtT(tl)}</div>`:'<p class="mu">Set tugagach tugmani bos, dam olish taymeri o‘zi ishga tushadi.</p>'}</section>
-    ${Z.items.map((it,i)=>{const e=zEx(it.id);return `<div class="goal"><div class="h"><b>${e?exTh(e)+' ':''}${esc(it.n)}</b><span class="mu">${it.r} marta${it.w?', '+it.w+' kg':''}</span></div><div class="in" style="margin:8px 0 0;flex-wrap:wrap">${Array.from({length:it.s},(_,j)=>`<button class="btn ${it.done.includes(j)?'':'s'}" style="min-width:52px" onclick="zwTick(${i},${j})">${it.done.includes(j)?'✓':''} ${j+1}</button>`).join('')}</div></div>`}).join('')}
+    ${Z.items.map((it,i)=>{const e=zEx(it.id);return `<div class="goal"><div class="h"><div class="exr">${e?exTh(e):''}<b>${esc(it.n)}</b></div><span class="mu">${it.r} marta${it.w?', '+it.w+' kg':''}</span></div><div class="in" style="margin:8px 0 0;flex-wrap:wrap">${Array.from({length:it.s},(_,j)=>`<button class="btn ${it.done.includes(j)?'':'s'}" style="min-width:52px" onclick="zwTick(${i},${j})">${it.done.includes(j)?'✓':''} ${j+1}</button>`).join('')}</div></div>`}).join('')}
     <div class="in"><button class="big" style="margin:0" onclick="zwEnd()">Yakunlash va saqlash</button></div><button class="ghost" onclick="zwCancel()">Bekor qilish</button>`}
   const d=PLD,P=zPl(d),T0=new Date().getDay(),wk=[1,2,3,4,5,6,0];
   const strip=wk.map(x=>{const p=S.gym.plan[x],pl=p&&ZP.find(z=>z[0]===p.place);return `<button class="${x===d?'on':''}" onclick="PLD=${x};render()"><span style="display:block;font-size:11px;font-weight:600">${DAYS[x].slice(0,2)}${x===T0?' •':''}</span>${pl?pl[1]:'➕'}</button>`}).join('');
   const n=wk.filter(x=>{const p=S.gym.plan[x];return p&&p.place!=='rest'&&p.ex.length}).length;
-  const rows=P.ex.map((x,i)=>{const e=zEx(x.id);if(!e)return '';return `<div class="goal"><div class="h"><b>${exTh(e)} ${esc(e.n)}</b><button class="x" onclick="plRm(${d},${i})">×</button></div><div class="in" style="margin:8px 0 0"><input type="number" inputmode="numeric" value="${x.s}" onchange="plSet(${d},${i},'s',this.value)"><span class="mu" style="align-self:center">set ×</span><input type="number" inputmode="numeric" value="${x.r}" onchange="plSet(${d},${i},'r',this.value)"><span class="mu" style="align-self:center">marta</span><input type="number" inputmode="decimal" placeholder="kg" value="${x.w||''}" onchange="plSet(${d},${i},'w',this.value)"></div></div>`}).join('');
+  const rows=P.ex.map((x,i)=>{const e=zEx(x.id);if(!e)return '';return `<div class="goal"><div class="h"><div class="exr">${exTh(e)}<b>${esc(e.n)}</b></div><button class="x" onclick="plRm(${d},${i})">×</button></div><div class="in" style="margin:8px 0 0"><input type="number" inputmode="numeric" value="${x.s}" onchange="plSet(${d},${i},'s',this.value)"><span class="mu" style="align-self:center">set ×</span><input type="number" inputmode="numeric" value="${x.r}" onchange="plSet(${d},${i},'r',this.value)"><span class="mu" style="align-self:center">marta</span><input type="number" inputmode="decimal" placeholder="kg" value="${x.w||''}" onchange="plSet(${d},${i},'w',this.value)"></div></div>`}).join('');
   const opts=S.gym.ex.map(e=>`<option value="${e.id}">${esc(e.n)} (${esc(e.g)})</option>`).join('');
-  return `<section class="hero"><p class="lab">Haftalik reja</p><h1 style="font-size:32px">${n} ta mashg‘ulot kuni</h1><p class="mu">Qaysi kuni qayerda va qaysi mashqlarni qilishingni belgila.</p></section>
+  return `<section class="hero"><p class="lab">Haftalik reja</p><h1 style="font-size:30px">Haftada ${n} kun</h1><p class="mu">Qaysi kuni qayerda va qaysi mashqlarni qilishingni belgila.</p></section>
   <div class="wkp" style="margin-top:12px">${strip}</div><h2>${DAYS[d]}${d===T0?' (bugun)':''}</h2>
   <div class="chips">${ZP.map(z=>`<button class="${P.place===z[0]?'on':''}" onclick="plPlace(${d},'${z[0]}')">${z[1]} ${z[2]}</button>`).join('')}</div>
   ${P.place==='rest'?'<p class="mu">Dam olish kuni. Tiklanish ham mashqning bir qismi.</p>':`${rows||'<p class="mu">Bu kunga mashq qo‘shilmagan.</p>'}${S.gym.ex.length?`<div class="in"><select id="pls">${opts}</select><button class="btn" onclick="plAdd(${d})">Qo‘sh</button></div>`:'<p class="mu">Avval 📚 Mashqlar bo‘limida mashqlaringni yarat.</p>'}`}
@@ -1613,20 +1666,62 @@ function psAuto(){const P=S.gym.pass,T0=dk();Object.keys(P.v).forEach(k=>{if(P.v
   const done=Object.values(P.v).filter(x=>x==='d').length,rem=P.t-done,days=[];for(let k=T0>P.s?T0:P.s;k<=P.e;k=nxtDay(k))if(!P.v[k])days.push(k);
   if(rem<=0||!days.length){save();return}const n=Math.min(rem,days.length);for(let i=0;i<n;i++)P.v[days[Math.floor((i+0.5)*days.length/n)]]='p';save()}
 function psEnd(){if(confirm('Abonement tugatilsinmi? U tarixga o‘tadi.')){S.gym.past.push(S.gym.pass);S.gym.pass=null;save()}}
-function psStat(){const P=S.gym.pass;if(!P)return null;const T0=dk(),vs=Object.values(P.v),done=vs.filter(x=>x==='d').length,miss=vs.filter(x=>x==='m').length,plan=Object.keys(P.v).filter(k=>P.v[k]==='p'&&k>=T0).length,rem=Math.max(0,P.t-done),avail=T0>P.e?0:dl(P.e)+(T0<P.s?dl(P.s)*0:0)+1,start=T0<P.s?dl(P.s):0,days=T0>P.e?0:Math.max(0,avail-start),burn=Math.max(0,rem-days);
-  return{done,miss,plan,rem,days,burn,perWeek:days?r1(rem/(days/7)):0,over:T0>P.e}}
+function psStat(){const P=S.gym.pass;if(!P)return null;const T0=dk(),vs=Object.values(P.v),done=vs.filter(x=>x==='d').length,miss=vs.filter(x=>x==='m').length,
+  plan=Object.keys(P.v).filter(k=>P.v[k]==='p'&&k>=T0).length,rem=Math.max(0,P.t-done),over=T0>P.e,from=T0<P.s?P.s:T0,days=over?0:dl(P.e)-dl(from)+1,burn=Math.max(0,rem-days);
+  return{done,miss,plan,rem,days,burn,perWeek:days?r1(rem/(days/7)):0,over,total:dl(P.e)-dl(P.s)+1}}
+function psToday(){const P=S.gym.pass,k=dk();if(k<P.s||k>P.e){alert('Bugun abonement muddatida emas.');return}
+  if(P.v[k]==='d')delete P.v[k];else{P.v[k]='d';const st=psStat();if(st.done>=P.t){confetti();toast('Abonement to‘liq bajarildi! 🎉')}else toast('Barakalla! 💪 Yana '+st.rem+' ta qoldi')}save()}
+function psEd(f,v){const P=S.gym.pass;if(f==='n')P.n=String(v).trim();else if(f==='t'){const n=Math.round(+v);if(n>0)P.t=n}else if(f==='e'){if(v&&v>=P.s)P.e=v;else alert('Tugash sanasi boshlanishdan keyin bo‘lsin.')}save()}
+function psSet(id,v){const e=$('#'+id);if(e)e.value=v}
+function psPre(m){const s=V('pss')||dk(),d=new Date(s+'T12:00');d.setMonth(d.getMonth()+m);d.setDate(d.getDate()-1);psSet('pse',d.toLocaleDateString('sv'))}
+const dShort=k=>+k.slice(8)+' '+MON[+k.slice(5,7)-1].slice(0,3);
+function psForm(first){
+  return `<div class="goal" style="padding:16px"><b style="font:700 18px Fraunces,serif">${first?'Abonementni kiriting':'Yangi abonement'}</b>
+  <div class="in" style="margin-top:10px"><input id="psn" placeholder="Zal nomi (ixtiyoriy)"></div>
+  <div class="fg"><label><span class="mu">Boshlanish</span><input id="pss" type="date" value="${dk()}"></label><label><span class="mu">Tugash</span><input id="pse" type="date"></label></div>
+  <div class="chips" style="margin-top:8px"><button onclick="psPre(1)">+1 oy</button><button onclick="psPre(2)">+2 oy</button><button onclick="psPre(3)">+3 oy</button></div>
+  <label style="display:block"><span class="mu">Jami kirishlar soni</span><input id="pst" type="number" inputmode="numeric" placeholder="masalan, 12" style="width:100%;margin-top:4px"></label>
+  <div class="chips" style="margin-top:8px">${[8,12,16,20,30].map(n=>`<button onclick="psSet('pst',${n})">${n} ta</button>`).join('')}</div>
+  <button class="big" style="margin:8px 0 0" onclick="psNew()">Abonementni boshlash</button></div>`}
 function zPass(){
   const P=S.gym.pass;
-  const form=`<div class="goal"><b>${P?'Yangi abonement':'Abonementni kiriting'}</b><div class="in" style="margin-top:8px"><input id="psn" placeholder="Zal nomi (ixtiyoriy)"></div><div class="in"><div style="flex:1"><span class="mu" style="font-size:12px">Boshlanish</span><input id="pss" type="date" style="width:100%" value="${dk()}"></div><div style="flex:1"><span class="mu" style="font-size:12px">Tugash</span><input id="pse" type="date" style="width:100%"></div></div><div class="in"><input id="pst" type="number" inputmode="numeric" placeholder="Jami kirishlar soni, masalan 12"></div><button class="btn" style="width:100%" onclick="psNew()">Saqlash</button></div>`;
-  if(!P)return `<p class="mu" style="margin:0 0 8px">Abonementning boshlanish va tugash sanasini hamda necha marta kirish mumkinligini yoz. Ilova yetib borishingni kuzatadi va kuyib ketmasligi uchun eslatadi.</p>${form}`;
-  const st=psStat(),T0=dk(),first=(new Date(P.s+'T12:00').getDay()+6)%7;
-  const cells=[];for(let k=P.s,i=0;k<=P.e&&i<100;k=nxtDay(k),i++)cells.push(k);
-  const grid=`<div class="pg" style="margin-top:8px">${['Du','Se','Ch','Pa','Ju','Sh','Ya'].map(x=>`<span class="mu" style="font-size:11px;text-align:center">${x}</span>`).join('')}${Array(first).fill('<i></i>').join('')}${cells.map(k=>{const s=P.v[k];return `<button class="pc2 ${s==='d'?'pd':s==='m'?'pm':s==='p'?'pp':''} ${k===T0?'pt':''}" onclick="psV('${k}')">${+k.slice(8)}${s==='d'?'<small>✓</small>':s==='m'?'<small>✗</small>':s==='p'?'<small>•</small>':''}</button>`}).join('')}</div><p class="mu" style="margin:8px 0 0;font-size:12px">Kunni bossang: • rejalashtirilgan, ✓ bordim, ✗ bormadim, yana bossang bekor.</p>`;
-  const warn=st.over?`<p style="color:var(--bad);margin:6px 0 0">Abonement muddati tugagan. ${st.rem?st.rem+' ta kirish ishlatilmadi.':'Hammasi ishlatilgan.'}</p>`:st.burn>0?`<p style="color:var(--bad);margin:6px 0 0">⚠️ ${st.rem} ta kirish qoldi, lekin ${st.days} kun bor. Hatto har kuni borsang ham ${st.burn} tasi kuyadi.</p>`:st.rem?`<p style="margin:6px 0 0">Qolgan ${st.rem} ta kirish uchun haftasiga taxminan <b>${st.perWeek}</b> marta borish kerak.</p>`:'<p style="color:var(--ac);margin:6px 0 0">Hammasi bajarildi, barakalla! 🎉</p>';
-  return `<section class="hero"><p class="lab">${esc(P.n||'Abonement')}</p><h1 style="font-size:40px">${st.done} / ${P.t}</h1><div class="bar" style="margin:8px 0"><i style="width:${Math.min(100,st.done/P.t*100)}%"></i></div><p class="mu">${P.s.slice(8)}.${P.s.slice(5,7)} dan ${P.e.slice(8)}.${P.e.slice(5,7)} gacha. ${st.over?'':st.days+' kun qoldi.'}</p>${warn}</section>
-  <div class="st"><div><b>${st.rem}</b>qolgan kirish</div><div><b>${st.plan}</b>rejalashtirilgan</div><div><b>${st.miss}</b>bormagan</div></div>
-  <div class="in" style="margin-top:10px"><button class="btn" style="flex:1" onclick="psAuto()">Mos kunlarni rejalashtir</button><button class="btn s" onclick="psEnd()">Tugatish</button></div>${grid}
-  <h2>Yangi abonement</h2>${form}`}
+  if(!P)return `<div class="tk" style="text-align:center"><div style="font-size:54px">🎟</div><h2 class="tk-n" style="margin:6px 0">Abonementni kuzatib bor</h2><p class="mu" style="margin:0 auto;max-width:300px">Boshlanish va tugash sanasini hamda kirishlar sonini yoz. Ilova yetib borishingni kuzatadi va kuyib ketmasligi uchun eslatadi.</p></div><div style="margin-top:12px">${psForm(true)}</div>${psPast()}`;
+  const st=psStat(),T0=dk(),pct=P.t?Math.min(1,st.done/P.t):0,C=2*Math.PI*42;
+  const plans=Object.keys(P.v).filter(k=>P.v[k]==='p'&&k>=T0).sort(),nxt=plans[0];
+  const inPass=T0>=P.s&&T0<=P.e,td=P.v[T0];
+  // holat banneri
+  const need=st.days?st.rem/st.days:0;
+  const bn=st.rem===0?['ok','🎉 Hammasi bajarildi. Barakalla!']
+    :st.over?['bd','Muddat tugadi: '+st.rem+' ta kirish ishlatilmay kuyib ketdi.']
+    :st.burn>0?['bd','⚠️ '+st.rem+' ta kirish qoldi, lekin atigi '+st.days+' kun bor. Har kuni borsang ham '+st.burn+' tasi kuyadi.']
+    :need>0.6?['wr','Tezroq kerak: haftasiga taxminan '+st.perWeek+' marta borish lozim.']
+    :['ok','Tempdasan. Haftasiga taxminan '+st.perWeek+' marta borsang yetadi.'];
+  // muhr kartasi
+  const cols=P.t<=12?6:P.t<=24?8:10;
+  const stamps=Array.from({length:P.t},(_,i)=>{const c=i<st.done?'d':(st.burn>0&&i>=P.t-st.burn)?'b':(i-st.done<st.plan)?'p':'';return `<div class="${c}">${c==='d'?'✓':c==='b'?'🔥':i+1}</div>`}).join('');
+  // kalendar (dushanbadan boshlab)
+  const first=(new Date(P.s+'T12:00').getDay()+6)%7,cells=[];for(let k=P.s,n=0;k<=P.e&&n<120;k=nxtDay(k),n++)cells.push(k);
+  const cal=['Du','Se','Ch','Pa','Ju','Sh','Ya'].map(x=>`<span class="w">${x}</span>`).join('')+Array(first).fill('<i></i>').join('')+cells.map(k=>{const s=P.v[k],mTag=(+k.slice(8)===1||k===P.s)?`<em>${MON[+k.slice(5,7)-1].slice(0,3)}</em>`:'';
+    return `<div class="c ${s||''} ${k<T0&&!s?'past':''} ${k===T0?'t':''} ${mTag?'mm':''}" onclick="psV('${k}')">${mTag}${+k.slice(8)}${s==='d'?'<small>✓</small>':s==='m'?'<small>✗</small>':s==='p'?'<small>•</small>':''}</div>`}).join('');
+  return `<div class="tk"><div class="tk-h"><div style="min-width:0"><p class="lab">🎟 ABONEMENT</p><h2 class="tk-n">${esc(P.n||'Zal abonementi')}</h2><p class="mu">${dShort(P.s)} → ${dShort(P.e)}, ${st.total} kun</p></div>
+    <div class="tk-r"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="42" fill="none" stroke="rgba(255,255,255,.16)" stroke-width="9"/><circle cx="50" cy="50" r="42" fill="none" stroke="${st.burn>0?'#f0a090':'#e2b857'}" stroke-width="9" stroke-linecap="round" stroke-dasharray="${(C*pct).toFixed(1)} ${C.toFixed(1)}"/></svg><b><span>${st.done}<small>/ ${P.t}</small></span></b></div></div>
+    <div class="tk-cut"></div>
+    <div class="tk-s"><div><b>${st.rem}</b><span>qolgan kirish</span></div><div><b>${st.over?0:st.days}</b><span>qolgan kun</span></div><div><b>${st.rem?st.perWeek:'0'}</b><span>haftasiga</span></div></div></div>
+  <div class="bn ${bn[0]}">${bn[1]}</div>
+  ${inPass?(td==='d'?`<button class="btn s" style="width:100%;margin-top:10px;padding:14px" onclick="psToday()">✓ Bugun bordim, bekor qilish</button>`:`<button class="big" style="margin:10px 0 0" onclick="psToday()">✅ Bugun bordim</button>`):''}
+  ${nxt?`<p class="mu" style="margin:10px 2px 0">Keyingi reja: <b style="color:var(--tx)">${DAYS[new Date(nxt+'T12:00').getDay()]}, ${dShort(nxt)}</b>${plans.length>1?' (yana '+(plans.length-1)+' ta)':''}</p>`:''}
+  <h2>Muhr kartasi</h2><div class="stp" style="grid-template-columns:repeat(${cols},minmax(0,1fr))">${stamps}</div>
+  <div class="lg"><span style="--c:var(--ac)">bordim</span><span style="--c:var(--go)">rejalashtirilgan</span>${st.burn>0?'<span style="--c:var(--bad)">kuyadi</span>':''}<span style="--c:var(--ln)">qolgan</span></div>
+  <h2>Kalendar</h2><div class="goal" style="padding:12px 10px"><div class="cal">${cal}</div>
+  <div class="lg" style="justify-content:center"><span style="--c:var(--go)">kunni bossang: rejalashtirish</span><span style="--c:var(--ac)">bordim</span><span style="--c:var(--bad)">bormadim</span></div></div>
+  <div class="in" style="margin-top:10px"><button class="btn" style="flex:1" onclick="psAuto()">✨ Mos kunlarni rejalashtir</button></div>
+  <details class="goal" style="margin-top:6px"><summary style="font-weight:600">Sozlamalar</summary>
+    <div style="margin-top:8px"><label style="display:block"><span class="mu">Zal nomi</span><input type="text" style="width:100%;margin-top:4px" value="${esc(P.n||'')}" onchange="psEd('n',this.value)"></label>
+    <div class="fg"><label><span class="mu">Tugash sanasi</span><input type="date" value="${P.e}" onchange="psEd('e',this.value)"></label><label><span class="mu">Jami kirishlar</span><input type="number" inputmode="numeric" value="${P.t}" onchange="psEd('t',this.value)"></label></div>
+    <button class="btn s" style="width:100%;margin-top:4px" onclick="psEnd()">Abonementni tugatish (tarixga o‘tadi)</button></div></details>
+  <details class="goal" style="margin-top:6px"><summary style="font-weight:600">Yangi abonement boshlash</summary><div style="margin-top:10px">${psForm(false)}</div></details>${psPast()}`}
+function psPast(){const A=S.gym.past||[];if(!A.length)return '';
+  return `<h2>Oldingi abonementlar</h2>${A.slice().reverse().map(x=>{const d=Object.values(x.v||{}).filter(v=>v==='d').length,l=Math.max(0,x.t-d);return `<div class="row" style="align-items:flex-start"><span class="t"><b>${esc(x.n||'Abonement')}</b><br><span class="mu">${dShort(x.s)} → ${dShort(x.e)}</span></span><span style="text-align:right"><b>${d} / ${x.t}</b><br><span class="mu" style="font-size:12px">${l?l+' ta kuygan':'to‘liq ✓'}</span></span></div>`}).join('')}`}
 
 // ---- Ovqat: AI bilan kaloriya va makrolar ----
 const FDMS=['Nonushta','Tushlik','Kechki ovqat','Snack'];
@@ -1655,14 +1750,14 @@ function fdGoal(f,v){S.gym.food.goal[f]=Math.max(0,Math.round(+v)||0);save()}
 function fdMul(x){FDR.mul=x;render()}
 function zFood(){
   const F=S.gym.food,k=FDT||dk(),L=F.log[k]||[],G=F.goal,T={kcal:fdSum(L,'kcal'),p:fdSum(L,'p'),f:fdSum(L,'f'),c:fdSum(L,'c')};
-  const bar=(l,v,g,u)=>`<div class="skb"><div class="h"><span>${l}</span><span class="mu">${v} / ${g} ${u}</span></div><div class="bar" style="margin-top:6px"><i style="width:${Math.min(100,g?v/g*100:0)}%;${v>g?'background:var(--bad)':''}"></i></div></div>`;
+  const bar=(l,v,g,u,col)=>`<div class="skb"><div class="h"><span>${l}</span><span class="mu">${v} / ${g} ${u}</span></div><div class="bar" style="margin-top:6px"><i style="width:${Math.min(100,g?v/g*100:0)}%;background:${v>g?'var(--bad)':col}"></i></div></div>`;
   const meals=FDMS.map(mm=>{const A=L.filter(x=>x.m===mm);return A.length?`<p class="mu" style="margin:12px 0 6px">${mm}, ${fdSum(A,'kcal')} kkal</p>`+A.map(x=>`<div class="row"><span class="t">${esc(x.n)}<br><span class="mu">${x.kcal} kkal, oqsil ${x.p}, yog‘ ${x.f}, uglevod ${x.c}</span></span><button class="x" onclick="fdDel(${x.id})">×</button></div>`).join(''):''}).join('');
   const R=FDR,mul=R?R.mul:1,rt={kcal:R?Math.round(fdSum(R.items,'kcal')*mul):0,p:R?Math.round(fdSum(R.items,'p')*mul):0,f:R?Math.round(fdSum(R.items,'f')*mul):0,c:R?Math.round(fdSum(R.items,'c')*mul):0};
   const res=R?`<div class="goal" style="border:1px solid var(--go)"><b>AI natijasi (taxminiy)</b>${R.items.map((x,i)=>`<div class="row" style="margin-top:6px"><span class="t">${esc(x.name)}${x.g?', '+x.g+' g':''}<br><span class="mu">${x.kcal} kkal, oqsil ${x.p}, yog‘ ${x.f}, uglevod ${x.c}</span></span><button class="x" onclick="fdRm(${i})">×</button></div>`).join('')}
     ${R.note?`<p class="mu" style="margin:8px 0 0;font-size:13px">${esc(R.note)}</p>`:''}<p class="mu" style="margin:10px 0 4px">Porsiya:</p><div class="chips">${[0.5,0.75,1,1.5,2].map(x=>`<button class="${mul===x?'on':''}" onclick="fdMul(${x})">×${x}</button>`).join('')}</div>
     <button class="big" style="margin:8px 0 0" onclick="fdAdd()">Qo‘shish: ${rt.kcal} kkal (${rt.p}/${rt.f}/${rt.c})</button></div>`:'';
-  return `<section class="hero"><p class="lab">${k===dk()?'Bugun':k.slice(8)+'.'+k.slice(5,7)}</p><h1 style="font-size:40px">${T.kcal} / ${G.kcal} kkal</h1><div class="bar" style="margin:8px 0"><i style="width:${Math.min(100,G.kcal?T.kcal/G.kcal*100:0)}%"></i></div><p class="mu">${T.kcal<=G.kcal?(G.kcal-T.kcal)+' kkal qoldi':(T.kcal-G.kcal)+' kkal oshdi'}</p></section>
-  <div style="margin-top:10px">${bar('Oqsil',T.p,G.p,'g')}${bar('Yog‘',T.f,G.f,'g')}${bar('Uglevod',T.c,G.c,'g')}</div>
+  return `<section class="hero"><p class="lab">${k===dk()?'Bugun':k.slice(8)+'.'+k.slice(5,7)}</p><h1 style="font-size:46px">${T.kcal}<span style="font-size:20px;font-weight:600;opacity:.75"> / ${G.kcal} kkal</span></h1><div class="bar" style="margin:8px 0"><i style="width:${Math.min(100,G.kcal?T.kcal/G.kcal*100:0)}%"></i></div><p class="mu">${T.kcal<=G.kcal?(G.kcal-T.kcal)+' kkal qoldi':(T.kcal-G.kcal)+' kkal oshdi'}</p></section>
+  <div style="margin-top:10px">${bar('Oqsil',T.p,G.p,'g','var(--ac)')}${bar('Yog‘',T.f,G.f,'g','var(--go)')}${bar('Uglevod',T.c,G.c,'g','#6f9fd8')}</div>
   <div class="in"><input type="date" value="${k}" onchange="FDT=this.value;render()"></div>
   <h2>🍽 AI bilan hisoblash</h2><div class="chips">${FDMS.map(x=>`<button class="${FDM===x?'on':''}" onclick="FDM='${x}';render()">${x}</button>`).join('')}</div>
   <div class="in"><input id="fdt" placeholder="Ovqat nomi, masalan: 300 g osh va non"></div>
