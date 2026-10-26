@@ -17,6 +17,13 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== 'GET' || u.hostname.endsWith('supabase.co')) return;
+  // Mushaf matni va shriftlari (katta, o‘zgarmaydi): avval keshdan, bo‘lmasa internetdan
+  if (u.origin === location.origin && /\/(fonts|data)\//.test(u.pathname)) {
+    e.respondWith(
+      caches.match(r).then((m) => m || fetch(r).then((res) => { if (res.ok) { const cp = res.clone(); caches.open(C).then((c) => c.put(r, cp)); } return res; }))
+    );
+    return;
+  }
   // Ilovaning o‘z fayllari: avval internet (yangi versiya), bo‘lmasa keshdan
   if (u.origin === location.origin) {
     e.respondWith(

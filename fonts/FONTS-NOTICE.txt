@@ -1,0 +1,24 @@
+FONTS AND QURAN TEXT USED BY THE "MUSHAF" READER
+=================================================
+
+1) UthmanicHafs1Ver18.ttf   (KFGQPC HAFS Uthmanic Script, version 0.18)
+   (c) King Fahd Glorious Quran Printing Complex (KFGQPC), Al-Madinah Al-Munawwarah.
+   مجمع الملك فهد لطباعة المصحف الشريف - https://qurancomplex.gov.sa/
+   Distributed UNMODIFIED. The font's own end-user licence (embedded in the file) says:
+   free of cost to use, copy and distribute; it may NOT be sold, modified, altered,
+   translated, reverse engineered or reproduced. Therefore: do not convert, subset or edit this file,
+   and do not sell the application together with it.
+
+2) AmiriQuran-arabic.woff2  (Amiri Quran, subset as published by Fontsource)
+   (c) 2010-2022 The Amiri Project Authors. SIL Open Font License 1.1 (see AmiriQuran-OFL.txt).
+   Used only for two rare marks (U+06E3 and U+06EB, verses 52:37 and 12:11).
+
+3) data/quran-mushaf.json
+   Quran text and line layout of the Madinah Mushaf (Hafs 'an 'Asim), (c) King Fahd Glorious Quran
+   Printing Complex; layout data via Quranic Universal Library (QUL, Tarteel) - https://qul.tarteel.ai/
+   Built by tools/build_quran.py. The text is NOT edited, with three exceptions (verses 5:52, 11:13, 80:25),
+   where a copying error in the source (a stray space, a wrong spelling, a missing hamza) was corrected
+   after checking against two independent texts.
+   Checked by tests/verify_quran.py (all 6,236 verses compared with an independent Quran text).
+
+Personal / educational use only. Please do not sell this application or its Quran data.

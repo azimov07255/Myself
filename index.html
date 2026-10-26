@@ -199,6 +199,47 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .un-ed{background:var(--c2);border-radius:14px;padding:12px;margin:8px 0}.un-ed label{display:block;margin-bottom:8px;min-width:0}.un-ed input,.un-ed select{width:100%;margin-top:4px;box-sizing:border-box}.un-ed .in input{width:auto}.ucs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.ucb{width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);color:#fff;font-weight:700;padding:0}
 .qab .qa-g{opacity:.55;font-size:18px;line-height:1}.qab.qbc{padding:0;border-radius:50%;justify-content:center}.qab .qa-bub{width:100%;height:100%;border-radius:50%;background:transparent;font-size:20px;pointer-events:none}
 .dgp{background:var(--c2);border-radius:12px;padding:10px 12px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 8px}
+@font-face{font-family:QPC;src:url(fonts/UthmanicHafs1Ver18.ttf) format('truetype');font-display:block}
+@font-face{font-family:QAM;src:url(fonts/AmiriQuran-arabic.woff2) format('woff2');font-display:block}
+.qam{font-family:QAM,'Amiri Quran',serif}
+.mfo{position:fixed;inset:0;z-index:150;background:var(--bg);display:flex;flex-direction:column;color:var(--tx)}
+.mft{display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 6px;background:var(--c1);border-bottom:1px solid var(--ln)}
+.mft .x{font-size:22px;padding:6px 8px}
+.mfti{flex:1;text-align:center;line-height:1.25;min-width:0}
+.mfti b{display:block;font:400 22px/1.3 QPC,'Amiri Quran',serif;direction:rtl}
+.mfti small{color:var(--mu);font-size:12px}
+.mfst{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;background:var(--c2);font-size:13px}
+.mfp{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 6px 12px}
+.mpg{direction:rtl;margin:0 auto;max-width:680px;font-family:QPC,'Amiri Quran',serif;color:var(--tx);background:var(--c1);border-radius:12px;padding:12px 10px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-size:20px;touch-action:pan-y}
+.mpg.cc{min-height:62vh;display:flex;flex-direction:column;justify-content:center}
+.mr{display:flex;justify-content:space-between;align-items:center;height:2.25em;line-height:1;white-space:nowrap}
+.mr.ct{justify-content:center;gap:.32em}
+.meas .mr{display:inline-flex;width:auto;gap:.32em;justify-content:flex-start}
+.mw{display:inline-block;position:relative;padding:.1em .02em;border-radius:.22em}
+.mw.mk{font-size:.92em}
+.mh{justify-content:center!important;height:2.1em;margin:.12em 0;border:1.5px solid var(--go);border-radius:.55em;background:linear-gradient(var(--c2),var(--c1));box-shadow:inset 0 0 0 2px var(--c1),inset 0 0 0 3px var(--go)}
+.h1{background:rgba(245,213,71,.38)}.h2{background:rgba(93,187,99,.38)}.h3{background:rgba(90,169,230,.38)}.h4{background:rgba(239,127,168,.38)}.h5{background:rgba(240,148,77,.42)}
+.hn::after{content:'✎';position:absolute;top:-.5em;left:50%;transform:translateX(-50%);font:600 .45em system-ui;color:var(--go)}
+.wkm{color:var(--bad)}
+.xh{color:transparent!important;background:var(--ln)!important;opacity:.6}
+.mfg{display:flex;flex-direction:column;gap:6px;padding:8px 12px;background:var(--c2);border-top:1px solid var(--ln);font-size:13px}
+.mfg[hidden],.mfst[hidden]{display:none}
+.mfg .in{margin:0}.mfg .btn{flex:1;padding:11px 6px;font-size:14px}
+.mfnv{display:flex;align-items:center;gap:8px;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--c1);border-top:1px solid var(--ln)}
+.mfnv .btn{flex:1;padding:11px 6px;font-size:14px}
+.mfnv input{width:62px;text-align:center;font:600 16px Figtree,system-ui;padding:9px 4px;border-radius:10px;border:1px solid var(--ln);background:var(--bg);color:var(--tx)}
+.mfs{position:absolute;left:0;right:0;bottom:0;z-index:5;background:var(--c1);border-radius:18px 18px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);box-shadow:0 -10px 34px rgba(0,0,0,.4)}
+.mfsh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mfv{font:400 22px/1.8 QPC,'Amiri Quran',serif;margin:4px 0 10px;color:var(--tx)}
+.mfdots{display:flex;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+.mfd{width:38px;height:38px;border-radius:50%;border:3px solid transparent;padding:0;font-size:16px;color:var(--mu)}
+.mfd.on{border-color:var(--tx)}.mfd.x0{background:var(--c2)}
+.mfs textarea{width:100%;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);padding:10px;font:inherit;margin-bottom:8px}
+.mfq{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:inherit;margin-bottom:8px}
+.mfrc{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px}
+.mfch{border:0;border-radius:12px;background:var(--c2);color:var(--tx);padding:7px 11px;font:600 14px Figtree,system-ui;white-space:nowrap}
+.mfch small{display:block;font-weight:400;color:var(--mu);font-size:11px}
+.mfdot{width:14px;height:14px;border-radius:50%;flex:none;display:inline-block}
 </style>
 </head>
 <body>
@@ -255,7 +296,9 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.10.26-1';
+const APP_VER='2026.10.26-3';
+// Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
+const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
 let REV=null,NORPC=false,SYNCING=false,PUSHQ=false,MERGED=0,LPL=0;
 const same=(a,b)=>JSON.stringify(a)===JSON.stringify(b),idArr=a=>Array.isArray(a)&&a.every(x=>isObj(x)&&x.id!==undefined);
@@ -685,9 +728,121 @@ function zt(){const z=S.z,k=dk(),c=z.c[k]=z.c[k]||{},t=z.tg||ZK[z.sel][2];c[z.se
 function ztg(n){S.z.tg=n;save()}
 function zr(){const z=S.z;if(confirm('Bugungi sanoq nolga tushirilsinmi?')){(z.c[dk()]=z.c[dk()]||{})[z.sel]=0;save()}}
 const stp=(f,min)=>`<div class="in" style="margin-top:10px"><button class="btn s" onclick="gs('${f}',-1,${min})">−</button><button class="btn s" onclick="gs('${f}',1,${min})">+</button></div>`;
+// ---- Mushaf: 15 qatorli Madina mushafi (matn: data/quran-mushaf.json, shrift: fonts/) ----
+const mfOn=()=>MUSHAF_MODE!=='off'&&!S.nomf;
+function mfToggle(){S.nomf=S.nomf?0:1;if(S.nomf){if(QT==='u')QT='y';if(MFO)mfClose()}save()}
+function mfSet(){return `<p class="mu" style="margin:0 0 8px">Qur’on bo‘limidagi 📖 Mushaf (matn, rang, izoh, yodlash sinovi). O‘chirsangiz bo‘lim ko‘rinmaydi va hech narsa yuklanmaydi. Belgilaringiz saqlanib qoladi.</p><button class="btn s" onclick="mfToggle()">${S.nomf?'📖 Mushaf’ni yoqish':'Mushaf’ni o‘chirish'}</button>`}
+const MFV='1',MFCOL=['#f5d547','#5dbb63','#5aa9e6','#ef7fa8','#f0944d'];
+let MF=null,MFP=null,MFPG=1,MFO=false,MV='s',MQ='',MFT=null,MFTM=0,MFSW=null;
+const mq=()=>{const q=S.mq=S.mq||{};q.hl=q.hl||{};q.wk=q.wk||{};q.bm=q.bm||[];q.rec=q.rec||[];if(!q.last)q.last=1;return q};
+const vkS=k=>Math.floor(k/1000),vkA=k=>k%1000,vkL=k=>SN[vkS(k)-1]+' '+vkS(k)+':'+vkA(k);
+const mfIdx=k=>{let s=0;for(let i=0;i<vkS(k)-1;i++)s+=AY[i];return s+vkA(k)-1};
+const mfFix=w=>w.replace(/\u06DF/g,'\u06E0');   // faqat ko‘rsatishda: shrift kichik doirani shu kod bilan to‘g‘ri chizadi (saqlangan matn o‘zgarmaydi)
+const mfNum=w=>/^[\u0660-\u0669]+$/.test(w);
+const mfSurahAt=p=>{let s=1;for(let i=0;i<114;i++)if(SP[i]<=p)s=i+1;return s};
+const mfJuz=p=>J.filter((x,i)=>i<30&&x<=p).length||1;
+function mfLoad(){if(MF)return Promise.resolve(MF);if(MFP)return MFP;
+  MFP=(async()=>{let d=null;try{d=await idbGet('mf'+MFV)}catch(e){}
+    if(!d||!d.p){const r=await fetch('data/quran-mushaf.json');if(!r.ok)throw new Error('HTTP '+r.status);d=await r.json();try{await idbSet('mf'+MFV,d)}catch(e){}}
+    MF=d;return d})();MFP.catch(()=>{MFP=null});return MFP}
+function mfVerse(k){const D=MF,p0=D.vp[mfIdx(k)],out=[];
+  for(let p=p0;p<=Math.min(604,p0+1);p++)for(const r of D.p[p].r){if(r[0]!=='x')continue;let i=0;for(const[kk,c]of r[2]){if(kk===k)for(let j=0;j<c;j++){const w=r[1][i+j];if(!mfNum(w))out.push(w)}i+=c}}
+  return out}
+function mfPageSurah(n){for(const r of MF.p[n].r)if(r[0]==='x')return vkS(r[2][0][0]);return mfSurahAt(n)}
+function mfPageHtml(n,st){
+  const D=MF,P=D.p[n];let h='',lastK=0,idx=0;const hl=st.hl||{},wk=st.wk||{},T=st.t;
+  if(P.t)h+=`<div class="mr mh">${esc(D.hd[P.t-1])}</div>`;
+  for(const r of P.r){
+    if(r[0]==='h')h+=`<div class="mr mh">${esc(D.hd[r[1]-1])}</div>`;
+    else if(r[0]==='b')h+=`<div class="mr ct mb">${D.bsm.map(w=>`<span class="mw">${esc(mfFix(w))}</span>`).join('')}</div>`;
+    else if(r[0]==='e')h+='<div class="mr"></div>';
+    else{let i=0,sp='';
+      for(const[k,c]of r[2]){
+        if(k!==lastK){lastK=k;idx=D.vp[mfIdx(k)]<n?99:0}
+        for(let j=0;j<c;j++){const w=r[1][i++],num=mfNum(w);let cl='mw';if(num)cl+=' mk';
+          const x=hl[k];if(x&&x.c)cl+=' h'+x.c;if(num&&x&&x.n)cl+=' hn';
+          const z=wk[k];if(num&&z&&z.s<2)cl+=' wkm';
+          if(T&&T.on&&!T.rev[k]&&!num&&(T.mode==='r'||idx>=2))cl+=' xh';
+          if(!num)idx++;
+          if(/[\u06E3\u06EB]/.test(w))cl+=' qam';sp+=`<span class="${cl}" data-v="${k}">${esc(mfFix(w))}</span>`}}
+      h+=`<div class="mr mx">${sp}</div>`}}
+  return h}
+function mfFit(){const pg=$('#mfpg');if(!pg||!MF)return;const W=pg.clientWidth-20;if(W<=0)return;
+  pg.style.fontSize='20px';pg.classList.add('meas');const rows=[...pg.querySelectorAll('.mx')],ws=rows.map(r=>r.getBoundingClientRect().width);pg.classList.remove('meas');
+  const m=Math.max(1,...ws),fs=Math.max(11,Math.min(42,20*W/m*0.995));pg.style.fontSize=fs+'px';
+  rows.forEach((r,i)=>r.classList.toggle('ct',ws[i]*fs/20<W*0.7));pg.dataset.fs=fs.toFixed(1)}
+function mfDraw(keep){const pg=$('#mfpg');if(!pg||!MF)return;const q=mq(),n=MFPG,sc=$('#mfp');const y=keep&&sc?sc.scrollTop:0;
+  pg.className='mpg'+(MF.p[n].c?' cc':'');pg.innerHTML=mfPageHtml(n,{hl:q.hl,wk:q.wk,t:MFT});
+  const s=mfPageSurah(n);$('#mfn').textContent=MF.hd[s-1];$('#mfj').textContent='Juz’ '+mfJuz(n)+' · '+n+'-bet';
+  const i=$('#mfi');if(i)i.value=n;const b=$('#mfb');if(b)b.textContent=q.bm.includes(n)?'★':'☆';
+  const st=$('#mfst');if(st){if(MFT&&MFT.on){st.hidden=false;st.innerHTML=`<span>Sinov: ${MFT.mode==='r'?'faqat raqam':'oyat boshi'} · ✅ ${MFT.st[2]} · ➖ ${MFT.st[1]} · ❌ ${MFT.st[0]}</span><button class="x" onclick="mfTestEnd()">Tugatish</button>`}else st.hidden=true}
+  mfFit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>{if(MFO)mfFit()});if(sc)sc.scrollTop=y}
+async function mfShow(n){n=Math.max(1,Math.min(604,Math.round(+n)||1));
+  try{await mfLoad()}catch(e){toast('Qur’on fayli yuklanmadi. Internetni tekshiring.');mfClose();return}
+  if(!MFO)return;MFPG=n;mfGrBar(0);mfDraw();mfSeen(n)}
+function mfSeen(n){const q=mq();q.last=n;q.rec=[{p:n,t:Date.now()}].concat(q.rec.filter(x=>x.p!==n)).slice(0,10);qsave()}
+const mfGo=d=>mfShow(MFPG+d),mfJump=v=>mfShow(v);
+function mfBm(){const q=mq(),n=MFPG,i=q.bm.indexOf(n);if(i>=0)q.bm.splice(i,1);else{q.bm.push(n);q.bm.sort((a,b)=>a-b)}qsave();const b=$('#mfb');if(b)b.textContent=q.bm.includes(n)?'★':'☆'}
+function mfHl(k,c){const q=mq(),x=q.hl[k]||(q.hl[k]={c:0,n:'',t:0});x.c=c;x.t=Date.now();if(!x.c&&!x.n)delete q.hl[k];qsave();mfDraw(1)}
+function mfNote(k,t){const q=mq(),x=q.hl[k]||(q.hl[k]={c:0,n:'',t:0});x.n=String(t||'').trim().slice(0,500);x.t=Date.now();if(!x.c&&!x.n)delete q.hl[k];qsave();mfDraw(1)}
+function mfLink(k){const i=vkS(k)-1;if(S.q&&S.q.m&&S.q.m[i]>0){const r=rsOf(i);r.weak=true;r.box=0;r.due=dk()}}
+function mfWeak(k){const q=mq(),z=q.wk[k];if(z&&z.s<2)delete q.wk[k];else{q.wk[k]={s:0,t:Date.now()};mfLink(k)}qsave();mfDraw(1)}
+function mfGrade(k,g){const q=mq();q.wk[k]={s:g,t:Date.now()};if(MFT){MFT.st[g]++;MFT.rev[k]=1}if(g<2)mfLink(k);qsave();mfGrBar(0);mfDraw(1)}
+function mfTestStart(m){MFT={on:true,mode:m,rev:{},st:[0,0,0]};mfSheetClose();mfDraw()}
+function mfTestEnd(){const t=MFT;MFT=null;mfGrBar(0);mfSheetClose();mfDraw();if(t&&(t.st[0]+t.st[1]+t.st[2]))toast('Sinov: ✅ '+t.st[2]+'  ➖ '+t.st[1]+'  ❌ '+t.st[0])}
+function mfTap(k){if(!MFT||!MFT.on)return;if(MFT.rev[k]){delete MFT.rev[k];mfGrBar(0)}else{MFT.rev[k]=1;mfGrBar(k)}mfDraw(1)}
+function mfGrBar(k){const g=$('#mfg');if(!g)return;if(!k){g.hidden=true;g.innerHTML='';return}
+  g.hidden=false;g.innerHTML=`<span>${esc(vkL(k))}: qanday esladingiz?</span><div class="in"><button class="btn" onclick="mfGrade(${k},2)">✅ Bildim</button><button class="btn s" onclick="mfGrade(${k},1)">➖ Qisman</button><button class="btn s" onclick="mfGrade(${k},0)">❌ Bilmadim</button></div>`}
+function mfSheetClose(){const e=$('#mfs');if(e)e.remove()}
+function mfSheet(k){mfSheetClose();const q=mq(),x=q.hl[k]||{},z=q.wk[k],w=mfVerse(k);const el=document.createElement('div');el.id='mfs';el.className='mfs';
+  el.innerHTML=`<div class="mfsh"><b>${esc(vkL(k))}</b><button class="x" onclick="mfSheetClose()">✕</button></div><p class="mfv" dir="rtl" lang="ar">${esc(w.slice(0,9).map(mfFix).join(' '))}${w.length>9?' …':''}</p>
+  <div class="mfdots">${MFCOL.map((c,i)=>`<button class="mfd${x.c===i+1?' on':''}" style="background:${c}" aria-label="Rang ${i+1}" onclick="mfHl(${k},${x.c===i+1?0:i+1});mfSheetClose()"></button>`).join('')}<button class="mfd x0" aria-label="Rangni olib tashlash" onclick="mfHl(${k},0);mfSheetClose()">⌫</button></div>
+  <div class="in" style="flex-wrap:wrap"><button class="btn s" onclick="mfNoteEdit(${k})">✎ Izoh${x.n?' (bor)':''}</button><button class="btn s" onclick="mfWeak(${k});mfSheetClose()">${z&&z.s<2?'Zaif belgisini olib tashlash':'⚠ Zaif oyat'}</button><button class="btn s" onclick="mfCopy(${k})">Nusxalash</button></div>`;
+  $('#mf').appendChild(el)}
+function mfNoteEdit(k){const e=$('#mfs');if(!e)return;const x=mq().hl[k]||{};
+  e.innerHTML=`<div class="mfsh"><b>${esc(vkL(k))} · izoh</b><button class="x" onclick="mfSheetClose()">✕</button></div><textarea id="mfnt" rows="4" maxlength="500" placeholder="Izoh yozing…">${esc(x.n||'')}</textarea><div class="in"><button class="btn" onclick="mfNote(${k},$('#mfnt').value);mfSheetClose()">Saqlash</button>${x.n?`<button class="btn s" onclick="mfNote(${k},'');mfSheetClose()">O‘chirish</button>`:''}</div>`;
+  const t=$('#mfnt');if(t)t.focus()}
+function mfCopy(k){const t=mfVerse(k).join(' ')+' ﴿'+vkL(k)+'﴾';try{navigator.clipboard.writeText(t).then(()=>toast('Nusxalandi'),()=>toast('Nusxalab bo‘lmadi'))}catch(e){toast('Nusxalab bo‘lmadi')}mfSheetClose()}
+function mfTestMenu(){mfSheetClose();const el=document.createElement('div');el.id='mfs';el.className='mfs';
+  el.innerHTML=`<div class="mfsh"><b>🧠 Yodlash sinovi</b><button class="x" onclick="mfSheetClose()">✕</button></div><p class="mu">Matn yashiriladi. Oyatga tegib ochasiz va o‘zingizni baholaysiz. Zaif oyatlar takrorga ulanadi.</p>
+  <div class="in" style="flex-direction:column"><button class="btn" onclick="mfTestStart('b')">Oyat boshini ko‘rsat, davomini ayt</button><button class="btn s" onclick="mfTestStart('r')">Faqat oyat raqami, o‘zing ayt</button>${MFT&&MFT.on?'<button class="btn s" onclick="mfTestEnd()">Sinovni tugatish</button>':''}</div>`;
+  $('#mf').appendChild(el)}
+function mfBind(){const pg=$('#mfp');if(!pg)return;let t=null,sx=0,sy=0,fired=false,mv=false,tgt=null;
+  const pt=e=>e.touches&&e.touches[0]?e.touches[0]:(e.changedTouches&&e.changedTouches[0]?e.changedTouches[0]:e);
+  const ig=e=>!e.touches&&Date.now()-MFTM<900;
+  const start=e=>{if(ig(e))return;if(e.touches)MFTM=Date.now();const p=pt(e);sx=p.clientX;sy=p.clientY;fired=false;mv=false;tgt=e.target.closest?e.target.closest('.mw'):null;clearTimeout(t);
+    if(tgt&&tgt.dataset.v&&!(MFT&&MFT.on))t=setTimeout(()=>{fired=true;if(navigator.vibrate)navigator.vibrate(15);mfSheet(+tgt.dataset.v)},480)};
+  const move=e=>{if(ig(e))return;const p=pt(e);if(Math.abs(p.clientX-sx)>10||Math.abs(p.clientY-sy)>10){mv=true;clearTimeout(t)}};
+  const end=e=>{if(ig(e))return;clearTimeout(t);if(e.touches)MFTM=Date.now();const p=pt(e),dx=p.clientX-sx,dy=p.clientY-sy;
+    if(fired)return;
+    if(Math.abs(dx)>70&&Math.abs(dx)>1.6*Math.abs(dy)){mfGo(dx>0?1:-1);return}
+    if(!mv&&tgt&&tgt.dataset.v&&MFT&&MFT.on)mfTap(+tgt.dataset.v)};
+  pg.addEventListener('touchstart',start,{passive:true});pg.addEventListener('touchmove',move,{passive:true});pg.addEventListener('touchend',end);
+  pg.addEventListener('mousedown',start);pg.addEventListener('mousemove',move);pg.addEventListener('mouseup',end);pg.addEventListener('contextmenu',e=>e.preventDefault())}
+function mfKey(e){if(!MFO)return;if(e.key==='ArrowLeft')mfGo(1);else if(e.key==='ArrowRight')mfGo(-1);else if(e.key==='Escape'){if($('#mfs'))mfSheetClose();else mfClose()}}
+function mfOpen(n){if(MFO||!mfOn())return;MFO=true;const el=document.createElement('div');el.id='mf';el.className='mfo';
+  el.innerHTML=`<div class="mft"><button class="x" onclick="mfClose()" aria-label="Yopish">✕</button><div class="mfti"><b id="mfn"></b><small id="mfj"></small></div><button class="x" id="mfb" onclick="mfBm()" aria-label="Xatcho‘p">☆</button><button class="x" onclick="mfTestMenu()" aria-label="Yodlash sinovi">🧠</button></div><div id="mfst" class="mfst" hidden></div><div class="mfp" id="mfp"><div class="mpg" id="mfpg"></div></div><div id="mfg" class="mfg" hidden></div><div class="mfnv"><button class="btn s" onclick="mfGo(1)">‹ Keyingi</button><input id="mfi" type="number" inputmode="numeric" min="1" max="604" aria-label="Sahifa raqami" onchange="mfJump(this.value)"><span class="mu">/ 604</span><button class="btn s" onclick="mfGo(-1)">Oldingi ›</button></div>`;
+  document.body.appendChild(el);ovLock(el);mfBind();document.addEventListener('keydown',mfKey);mfShow(n||mq().last||1)}
+function mfClose(){MFO=false;MFT=null;document.removeEventListener('keydown',mfKey);ovUnlock();const e=$('#mf');if(e)e.remove();render()}
+async function mfOpenV(k){try{await mfLoad()}catch(e){toast('Qur’on fayli yuklanmadi. Internetni tekshiring.');return}mfOpen(MF.vp[mfIdx(k)])}
+function mfSurahRows(){const f=MQ.trim().toLowerCase();return SN.map((nm,i)=>({nm,i})).filter(x=>!f||x.nm.toLowerCase().includes(f)||String(x.i+1)===f).map(x=>`<button class="row" onclick="mfOpen(${SP[x.i]})"><b style="min-width:26px">${x.i+1}</b><span class="t">${esc(x.nm)}<br><small class="mu">${AY[x.i]} oyat</small></span><span class="tm">${SP[x.i]}-bet</span></button>`).join('')||'<p class="mu">Topilmadi.</p>'}
+function mfListUpd(v){MQ=v;const e=$('#mfl');if(e)e.innerHTML=mfSurahRows()}
+function mushaf(){const q=mq(),last=q.last||1;
+  const seg=[['s','Suralar'],['j','Juz’'],['n','Izohlar'],['b','Xatcho‘p'],['w','Zaif']].map(x=>`<button class="${MV===x[0]?'on':''}" onclick="MV='${x[0]}';render()">${x[1]}</button>`).join('');
+  const rec=q.rec.filter(x=>x.p!==last).slice(0,8).map(x=>`<button class="mfch" onclick="mfOpen(${x.p})">${x.p}<small>${esc(SN[mfSurahAt(x.p)-1])}</small></button>`).join('');
+  let body='';
+  if(MV==='s')body=`<input class="mfq" placeholder="Sura qidirish" value="${esc(MQ)}" oninput="mfListUpd(this.value)"><div id="mfl">${mfSurahRows()}</div>`;
+  else if(MV==='j')body=J.slice(0,30).map((p,i)=>`<button class="row" onclick="mfOpen(${p})"><b style="min-width:26px">${i+1}</b><span class="t">${i+1}-juz<br><small class="mu">${esc(SN[mfSurahAt(p)-1])}dan</small></span><span class="tm">${p}-bet</span></button>`).join('');
+  else if(MV==='n'){const a=Object.entries(q.hl).sort((x,y)=>(y[1].t||0)-(x[1].t||0));body=a.length?a.map(([k,x])=>`<button class="row" onclick="mfOpenV(${k})"><i class="mfdot" style="background:${x.c?MFCOL[x.c-1]:'var(--ln)'}"></i><span class="t">${esc(vkL(+k))}${x.n?`<br><small class="mu">${esc(x.n)}</small>`:''}</span><span class="tm">${mfJuz(MF?MF.vp[mfIdx(+k)]:SP[vkS(+k)-1])}-juz</span></button>`).join(''):'<p class="mu">Hali belgilangan oyat yo‘q. Mushafda oyatni uzoq bosib, rang tanlang yoki izoh yozing.</p>'}
+  else if(MV==='b')body=q.bm.length?q.bm.map(p=>`<div class="row"><button class="x" style="flex:1;text-align:left;color:var(--tx);font:inherit" onclick="mfOpen(${p})">★ ${p}-bet <small class="mu">${esc(SN[mfSurahAt(p)-1])}</small></button><button class="x" onclick="mfBmDel(${p})">✕</button></div>`).join(''):'<p class="mu">Xatcho‘p yo‘q. Mushafda tepadagi ☆ ni bosing.</p>';
+  else{const a=Object.entries(q.wk).filter(([k,z])=>z.s<2).sort((x,y)=>(y[1].t||0)-(x[1].t||0));body=(a.length?`<p class="mu" style="margin:0 0 8px">${a.length} ta zaif oyat. Ularning surasi “Takror” ga qo‘shilgan (agar sura yodlash ro‘yxatida bo‘lsa).</p>`+a.map(([k,z])=>`<button class="row" onclick="mfOpenV(${k})"><span class="t">${esc(vkL(+k))}<br><small class="mu">${z.s===0?'Bilmadim':'Qisman'} · ${new Date(z.t).toLocaleDateString('sv')}</small></span><span class="tm">ochish</span></button>`).join(''):'<p class="mu">Zaif oyat yo‘q. Mushafda 🧠 bilan sinab ko‘ring.</p>')}
+  return `<section class="goal"><p class="mu" style="margin:0">DAVOM ETISH</p><h2 style="margin:4px 0 0">${esc(SN[mfSurahAt(last)-1])} · ${last}-bet</h2><button class="big" style="margin-top:10px" onclick="mfOpen(${last})">📖 Mushafni ochish</button>${rec?`<div class="mfrc">${rec}</div>`:''}</section><div class="seg sc">${seg}</div>${body}<p class="mu" style="font-size:11px;margin-top:14px">Matn va shrift: Madina mushafi, Qur’on bosmaxonasi majmuasi (KFGQPC). Shaxsiy foydalanish uchun. Tafsilot: fonts/FONTS-NOTICE.txt</p>`}
+function mfBmDel(p){const q=mq();q.bm=q.bm.filter(x=>x!==p);save()}
+
 function quran(){
-  const seg=[['y','🧠 Yodlash'],['t','🔁 Takror'],['h','📖 Hatm'],['z','📿 Zikr'],['n','🕌 Namoz'],['r','🌙 Ramazon'],['d','🤲 Duolar'],['a','🎧 Tinglash']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg sc" style="margin-top:12px">${seg}</div>${QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():QT==='r'?ramazon():QT==='d'?duolar():QT==='a'?qaView():zikr()}`}
+  if(QT==='u'&&!mfOn())QT='y';
+  const seg=[...(mfOn()?[['u','📖 Mushaf']]:[]),['y','🧠 Yodlash'],['t','🔁 Takror'],['h','📖 Hatm'],['z','📿 Zikr'],['n','🕌 Namoz'],['r','🌙 Ramazon'],['d','🤲 Duolar'],['a','🎧 Tinglash']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg sc" style="margin-top:12px">${seg}</div>${QT==='u'?mushaf():QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():QT==='r'?ramazon():QT==='d'?duolar():QT==='a'?qaView():zikr()}`}
 const J=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582,605];
 const AY=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 function juzMem(j){let s=0;SN.forEach((_,i)=>{const d=Math.min(S.q.m[i]||0,SL(i));if(d>0){const a=SP[i];s+=Math.max(0,Math.min(a+d,J[j+1])-Math.max(a,J[j]))}});return s}
@@ -790,7 +945,7 @@ function sozlama(){const t=getTh();
   <h2>Ko‘rinish</h2><div class="seg">${[['auto','Tizim'],['light','Yorug‘'],['dark','Qorong‘u']].map(x=>`<button class="${t===x[0]?'on':''}" onclick="setTh('${x[0]}')">${x[1]}</button>`).join('')}</div><p class="mu">Tizim tanlansa, telefonning kunduz va tun rejimiga qarab o‘zi almashadi. Bu tanlov faqat shu qurilmada saqlanadi.</p>
   <h2>Profil</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div>
   <h2>Hisob</h2><p class="mu" style="margin:0 0 6px">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':'Kirilmagan.'):'Hozircha faqat shu telefonda saqlanadi.'}</p><p class="mu" style="margin:0 0 6px">${SYNC==='ok'?'Sinxronlash: hamma narsa saqlangan.':SYNC==='wait'?'Sinxronlash: internet kelganda yuboriladi.':'Internet yo‘q. Ma‘lumot shu telefonda saqlanadi va keyin sinxronlanadi.'}</p>${PROF?`<p style="margin:0 0 6px">⭐ ${subLine()}</p>${PROF.lifetime?'':tgBtn('Obunani uzaytirish')}`:''}${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}
-  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)',errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
+  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)',errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
   <p class="mu" style="text-align:center;margin-top:28px;letter-spacing:.14em;font-size:12px">KUNLIK TIZIM BY AZIMOV</p>`}
 
 applyTheme();try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTh()==='auto')applyTheme()})}catch(e){}
@@ -1657,7 +1812,7 @@ let OVL=null;
 function ovLock(el){ovUnlock();const y=window.scrollY||window.pageYOffset||0,v=window.visualViewport;
   const fit=()=>{const w=window.visualViewport;if(!w||!el.isConnected)return;el.style.height=w.height+'px';el.style.top=w.offsetTop+'px';el.style.bottom='auto';
     const c=el.querySelector('.aic');if(c&&document.activeElement&&document.activeElement.tagName==='TEXTAREA')c.scrollTop=c.scrollHeight};
-  const tm=e=>{if(!(e.target.closest&&e.target.closest('.aic,.aiq,textarea')))e.preventDefault()};
+  const tm=e=>{if(!(e.target.closest&&e.target.closest('.aic,.aiq,.mfp,.mfs,textarea')))e.preventDefault()};
   OVL={el,y,v,fit,tm};document.documentElement.classList.add('ovl');document.body.style.top=(-y)+'px';
   if(v){v.addEventListener('resize',fit);v.addEventListener('scroll',fit)}el.addEventListener('touchmove',tm,{passive:false});fit()}
 function ovUnlock(){if(!OVL)return;const o=OVL;OVL=null;if(o.v){o.v.removeEventListener('resize',o.fit);o.v.removeEventListener('scroll',o.fit)}
