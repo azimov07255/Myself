@@ -1,0 +1,16 @@
+# Supabase loyiha sozlamasi. GitHub integratsiyasi "Deploy to production" yoqilganda,
+# main ga yuklangan o'zgarishlar shu yerda e'lon qilingan funksiyalarni avtomatik Deploy qiladi.
+project_id = "dsfwagfsehpugjkervqc"
+
+[functions.ai-assistant]
+verify_jwt = true
+
+[functions.create-user]
+verify_jwt = true
+
+[functions.send-reminders]
+verify_jwt = true
+
+# Telegram o'zi chaqiradi (unda Supabase kaliti yo'q), himoya TELEGRAM_WEBHOOK_SECRET bilan
+[functions.telegram-bot]
+verify_jwt = false
