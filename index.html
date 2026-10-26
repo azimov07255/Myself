@@ -241,7 +241,7 @@ const hm=m=>pad(Math.floor(m/60)%24)+':'+pad(m%60);
 const dk=()=>new Date().toLocaleDateString('sv');
 const fmt=m=>m>=60?Math.floor(m/60)+' soat '+(m%60?m%60+' daqiqa':''):m+' daqiqa';
 const num=n=>Number(n).toLocaleString('ru-RU');
-const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,ai:{chat:[],sh:{core:1,quran:1,study:1,health:1,money:0},tip:{}},debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7,ex:'',tests:[],dp:{},dr:''},un:{tasks:[],exams:[],subj:[],tt:{},gr:{},ab:{}},qa:{list:[],rate:1,rep:'off'},dz:{d:{}},tgd:[],pr:{er:{},pm:18,st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,tg:false,blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[],ex:[],plan:{},pass:null,past:[],food:{goal:{kcal:2500,p:150,f:70,c:300},log:{}}},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
+const blank=()=>({ts:0,done:{},tasks:{},rules:{},wake:{},goals:[],ob:0,md:{cur:'Asosiy',sets:{}},money:[],name:'',main:0,ai:{chat:[],sh:{core:1,quran:1,study:1,health:1,money:0},tip:{}},debts:[],rz:{start:'',fast:{},tar:{},debt:0,log:[]},pt:{loc:'Toshkent',lat:41.2995,lon:69.2401,tune:{},cache:null},nh:{p:0,c:0,log:[],hist:[],pr:'fajr'},sg:0,kt:{books:[],log:[],goal:20},nm:{d:{},debt:{},log:[],qb:{}},ie:{words:[],mock:[],wr:[],target:7,ex:'',tests:[],dp:{},dr:''},un:{tasks:[],exams:[],subj:[],tt:{},gr:{},ab:{}},qa:{list:[],rate:1,rep:'off'},dz:{d:{}},tgd:[],pr:{er:{},pm:18,st:['Nazariy kursga yozilish','Nazariy testlarni ishlash','Nazariy imtihonni topshirish','Amaliy mashg‘ulotlar','Amaliy imtihonni topshirish','Pravani olish'].map(t=>({t,x:0})),tests:[],exam:''},iso:{lim:60,m:{},log:[]},rem:{on:false,tg:false,zk:false,rz:false,zam:'06:30',zpm:'18:30',blk:true,off:5,close:true,ct:'21:30',wake:true,custom:[],sd:''},top:{},close:{},gym:{log:[],body:[],ex:[],plan:{},pass:null,past:[],food:{goal:{kcal:2500,p:150,f:70,c:300},log:{}}},fin:{budget:0,goal:{t:'',a:0,s:0},open:{p:{cash:0,card:0},d:{cash:0,card:0}},sg:[]},hab:[],hb:{},mood:{},water:{},note:{},fm:{},bl:null,wk:{base:0,start:null},q:{ppd:3,cur:0,m:{},ord:[],rv:0,rg:5,rd:{},hp:0,hg:20,hc:0,hd:{}},z:{sel:0,c:{}}});
 
 let BV='j',SDO={},IVW='b',IK='L',IQ=null,IQS='',WE={k:2,p:'',run:false,end:0,open:0},SPQ=null,IT=null,URG=null,PSim=null,PSel=[],PTB=false,RM=0,RMN=false,CRS=-1,NMo=0,EV='i',IR=0,PULLED=!sb,OB=1,OBN='',OBC='',OBG=[],OBP='talaba';
 let OT='j',WK=0,FC=0,GN='',GS='',GR='',GK='',BW='',BC='',BB='',BA='';
@@ -835,6 +835,8 @@ function remRows(){
   if(r.close)rows.push({hhmm:r.ct,days:A,title:'Kunni yopish vaqti',body:'Bugunni baholang va ertangi 3 ta asosiy ishni yozing.',tz});
   if(r.wake&&S.wk.start){const t=tgtFor(new Date().getHours()>=12?dAgo(-1):dk());rows.push({hhmm:hm(t),days:A,title:'Turish vaqti',body:'Bugungi maqsad: '+hm(t)+'. Tur va namozga tayyorlan.',tz})}
   if(r.nz){const tt=ptTimes(),no=r.noff!==undefined?r.noff:10;if(tt)[['Fajr','Bomdod'],['Dhuhr','Peshin'],['Asr','Asr'],['Maghrib','Shom'],['Isha','Xufton']].forEach(([k,n])=>{if(tt[k]!==undefined)rows.push({hhmm:hm(tt[k]-no+1440),days:A,title:n+' namozi',body:no?no+' daqiqadan keyin vaqti kiradi':'Vaqti kirdi',tz,kind:'nm:'+k.toLowerCase()})})}
+  if(r.zk){rows.push({hhmm:r.zam||'06:30',days:A,title:'Ertalabki zikr',body:'Ertalabki zikr va duolarni o‘qish vaqti.',tz,kind:'zk:sb'});rows.push({hhmm:r.zpm||'18:30',days:A,title:'Kechki zikr',body:'Kechki zikr va duolarni o‘qish vaqti.',tz,kind:'zk:sh'})}
+  if(r.rz&&rzInfo().on)rows.push({hhmm:'21:30',days:A,title:'Ro‘za: bugun tutdingmi?',body:'Belgilab qo‘y: ro‘za tutdingmi yoki qazo bo‘ldimi.',tz,kind:'rz'});
   r.custom.forEach(c=>rows.push({hhmm:c.time,days:A,title:c.t,body:'',tz}));
   return rows}
 async function syncRem(force){
@@ -866,6 +868,7 @@ function remCard(){
   return `<h2>Eslatmalar</h2>${tgBlock()}<p class="mu">${r.on?`Bildirishnoma yoqilgan (ruxsat: ${np==='granted'?'berilgan':np}).`:'Faqat Telegram yoqilgan.'}</p>${r.on?'':'<button class="btn s" style="margin-bottom:8px" onclick="pushOn()">Bildirishnomani ham yoqish</button>'}
   ${chk(r.blk,'blk','Har bir reja boshlanganda')}<div class="in"><select onchange="remOff(this.value)">${[0,5,10,15].map(m=>`<option value="${m}" ${r.off===m?'selected':''}>${m?m+' daqiqa oldin':'Aynan boshlanganda'}</option>`).join('')}</select></div>
   ${chk(r.wake,'wake','Turish vaqti (uyg‘onish maqsadi)')}${chk(r.close,'close','Kunni yopish')}<div class="in"><input type="time" value="${r.ct}" onchange="remCt(this.value)"></div>
+  ${chk(r.zk,'zk','Ertalabki va kechki zikr (06:30 va 18:30)')}${chk(r.rz,'rz','Ramazon: kechqurun ro‘za belgilash (21:30)')}
   ${chk(r.nz,'nz','Namoz vaqtlari')}<div class="in"><select onchange="remNo(this.value)">${[0,5,10,15,20].map(m=>`<option value="${m}" ${(r.noff!==undefined?r.noff:10)===m?'selected':''}>${m?m+' daqiqa oldin':'Aynan vaqti kirganda'}</option>`).join('')}</select></div>
   <p class="mu" style="margin:8px 0">O‘zingning eslatmang:</p>${r.custom.map((c,i)=>`<div class="row"><span class="t">${esc(c.t)}</span><span class="tm">${c.time}</span><button class="x" onclick="delRem(${i})">×</button></div>`).join('')}
   <div class="in"><input type="time" id="rt" value="08:00" style="flex:0 0 120px"><input id="rx" placeholder="Masalan: 33 ta zikr" onkeydown="if(event.key==='Enter')addRem()"><button class="btn" onclick="addRem()">+</button></div>
@@ -2228,6 +2231,9 @@ async function tgLink(){if(!TGB){alert('Telegram bot hali sozlanmagan.');return}
   if(r.error){alert('Kod yaratib bo‘lmadi: '+(r.error.message||r.error));return}
   TGW=true;window.open('https://t.me/'+TGB+'?start='+code,'_blank');render()}
 async function tgUnlink(){if(!confirm('Telegram uzilsinmi? Eslatmalar botga kelmaydi.'))return;await sb.from('tg_links').delete().eq('user_id',UID);TGL=false;S.rem.tg=false;save();await syncRem(true)}
+function rzForce(k,v){const R=S.rz,c=R.fast[k]||0;if(c===v)return;
+  if(c===2){R.debt=Math.max(0,R.debt-1);const x=R.log.findIndex(y=>y.d===k&&y.k==='miss');if(x>=0)R.log.splice(x,1)}
+  if(v===2){R.debt++;R.log.push({id:Date.now(),d:k,k:'miss',n:1})}R.fast[k]=v}
 function nmOne(k,p){const N=S.nm,d=N.d[k]=N.d[k]||{},c=d[p]||0;if(c===1)return;
   if(c===2){N.debt[p]=Math.max(0,(N.debt[p]||0)-1);const i=N.log.findIndex(x=>x.d===k&&x.p===p&&x.k==='miss');if(i>=0)N.log.splice(i,1)}d[p]=1}
 // Bot "pochta qutisi"ga yozadi, ilova ochilganda shu yerdan olib o‘z holatiga qo‘llaydi (sinxron bilan to‘qnashmaydi)
@@ -2240,6 +2246,8 @@ async function tgApply(){if(!sb||!UID||!TGL)return;
       if(x.kind==='nm'&&['fajr','dhuhr','asr','maghrib','isha','vitr'].includes(p.p)){nmOne(k,p.p);ch=true}
       else if(x.kind==='blk'&&/^[\w-]{1,40}$/.test(p.id||'')){(S.done[k]=S.done[k]||{})[p.id]=true;ch=true}
       else if(x.kind==='task'&&p.t){(S.tasks[k]=S.tasks[k]||[]).push({t:String(p.t).slice(0,200),x:0});ch=true}
+      else if(x.kind==='zk'&&['sb','sh'].includes(p.c)){const D=S.dz.d[k]=S.dz.d[k]||{};dzList(p.c).forEach(d=>{D[d.id+'@'+p.c]=d.k});ch=true}
+      else if(x.kind==='rz'&&(p.v===1||p.v===2)){rzForce(k,p.v);ch=true}
       else if(x.kind==='water'){S.water[k]=Math.max(0,Math.min(8,(S.water[k]||0)+(+p.n||1)));ch=true}}
     S.tgd=[...done].slice(-200);
     if(ch){save();try{toast('Telegramdagi belgilar qo‘llandi')}catch(e){}}else lsSet(KEY(),JSON.stringify(S))
