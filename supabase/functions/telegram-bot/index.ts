@@ -1,7 +1,7 @@
 // Edge Function: telegram-bot   (Verify JWT = O'CHIQ bo'lishi kerak: Telegram o'zi chaqiradi)
 // Secrets: TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
-
+ 
 // Kalit qiymatlarini tozalaymiz: ortiqcha bo'sh joy, qo'shtirnoq yoki tokenning oldidagi "bot" so'zi xato qilmasin
 const clean = (s: string | undefined) => String(s || '').trim().replace(/^["']|["']$/g, '').replace(/^bot(?=\d)/i, '').trim()
 const TOKEN = clean(Deno.env.get('TELEGRAM_BOT_TOKEN'))
@@ -14,20 +14,20 @@ const api = (method: string, body: unknown) =>
     if (!j?.ok) console.error('telegram api', method, r.status, JSON.stringify(j).slice(0, 200)) // Logs'da ko'rinadi
     return j
   }).catch((e) => { console.error('telegram fetch failed', method, String(e)); return {} })
-
+ 
 const PRAYERS: Record<string, string> = { fajr: 'Bomdod', dhuhr: 'Peshin', asr: 'Asr', maghrib: 'Shom', isha: 'Xufton' }
 const localDate = (tz: number) => new Date(Date.now() + tz * 60000).toISOString().slice(0, 10)
 const esc = (s: string) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
-
+ 
 const HELP = `🤖 <b>Kunlik tizim boti</b>
-
+ 
 /bugun — bugungi holat (asosiy ishlar, vazifalar, namoz, suv)
 /vazifa <i>matn</i> — bugunga vazifa qo‘shish
 /suv — bir stakan suv (+1)
 /stop — botni uzish
-
+ 
 Eslatma xabarlaridagi <b>✅</b> tugmalarini bossang, ilovada belgilanadi (ilova keyingi ochilganda qo‘llanadi).`
-
+ 
 Deno.serve(async (req) => {
   if (!SECRET || req.headers.get('x-telegram-bot-api-secret-token') !== SECRET) return new Response('no', { status: 403 })
   const u = await req.json().catch(() => null)
@@ -50,13 +50,13 @@ Deno.serve(async (req) => {
   }
   return new Response('ok')
 })
-
+ 
 async function getLink(db: any, chat: number) {
   const { data, error } = await db.from('tg_links').select('*').eq('chat_id', chat).maybeSingle()
   if (error) throw new Error(error.message)
   return data
 }
-
+ 
 async function onMessage(db: any, m: any) {
   if (m.chat?.type !== 'private') return
   const chat = m.chat.id as number
@@ -65,7 +65,7 @@ async function onMessage(db: any, m: any) {
   const cmd = parts[0].split('@')[0].toLowerCase()
   const arg = parts.slice(1).join(' ').trim()
   const send = (t: string, extra: Record<string, unknown> = {}) => api('sendMessage', { chat_id: chat, text: t, parse_mode: 'HTML', ...extra })
-
+ 
   if (cmd === '/start') {
     const code = arg.toUpperCase().replace(/[^A-Z0-9]/g, '')
     if (!code) {
@@ -81,11 +81,11 @@ async function onMessage(db: any, m: any) {
     await send('✅ <b>Ulandi!</b> Endi eslatmalar shu yerga keladi.\n\n' + HELP)
     return
   }
-
+ 
   const link = await getLink(db, chat)
   if (!link) { await send('Avval ulang: ilovada <b>Sozlama → Eslatmalar → Telegramga ulash</b>.'); return }
   const d = localDate(link.tz ?? 300)
-
+ 
   if (cmd === '/yordam' || cmd === '/help') { await send(HELP); return }
   if (cmd === '/stop') { await db.from('tg_links').delete().eq('chat_id', chat); await send('Bot uzildi. Qayta ulash uchun ilovadan foydalan.'); return }
   if (cmd === '/suv') {
@@ -113,7 +113,7 @@ async function onMessage(db: any, m: any) {
   }
   await send('Tushunmadim. Buyruqlar uchun /yordam ni bos.')
 }
-
+ 
 async function onCallback(db: any, q: any) {
   const chat = q.message?.chat?.id as number
   const answer = (t: string) => api('answerCallbackQuery', { callback_query_id: q.id, text: t })
@@ -126,6 +126,10 @@ async function onCallback(db: any, q: any) {
     await db.from('tg_inbox').insert({ user_id: link.user_id, kind: 'nm', payload: { d, p: data.slice(3) } }); ok = true
   } else if (/^blk:[\w-]{1,40}$/.test(data)) {
     await db.from('tg_inbox').insert({ user_id: link.user_id, kind: 'blk', payload: { d, id: data.slice(4) } }); ok = true
+  } else if (/^zk:(sb|sh)$/.test(data)) {
+    await db.from('tg_inbox').insert({ user_id: link.user_id, kind: 'zk', payload: { d, c: data.slice(3) } }); ok = true
+  } else if (/^rz:[12]$/.test(data)) {
+    await db.from('tg_inbox').insert({ user_id: link.user_id, kind: 'rz', payload: { d, v: Number(data.slice(3)) } }); ok = true
   }
   if (!ok) { await answer('Noma’lum tugma.'); return }
   await answer('Belgilandi ✅')
