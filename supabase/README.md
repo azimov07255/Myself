@@ -8,3 +8,4 @@ funksiyalarni main ga har yuklashda avtomatik Deploy qiladi.
 
 Kerakli maxfiy qiymatlar (Supabase → Edge Functions → Secrets): GEMINI_API_KEY, OWNER_EMAIL, VAPID_PUBLIC, VAPID_PRIVATE,
 VAPID_SUBJECT, CRON_SECRET, TELEGRAM_BOT_TOKEN, TELEGRAM_WEBHOOK_SECRET (ixtiyoriy: GEMINI_MODEL, YOUTUBE_API_KEY).
+
