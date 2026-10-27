@@ -101,6 +101,10 @@ async function callGemini(model: string, key: string, base: unknown, stream: boo
   return r
 }
 
+const PLAN_SYSTEM = `Sen o'zbek tilida gapiradigan shaxsiy kun rejalashtiruvchisan. Foydalanuvchining bugungi ma'lumotlari JSON ko'rinishida beriladi (reja bloklari, muddatlar, maqsad, hifz miqdori, zaif soha, kechagi natija).
+FAQAT shu JSON ko'rinishida javob ber: {"top3":[{"t":"..."},{"t":"..."},{"t":"..."}],"tip":"..."}
+Qoidalar: top3 — bugun bajariladigan 3 tagacha aniq ish (har biri 70 belgidan oshmasin, fe'l bilan boshlansin), faqat berilgan ma'lumotlarga tayan: yaqin muddatlar, maqsadning keyingi bosqichi, zaif soha, hifz (sabqi/manzil). Ma'lumotda yo'q narsani o'ylab topma. "mavjud_top3" dagi ishlarni takrorlama; ular band bo'lsa, faqat qolgan bo'sh joylar uchun yoz. "yengil_kun" true bo'lsa, ishlarni yengil va kam qil. Vaqt bloklariga sig'maydigan ish yozma. tip — bitta qisqa, mehribon, rag'batlantiruvchi gap (150 belgigacha). Diniy hukm berma, tibbiy maslahat berma.`
+
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
 FAQAT JSON qaytar, boshqa matn yozma:
 {"items":[{"name":"taom nomi (o'zbekcha)","grams":son,"kcal":son,"p":oqsil_gramm,"f":yog_gramm,"c":uglevod_gramm}],"note":"qisqa izoh, natija taxminiy ekanini ayt"}
@@ -217,14 +221,20 @@ Deno.serve(async (req) => {
     return json({ videos: (j.items || []).map((x: any) => ({ id: x.id?.videoId, t: x.snippet?.title, ch: x.snippet?.channelTitle, th: x.snippet?.thumbnails?.medium?.url })).filter((x: any) => x.id) })
   }
 
-  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts') {
+  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan') {
     const list = await candidates(key).catch(() => [] as string[])
     if (!list.length) return json({ error: 'Mos Gemini modeli topilmadi.' }, 502)
     const parts: unknown[] = []
     let system = FOOD_SYSTEM
     let extra: Record<string, unknown> = { responseMimeType: 'application/json', maxOutputTokens: 1500 }
     let tmo = 30000
-    if (b.action === 'ielts') {
+    if (b.action === 'plan') {
+      const ctx = String(b.ctx || '').trim()
+      if (ctx.length < 10) return json({ error: 'Reja uchun ma‘lumot yo‘q.' }, 400)
+      if (ctx.length > 6000) return json({ error: 'Ma‘lumot juda katta.' }, 400)
+      system = PLAN_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 700 }
+      parts.push({ text: 'Bugungi ma‘lumotlar (JSON):\n' + ctx })
+    } else if (b.action === 'ielts') {
       tmo = 70000; system = IELTS_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 4500 }
       if (b.kind === 'speaking') {
         const a = String(b.audio || '')
