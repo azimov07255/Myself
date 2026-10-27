@@ -240,6 +240,40 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .mfch{border:0;border-radius:12px;background:var(--c2);color:var(--tx);padding:7px 11px;font:600 14px Figtree,system-ui;white-space:nowrap}
 .mfch small{display:block;font-weight:400;color:var(--mu);font-size:11px}
 .mfdot{width:14px;height:14px;border-radius:50%;flex:none;display:inline-block}
+.rwc{background:linear-gradient(135deg,#1e5f4b,#164536);color:#fff;border-radius:18px;padding:14px;margin:10px 0;cursor:pointer;box-shadow:0 6px 18px rgba(20,60,45,.22)}
+.rwc .bar,.rwh .bar{background:rgba(255,255,255,.2)}.rwc .bar i,.rwh .bar i{background:#f1c778}.rwc small{color:rgba(255,255,255,.75)}
+.rwt1{display:flex;align-items:center;gap:12px}.rwt1 svg{flex:none;color:#fff}
+.rwi{flex:1;min-width:0}.rwi b{display:block;font:700 17px Fraunces,serif;margin-bottom:6px}
+.rwm{display:flex;flex-direction:column;gap:4px;font-weight:700;font-size:15px;text-align:right}
+.rwm.rwbg{flex-direction:row;justify-content:space-around;font-size:18px;margin-top:12px;text-align:center}
+.rwt2{margin-top:12px}.rwt2 small{display:block;margin-top:4px}
+.rwb2{position:relative;overflow:visible}.rwb2 u{position:absolute;top:-3px;bottom:-3px;width:2px;background:#f1c778;border-radius:2px;text-decoration:none}
+.rwq{display:flex;align-items:center;gap:6px;margin-top:12px}
+.rwq i{font-style:normal;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:rgba(255,255,255,.14);font-size:17px;opacity:.55}
+.rwq i.ok{opacity:1;box-shadow:0 0 0 2px #f1c778;animation:rwp 1.4s infinite}.rwq i.cl{opacity:1;background:#f1c778}
+.rwq small{margin-left:6px}
+@keyframes rwp{50%{box-shadow:0 0 0 5px rgba(241,199,120,.35)}}
+.rwr{margin:10px 0 0;font-weight:600;color:#f1c778}
+.rwh .rwhr{display:flex;align-items:center;gap:16px}.rwh svg{color:#fff;flex:none}
+.rwo .rwb{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 24px)}
+.rwo .goal{margin:10px 0}.rwo .h{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+.rwch{display:flex;flex-wrap:wrap;gap:6px}
+.rwq2,.rwit{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--ln)}
+.rwq2:first-of-type{border-top:0}
+.rwq2 .e,.rwit .e{font-size:24px;width:34px;text-align:center;flex:none}
+.rwq2 .t,.rwit .t{flex:1;min-width:0}.rwq2 .t b,.rwit .t b{display:block;font-size:14px;margin-bottom:5px}
+.rwq2 small,.rwit small{color:var(--mu);font-size:12px}
+.rwq2.cl{opacity:.6}.rwq2.ok .bar i{background:#f1c778}
+.rwq2 .btn,.rwit .btn{padding:8px 11px;font-size:13px;white-space:nowrap}
+.rwbars{display:flex;gap:6px;align-items:flex-end;height:112px;margin-top:6px}
+.rwbars>div{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:2px}
+.rwbars i{display:block;width:100%;max-width:30px;background:var(--c2);border-radius:6px 6px 2px 2px}
+.rwbars i.m{background:#9bc7b6}.rwbars i.g{background:var(--go)}
+.rwbars small{font-size:11px;color:var(--mu)}.rwbars .now small:first-of-type{color:var(--tx);font-weight:700}
+.rwheat{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
+.hc{height:26px;border-radius:6px;background:var(--c2);display:block}
+.hc.l{background:#d9e8e0}.hc.m{background:#9bc7b6}.hc.g{background:var(--go)}.hc.sh{box-shadow:inset 0 0 0 2px #5aa9e6}.hc.now{outline:2px solid var(--tx);outline-offset:1px}
+.rwhist{display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-top:1px solid var(--ln);font-size:13px}
 </style>
 </head>
 <body>
@@ -295,8 +329,8 @@ const isObj=x=>x&&typeof x==='object'&&!Array.isArray(x);
 function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON.stringify(b[k]));else if(isObj(a[k])&&isObj(b[k]))fillDef(a[k],b[k])}return a}
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
-function save(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.10.26-3';
+function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
+const APP_VER='2026.10.26-4';
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -371,9 +405,7 @@ function scoreOf(k){const day=new Date(k+'T12:00').getDay(),dn=S.done[k]||{},rd=
   const c=bl().filter(b=>b.d.includes(day)&&!b.id.startsWith('uyqu')),tot=c.length+RULES.length+S.hab.length+tk_.length;
   const got=c.filter(b=>dn[b.id]).length+RULES.filter(r=>rd[r.id]).length+S.hab.filter(h=>hb[h.id]).length+tk_.filter(t=>t.x).length;
   return{tot,got,p:tot?Math.round(got/tot*100):0}}
-function xpInfo(){let xp=0,st=0,run=true;for(let i=0;i<120;i++){const s=scoreOf(dAgo(i));xp+=s.got;if(run){if(s.p>=50)st++;else if(i>0)run=false}}
-  const L=Math.floor(Math.sqrt(xp/12)),cur=L*L*12,nx=(L+1)*(L+1)*12;
-  return{xp,L:L+1,st,pc:Math.round((xp-cur)/(nx-cur)*100),name:['Boshlovchi','Qat‘iyatli','Intizomli','Mustahkam','Usta','Ustoz'][Math.min(5,L)]}}
+
 function vd(k){VD=k===dk()?null:k;render();scrollTo(0,0)}
 function pn(i){S.main=i;save()}
 function hozir(){
@@ -431,8 +463,7 @@ function hozir(){
   const bvs=[['j','📅 Jadval'],['m','✅ Kunlik'],['h','💚 Holat'],['t','📊 Tahlil']].map(x=>`<button class="${BV===x[0]?'on':''}" style="font-size:13px;padding:9px 2px" onclick="BV='${x[0]}';render()">${x[1]}</button>`).join('');
   return `<div class="top"><div>${head}</div>
   <svg width="64" height="64" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
-  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${mdBar()}
-  ${dueCard()}${uniCard()}${zkCard()}${rzCard()}${edForm()}${hero}${rit}${wkTop}${topC}${mgRow}${aiCard()}
+  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${edForm()}${isT?rwCard():''}${mdBar()} ${hero}${rit}${wkTop}${rzCard()}${topC}${dueCard()}${uniCard()}${zkCard()}${mgRow}${aiCard()}
   <div class="seg" style="margin-top:16px">${bvs}</div>${BV==='j'?jadval:BV==='m'?kunlik:BV==='h'?holat:tahlil}`;
 }
 
@@ -447,12 +478,11 @@ function maqsad(){
     return `<div class="goal" style="border-left:4px solid ${col}"><div class="h"><b style="font:700 19px Fraunces,serif">${x.e||GEM[i]||'🎯'} ${esc(x.t)}</b><span><button class="x" style="font-size:16px;${S.main===i?'color:var(--go)':''}" onclick="pn(${i})">${S.main===i?'★':'☆'}</button><button class="x" onclick="dg(${i})">×</button></span></div>
     <div class="gh"><svg width="64" height="64" viewBox="0 0 64 64"><circle cx="32" cy="32" r="26" fill="none" stroke="var(--c2)" stroke-width="7"/><circle cx="32" cy="32" r="26" fill="none" stroke="${col}" stroke-width="7" stroke-linecap="round" stroke-dasharray="${R*pc/100} ${R}" transform="rotate(-90 32 32)"/><text x="32" y="37" text-anchor="middle" font-size="14" font-weight="700" fill="var(--tx)">${pc}%</text></svg>
     <div>${x.why?`<p class="mu" style="margin:0 0 6px">Nega: ${esc(x.why)}</p>`:''}<span class="chip">${ms.filter(m=>m.x).length}/${ms.length} bosqich</span><span class="chip ${lf!==null&&lf<0?'bad':''}">${lf===null?'Muddat yo‘q':lf>=0?lf+' kun qoldi':'Muddat o‘tdi'}</span>${pc>=100&&ms.length?'<span class="chip" style="color:var(--ac)">Bajarildi</span>':''}</div></div>
-    ${mn?`<p style="margin:0 0 8px">Keyingi qadam: <b>${esc(mn.t)}</b></p>`:''}<div class="in"><input type="date" value="${x.dl||''}" onchange="gdl(${i},this.value)"></div>${ml}<div class="in"><input id="gm${i}" placeholder="Yangi bosqich" onkeydown="if(event.key==='Enter')gma(${i})"><button class="btn" onclick="gma(${i})">+</button></div>${ms.length?'':`<p class="mu" style="margin:0 0 6px">Foiz bosqichlardan o‘zi hisoblanadi. Pastga bosqich yoz yoki tayyorini tanla:</p><div class="chips">${(GT[x.t]||[]).map((t,j)=>`<button onclick="gmt(${i},${j})">${esc(t)}</button>`).join('')}</div>`}</div>`}).join('');
+    ${mn?`<p style="margin:0 0 8px">Keyingi qadam: <b>${esc(mn.t)}</b></p>`:''}<p style="margin:0 0 8px"><button class="chip" style="border:0;font:inherit" onclick="grw(${i})">🎁 ${x.rw?'Mukofot: '+esc(x.rw):'Mukofot qo‘sh'}</button></p><div class="in"><input type="date" value="${x.dl||''}" onchange="gdl(${i},this.value)"></div>${ml}<div class="in"><input id="gm${i}" placeholder="Yangi bosqich" onkeydown="if(event.key==='Enter')gma(${i})"><button class="btn" onclick="gma(${i})">+</button></div>${ms.length?'':`<p class="mu" style="margin:0 0 6px">Foiz bosqichlardan o‘zi hisoblanadi. Pastga bosqich yoz yoki tayyorini tanla:</p><div class="chips">${(GT[x.t]||[]).map((t,j)=>`<button onclick="gmt(${i},${j})">${esc(t)}</button>`).join('')}</div>`}</div>`}).join('');
   const av=S.goals.length?Math.round(sp_/S.goals.length):0,mm=av>=100?'Hammasi bajarildi. Yangi maqsad qo‘y!':av>=60?'Marraga yaqinsan, to‘xtama.':av>=20?'Yaxshi ketyapsan, bosqichma-bosqich.':'Yo‘l endi boshlandi. Birinchi bosqichni bugun yop.';
   return `<p class="mu" style="margin:0">Maqsadlar</p><h1 class="gr">Katta orzular, kichik bosqichlar</h1>
   <section class="hero" style="margin-top:12px"><p class="lab">Umumiy jarayon</p><h1 style="font-size:44px">${av}%</h1><div class="bar" style="margin:8px 0"><i style="width:${av}%"></i></div><p class="mu">${S.goals.length} maqsad, ${td_}/${tm} bosqich bajarilgan${nd!==null?`. Eng yaqin muddat: ${nd} kun`:''}. ${mm}</p></section>
-  <p class="mu" style="margin:14px 0 8px">Yulduzcha bosilgan maqsad Hozir ekranida asosiy maqsad bo‘lib chiqadi.</p>${g}
-  <div class="goal"><b>Yangi maqsad</b><div class="in" style="margin-top:8px"><input id="ng" placeholder="Maqsad nomi"></div><div class="in"><input id="nw" placeholder="Nega kerak? (ixtiyoriy)"></div><button class="btn" onclick="addG()">Qo‘shish</button></div>
+  <p class="mu" style="margin:14px 0 8px">Yulduzcha bosilgan maqsad Hozir ekranida asosiy maqsad bo‘lib chiqadi.</p>${(()=>{const X=xpInfo();return `<button class="row" style="margin:10px 0" onclick="rwOpen()"><span class="t">🏆 Yo‘l: ${X.L}-daraja, 🔥 ${X.st} kun, 🪙 ${rwTotals().coins}<br><small class="mu">Bosqich tugatsang +${RWP.ms} XP</small></span><span class="tm">ochish</span></button>`})()}${g} <div class="goal"><b>Yangi maqsad</b><div class="in" style="margin-top:8px"><input id="ng" placeholder="Maqsad nomi"></div><div class="in"><input id="nw" placeholder="Nega kerak? (ixtiyoriy)"></div><button class="btn" onclick="addG()">Qo‘shish</button></div>
   `;
 }
 
@@ -659,8 +689,7 @@ function renderCore(){
   const hs={};if(document.querySelectorAll)document.querySelectorAll('.hg').forEach(e=>{hs[e.dataset.k]=e.scrollLeft});
   const sy=window.scrollY||0;
   a.innerHTML=stick((SO?'':topbar())+v);
-  drawNav();
-  fixGrid(hs);fixSeg(ss);
+  drawNav();fixGrid(hs);fixSeg(ss);if(RWO)rwDraw();
   if(sy>0)window.scrollTo(0,sy);
 }
 
@@ -716,9 +745,9 @@ const SP=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,
 const SL=i=>i<113?(SP[i+1]-SP[i]||0.5):0.5;
 const TOT=SN.reduce((a,_,i)=>a+SL(i),0),r1=x=>Math.round(x*10)/10;
 const mdone=()=>SN.reduce((a,_,i)=>a+Math.min(S.q.m[i]||0,SL(i)),0);
-function setM(i,v){const q=S.q,o=q.m[i]||0;v=Math.max(0,Math.min(SL(i),v));q.m[i]=v;if(o<=0&&v>0){q.ord.push(i);initRs(i)}if(v<=0){q.ord=q.ord.filter(x=>x!==i);if(q.rs)delete q.rs[i]}save()}
+function setM(i,v){const q=S.q,o=q.m[i]||0;v=Math.max(0,Math.min(SL(i),v));q.m[i]=v;rwNy(v-o);if(o<=0&&v>0){q.ord.push(i);initRs(i)}if(v<=0){q.ord=q.ord.filter(x=>x!==i);if(q.rs)delete q.rs[i]}save()}
 const sp=(i,d)=>setM(i,(S.q.m[i]||0)+d),sf=i=>setM(i,(S.q.m[i]||0)>=SL(i)?0:SL(i)),sc=i=>{S.q.cur=i;save()};
-function addP(n){const q=S.q;let i=q.cur;while(n>0&&i<114){const a=Math.min(n,SL(i)-(q.m[i]||0));if(a>0){if(!(q.m[i]>0)){q.ord.push(i);initRs(i)}q.m[i]=(q.m[i]||0)+a;n-=a}if((q.m[i]||0)>=SL(i))i++;else break}q.cur=Math.min(i,113);save()}
+function addP(n){const q=S.q;let i=q.cur;while(n>0&&i<114){const a=Math.min(n,SL(i)-(q.m[i]||0));if(a>0){if(!(q.m[i]>0)){q.ord.push(i);initRs(i)}q.m[i]=(q.m[i]||0)+a;rwNy(a);n-=a}if((q.m[i]||0)>=SL(i))i++;else break}q.cur=Math.min(i,113);save()}
 function gs(f,d,min){S.q[f]=Math.max(min,S.q[f]+d);save()}
 function rvPlan(){const q=S.q,o=q.ord;if(!o.length)return[];const a=[],j=q.rv%o.length;let s=0;for(let c=0;c<o.length&&s<q.rg;c++){const i=o[(j+c)%o.length];a.push(i);s+=Math.min(q.m[i]||0,SL(i))}return a}
 function rvDone(){const q=S.q,a=rvPlan();if(!a.length)return;const k=dk();q.rd[k]=r1((q.rd[k]||0)+a.reduce((s,i)=>s+Math.min(q.m[i]||0,SL(i)),0));q.rv=(q.rv+a.length)%q.ord.length;save()}
@@ -839,10 +868,103 @@ function mushaf(){const q=mq(),last=q.last||1;
   return `<section class="goal"><p class="mu" style="margin:0">DAVOM ETISH</p><h2 style="margin:4px 0 0">${esc(SN[mfSurahAt(last)-1])} · ${last}-bet</h2><button class="big" style="margin-top:10px" onclick="mfOpen(${last})">📖 Mushafni ochish</button>${rec?`<div class="mfrc">${rec}</div>`:''}</section><div class="seg sc">${seg}</div>${body}<p class="mu" style="font-size:11px;margin-top:14px">Matn va shrift: Madina mushafi, Qur’on bosmaxonasi majmuasi (KFGQPC). Shaxsiy foydalanish uchun. Tafsilot: fonts/FONTS-NOTICE.txt</p>`}
 function mfBmDel(p){const q=mq();q.bm=q.bm.filter(x=>x!==p);save()}
 
+/*RW*/// ================= YO‘L: ochko (XP), daraja, seriya, topshiriqlar, tanga va mukofotlar do‘koni =================
+// Hammasi mavjud ma’lumotlardan HISOBLANADI (alohida saqlanmaydi): shuning uchun qurilmalar orasida chalkashmaydi, o‘tgan kunlar ham hisobga kiradi.
+const RWP={blk:4,rule:6,hab:8,task:10,top:20,pray:12,zk:3,hatm:2,rev:3,newp:25,gym:30,close:10,water:1,fast:20,word:1,ms:40,fm:1};
+const RWCAP={zk:10,hatm:20,rev:15,newp:5,word:20,fm:30};
+const DAYMIN=60,DAYGOAL=100,QXP=25,QCOIN=20,WKXP=50,WKCOIN=100,SHCOST=60,RWDAYS=800;
+const RW_L=[[1,'Boshlovchi'],[3,'Qat’iyatli'],[5,'Intizomli'],[8,'Mustahkam'],[12,'Usta'],[17,'Ustoz'],[25,'Afsona']];
+const RW_SHOP=[{id:'s1',e:'☕',t:'Maxsus choy yoki kofe',c:30},{id:'s2',e:'🍔',t:'Sevimli ovqat',c:80},{id:'s3',e:'🎬',t:'Kino yoki serial kechasi',c:120},{id:'s4',e:'🛍',t:'Yangi kiyim yoki aksessuar',c:400},{id:'s5',e:'🎁',t:'O‘zingga katta sovg‘a',c:1500}];
+let RWM={},RWX=null,RWT=null,RWO=false;
+function rwReset(){RWM={};RWX=null;RWT=null}
+const rw=()=>{const r=S.rw=S.rw||{};r.sh=r.sh||0;r.su=r.su||[];r.q=r.q||{};r.buy=r.buy||[];r.wk=r.wk||{};if(!r.shop)r.shop=RW_SHOP.map(x=>({...x}));return r};
+const rwName=L=>RW_L.slice().reverse().find(x=>L>=x[0])[1];
+const rwLevel=xp=>{const L=Math.floor(Math.sqrt(Math.max(0,xp)/100))+1,cur=(L-1)*(L-1)*100,nx=L*L*100;return{L,cur,nx,pc:Math.round((xp-cur)/(nx-cur)*100),name:rwName(L)}};
+function rwBuild(){const W={},G=new Set(),M={};S.ie.words.forEach(w=>{if(w.t){const d=new Date(w.t).toLocaleDateString('sv');W[d]=(W[d]||0)+1}});S.gym.log.forEach(x=>G.add(x.d));S.goals.forEach(g=>(g.ms||[]).forEach(m=>{if(m.x&&m.xd)M[m.xd]=(M[m.xd]||0)+1}));return{W,G,M}}
+const rwX=()=>RWX||(RWX=rwBuild());
+function rwNy(d){const q=S.q,k=dk();q.ny=q.ny||{};q.ny[k]=Math.max(0,Math.round(((q.ny[k]||0)+d)*10)/10)}
+const rwNm=k=>Object.values(((S.nm||{}).d||{})[k]||{}).filter(v=>v===1).length;
+function dayPts(k){if(RWM[k])return RWM[k];const X=rwX(),P=[],add=(l,n,p)=>{n=Math.round(n*p);if(n>0)P.push([l,n])};
+  const day=new Date(k+'T12:00').getDay(),dn=S.done[k]||{},rd=S.rules[k]||{},hb=S.hb[k]||{},q=S.q;
+  add('Reja',bl().filter(b=>b.d.includes(day)&&!b.id.startsWith('uyqu')&&dn[b.id]).length,RWP.blk);
+  add('Qoidalar',RULES.filter(r=>rd[r.id]).length,RWP.rule);
+  add('Odatlar',S.hab.filter(h=>hb[h.id]).length,RWP.hab);
+  add('Vazifalar',(S.tasks[k]||[]).filter(t=>t.x).length,RWP.task);
+  add('Top-3',(S.top[k]||[]).filter(t=>t.x).length,RWP.top);
+  add('Namoz',rwNm(k),RWP.pray);
+  const dz=((S.dz||{}).d||{})[k]||{};let zn=0;for(const key in dz){const it=DU.find(x=>x.id===key.split('@')[0]);if(it&&dz[key]>=it.k)zn++}add('Zikr',Math.min(zn,RWCAP.zk),RWP.zk);
+  add('Hatm',Math.min((q.hd||{})[k]||0,RWCAP.hatm),RWP.hatm);add('Takror',Math.min((q.rd||{})[k]||0,RWCAP.rev),RWP.rev);add('Yangi sahifa',Math.min((q.ny||{})[k]||0,RWCAP.newp),RWP.newp);
+  add('Zal',X.G.has(k)?1:0,RWP.gym);add('Kunni yopish',(S.close[k]||{}).d?1:0,RWP.close);add('Suv',Math.min(8,S.water[k]||0),RWP.water);add('Ro‘za',((S.rz||{}).fast||{})[k]===1?1:0,RWP.fast);
+  add('Lug‘at',Math.min(X.W[k]||0,RWCAP.word),RWP.word);add('Bosqich',X.M[k]||0,RWP.ms);add('Fokus',Math.min(Math.floor((S.fm[k]||0)/5),RWCAP.fm),RWP.fm);
+  return RWM[k]={t:P.reduce((a,x)=>a+x[1],0),p:P}}
+function rwTotals(){if(RWT)return RWT;let xp=0;for(let i=0;i<RWDAYS;i++)xp+=dayPts(dAgo(i)).t;const r=rw();let bq=0,chest=0;for(const k in r.q){bq+=(r.q[k].c||[]).length;if(r.q[k].x)chest++}const wk=Object.keys(r.wk).length;xp+=bq*QXP+wk*WKXP;const earned=Math.floor(xp/10)+chest*QCOIN+wk*WKCOIN,spent=r.buy.reduce((a,b)=>a+(+b.c||0),0);return RWT={xp,earned,spent,coins:earned-spent,bq,chest,wk}}
+const rwOk=k=>dayPts(k).t>=DAYMIN||rw().su.includes(k);
+function rwStreak(){let st=rwOk(dk())?1:0;for(let i=1;i<RWDAYS;i++){if(rwOk(dAgo(i)))st++;else break}return st}
+function rwBest(){let b=0,c=0;for(let i=RWDAYS-1;i>=0;i--){if(rwOk(dAgo(i))){c++;b=Math.max(b,c)}else c=0}return b}
+function rwAuto(){const r=rw(),T=dk();if(r.au===T)return;r.au=T;const Y=dAgo(1);if(r.sh>0&&!rwOk(Y)&&rwOk(dAgo(2))){r.su.push(Y);r.sh--;qsave();toast('🛡 Qalqon seriyangni saqladi')}}
+function xpInfo(){const T=rwTotals(),v=rwLevel(T.xp);return{xp:T.xp,L:v.L,st:rwStreak(),pc:v.pc,name:v.name,cur:v.cur,nx:v.nx}}
+// ---- kunlik topshiriqlar: o‘z sozlamalaringdan tanlanadi ----
+const dzAll=c=>{try{return dzList(c).length>0&&dzDone(c)>=dzList(c).length}catch(e){return false}};
+const RWQ=[
+ {id:'hifz',e:'📖',t:()=>'Bugun '+S.q.ppd+' bet yodla',g:()=>S.q.ppd,n:()=>(S.q.ny||{})[dk()]||0,ap:()=>S.q.ppd>0&&S.q.cur<114},
+ {id:'top',e:'🎯',t:()=>'Top-3 vazifaning hammasini bajar',g:()=>(S.top[dk()]||[]).length,n:()=>(S.top[dk()]||[]).filter(x=>x.x).length,ap:()=>(S.top[dk()]||[]).length>0},
+ {id:'pray',e:'🕌',t:()=>'5 vaqt namozni o‘qi',g:()=>5,n:()=>rwNm(dk()),ap:()=>true},
+ {id:'zikr',e:'🤲',t:()=>'Zikr to‘plamini tugat',g:()=>1,n:()=>dzAll('sb')||dzAll('sh')?1:0,ap:()=>true},
+ {id:'rev',e:'🔁',t:()=>'Yodlaganlaringni takrorla',g:()=>1,n:()=>((S.q.rd||{})[dk()]||0)>0?1:0,ap:()=>S.q.ord.length>0},
+ {id:'gym',e:'💪',t:()=>'Mashq qil (zal yoki uy)',g:()=>1,n:()=>S.gym.log.some(x=>x.d===dk())?1:0,ap:()=>{const p=S.gym.plan[new Date().getDay()];return !!p&&p.place!=='rest'}},
+ {id:'word',e:'🔤',t:()=>'Lug‘atdan 10 ta so‘zni takrorla',g:()=>10,n:()=>rwX().W[dk()]||0,ap:()=>S.ie.words.length>=10},
+ {id:'hab',e:'✅',t:()=>'Hamma odatlarni bajar',g:()=>S.hab.length,n:()=>S.hab.filter(h=>(S.hb[dk()]||{})[h.id]).length,ap:()=>S.hab.length>0},
+ {id:'water',e:'💧',t:()=>'8 stakan suv ich',g:()=>8,n:()=>S.water[dk()]||0,ap:()=>true},
+ {id:'goal',e:'🏁',t:()=>'Maqsad uchun bitta bosqichni bajar',g:()=>1,n:()=>rwX().M[dk()]||0,ap:()=>S.goals.some(g=>(g.ms||[]).some(m=>!m.x))},
+ {id:'close',e:'🌙',t:()=>'Kunni yop va o‘zingni baho',g:()=>1,n:()=>(S.close[dk()]||{}).d?1:0,ap:()=>true}];
+function rwQuests(k){const pool=RWQ.filter(q=>{try{return q.ap()}catch(e){return false}});let h=0;for(const c of k)h=(h*31+c.charCodeAt(0))>>>0;
+  const rnd=()=>{h=(Math.imul(h,1664525)+1013904223)>>>0;return h/4294967296};
+  const first=pool.find(q=>q.id==='hifz')||pool.find(q=>q.id==='top')||pool[0],pick=first?[first]:[];if(first)pool.splice(pool.indexOf(first),1);
+  while(pick.length<3&&pool.length)pick.push(pool.splice(Math.floor(rnd()*pool.length),1)[0]);return pick}
+function rwClaim(id){const k=dk(),r=rw(),Qs=rwQuests(k),Q=Qs.find(q=>q.id===id);if(!Q||Q.n()<Q.g())return;const e=r.q[k]=r.q[k]||{c:[],x:0};if(e.c.includes(id))return;e.c.push(id);
+  if(Qs.every(q=>e.c.includes(q.id))&&!e.x){e.x=1;confetti();toast('🎁 Kun sandig‘i ochildi: +'+QCOIN+' tanga!')}else toast('+'+QXP+' XP · '+Q.t());save()}
+const rwWkKey=()=>{const d=new Date();d.setDate(d.getDate()-((d.getDay()+6)%7));return d.toLocaleDateString('sv')};
+function rwWeek(){const s=rwWkKey(),T=dk(),days=[];let n=0;for(let i=0;i<7;i++){const d=new Date(s+'T12:00');d.setDate(d.getDate()+i);const k=d.toLocaleDateString('sv'),v=k>T?null:dayPts(k).t;days.push([k,v]);if(v!==null&&v>=DAYGOAL)n++}return{key:s,n,g:5,days,claimed:!!rw().wk[s]}}
+function rwClaimWk(){const w=rwWeek();if(w.claimed||w.n<w.g)return;rw().wk[w.key]=1;confetti();toast('🏆 Haftalik chellenj: +'+WKCOIN+' tanga, +'+WKXP+' XP!');save()}
+// ---- do‘kon ----
+function rwBuy(id){const r=rw(),it=r.shop.find(x=>x.id===id),T=rwTotals();if(!it)return;if(T.coins<it.c){toast('Tanga yetmaydi: yana '+(it.c-T.coins)+' kerak');return}if(!confirm(it.e+' '+it.t+' — '+it.c+' tanga. Olasanmi?'))return;r.buy.push({id:Date.now(),i:it.id,e:it.e,t:it.t,c:it.c,d:dk()});confetti();toast('🎉 '+it.t+': bu sening halol mehnating mukofoti!');save()}
+function rwShield(){const r=rw(),T=rwTotals();if(T.coins<SHCOST){toast('Tanga yetmaydi: yana '+(SHCOST-T.coins)+' kerak');return}r.sh++;r.buy.push({id:Date.now(),i:'shield',e:'🛡',t:'Seriya qalqoni',c:SHCOST,d:dk(),k:'sh'});toast('🛡 Qalqon olindi');save()}
+function rwUndo(id){const r=rw(),b=r.buy.find(x=>x.id===id);if(!b||!confirm('Bekor qilinsinmi? '+b.c+' tanga qaytariladi.'))return;if(b.k==='sh')r.sh=Math.max(0,r.sh-1);r.buy=r.buy.filter(x=>x.id!==id);save()}
+function rwItemAdd(){const e=(V('rwe')||'').trim()||'🎁',t=V('rwt').trim(),c=Math.round(+V('rwc'));if(!t||!(c>0)){toast('Nom va narxni (tanga) yozing');return}rw().shop.push({id:'u'+Date.now(),e,t,c});save()}
+function rwItemDel(id){if(confirm('Mukofot ro‘yxatdan o‘chirilsinmi?')){const r=rw();r.shop=r.shop.filter(x=>x.id!==id);save()}}
+function rwItemEdit(id){const it=rw().shop.find(x=>x.id===id);if(!it)return;const c=prompt('Narxi (tanga):',it.c);if(c===null)return;const n=Math.round(+c);if(n>0){it.c=n;save()}}
+function grw(i){const v=prompt('Maqsadga erishsang, o‘zingga qanday mukofot berasan?',S.goals[i].rw||'');if(v===null)return;S.goals[i].rw=v.trim().slice(0,80);save()}
+// ---- Bugun ekranidagi kartochka ----
+function rwRing(pc,sz,txt,col){const R=sz/2-6,C=2*Math.PI*R;return `<svg width="${sz}" height="${sz}" viewBox="0 0 ${sz} ${sz}"><circle cx="${sz/2}" cy="${sz/2}" r="${R}" fill="none" stroke="rgba(128,128,128,.28)" stroke-width="6"/><circle cx="${sz/2}" cy="${sz/2}" r="${R}" fill="none" stroke="${col||'var(--go)'}" stroke-width="6" stroke-linecap="round" stroke-dasharray="${C*Math.min(100,pc)/100} ${C}" transform="rotate(-90 ${sz/2} ${sz/2})"/><text x="${sz/2}" y="${sz/2+6}" text-anchor="middle" font-size="${sz>70?22:17}" font-weight="700" fill="currentColor">${txt}</text></svg>`}
+function rwCard(){if(!S.ob&&!S.ts)return '';rwAuto();const X=xpInfo(),k=dk(),t=dayPts(k).t,Qs=rwQuests(k),e=rw().q[k]||{c:[]},T=rwTotals(),hr=new Date().getHours();
+  const risk=X.st>0&&t<DAYMIN&&hr>=17?`<p class="rwr">🔥 Seriyani saqlash uchun yana ${DAYMIN-t} XP kerak</p>`:'';
+  return `<section class="rwc" onclick="rwOpen()" role="button" tabindex="0" aria-label="Yo‘l: daraja, seriya va mukofotlar"><div class="rwt1">${rwRing(X.pc,64,X.L,'#f1c778')}<div class="rwi"><b>${esc(X.name)}</b><div class="bar"><i style="width:${X.pc}%"></i></div><small>Keyingi darajagacha ${X.nx-X.xp} XP</small></div><div class="rwm"><span>🔥 ${X.st}</span><span>🪙 ${T.coins}</span></div></div><div class="rwt2"><div class="bar rwb2"><i style="width:${Math.min(100,t)}%"></i><u style="left:${DAYMIN}%"></u></div><small>Bugun <b>${t}</b>/${DAYGOAL} XP</small></div><div class="rwq">${Qs.map(q=>`<i class="${e.c.includes(q.id)?'cl':q.n()>=q.g()?'ok':''}">${q.e}</i>`).join('')}<small>Topshiriqlar ${e.c.length}/${Qs.length}${Qs.some(q=>q.n()>=q.g()&&!e.c.includes(q.id))?' · 🎁 olinmagan':''}</small></div>${risk}</section>`}
+// ---- Yo‘l ekrani ----
+function rwOpen(){if(RWO)return;RWO=true;const el=document.createElement('div');el.id='rw';el.className='mfo rwo';el.innerHTML='<div class="mft"><button class="x" onclick="rwClose()" aria-label="Yopish">✕</button><div class="mfti"><b style="font:700 20px Fraunces,serif">Yo‘l</b><small>ochko · daraja · mukofot</small></div><span style="width:38px"></span></div><div class="mfp rwb" id="rwb"></div>';document.body.appendChild(el);ovLock(el);rwDraw()}
+function rwClose(){RWO=false;ovUnlock();const e=$('#rw');if(e)e.remove();render()}
+function rwDraw(){const b=$('#rwb');if(!b)return;const X=xpInfo(),T=rwTotals(),k=dk(),dp=dayPts(k),Qs=rwQuests(k),r=rw(),e=r.q[k]||{c:[],x:0},W=rwWeek(),mg=S.goals[S.main],best=rwBest(),ST=X.st;
+  const hero=`<section class="hero rwh"><div class="rwhr">${rwRing(X.pc,92,X.L,'#f1c778')}<div><p class="lab">${esc(X.name)}</p><h1>${X.L}-daraja</h1><p>${X.xp} XP · keyingi darajaga ${X.nx-X.xp} XP</p></div></div><div class="rwm rwbg"><span>🔥 ${ST} kun</span><span>🪙 ${T.coins}</span><span>🛡 ${r.sh}</span></div></section>`;
+  const parts=dp.p.length?dp.p.map(x=>`<span class="chip">${esc(x[0])} +${x[1]}</span>`).join(''):'<span class="mu">Hali ochko yo‘q. Birinchi ishni bajar!</span>';
+  const qh=Qs.map(q=>{const g=q.g(),n=Math.min(q.n(),g),ok=q.n()>=g,cl=e.c.includes(q.id);return `<div class="rwq2 ${cl?'cl':ok?'ok':''}"><span class="e">${q.e}</span><div class="t"><b>${esc(q.t())}</b><div class="bar"><i style="width:${Math.round(n/g*100)}%"></i></div><small>${Math.round(n*10)/10}/${g}</small></div>${cl?`<span class="chip" style="color:var(--ac)">✓ +${QXP}</span>`:ok?`<button class="btn" onclick="rwClaim('${q.id}')">+${QXP} XP</button>`:''}</div>`}).join('');
+  const today=`<section class="goal"><div class="h"><b>Bugun</b><span class="mu">${dp.t}/${DAYGOAL} XP</span></div><div class="bar rwb2"><i style="width:${Math.min(100,dp.t)}%"></i><u style="left:${DAYMIN}%"></u></div><p class="mu" style="margin:6px 0 10px">${dp.t>=DAYGOAL?'Kun maqsadi bajarildi ⚡':dp.t>=DAYMIN?'Seriya saqlandi. Yana '+(DAYGOAL-dp.t)+' XP: kun maqsadi.':'Seriya uchun yana '+(DAYMIN-dp.t)+' XP kerak.'}</p><div class="rwch">${parts}</div></section>
+  <section class="goal"><div class="h"><b>Kun topshiriqlari</b><span class="mu">${e.c.length}/${Qs.length}</span></div>${qh}<p class="mu" style="margin:8px 0 0">${e.x?'🎁 Kun sandig‘i ochildi (+'+QCOIN+' tanga).':'Hammasini olsang: 🎁 sandiq +'+QCOIN+' tanga. Har topshiriq +'+QXP+' XP.'}</p></section>`;
+  const mx=Math.max(DAYGOAL,...W.days.map(d=>d[1]||0)),DN=['Du','Se','Ch','Pa','Ju','Sh','Ya'];
+  const wk=`<section class="goal"><div class="h"><b>Bu hafta</b><span class="mu">${W.n}/${W.g} kun ≥${DAYGOAL} XP</span></div><div class="rwbars">${W.days.map((d,i)=>`<div class="${d[0]===k?'now':''}"><i style="height:${d[1]===null?0:Math.max(3,Math.round(d[1]/mx*70))}px" class="${d[1]!==null&&d[1]>=DAYGOAL?'g':d[1]!==null&&d[1]>=DAYMIN?'m':''}"></i><small>${DN[i]}</small><small>${d[1]===null?'':d[1]}</small></div>`).join('')}</div>${W.claimed?`<p class="mu" style="margin:8px 0 0">🏆 Haftalik chellenj olindi.</p>`:W.n>=W.g?`<button class="big" style="margin-top:8px" onclick="rwClaimWk()">🏆 Chellenjni ol: +${WKCOIN} tanga</button>`:`<p class="mu" style="margin:8px 0 0">Haftada ${W.g} kun ${DAYGOAL} XP ga yetsang: 🏆 +${WKCOIN} tanga, +${WKXP} XP.</p>`}</section>`;
+  const heat=[];for(let i=34;i>=0;i--){const kk=dAgo(i),v=dayPts(kk).t;heat.push(`<i class="hc ${v>=DAYGOAL?'g':v>=DAYMIN?'m':v>0?'l':''} ${r.su.includes(kk)?'sh':''} ${kk===k?'now':''}" title="${kk}: ${v} XP"></i>`)}
+  const st=`<section class="goal"><div class="h"><b>Seriya</b><span class="mu">eng uzun: ${best} kun</span></div><div class="rwheat">${heat.join('')}</div><p class="mu" style="margin:8px 0">Kuniga kamida ${DAYMIN} XP = seriya davom etadi. 🛡 qalqon bir o‘tkazib yuborilgan kunni avtomatik saqlaydi.</p><button class="btn s" onclick="rwShield()">🛡 Qalqon olish: ${SHCOST} tanga (hozir ${r.sh} ta)</button></section>`;
+  const gp=mg?(()=>{const ms=mg.ms||[],pc=gpct(mg),nx=ms.find(m=>!m.x),lf=mg.dl?Math.ceil((new Date(mg.dl)-new Date(k))/864e5):null;return `<section class="goal" style="border-left:4px solid var(--go)"><div class="h"><b>🏁 Asosiy maqsad</b><span class="mu">${pc}%</span></div><p style="margin:0 0 6px;font:700 17px Fraunces,serif">${esc(mg.e||'')} ${esc(mg.t)}</p><div class="bar"><i style="width:${pc}%"></i></div><p class="mu" style="margin:8px 0 4px">${nx?'Keyingi bosqich: <b>'+esc(nx.t)+'</b> (+'+RWP.ms+' XP)':ms.length?'Hamma bosqich bajarilgan!':'Bosqichlar qo‘shilmagan. Maqsadlar bo‘limida qo‘sh.'}${lf!==null?' · '+(lf>=0?lf+' kun qoldi':'muddat o‘tdi'):''}</p>${mg.rw?`<p style="margin:0 0 8px">🎁 Mukofot: <b>${esc(mg.rw)}</b></p>`:`<p class="mu" style="margin:0 0 8px">Mukofot belgilanmagan.</p>`}<div class="in"><button class="btn s" onclick="grw(${S.main})">🎁 Mukofotni o‘zgartirish</button><button class="btn s" onclick="rwClose();go('m')">Maqsadlar</button></div></section>`})():`<section class="goal"><b>🏁 Asosiy maqsad yo‘q</b><p class="mu">Maqsadlar bo‘limida maqsad qo‘yib, yulduzchani bos: u shu yerda ko‘rinadi.</p><button class="btn s" onclick="rwClose();go('m')">Maqsad qo‘yish</button></section>`;
+  const shop=`<section class="goal"><div class="h"><b>🪙 Mukofotlar do‘koni</b><span class="mu">${T.coins} tanga</span></div><p class="mu" style="margin:0 0 8px">Har 10 XP = 1 tanga. Mukofotlarni o‘zing belgila, ularni halol topganingdan keyin ol.</p>${r.shop.map(it=>{const ok=T.coins>=it.c;return `<div class="rwit ${ok?'ok':''}"><span class="e">${esc(it.e)}</span><div class="t"><b>${esc(it.t)}</b><div class="bar"><i style="width:${Math.min(100,Math.round(T.coins/it.c*100))}%"></i></div><small>${it.c} tanga${ok?'':' · yana '+(it.c-T.coins)}</small></div><button class="btn ${ok?'':'s'}" ${ok?'':'style="opacity:.55"'} onclick="rwBuy('${it.id}')">Olish</button><button class="x" onclick="rwItemEdit('${it.id}')" aria-label="Narxni o‘zgartirish">✎</button><button class="x" onclick="rwItemDel('${it.id}')" aria-label="O‘chirish">✕</button></div>`}).join('')}<div class="in" style="margin-top:10px"><input id="rwe" placeholder="🎁" style="max-width:54px;text-align:center"><input id="rwt" placeholder="Yangi mukofot nomi"><input id="rwc" type="number" inputmode="numeric" placeholder="tanga" style="max-width:84px"></div><button class="btn" onclick="rwItemAdd()">+ Mukofot qo‘shish</button>${r.buy.length?`<p class="mu" style="margin:14px 0 6px">Olingan mukofotlar</p>${r.buy.slice().reverse().slice(0,8).map(x=>`<div class="rwhist"><span>${esc(x.e)} ${esc(x.t)} <small class="mu">${esc(x.d)}</small></span><span>−${x.c} <button class="x" onclick="rwUndo(${x.id})" aria-label="Bekor qilish">↩</button></span></div>`).join('')}`:''}</section>`;
+  const rules=`<details class="sd"><summary>ℹ️ Ochkolar qanday hisoblanadi</summary><p class="mu" style="margin:6px 0">Namoz +${RWP.pray}, Top-3 vazifa +${RWP.top}, yangi yodlangan bet +${RWP.newp} (kuniga ${RWCAP.newp} tagacha), zal +${RWP.gym}, odat +${RWP.hab}, vazifa +${RWP.task}, maqsad bosqichi +${RWP.ms}, ro‘za +${RWP.fast}, kunni yopish +${RWP.close}, qoida +${RWP.rule}, reja bloki +${RWP.blk}, takror +${RWP.rev}/bet (${RWCAP.rev} gacha), zikr +${RWP.zk}, hatm +${RWP.hatm}/bet, suv +1/stakan, lug‘at +1/so‘z (${RWCAP.word} gacha), fokus +1 har 5 daqiqaga. Daraja: 100, 400, 900 XP... (har daraja avvalgisidan qiyinroq). Hammasi sening belgilaganlaringdan avtomatik hisoblanadi.</p></details>`;
+  b.innerHTML=hero+today+wk+st+gp+shop+`<section class="goal">${badgeHtml()}</section>`+rules}
+
+const QGX={q:['u','y','t','h','a'],i:['n','z','d','r']};let QGL={q:'y',i:'n'};const qgOf=t=>QGX.i.includes(t)?'i':'q';
 function quran(){
   if(QT==='u'&&!mfOn())QT='y';
-  const seg=[...(mfOn()?[['u','📖 Mushaf']]:[]),['y','🧠 Yodlash'],['t','🔁 Takror'],['h','📖 Hatm'],['z','📿 Zikr'],['n','🕌 Namoz'],['r','🌙 Ramazon'],['d','🤲 Duolar'],['a','🎧 Tinglash']].map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Qur‘on</p></div><div class="seg sc" style="margin-top:12px">${seg}</div>${QT==='u'?mushaf():QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():QT==='r'?ramazon():QT==='d'?duolar():QT==='a'?qaView():zikr()}`}
+  const gq=qgOf(QT);QGL[gq]=QT;
+  const ALL=[['u','📖 Mushaf'],['y','🧠 Yodlash'],['t','🔁 Takror'],['h','📖 Hatm'],['a','🎧 Tinglash'],['n','🕌 Namoz'],['z','📿 Zikr'],['d','🤲 Duolar'],['r','🌙 Ramazon']];
+  const seg=ALL.filter(x=>QGX[gq].includes(x[0])&&(x[0]!=='u'||mfOn())).map(x=>`<button class="${QT===x[0]?'on':''}" onclick="QT='${x[0]}';render()">${x[1]}</button>`).join('');
+  const gs=`<div class="seg" style="margin-top:12px"><button class="${gq==='q'?'on':''}" onclick="QT=QGL.q;render()">📖 Qur‘on</button><button class="${gq==='i'?'on':''}" onclick="QT=QGL.i;render()">🕌 Ibodat</button></div>`;
+  return `<div class="top"><p class="d">${gq==='q'?'Qur‘on':'Ibodat'}</p></div>${gs}<div class="seg sc" style="margin-top:8px">${seg}</div>${QT==='u'?mushaf():QT==='y'?yod():QT==='t'?tak():QT==='h'?hatm():QT==='n'?namoz():QT==='r'?ramazon():QT==='d'?duolar():QT==='a'?qaView():zikr()}`}
 const J=[1,22,42,62,82,102,121,142,162,182,201,222,242,262,282,302,322,342,362,382,402,422,442,462,482,502,522,542,562,582,605];
 const AY=[7,286,200,176,120,165,206,75,129,109,123,111,43,52,99,128,111,110,98,135,112,78,118,64,77,227,93,88,69,60,34,30,73,54,45,83,182,88,75,85,54,53,89,59,37,35,38,29,18,45,60,49,62,55,78,96,29,22,24,13,14,11,11,18,12,12,30,52,52,44,28,28,20,56,40,31,50,40,46,42,29,19,36,25,22,17,19,26,30,20,15,21,11,8,8,19,5,8,8,11,11,8,3,9,5,4,7,3,6,3,5,4,5,6];
 function juzMem(j){let s=0;SN.forEach((_,i)=>{const d=Math.min(S.q.m[i]||0,SL(i));if(d>0){const a=SP[i];s+=Math.max(0,Math.min(a+d,J[j+1])-Math.max(a,J[j]))}});return s}
@@ -921,7 +1043,7 @@ function addH(){const v=$('#nh').value.trim();if(!v)return;const e=($('#ne')&&$(
 function delH(i){if(confirm('Odat o‘chirilsinmi?')){S.hab.splice(i,1);save()}}
 function hst(id){let n=0;for(let i=0;i<400;i++){if((S.hb[dAgo(i)]||{})[id])n++;else if(i>0)break}return n}
 const gpct=g=>g.ms&&g.ms.length?Math.round(g.ms.filter(m=>m.x).length/g.ms.length*100):(g.p||0);
-function gm(i,j){const m=S.goals[i].ms[j];m.x=!m.x;save()}
+function gm(i,j){const g=S.goals[i],m=g.ms[j];m.x=!m.x;m.xd=m.x?dk():'';if(m.x){confetti();toast(g.ms.every(x=>x.x)?'🏆 Maqsadga erishding! '+(g.rw?'Mukofot: '+g.rw:'Alhamdulillah!'):'Bosqich bajarildi! +'+RWP.ms+' XP')}save()}
 function gmd(i,j){S.goals[i].ms.splice(j,1);save()}
 function gma(i){const e=$('#gm'+i),v=e.value.trim();if(!v)return;const g=S.goals[i];(g.ms=g.ms||[]).push({t:v,x:0});save()}
 function gdl(i,v){S.goals[i].dl=v;save()}
@@ -1067,7 +1189,7 @@ const IPL=[['v','Lug‘at takrori'],['L','Listening mashqi'],['R','Reading mashq
 const ieDp=()=>{S.ie.dp=S.ie.dp||{};return S.ie.dp[dk()]=S.ie.dp[dk()]||{}};
 function ieTick(k){const d=ieDp();d[k]=d[k]?0:1;save()}
 function ieStreak(){let n=0;for(let i=0;i<120;i++){const d=(S.ie.dp||{})[dAgo(i)]||{},c=Object.values(d).filter(Boolean).length;if(c>=3)n++;else if(i>0)break}return n}
-function qsave(){S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700)}
+function qsave(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700)}
 
 function ielts(){
   const seg=[['b','🏠 Bosh'],['l','🔤 Lug‘at'],['m','📝 Mashq'],['w','✍️ Writing'],['s','🗣 Speaking']].map(x=>`<button class="${IVW===x[0]?'on':''}" onclick="IVW='${x[0]}';render()">${x[1]}</button>`).join('');
@@ -1903,18 +2025,18 @@ function celeb(){
   if(!C.init){C.init=1;C.d={};C.d[k]=sc>=100?1:0;C.lv=L.L;C.hs={};S.hab.forEach(h=>{C.hs[h.id]=ms(h)});C.hc=S.q.hc;C.bk=bk;qsave();return}
   C.d=C.d||{};C.hs=C.hs||{};
   if(sc>=100&&!C.d[k]){C.d[k]=1;msg='Kun mukammal, 100%! 🎉'}
-  if(L.L>(C.lv||0)){C.lv=L.L;msg='Yangi daraja: '+L.name+' 🚀'}
+  if(!C.v2){C.v2=1;C.lv=L.L}if(L.L>(C.lv||0)){C.lv=L.L;msg='Yangi daraja: '+L.L+' · '+L.name+' 🚀'}
   S.hab.forEach(h=>{const m=ms(h);if(m>(C.hs[h.id]||0)){C.hs[h.id]=m;msg=(h.e||'🔥')+' '+h.t+': '+m+' kunlik seriya!'}});
   if(S.q.hc>(C.hc||0)){C.hc=S.q.hc;msg='Hatm tugadi, Alhamdulillah! 🤲'}
   if(bk>(C.bk||0)){C.bk=bk;msg='Kitob tugatildi! 📚'}
-  if(msg){confetti();toast(msg);qsave()}}
+  {const dp=dayPts(k).t,st=rwStreak();C.xg=C.xg||{};if(dp>=DAYGOAL&&!C.xg[k]){C.xg[k]=1;if(!msg)msg='Kun maqsadi bajarildi: '+dp+' XP ⚡'}if(MIL.includes(st)&&C.sm!==st+'@'+k){C.sm=st+'@'+k;msg='🔥 '+st+' kunlik seriya!'}}if(msg){confetti();toast(msg);qsave()}}
 function badgeHtml(){
   const q=S.q,xp=xpInfo(),fin=S.kt.books.filter(b=>b.st==='t').length,md_=mdone(),words=S.ie.words.length;
-  let perfect=0;for(let i=0;i<120;i++)if(scoreOf(dAgo(i)).p>=100)perfect++;
+  let perfect=0,bestDay=0;for(let i=0;i<120;i++){if(scoreOf(dAgo(i)).p>=100)perfect++;bestDay=Math.max(bestDay,dayPts(dAgo(i)).t)}
   const mocks=S.ie.tests.filter(t=>t.k==='M').map(t=>ieRound(Object.values(t.b).reduce((a,x)=>a+x,0)/Object.keys(t.b).length)),best=mocks.length?Math.max(...mocks):0;
   const gym=new Set(S.gym.log.map(x=>x.d)).size,hs=S.hab.length?Math.max(...S.hab.map(h=>hst(h.id))):0;
   const B=[['🔥','7 kunlik seriya',xp.st,7],['🔥','30 kunlik seriya',xp.st,30],['💎','100 kunlik seriya',xp.st,100],['⭐','10 mukammal kun',perfect,10],['✅','Odatda 14 kun',hs,14],
-    ['📖','Birinchi hatm',q.hc,1],['🧠','100 bet yodlandi',Math.floor(md_),100],['🕌','300 bet yodlandi',Math.floor(md_),300],['🔤','100 ta so‘z',words,100],['🎓','IELTS mock 7.0',best,7],['📚','Birinchi kitob',fin,1],['💪','20 ta zal kuni',gym,20]];
+    ['📖','Birinchi hatm',q.hc,1],['🧠','100 bet yodlandi',Math.floor(md_),100],['🕌','300 bet yodlandi',Math.floor(md_),300],['🔤','100 ta so‘z',words,100],['🎓','IELTS mock 7.0',best,7],['📚','Birinchi kitob',fin,1],['💪','20 ta zal kuni',gym,20],['🏅','5-daraja',xp.L,5],['🥇','10-daraja',xp.L,10],['💎','20-daraja',xp.L,20],['🎁','Birinchi mukofot olindi',rw().buy.filter(b=>b.k!=='sh').length,1],['⚡','Bir kunda 200 XP',bestDay,200],['🛡','Qalqon seriyani saqladi',rw().su.length,1],['🏆','Haftalik chellenj',Object.keys(rw().wk).length,1]];
   const got=B.filter(b=>b[2]>=b[3]).length;
   return `<h2>🏆 Yutuqlar (${got}/${B.length})</h2><div class="bdg">${B.map(b=>`<div class="bd ${b[2]>=b[3]?'on':''}"><i>${b[0]}</i>${b[1]}<small>${Math.min(b[2],b[3])}/${b[3]}</small></div>`).join('')}</div>`}
 
