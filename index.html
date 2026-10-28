@@ -341,7 +341,7 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.10.27-2';
+const APP_VER='2026.10.28-1';
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -2011,8 +2011,9 @@ function aiContext(){
   if(sh.money)T(()=>{const mk=k.slice(0,7),L=S.money.filter(m=>m.w==='p'&&m.d.startsWith(mk)),i=L.filter(m=>m.k==='in').reduce((a,m)=>a+m.a,0),u=L.filter(m=>m.k==='out').reduce((a,m)=>a+m.a,0),c={};L.filter(m=>m.k==='out').forEach(m=>{c[m.c||'Boshqa']=(c[m.c||'Boshqa']||0)+m.a});const tc=Object.entries(c).sort((a,b)=>b[1]-a[1])[0];
     ln('Shaxsiy pul (shu oy): kirim '+num(i)+', chiqim '+num(u)+(tc?', eng ko‘p sarf: '+tc[0]:'')+(S.fin.budget?', oylik limit '+num(S.fin.budget):''))});
   return o.join('\n')}
+async function aiSession(){try{return (await sb.auth.getSession()).data.session}catch(e){return null}}
 async function fnPost(body,ms){
-  let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
+  let s=await aiSession();
   if(!s)throw new Error('Hisobga qayta kiring.');
   const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),ms||60000);let res;
   try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify(body)})}
@@ -2032,7 +2033,7 @@ function aiBuild(){const old=document.getElementById('ai');if(old)old.remove();c
 function aiGrow(el){el.style.height='auto';el.style.height=Math.min(120,el.scrollHeight)+'px'}
 function aiRender(){const c=document.getElementById('aic');if(!c)return;const A=aiS(),ch=A.chat;
   const hi=`<div class="bb a">Assalomu alaykum${S.name?', '+esc(S.name):''}! Men sening shaxsiy yordamchingman. Kuning, odatlaring, Qur‘on, IELTS va maqsadlaring haqida ma‘lumotlaringni ko‘raman, shunga qarab maslahat beraman. Pastdagi savollardan birini tanla yoki o‘zing yoz.</div>`;
-  c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t):md(m.r==='model'?aiActs(t).clean:t)+(m.r==='model'&&!AIT?aiCards(m,i)+aiExtra(m):'')+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s</span></div>`:'');
+  c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t)+(i===ch.length-1&&ch[i-1]&&ch[i-1].r==='user'&&!AIL?'<br><button class="btn s" style="margin-top:8px" onclick="aiRetry()">↻ Qayta yuborish</button>':''):md(m.r==='model'?aiActs(t).clean:t)+(m.r==='model'&&!AIT?aiCards(m,i)+aiExtra(m):'')+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s${AIRT?' · qayta urinyapman':''}</span></div>`:'');
   c.scrollTop=c.scrollHeight}
 // Oyna ochiq paytda orqadagi sahifa qotiriladi, oyna esa klaviatura ustidagi ko‘rinadigan maydonga moslanadi (iOS)
 let OVL=null;
@@ -2049,23 +2050,30 @@ function aiClose(){ovUnlock();const e=document.getElementById('ai');if(e)e.remov
 function aiNew(){if(AIT&&AIT.iv)clearInterval(AIT.iv);AIT=null;AIL=false;aiS().chat=[];qsave();aiRender()}
 function aiClear(){if(confirm('Suhbat tarixi o‘chirilsinmi?')){aiS().chat=[];save()}}
 function aiGo(i){if(AIL)return;let t;if(typeof i==='number')t=AIQ[i];else{const e=document.getElementById('aii');t=e?e.value.trim():'';if(e){e.value='';aiGrow(e)}}if(t)aiSend(t)}
-async function aiStream(msgs,ctx,onText,onMeta,opt){
-  let s=null;try{s=(await sb.auth.getSession()).data.session}catch(e){}
+async function aiStream(msgs,ctx,onText,onMeta,opt){let got=false;const wrap=x=>{got=true;onText(x)};
+  try{return await aiStream1(msgs,ctx,wrap,onMeta,opt)}
+  catch(e){if(got||!e.gw)throw e;if(opt&&opt.onRetry)opt.onRetry();await new Promise(r=>setTimeout(r,1500));return await aiStream1(msgs,ctx,onText,onMeta,opt)}}
+async function aiStream1(msgs,ctx,onText,onMeta,opt){
+  let s=await aiSession();
   if(!s)throw new Error('Hisobga qayta kiring.');
   let res;const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),45000);
   try{res=await fetch(CFG.url+'/functions/v1/ai-assistant',{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','Authorization':'Bearer '+s.access_token,'apikey':CFG.key},body:JSON.stringify({action:'chat',stream:true,web:!!(opt&&opt.web),messages:msgs,context:ctx})})}
   catch(e){clearTimeout(to);if(e&&e.name==='AbortError')throw new Error('AI 45 soniyada javob bermadi. Birozdan keyin urinib ko‘ring.');const r=await aiCall(msgs,ctx);onText(r.text);return r.text}
   clearTimeout(to);try{const tm=res.headers&&res.headers.get&&res.headers.get('x-timing');if(tm&&onMeta)onMeta(tm)}catch(e){}
-  if(!res.ok){let m='';try{const j=await res.json();m=(j.error||j.message||'')+(res.status===429&&j.detail?' ['+j.detail+']':'')}catch(e){}
+  if(!res.ok){let m='',raw='';try{raw=await res.text();const j=JSON.parse(raw);m=(j.error||j.message||'')+(res.status===429&&j.detail?' ['+j.detail+']':'')}catch(e){}
     if(res.status===404)m='AI funksiyasi topilmadi. Supabase’da nomi aynan “ai-assistant” bo‘lgan funksiya yaratilganini tekshiring.';
-    throw new Error(m||('Server xatosi ('+res.status+').'))}
+    if(!m&&[502,503,504,546].includes(res.status)){const er=new Error('AI serveri vaqtincha javob bermadi ('+res.status+').'+(raw?' '+raw.replace(/<[^>]+>/g,' ').replace(/\s+/g,' ').trim().slice(0,100):''));er.gw=1;throw er}throw new Error(m||('Server xatosi ('+res.status+').'))}
   const ct=(res.headers&&res.headers.get&&res.headers.get('content-type'))||'';
   if(ct.includes('application/json')){const j=await res.json();if(j&&j.text){onText(j.text);if(opt&&opt.onSrc)opt.onSrc(j.sources||[]);return j.text}throw new Error((j&&j.error)||'AI javob bermadi.')}
   if(!res.body||!res.body.getReader){const t=await res.text();onText(t);return t}
   const rd=res.body.getReader(),dec=new TextDecoder();let full='';
   while(true){const{done,value}=await rd.read();if(done)break;full+=dec.decode(value,{stream:true});onText(full)}
   full+=dec.decode();onText(full);return full}
-async function aiSend(text){
+function aiTimingLine(meta,tf,tot){meta=meta||'';const g=/gemini=(\d+)/.exec(meta),sv=/auth=(\d+),db=(\d+)/.exec(meta),th=/think=(\w+)/.exec(meta),at=/att=([^,]*)/.exec(meta),sg=(g?+g[1]:0)+(sv?+sv[1]+ +sv[2]:0);
+  return (tot/1000).toFixed(1)+' s ('+(tf?'birinchi so‘z '+(tf/1000).toFixed(1)+' s':'')+(g?', Gemini '+(g[1]/1000).toFixed(1)+' s':'')+(sv?', server '+((+sv[1]+ +sv[2])/1000).toFixed(1)+' s':'')+(th?', o‘ylash: '+th[1]:'')+(at&&at[1].includes('|')?', urinishlar: '+at[1].split('|').map(x=>x.replace(/^gemini-/,'')).join(' → '):'')+(tf&&tf-sg>4000?', tarmoq/kutish: '+((tf-sg)/1000).toFixed(1)+' s':'')+')'}
+let AIRT=false;
+function aiRetry(){if(AIL)return;const ch=aiS().chat,l=ch[ch.length-1];if(!l||l.r!=='err')return;ch.pop();const u=ch[ch.length-1];if(!u||u.r!=='user')return;ch.pop();aiSend(u.t)}
+async function aiSend(text){AIRT=false;
   const A=aiS();A.chat.push({r:'user',t:text});if(A.chat.length>40)A.chat.splice(0,A.chat.length-40);AIL=true;AIT0=Date.now();clearInterval(AIW);AIW=setInterval(()=>{if(AIL)aiRender();else{clearInterval(AIW);AIW=null}},1000);aiRender();qsave();
   const hist=A.chat.filter(m=>m.r==='user'||m.r==='model').slice(-10).map(m=>({r:m.r,t:m.t})),ctx=aiContext();
   try{
@@ -2073,9 +2081,9 @@ async function aiSend(text){
     const web=/video|youtube|yutub|havola|link|qidir|internet|saytdan|manba|izla|yangilik|news/i.test(text),vid=/video|youtube|yutub/i.test(text),vq=text.replace(/video(lar)?|youtube|yutub|havola(si)?|link(ini)?|topib|top\b|ber\b|qidir|izla|menga|iltimos|tashla|bo‘yicha|haqida/gi,' ').replace(/\s+/g,' ').trim()||text;
     let vidData=null,mref=null;const setVid=()=>{if(mref&&vidData){mref.vid=vidData;aiRender()}};
     if(vid){fnPost({action:'videos',q:vq.slice(0,100)},25000).then(d=>{vidData=d;setVid()}).catch(()=>{vidData={videos:[]};setVid()})}
-    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;tf=Date.now()-AIT0;A.chat.push(m);AIL=false;mref=m;if(vid){m.vq=vq;setVid()}}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}},h=>{meta=h},{web,onSrc:s=>{if(mref&&s.length)mref.src=s;else m.src=s}});
+    const full=await aiStream(hist,ctx,t=>{if(!started){started=true;tf=Date.now()-AIT0;A.chat.push(m);AIL=false;mref=m;if(vid){m.vq=vq;setVid()}}m.t=t;const n=Date.now();if(n-last>50){last=n;aiRender()}},h=>{meta=h},{web,onRetry:()=>{AIRT=true;aiRender()},onSrc:s=>{if(mref&&s.length)mref.src=s;else m.src=s}});
     AIL=false;if(!started)A.chat.push(m);m.t=full;
-    const g=/gemini=(\d+)/.exec(meta),sv=/auth=(\d+),db=(\d+)/.exec(meta),th=/think=(\w+)/.exec(meta);m.ms=((Date.now()-AIT0)/1000).toFixed(1)+' s ('+(tf?'birinchi so‘z '+(tf/1000).toFixed(1)+' s':'')+(g?', Gemini '+(g[1]/1000).toFixed(1)+' s':'')+(sv?', server '+((+sv[1]+ +sv[2])/1000).toFixed(1)+' s':'')+(th?', o‘ylash: '+th[1]:'')+')';
+    const g=/gemini=(\d+)/.exec(meta),sv=/auth=(\d+),db=(\d+)/.exec(meta),th=/think=(\w+)/.exec(meta);m.ms=aiTimingLine(meta,tf,Date.now()-AIT0);
     if(!String(full).trim()){A.chat.pop();throw new Error('Bo‘sh javob keldi.')}
     aiRender()}
   catch(e){AIL=false;A.chat.push({r:'err',t:e.message});aiRender()}
