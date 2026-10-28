@@ -66,6 +66,18 @@ async function candidates(key: string): Promise<string[]> {
 const THINK: Array<Record<string, unknown> | null> = [{ thinkingLevel: 'minimal' }, { thinkingLevel: 'low' }, { thinkingBudget: 0 }, null]
 const OKT: Record<string, number> = {}
 
+// Oxirgi muvaffaqiyatli model birinchi sinaladi; qotib qolgan model 10 daqiqaga oxiriga suriladi (har so'rovda 20 soniya bekor ketmasligi uchun)
+const GOOD = { m: '' }
+const SLOW = new Map<string, number>()
+const slowFor = (m: string, ms: number) => SLOW.set(m, Date.now() + ms)
+function ordered(models: string[]): string[] {
+  const now = Date.now(), slow = (m: string) => (SLOW.get(m) || 0) > now
+  const pin = String(Deno.env.get('GEMINI_MODEL') || '') // egasi qo'lda tanlagan model har doim birinchi (qotib qolmagan bo'lsa)
+  const pick = pin && models.includes(pin) && !slow(pin) ? pin : GOOD.m
+  const first = pick && models.includes(pick) && !slow(pick) ? [pick] : []
+  return [...first, ...models.filter((m) => !first.includes(m) && !slow(m)), ...models.filter((m) => !first.includes(m) && slow(m))]
+}
+
 type Rate = { msg: string; wait: number; zero: boolean; detail: string }
 function quotaMsg(j: any): Rate {
   const raw = JSON.stringify(j?.error || {})
@@ -123,7 +135,7 @@ async function oneShot(key: string, models: string[], parts: unknown[], system: 
   let lastErr = ''
   let rate: Rate | null = null
   for (let pass = 0; pass < 2; pass++) {
-  for (const model of models) {
+  for (const model of ordered(models)) {
     const ctl = new AbortController()
     const to = setTimeout(() => ctl.abort(), timeoutMs)
     try {
@@ -134,7 +146,7 @@ async function oneShot(key: string, models: string[], parts: unknown[], system: 
       const text = (j.candidates?.[0]?.content?.parts || []).filter((x: any) => !x.thought).map((x: any) => x.text || '').join('').trim()
       if (text) return { text, model }
       lastErr = 'Bo‘sh javob keldi'
-    } catch (_e) { clearTimeout(to); lastErr = model + ': vaqt tugadi' }
+    } catch (_e) { clearTimeout(to); lastErr = model + ': vaqt tugadi'; slowFor(model, 600000) }
   }
   // Qisqa daqiqalik limitda bir marta kutib qayta uriniladi
   if (!rate || rate.zero || /PerDay|kunlik|Bugungi/i.test(rate.msg) || rate.wait > 25 || pass === 1) break
@@ -282,34 +294,39 @@ Deno.serve(async (req) => {
     contents: msgs,
   }
   const TIMEOUT = Number(Deno.env.get('GEMINI_TIMEOUT_MS')) || 20000
+  const TTFB = Number(Deno.env.get('GEMINI_TTFB_MS')) || 9000 // oqimda birinchi bayt shu vaqtda kelmasa, keyingi modelga o'tamiz
   let models: string[] = []
   try { models = await candidates(key) } catch (_e) { /* ro'yxat olinmasa, quyida xabar beramiz */ }
   if (!models.length) return json({ error: 'Mos Gemini modeli topilmadi. Kalitni va GEMINI_MODEL secretini tekshiring.' }, 502)
 
   let lastErr = ''
   let rate: Rate | null = null
+  const att: string[] = []
   for (let pass = 0; pass < 2; pass++) {
-  for (const model of models) {
+  for (const model of ordered(models)) {
     const ctl = new AbortController()
-    const to = setTimeout(() => ctl.abort(), TIMEOUT) // qotib qolgan so'rovni to'xtatib, keyingi modelga o'tamiz
+    const to = setTimeout(() => ctl.abort(), (b.stream && !useWeb) ? Math.min(TIMEOUT, TTFB) : TIMEOUT) // qotib qolgan so'rovni to'xtatib, keyingi modelga o'tamiz
     const tg = Date.now()
     let r: Response
     try {
       r = await callGemini(model, key, base, !!b.stream && !useWeb, ctl.signal)
     } catch (_e) {
-      clearTimeout(to); lastErr = `${model}: ${Math.round(TIMEOUT / 1000)} soniyada javob bermadi`; continue
+      const ms = Date.now() - tg; clearTimeout(to); lastErr = `${model}: ${Math.round(ms / 1000)} soniyada javob bermadi`; att.push(`${model}:timeout${ms}`); slowFor(model, 600000); continue
     }
     const th = THINK[OKT[model] ?? 0]
     const timing = `auth=${tAuth - t0},db=${tDb - tAuth},gemini=${Date.now() - tg},model=${model},think=${th ? Object.values(th)[0] : 'default'}`
     if (!r.ok) {
       clearTimeout(to)
       const j = await r.json().catch(() => ({}))
-      lastErr = j?.error?.message || ('HTTP ' + r.status)
+      lastErr = j?.error?.message || ('HTTP ' + r.status); att.push(`${model}:http${r.status}`)
+      if (r.status === 429) slowFor(model, 300000)
       if (r.status === 429) { const q = quotaMsg(j); if (!q.zero || !rate) rate = q; continue } // har bir modelning o'z limiti bor: keyingisini sinaymiz
       if (r.status === 400 && /API key/i.test(lastErr)) return json({ error: 'Gemini kaliti noto‘g‘ri.' }, 500)
       continue // boshqa xatolarda (404 ham) keyingi modelga o'tamiz
     }
 
+    GOOD.m = model; att.push(`${model}:ok${Date.now() - tg}`)
+    const attS = ',att=' + att.map((x) => x.replace(/^gemini-/, '')).join('|')
     if (b.stream && !useWeb) {
       clearTimeout(to)
       // Javobni bo'lak-bo'lak (tayyor bo'lgan zahoti) yuboramiz
@@ -343,17 +360,17 @@ Deno.serve(async (req) => {
           if (any) await db.from('ai_usage').upsert({ user_id: u.user.id, day, n: used + 1 })
         },
       })
-      return new Response(stream, { headers: { ...cors, 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Model': model, 'X-Timing': timing } })
+      return new Response(stream, { headers: { ...cors, 'Content-Type': 'text/plain; charset=utf-8', 'Cache-Control': 'no-store', 'X-Model': model, 'X-Timing': timing + attS } })
     }
 
     const j = await r.json().catch(() => ({}))
     clearTimeout(to)
     const text = (j.candidates?.[0]?.content?.parts || []).filter((x: any) => !x.thought).map((x: any) => x.text || '').join('').trim()
-    if (!text) { lastErr = 'Bo‘sh javob keldi'; continue }
+    if (!text) { lastErr = 'Bo‘sh javob keldi'; att[att.length - 1] = `${model}:empty`; continue }
     await db.from('ai_usage').upsert({ user_id: u.user.id, day, n: used + 1 })
     const sources = (j.candidates?.[0]?.groundingMetadata?.groundingChunks || [])
       .map((c: any) => ({ t: String(c?.web?.title || '').slice(0, 90), u: String(c?.web?.uri || '') })).filter((x: any) => x.u).slice(0, 6)
-    return json({ text, model, timing, sources, left: isOwner ? null : Math.max(0, DAILY_LIMIT - used - 1) })
+    return json({ text, model, timing: timing + attS, sources, left: isOwner ? null : Math.max(0, DAILY_LIMIT - used - 1) })
   }
   // Qisqa daqiqalik limitda bir marta kutib, qayta uriniladi (javob boshlanmagan bo'lsa)
   const cur = rate as Rate | null
@@ -362,5 +379,5 @@ Deno.serve(async (req) => {
   }
   const fr = rate as Rate | null
   if (fr) return json({ error: fr.msg, retry: fr.wait, detail: fr.detail }, 429)
-  return json({ error: 'AI javob bera olmadi: ' + lastErr }, 502)
+  return json({ error: 'AI javob bera olmadi: ' + lastErr + (att.length > 1 ? ' [' + att.join('; ') + ']' : '') }, 502)
 })
