@@ -117,6 +117,16 @@ const PLAN_SYSTEM = `Sen o'zbek tilida gapiradigan shaxsiy kun rejalashtiruvchis
 FAQAT shu JSON ko'rinishida javob ber: {"top3":[{"t":"..."},{"t":"..."},{"t":"..."}],"tip":"..."}
 Qoidalar: top3 — bugun bajariladigan 3 tagacha aniq ish (har biri 70 belgidan oshmasin, fe'l bilan boshlansin), faqat berilgan ma'lumotlarga tayan: yaqin muddatlar, maqsadning keyingi bosqichi, zaif soha, hifz (sabqi/manzil). Ma'lumotda yo'q narsani o'ylab topma. "mavjud_top3" dagi ishlarni takrorlama; ular band bo'lsa, faqat qolgan bo'sh joylar uchun yoz. "yengil_kun" true bo'lsa, ishlarni yengil va kam qil. Vaqt bloklariga sig'maydigan ish yozma. tip — bitta qisqa, mehribon, rag'batlantiruvchi gap (150 belgigacha). Diniy hukm berma, tibbiy maslahat berma.`
 
+const DAYPLAN_SYSTEM = `Sen o'zbek tilida gapiradigan kun rejalashtiruvchisan. Foydalanuvchining bir kuni uchun ma'lumotlar JSON ko'rinishida beriladi: sana, turish va uxlash vaqti, qat_bloklar (uning doimiy jadvali: id, boshlanish, tugash, nom), namoz_vaqtlari, muddatlar, maqsad, hifz miqdori, zal rejasi, zaif soha va foydalanuvchining istagi (istak).
+FAQAT shu JSON ko'rinishida javob ber: {"blocks":[{"id":"...","n":"..."}],"extra":[{"s":"HH:MM","e":"HH:MM","t":"..."}],"tip":"..."}
+Qoidalar:
+1) qat_bloklar o'zgarmaydi. "blocks" ichida har bir blok uchun uning id sini yoz va "n" ga shu blok ichida BUGUN nima qilinishini aniq yoz (80 belgigacha, masalan "3 bet sabaq, sabqini takrorla, manzil 2 bet"). Bloklarning vaqtini yoki nomini o'zgartirma.
+2) "extra" faqat qat_bloklar bilan KESISHMAYDIGAN bo'sh oraliqlar uchun: har biri kamida 15 daqiqa, turish va uxlash vaqti oralig'ida, nomi 60 belgigacha va fe'l bilan boshlansin. Ko'pi bilan 6 ta.
+3) Foydalanuvchi istagi (istak) birinchi o'rinda: uni albatta hisobga ol (masalan, "ertalab dam olaman" desa, og'ir ish qo'yma).
+4) Muddatlar, maqsadning keyingi bosqichi, hifz (sabaq, sabqi, manzil) va zaif sohani ustuvor qil, lekin ma'lumotda yo'q majburiyat, uchrashuv yoki vaqt o'ylab topma.
+5) Namoz vaqtlari berilgan bo'lsa, ularni ish vaqtlari bilan to'qnashtirma. Ovqat va dam uchun real vaqt qoldir, kunni ortiqcha to'ldirma. "yengil_kun" true bo'lsa, rejani yengil va kam qil. "boshqacha" true bo'lsa, oldingidan farqli tartib taklif qil.
+6) tip: bitta mehribon, qisqa gap (150 belgigacha). Diniy hukm berma, tibbiy maslahat berma.`
+
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
 FAQAT JSON qaytar, boshqa matn yozma:
 {"items":[{"name":"taom nomi (o'zbekcha)","grams":son,"kcal":son,"p":oqsil_gramm,"f":yog_gramm,"c":uglevod_gramm}],"note":"qisqa izoh, natija taxminiy ekanini ayt"}
@@ -233,14 +243,20 @@ Deno.serve(async (req) => {
     return json({ videos: (j.items || []).map((x: any) => ({ id: x.id?.videoId, t: x.snippet?.title, ch: x.snippet?.channelTitle, th: x.snippet?.thumbnails?.medium?.url })).filter((x: any) => x.id) })
   }
 
-  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan') {
+  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan') {
     const list = await candidates(key).catch(() => [] as string[])
     if (!list.length) return json({ error: 'Mos Gemini modeli topilmadi.' }, 502)
     const parts: unknown[] = []
     let system = FOOD_SYSTEM
     let extra: Record<string, unknown> = { responseMimeType: 'application/json', maxOutputTokens: 1500 }
     let tmo = 30000
-    if (b.action === 'plan') {
+    if (b.action === 'dayplan') {
+      const ctx = String(b.ctx || '').trim()
+      if (ctx.length < 10) return json({ error: 'Reja uchun ma‘lumot yo‘q.' }, 400)
+      if (ctx.length > 9000) return json({ error: 'Ma‘lumot juda katta.' }, 400)
+      tmo = 45000; system = DAYPLAN_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 2000 }
+      parts.push({ text: 'Kun ma‘lumotlari (JSON):\n' + ctx })
+    } else if (b.action === 'plan') {
       const ctx = String(b.ctx || '').trim()
       if (ctx.length < 10) return json({ error: 'Reja uchun ma‘lumot yo‘q.' }, 400)
       if (ctx.length > 6000) return json({ error: 'Ma‘lumot juda katta.' }, 400)
