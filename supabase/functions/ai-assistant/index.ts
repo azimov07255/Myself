@@ -127,6 +127,13 @@ Qoidalar:
 5) Namoz vaqtlari berilgan bo'lsa, ularni ish vaqtlari bilan to'qnashtirma. Ovqat va dam uchun real vaqt qoldir, kunni ortiqcha to'ldirma. "yengil_kun" true bo'lsa, rejani yengil va kam qil. "boshqacha" true bo'lsa, oldingidan farqli tartib taklif qil.
 6) tip: bitta mehribon, qisqa gap (150 belgigacha). Diniy hukm berma, tibbiy maslahat berma.`
 
+const VOCAB_ANALYZE_SYSTEM = `Sen tajribali IELTS o'qituvchisisan. O'zbek tilida so'zlashadigan talaba uchun INGLIZCHA matnni (maqola yoki podkast transkripti) tahlil qilasan.
+FAQAT shu JSON ko'rinishida javob ber: {"level":"B2","topic":"...","words":[{"w":"lemma","f":"matndagi shakli","pos":"n","lv":"C1","def":"...","uz":"...","ctx":"...","ex":"..."}],"chunks":[{"p":"...","k":"collocation","def":"...","uz":"...","ctx":"...","ex":"..."}]}
+Qoidalar: 1) "words": IELTS uchun foydali va qiyin (B2-C2) so'zlar, eng ko'pi 14 ta. Juda oddiy so'zlar, xos otlar, raqamlar va "known" ro'yxatidagi so'zlarni kiritma. "w" - so'zning asosiy shakli (lemma), "f" - matnda uchragan aniq shakli, "pos" - n, v, adj yoki adv, "lv" - B2, C1 yoki C2. 2) "chunks": matnda aynan uchraydigan foydali iboralar (collocation, phrasal, idiom yoki phrase), eng ko'pi 8 ta; "p" 2-5 so'zdan iborat bo'lsin; "k" - collocation, phrasal, idiom yoki phrase. 3) "f" va "p" matnda AYNAN mavjud bo'lsin (katta-kichik harf farqi muhim emas). "ctx" - matndan aynan ko'chirilgan bitta gap. Matnda yo'q so'z yoki iborani O'YLAB TOPMA. 4) "def" - sodda ingliz tilida ta'rif (14 so'zgacha). "uz" - qisqa (1-4 so'z) va aniq o'zbek (lotin) tilidagi ma'no; ishonching komil bo'lmasa bo'sh qoldir (""). "ex" - matndagidan farqli, yangi, sodda misol gap (18 so'zgacha). 5) "level" - matnning umumiy CEFR darajasi (B1, B2, C1 yoki C2), "topic" - ingliz tilida 2-4 so'zli mavzu. 6) Hech qanday izoh, markdown yoki \`\`\` qo'shma, faqat JSON.`
+
+const VOCAB_DEFINE_SYSTEM = `Sen IELTS o'qituvchisisan. Berilgan inglizcha so'z yoki ibora va u uchragan gap bo'yicha FAQAT shu JSON ko'rinishida javob ber: {"w":"asosiy shakli","pos":"n","lv":"C1","def":"...","uz":"...","ex":"..."}
+Qoidalar: "def" - shu gapdagi ma'noga mos sodda ingliz tilida ta'rif (14 so'zgacha). "uz" - qisqa (1-4 so'z) o'zbek (lotin) tilidagi ma'no; ishonching komil bo'lmasa "". "ex" - yangi, sodda misol gap (18 so'zgacha). "lv" - B1, B2, C1 yoki C2. Hech qanday izoh yoki markdown qo'shma.`
+
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
 FAQAT JSON qaytar, boshqa matn yozma:
 {"items":[{"name":"taom nomi (o'zbekcha)","grams":son,"kcal":son,"p":oqsil_gramm,"f":yog_gramm,"c":uglevod_gramm}],"note":"qisqa izoh, natija taxminiy ekanini ayt"}
@@ -243,14 +250,28 @@ Deno.serve(async (req) => {
     return json({ videos: (j.items || []).map((x: any) => ({ id: x.id?.videoId, t: x.snippet?.title, ch: x.snippet?.channelTitle, th: x.snippet?.thumbnails?.medium?.url })).filter((x: any) => x.id) })
   }
 
-  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan') {
+  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan' || b.action === 'vocab') {
     const list = await candidates(key).catch(() => [] as string[])
     if (!list.length) return json({ error: 'Mos Gemini modeli topilmadi.' }, 502)
     const parts: unknown[] = []
     let system = FOOD_SYSTEM
     let extra: Record<string, unknown> = { responseMimeType: 'application/json', maxOutputTokens: 1500 }
     let tmo = 30000
-    if (b.action === 'dayplan') {
+    if (b.action === 'vocab') {
+      if (b.mode === 'define') {
+        const w = String(b.word || '').trim().slice(0, 40), c = String(b.ctx || '').trim().slice(0, 300)
+        if (!w) return json({ error: 'So‘z yozilmagan.' }, 400)
+        system = VOCAB_DEFINE_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 600 }
+        parts.push({ text: 'So‘z yoki ibora: ' + w + '\nGap: ' + c })
+      } else {
+        const text = String(b.text || '').trim()
+        if (text.length < 80) return json({ error: 'Matn juda qisqa.' }, 400)
+        if (text.length > 4500) return json({ error: 'Matn juda uzun (4500 belgigacha).' }, 400)
+        const known = (Array.isArray(b.known) ? b.known : []).slice(0, 120).map((x: unknown) => String(x).slice(0, 30)).join(', ')
+        tmo = 50000; system = VOCAB_ANALYZE_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 4500 }
+        parts.push({ text: 'known: ' + (known || '(yo‘q)') + '\n\nMATN:\n' + text })
+      }
+    } else if (b.action === 'dayplan') {
       const ctx = String(b.ctx || '').trim()
       if (ctx.length < 10) return json({ error: 'Reja uchun ma‘lumot yo‘q.' }, 400)
       if (ctx.length > 9000) return json({ error: 'Ma‘lumot juda katta.' }, 400)
