@@ -134,6 +134,12 @@ Qoidalar: 1) "words": IELTS uchun foydali va qiyin (B2-C2) so'zlar, eng ko'pi 14
 const VOCAB_DEFINE_SYSTEM = `Sen IELTS o'qituvchisisan. Berilgan inglizcha so'z yoki ibora va u uchragan gap bo'yicha FAQAT shu JSON ko'rinishida javob ber: {"w":"asosiy shakli","pos":"n","lv":"C1","def":"...","uz":"...","ex":"..."}
 Qoidalar: "def" - shu gapdagi ma'noga mos sodda ingliz tilida ta'rif (14 so'zgacha). "uz" - qisqa (1-4 so'z) o'zbek (lotin) tilidagi ma'no; ishonching komil bo'lmasa "". "ex" - yangi, sodda misol gap (18 so'zgacha). "lv" - B1, B2, C1 yoki C2. Hech qanday izoh yoki markdown qo'shma.`
 
+const READING_SYSTEM = `Sen IELTS Academic Reading materiallari yozuvchisisan. FAQAT shu JSON ko'rinishida javob ber: {"title":"...","passage":"...","questions":[{"t":"tfng","q":"...","a":"TRUE","why":"..."},{"t":"mcq","q":"...","o":["...","...","...","..."],"a":"B","why":"..."},{"t":"gap","q":"... ____ ...","a":"...","why":"..."}],"used":["..."]}
+Qoidalar: 1) "passage" - ORIGINAL, o'zing yozgan akademik matn: 220-320 so'z, 3-4 paragraf (paragraflar bo'sh qator bilan ajratilgan), berilgan "band" darajasiga mos. Mavjud mashhur matndan ko'chirma qilma. 2) Aniq 8 ta savol: 3 ta "tfng" (a: TRUE, FALSE yoki NOT GIVEN), 3 ta "mcq" (4 ta variant, a: A, B, C yoki D harfi), 2 ta "gap" (matndagi gapni to'ldirish; javob matnda AYNAN uchraydigan 1-2 so'z). 3) Har bir javob matndan aniq tekshirilsin. NOT GIVEN faqat matnda umuman aytilmagan da'vo uchun, FALSE - matnga zid da'vo uchun. 4) "so'zlar" ro'yxati berilsa, ularning har birini matnda tabiiy ishlat va ishlatganlaringni "used" ga yoz. 5) "why" - qisqa o'zbekcha izoh, matndan dalil bilan (25 so'zgacha). 6) Bahsli siyosiy yoki diniy da'volardan qoch. 7) Hech qanday izoh, markdown qo'shma, faqat JSON.`
+
+const VOCAB_CHECK_SYSTEM = `Sen IELTS o'qituvchisisan. O'quvchi berilgan inglizcha so'z yoki iborani gapda ishlatdi. Uni to'g'ri va tabiiy ishlatganini tekshir. FAQAT shu JSON ko'rinishida javob ber: {"ok":true,"fix":"...","better":"...","note":"..."}
+Qoidalar: "ok" - so'z ma'nosi, grammatikasi va kollokatsiyasi to'g'ri bo'lsa true, aks holda false. "fix" - agar ok false bo'lsa, o'quvchi gapining to'g'rilangan varianti (o'quvchining fikrini saqlagan holda), aks holda "". "better" - shu so'z saqlangan, tabiiyroq va band 7+ darajadagi variant. "note" - 1-2 gap sodda o'zbek (lotin) tilida: nima to'g'ri yoki xato, qaysi kollokatsiya yoki predlog kerak. Hech qanday markdown qo'shma.`
+
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
 FAQAT JSON qaytar, boshqa matn yozma:
 {"items":[{"name":"taom nomi (o'zbekcha)","grams":son,"kcal":son,"p":oqsil_gramm,"f":yog_gramm,"c":uglevod_gramm}],"note":"qisqa izoh, natija taxminiy ekanini ayt"}
@@ -141,9 +147,9 @@ Raqamlar butun son bo'lsin. Ovqat tanib bo'lmasa, items bo'sh ro'yxat va note ic
 const IELTS_SYSTEM = `Sen tajribali va halol IELTS examiner'san (British Council va IDP mezonlari). Foydalanuvchi o'zbek, shuning uchun tushuntirishlarni sodda o'zbek tilida (lotin yozuvi) yoz, lekin inglizcha misollar, tuzatishlar va qayta yozilgan matnni inglizcha qoldir.
 Ballarni real va qat'iy qo'y: ko'pchilik o'quvchi 5.5 dan 7.0 gacha oraliqda bo'ladi, maqtab yuborma. Band 0.5 qadam bilan.
 FAQAT JSON qaytar, boshqa matn yozma:
-{"band":6.5,"words":0,"transcript":"(faqat speaking uchun: audiodan so'zma-so'z matn)","criteria":[{"k":"mezon nomi","b":6.5,"n":"1-2 gaplik izoh"}],"errors":[{"o":"matndan aynan xato ibora","c":"to'g'rilangani","w":"nima uchun xato, qisqa o'zbekcha"}],"strengths":["..."],"improve":["eng muhim 3-4 ta aniq maslahat"],"better":"eng zaif qismning yoki butun javobning band 8 darajasidagi inglizcha varianti","vocab":[{"w":"foydali so'z yoki ibora","m":"o'zbekcha ma'no"}]}
+{"band":6.5,"words":0,"transcript":"(faqat speaking uchun: audiodan so'zma-so'z matn)","criteria":[{"k":"mezon nomi","b":6.5,"n":"1-2 gaplik izoh"}],"errors":[{"o":"matndan aynan xato ibora","c":"to'g'rilangani","w":"nima uchun xato, qisqa o'zbekcha","t":"grammar"}],"strengths":["..."],"improve":["eng muhim 3-4 ta aniq maslahat"],"better":"eng zaif qismning yoki butun javobning band 8 darajasidagi inglizcha varianti","vocab":[{"w":"foydali so'z yoki ibora","m":"o'zbekcha ma'no"}]}
 Writing mezonlari: Task 1 uchun "Task Achievement", Task 2 uchun "Task Response", keyin "Coherence & Cohesion", "Lexical Resource", "Grammatical Range & Accuracy". Speaking mezonlari: "Fluency & Coherence", "Lexical Resource", "Grammatical Range & Accuracy", "Pronunciation" (talaffuzni audiodan imkon qadar baho ber va bu taxminiy ekanini ayt).
-errors ro'yxatiga 4 dan 10 gacha eng muhim xatoni yoz (grammatika, so'z tanlash, kollokatsiya, imlo). vocab: 5-8 ta band 7+ so'z yoki ibora.
+errors ro'yxatiga 4 dan 10 gacha eng muhim xatoni yoz (grammatika, so'z tanlash, kollokatsiya, imlo). Har bir xatoda "t" - xato turi, FAQAT shu qiymatlardan biri: grammar, vocab, collocation, spelling, other. vocab: 5-8 ta band 7+ so'z yoki ibora.
 Writing juda qisqa bo'lsa (Task 2 uchun 250 so'zdan kam, Task 1 uchun 150 dan kam), buni improve ichida ayt va ballni pasaytir.`
 const TRANSCRIBE_PROMPT = 'Quyidagi audioni so‘zma-so‘z matnga aylantir. Til o‘zbek (lotin yozuvi), rus yoki ingliz bo‘lishi mumkin: qaysi tilda aytilgan bo‘lsa, shu tilda yoz. Hech narsa qo‘shma, tushuntirma. Faqat aytilgan matnni qaytar.'
 
@@ -250,15 +256,27 @@ Deno.serve(async (req) => {
     return json({ videos: (j.items || []).map((x: any) => ({ id: x.id?.videoId, t: x.snippet?.title, ch: x.snippet?.channelTitle, th: x.snippet?.thumbnails?.medium?.url })).filter((x: any) => x.id) })
   }
 
-  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan' || b.action === 'vocab') {
+  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan' || b.action === 'vocab' || b.action === 'reading') {
     const list = await candidates(key).catch(() => [] as string[])
     if (!list.length) return json({ error: 'Mos Gemini modeli topilmadi.' }, 502)
     const parts: unknown[] = []
     let system = FOOD_SYSTEM
     let extra: Record<string, unknown> = { responseMimeType: 'application/json', maxOutputTokens: 1500 }
     let tmo = 30000
-    if (b.action === 'vocab') {
-      if (b.mode === 'define') {
+    if (b.action === 'reading') {
+      const topic = String(b.topic || '').trim().slice(0, 80) || 'a current academic topic'
+      const band = Math.min(9, Math.max(5, Number(b.band) || 7))
+      const words = (Array.isArray(b.words) ? b.words : []).slice(0, 8).map((x: unknown) => String(x).replace(/[^\p{L}' -]/gu, '').slice(0, 30)).filter(Boolean)
+      tmo = 60000; system = READING_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 5000 }
+      parts.push({ text: 'Mavzu: ' + topic + '\nband: ' + band + '\nso\'zlar: ' + (words.length ? words.join(', ') : '(berilmagan)') })
+    } else if (b.action === 'vocab') {
+      if (b.mode === 'check') {
+        const w = String(b.word || '').trim().slice(0, 40), s = String(b.sentence || '').trim().slice(0, 300)
+        if (!w) return json({ error: 'So‘z yozilmagan.' }, 400)
+        if (s.length < 8) return json({ error: 'Gap juda qisqa.' }, 400)
+        system = VOCAB_CHECK_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 700 }
+        parts.push({ text: 'So‘z yoki ibora: ' + w + '\nO‘quvchining gapi: ' + s })
+      } else if (b.mode === 'define') {
         const w = String(b.word || '').trim().slice(0, 40), c = String(b.ctx || '').trim().slice(0, 300)
         if (!w) return json({ error: 'So‘z yozilmagan.' }, 400)
         system = VOCAB_DEFINE_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 600 }
