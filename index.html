@@ -311,6 +311,11 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .dpn .nx{margin-top:10px;padding:8px 10px;border-radius:10px;background:var(--c2);font-size:13px}
 .icd{background:var(--c1);border-radius:14px;padding:12px;margin:8px 0}.icd .cz{font:400 19px/1.6 Georgia,serif}.icd .cz u{display:inline-block;min-width:70px;border-bottom:2px solid var(--ac);text-decoration:none;color:transparent}
 .cz2{font:400 20px/1.6 Georgia,serif;margin:4px 0 6px}
+.rdq{background:var(--c1);border-radius:14px;padding:12px;margin:8px 0}.rdq .h{display:flex;justify-content:space-between;gap:8px;align-items:flex-start;margin-bottom:8px}.rdq .h b{font-size:14px;line-height:1.4}
+.tfo{display:flex;gap:6px;flex-wrap:wrap}.tfo button{flex:1;border:1.5px solid var(--ln);background:var(--bg);color:var(--tx);border-radius:10px;padding:9px 6px;font:600 13px Figtree,system-ui}.tfo button.on{border-color:var(--go);background:rgba(217,164,65,.18)}.tfo button.ok{border-color:var(--ac);background:rgba(93,187,99,.2)}
+.rdq .qopt.on{border-color:var(--go)}.rdg{width:100%}
+.dok{color:#2f8f4e;font-weight:600}.dno{color:var(--bad);text-decoration:underline wavy;font-weight:600}
+.seg.ssub button{flex-direction:row;padding:10px 4px;font-size:14px;white-space:nowrap}
 </style>
 </head>
 <body>
@@ -367,8 +372,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.10.30-1';
-const APP_BUILD='aff1c8ddba'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.10.31-1';
+const APP_BUILD='11f38d2f10'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -1300,7 +1305,7 @@ function oqish(){
 const wDue=()=>{const room=Math.max(0,(S.ie.nl||10)-ieNd());let nw=0;return S.ie.words.filter(w=>w.due<=dk()).sort((a,b)=>(a.t||0)-(b.t||0)).filter(w=>w.t||(nw++<room))};
 function iAdd(){const w=V('iw'),m=V('im');if(!w)return;S.ie.words.push({id:Date.now(),w,m,box:0,due:dk(),t:0});save()}
 function iBulk(){V('ib').split('\n').forEach((l,i)=>{const p=l.split(/[-–:=]/),w=(p[0]||'').trim();if(w)S.ie.words.push({id:Date.now()+i,w,m:p.slice(1).join('-').trim(),box:0,due:dk(),t:0})});save()}
-function iAns(ok){const w=wDue()[0];if(!w)return;if(ok){w.box=Math.min(5,w.box+1);w.due=addD(IV[w.box])}else{w.box=0;w.due=dk()}if(!w.t)S.ie.nd={d:dk(),n:ieNd()+1};w.t=Date.now();IR=0;save()}
+function iAns(ok){const w=wDue()[0];if(!w)return;if(ok){w.box=Math.min(5,w.box+1);w.due=addD(IV[w.box])}else{w.box=0;w.due=dk()}if(!w.t)S.ie.nd={d:dk(),n:ieNd()+1};w.t=Date.now();IR=0;ISC=null;save()}
 function iDel(id){S.ie.words=S.ie.words.filter(w=>w.id!==id);save()}
 function iMock(){const b=parseFloat(V('mb'));if(!(b>=0&&b<=9))return;S.ie.mock.push({id:Date.now(),d:dk(),t:V('mt')||'Umumiy',b});save()}
 function iWr(){const t=V('wp');if(!t)return;S.ie.wr.push({id:Date.now(),d:dk(),k:V('wk'),t,n:+V('wn')||0});save()}
@@ -1324,21 +1329,16 @@ function ieTick(k){const d=ieDp();d[k]=d[k]?0:1;save()}
 function ieStreak(){let n=0;for(let i=0;i<120;i++){const d=(S.ie.dp||{})[dAgo(i)]||{},c=Object.values(d).filter(Boolean).length;if(c>=3)n++;else if(i>0)break}return n}
 function qsave(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700)}
 
-function ielts(){
-  const seg=[['b','🏠 Bosh'],['l','🔤 Lug‘at'],['a','📰 Materiallar'],['m','📝 Mashq'],['w','✍️ Writing'],['s','🗣 Speaking']].map(x=>`<button class="${IVW===x[0]?'on':''}" onclick="IVW='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="seg sc" style="margin-top:0">${seg}</div>${IVW==='b'?ieBosh():IVW==='l'?ieLug():IVW==='a'?ieMat():IVW==='m'?ieMashq():IVW==='w'?ieWrite():ieSpeak()}`}
-
-function ieBosh(){
-  const st=ieStat(),T=S.ie.target||7,exd=S.ie.ex?dl(S.ie.ex):null,dp=ieDp(),due=wDue().length,str=ieStreak();
-  const gaps=Object.keys(SK).filter(k=>st.c[k]!==null).map(k=>({k,g:T-st.c[k]})).sort((a,b)=>b.g-a.g),foc=gaps[0];
-  const skl=Object.keys(SK).map(k=>{const c=st.c[k];return `<div class="skb"><div class="h"><span>${SK[k]}</span><span class="mu">${c===null?'ma‘lumot yo‘q':c+' / maqsad '+T}</span></div><div class="bar" style="margin-top:6px"><i style="width:${c===null?0:c/9*100}%"></i><b style="left:${T/9*100}%"></b></div></div>`}).join('');
+const IMGS=[['m','Natijalar'],['w','Writing'],['s','Speaking'],['x','AI mashq']];
+function ielts(){const g=IMG.includes(IVW),top=[['b','🏠 Bosh'],['l','🔤 Lug‘at'],['a','📰 Materiallar'],['m','🎯 Mashq']].map(x=>`<button class="${(x[0]==='m'?g:IVW===x[0])?'on':''}" onclick="IVW='${x[0]==='m'&&g?IVW:x[0]}';render()">${x[1]}</button>`).join(''),sub=g?`<div class="seg ssub" style="margin:8px 0 0">${IMGS.map(x=>`<button class="${IVW===x[0]?'on':''}" onclick="IVW='${x[0]}';render()">${x[1]}</button>`).join('')}</div>`:'';
+  return `<div class="seg" style="margin-top:0">${top}</div>${sub}${IVW==='b'?ieBosh():IVW==='l'?ieLug():IVW==='a'?ieMat():IVW==='m'?ieMashq():IVW==='w'?ieWrite():IVW==='x'?ieAiTab():ieSpeak()}`}
+function ieBosh(){const st=ieStat(),T=S.ie.target||7,dp=ieDp(),due=wDue().length;
+  const skl=Object.keys(SK).map(k=>{const c=st.c[k];return `<div class="skb"><div class="h"><span>${SK[k]}</span><span class="mu">${c===null?'ma’lumot yo‘q':c+' / maqsad '+T}</span></div><div class="bar" style="margin-top:6px"><i style="width:${c===null?0:c/9*100}%"></i><b style="left:${T/9*100}%"></b></div></div>`}).join('');
   const plan=IPL.map(([k,t])=>`<button class="row ${dp[k]?'done':''}" onclick="ieTick('${k}')"><span class="ck">${dp[k]?'✓':''}</span><span class="t">${t}${k==='v'?` <span class="mu">(${due} ta navbatda)</span>`:''}</span></button>`).join('');
-  const mocks=S.ie.tests.filter(t=>t.k==='M').map(t=>({d:t.d,o:ieRound(Object.values(t.b).reduce((a,x)=>a+x,0)/Object.keys(t.b).length)})),n=mocks.length;
-  const line=n>1?`<svg viewBox="0 0 300 70" width="100%" height="70"><polyline fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${mocks.map((m,i)=>`${i*300/(n-1)},${66-(m.o-4)/5*60}`).join(' ')}"/></svg>`:'';
-  return `<section class="hero"><p class="lab">IELTS</p><h1 style="font-size:46px">${st.ov===null?'—':st.ov}<span style="font-size:22px"> / ${T}</span></h1><p class="mu">Taxminiy umumiy ball (so‘nggi natijalaringdan)${exd!==null?`. Imtihongacha: ${exd>=0?exd+' kun, '+Math.ceil(exd/7)+' hafta':'o‘tib ketdi'}`:''}.</p>${foc&&foc.g>0?`<p style="margin-top:6px">Eng ko‘p e‘tibor: <b>${SK[foc.k]}</b>, maqsadgacha ${r1(foc.g)} ball.</p>`:''}</section>${dualPanel()} <div class="st"><div><b>${str} kun</b>ketma-ket mashq</div><div><b>${due}</b>lug‘at navbatda</div><div><b>${S.ie.words.length}</b>so‘z</div></div>
-  <h2>Bugungi reja</h2>${plan}<h2>Ko‘nikmalar</h2>${skl}${line?`<h2>Mock natijalari o‘sishi</h2>${line}`:''}
-  <h2>Sozlamalar</h2><div class="in"><span style="align-self:center;min-width:92px">Maqsad ball</span><input type="number" step="0.5" min="4" max="9" value="${T}" onchange="S.ie.target=+this.value||7;save()"></div><div class="in"><span style="align-self:center;min-width:92px">Imtihon sanasi</span><input type="date" value="${S.ie.ex||''}" onchange="S.ie.ex=this.value;save()"></div>`}
-
+  const mocks=S.ie.tests.filter(t=>t.k==='M').map(t=>({d:t.d,o:ieRound(Object.values(t.b).reduce((a,x)=>a+x,0)/Object.keys(t.b).length)})),n=mocks.length,
+    line=n>1?`<svg viewBox="0 0 300 70" width="100%" height="70"><polyline fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${mocks.map((m,i)=>`${i*300/(n-1)},${66-(m.o-4)/5*60}`).join(' ')}"/></svg>`:'';
+  return `${dualPanel('i')}<h2>Bugungi reja</h2>${plan}<h2>Ko‘nikmalar</h2>${skl}${line?`<h2>Mock natijalari o‘sishi</h2>${line}`:''}${ieErrBrief()}
+  <details class="sd" style="margin-top:14px"><summary>⚙️ Sozlamalar</summary><div class="in" style="margin-top:8px"><span style="align-self:center;min-width:110px">Maqsad ball</span><input type="number" step="0.5" min="4" max="9" value="${T}" onchange="S.ie.target=+this.value||7;save()"></div><div class="in"><span style="align-self:center;min-width:110px">Imtihon sanasi</span><input type="date" value="${S.ie.ex||''}" onchange="S.ie.ex=this.value;save()"></div><div class="in"><span style="align-self:center;min-width:110px">Lug‘at maqsadi</span><input type="number" min="100" step="100" value="${S.ie.vg||1500}" onchange="S.ie.vg=Math.max(100,+this.value||1500);save()"></div></details>`}
 function ieQuiz(){const W=S.ie.words.filter(w=>w.m);if(W.length<4){IQ={err:1};render();return}
   const w=W[Math.floor(Math.random()*W.length)],o=W.filter(x=>x.id!==w.id).sort(()=>Math.random()-.5).slice(0,3),opts=[...o,w].sort(()=>Math.random()-.5);
   IQ={w,opts,ans:null,sc:(IQ&&IQ.sc)||0,n:(IQ&&IQ.n)||0};render()}
@@ -1995,7 +1995,10 @@ const STKK=Object.keys(STK).sort((a,b)=>b.length-a.length);
 const stick=html=>html.replace(/<h2([^>]*)>([^<]+)/g,(m,a,t)=>{const k=STKK.find(x=>t.startsWith(x));return k?`<h2${a}>${STK[k]} ${t}`:m});
 
 // ================= AI YORDAMCHI =================
-const AIQ=['Bugun nimaga e‘tibor qarataman?','Haftamni tahlil qil','Ertangi kunni rejalashtir','Maqsadlarim bo‘yicha maslahat ber','Odatlarimni qanday yaxshilayman?','Qur‘on yodlash va takror bo‘yicha maslahat','IELTS uchun reja tuz','IELTS Writing Task 2 bo‘yicha video top','Meni ruhlantir'];
+const aiUk=()=>'trk_aiu_'+dk();
+function aiCount(n){try{const k=aiUk();for(let i=localStorage.length-1;i>=0;i--){const x=localStorage.key(i);if(x&&x.startsWith('trk_aiu_')&&x!==k)localStorage.removeItem(x)}localStorage.setItem(k,String((+localStorage.getItem(k)||0)+(n||1)))}catch(e){}}
+const aiUsed=()=>{try{return +localStorage.getItem(aiUk())||0}catch(e){return 0}},aiLeft=()=>Math.max(0,40-aiUsed()),aiUseLabel=()=>'AI: '+aiUsed()+'/40 bugun';
+const AIQ=['Bugun nimaga e‘tibor qarataman?','Haftamni tahlil qil','Ertangi kunni rejalashtir','Maqsadlarim bo‘yicha maslahat ber','Odatlarimni qanday yaxshilayman?','Hifz tezligim va takrorimni baholab, maslahat ber','IELTS tayyorgarligimni baholab, haftalik reja tuz','Xatolarim bo‘yicha nimani takrorlay?','IELTS Writing Task 2 bo‘yicha video top','Meni ruhlantir'];
 let AIL=false,AIT=null,AITL=false,AIW=null,AIT0=0;
 const aiS=()=>{S.ai=S.ai||{};S.ai.chat=S.ai.chat||[];S.ai.sh=S.ai.sh||{core:1,quran:1,study:1,health:1,money:0};S.ai.tip=S.ai.tip||{};return S.ai};
 const md=t=>{let s=esc(t).replace(/\*\*(.+?)\*\*/g,'<b>$1</b>').replace(/(^|\n)[-*•] (.+)/g,'$1<li>$2</li>').replace(/(^|\n)\d+\. (.+)/g,'$1<li>$2</li>');
@@ -2022,7 +2025,11 @@ function aiContext(){
     let n=0;for(let i=0;i<7;i++)PR.slice(0,5).forEach(([p])=>{if(((S.nm.d[dAgo(i)]||{})[p])===1)n++});ln('Namoz: oxirgi 7 kunda 35 tadan '+n+' tasi o‘qilgan, jami qazo qarzi '+Object.values(S.nm.debt).reduce((a,c)=>a+c,0)+' ta');
     const R=rzInfo();if(R.left>0&&R.left<=120)ln('Ramazonga '+R.left+' kun qoldi');
   });
-  if(sh.study)T(()=>{
+  if(sh.quran)T(()=>{const H=hifzStats();ln('Hifz (aniq hisob): yodlangan '+H.done+'/'+H.tot+' bet, '+H.rem+' bet qoldi'+(H.days?', kuniga '+H.ppd+' bet bilan taxminan '+H.days+' kun ('+H.eta+')':'')+', to‘liq juz’lar '+H.juz+'/30, bu hafta '+H.week+' bet, bugungi sabaq '+H.sabaq+'/'+H.ppd+', sabqi va manzil '+H.partsDone+'/'+H.parts+' bajarilgan')});
+ if(sh.study)T(()=>{const R=ieReady(),E=ieErrs();ln('IELTS tayyorgarlik: '+R.pc+'% (ko‘nikmalar '+R.skill+'%, lug‘at '+R.vocab+'%, 14 kunlik izchillik '+R.cons+'%, 30 kunlik mock '+R.mock+'%). Yodlangan so‘z '+R.learned+'/'+R.vg+'. Tavsiya: '+R.next);
+  if(E.length){const c={};E.forEach(e=>c[e.t]=(c[e.t]||0)+e.n);ln('Writing/Speaking xatolari turlari: '+Object.entries(c).map(([k,n])=>k+' '+n).join(', ')+'. Oxirgi xatolar: '+E.slice(0,4).map(e=>'“'+e.o+'” → “'+e.c+'”').join('; '))}
+  ln('IELTS materiallari: '+ieM().length+' ta, ulardan lug‘atga '+S.ie.words.filter(w=>w.src).length+' ta so‘z qo‘shilgan')});
+ if(sh.study)T(()=>{
     const st=ieStat(),I=S.ie;if(I.words.length)ln('IELTS lug‘atidagi so‘zlar (takrorlama): '+I.words.slice(-60).map(x=>x.w).join(', '));ln('IELTS: maqsad '+(I.target||7)+', taxminiy umumiy ball '+(st.ov===null?'hali yo‘q':st.ov)+(I.ex?', imtihon '+I.ex+' ('+dl(I.ex)+' kun qoldi)':'')+'. Ko‘nikmalar: '+Object.keys(SK).map(x=>SK[x]+' '+(st.c[x]===null?'yo‘q':st.c[x])).join(', ')+'. Lug‘at: navbatda '+wDue().length+' ta, jami '+I.words.length+' ta. Mashq seriyasi '+ieStreak()+' kun');
     const ut=S.un.tasks.filter(t=>!t.x&&t.due).sort((a,b)=>a.due>b.due?1:-1).slice(0,4);if(ut.length)ln('Univer topshiriqlari: '+ut.map(t=>t.t+' ('+dlTxt(dl(t.due))+')').join('; '));
     const ex=S.un.exams.filter(e=>dl(e.d)>=0).slice(0,3);if(ex.length)ln('Imtihonlar: '+ex.map(e=>e.s+' ('+dlTxt(dl(e.d))+')').join('; '));
@@ -2055,10 +2062,10 @@ async function fnPost(body,ms){
   if(j.error)throw new Error(j.error);return j}
 async function aiCall(msgs,ctx){const d=await fnPost({action:'chat',messages:msgs,context:ctx},60000);if(!d.text)throw new Error('AI javob bermadi.');return d}
 function aiBuild(){const old=document.getElementById('ai');if(old)old.remove();const d=document.createElement('div');d.id='ai';d.className='ai';
-  d.innerHTML=`<div class="aih"><button class="x" style="font-size:22px" onclick="aiClose()">✕</button><div style="flex:1"><b>✨ Yordamchi</b><div class="mu" style="font-size:12px">Kunlik tizim AI</div></div><button class="btn s" style="padding:7px 12px" onclick="aiNew()">Yangi suhbat</button></div><div id="aic" class="aic"></div><div id="aiq" class="aiq">${AIQ.map((q,i)=>`<button onclick="aiGo(${i})">${q}</button>`).join('')}</div><div class="aif"><button class="mic" id="aimic" onclick="aiMic()" aria-label="Ovozli kiritish">🎤</button><textarea id="aii" rows="1" placeholder="Savol yoz..." oninput="aiGrow(this)" onfocus="setTimeout(()=>{const c=document.getElementById('aic');if(c)c.scrollTop=c.scrollHeight},350)"></textarea><button class="send" onclick="aiGo()">➤</button></div>`;
+  d.innerHTML=`<div class="aih"><button class="x" style="font-size:22px" onclick="aiClose()">✕</button><div style="flex:1"><b>✨ Yordamchi</b><div class="mu" style="font-size:12px" id="aisub">Kunlik tizim AI</div></div><button class="btn s" style="padding:7px 12px" onclick="aiNew()">Yangi suhbat</button></div><div id="aic" class="aic"></div><div id="aiq" class="aiq">${AIQ.map((q,i)=>`<button onclick="aiGo(${i})">${q}</button>`).join('')}</div><div class="aif"><button class="mic" id="aimic" onclick="aiMic()" aria-label="Ovozli kiritish">🎤</button><textarea id="aii" rows="1" placeholder="Savol yoz..." oninput="aiGrow(this)" onfocus="setTimeout(()=>{const c=document.getElementById('aic');if(c)c.scrollTop=c.scrollHeight},350)"></textarea><button class="send" onclick="aiGo()">➤</button></div>`;
   document.body.appendChild(d)}
 function aiGrow(el){el.style.height='auto';el.style.height=Math.min(120,el.scrollHeight)+'px'}
-function aiRender(){const c=document.getElementById('aic');if(!c)return;const A=aiS(),ch=A.chat;
+function aiRender(){const sb2=document.getElementById('aisub');if(sb2)sb2.textContent='Kunlik tizim AI · '+aiUseLabel();const c=document.getElementById('aic');if(!c)return;const A=aiS(),ch=A.chat;
   const hi=`<div class="bb a">Assalomu alaykum${S.name?', '+esc(S.name):''}! Men sening shaxsiy yordamchingman. Kuning, odatlaring, Qur‘on, IELTS va maqsadlaring haqida ma‘lumotlaringni ko‘raman, shunga qarab maslahat beraman. Pastdagi savollardan birini tanla yoki o‘zing yoz.</div>`;
   c.innerHTML=hi+ch.map((m,i)=>{const t=(AIT&&i===ch.length-1&&m.r==='model')?m.t.slice(0,AIT.n):m.t;return `<div class="bb ${m.r==='user'?'u':m.r==='err'?'e':'a'}">${m.r==='plan'?dpCard(m,i):m.r==='user'?esc(t).replace(/\n/g,'<br>'):m.r==='err'?'⚠️ '+esc(t)+(i===ch.length-1&&ch[i-1]&&ch[i-1].r==='user'&&!AIL?'<br><button class="btn s" style="margin-top:8px" onclick="aiRetry()">↻ Qayta yuborish</button>':''):md(m.r==='model'?aiActs(t).clean:t)+(m.r==='model'&&!AIT?aiCards(m,i)+aiExtra(m):'')+(m.ms&&!AIT?`<div class="mu" style="font-size:11px;margin-top:6px">⏱ ${esc(m.ms)}</div>`:'')}</div>`}).join('')+(AIL?`<div class="bb a"><span class="dots"><span></span><span></span><span></span></span> <span class="mu" style="font-size:12px">${Math.floor((Date.now()-AIT0)/1000)} s${AIRT?' · qayta urinyapman':''}</span></div>`:'');
   c.scrollTop=c.scrollHeight}
@@ -2078,8 +2085,8 @@ function aiNew(){if(AIT&&AIT.iv)clearInterval(AIT.iv);AIT=null;AIL=false;aiS().c
 function aiClear(){if(confirm('Suhbat tarixi o‘chirilsinmi?')){aiS().chat=[];save()}}
 function aiGo(i){if(AIL)return;let t;if(typeof i==='number')t=AIQ[i];else{const e=document.getElementById('aii');t=e?e.value.trim():'';if(e){e.value='';aiGrow(e)}}if(t)aiSend(t)}
 async function aiStream(msgs,ctx,onText,onMeta,opt){let got=false;const wrap=x=>{got=true;onText(x)};
-  try{return await aiStream1(msgs,ctx,wrap,onMeta,opt)}
-  catch(e){if(got||!e.gw)throw e;if(opt&&opt.onRetry)opt.onRetry();await new Promise(r=>setTimeout(r,1500));return await aiStream1(msgs,ctx,onText,onMeta,opt)}}
+  try{const r=await aiStream1(msgs,ctx,wrap,onMeta,opt);aiCount();return r}
+  catch(e){if(got||!e.gw)throw e;if(opt&&opt.onRetry)opt.onRetry();await new Promise(r=>setTimeout(r,1500));const r2=await aiStream1(msgs,ctx,onText,onMeta,opt);aiCount();return r2}}
 async function aiStream1(msgs,ctx,onText,onMeta,opt){
   let s=await aiSession();
   if(!s)throw new Error('Hisobga qayta kiring.');
@@ -2349,7 +2356,7 @@ function psPast(){const A=S.gym.past||[];if(!A.length)return '';
 // ---- Ovqat: AI bilan kaloriya va makrolar ----
 const FDMS=['Nonushta','Tushlik','Kechki ovqat','Snack'];
 function b64(buf){const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)}
-async function fnAI(body){const d=await fnPost(body,body.action==='ielts'?95000:60000);if(!d.text)throw new Error('AI javob bermadi.');return d}
+async function fnAI(body){const d=await fnPost(body,body.action==='ielts'?95000:60000);if(!d.text)throw new Error('AI javob bermadi.');aiCount();return d}
 function parseJson(t){let s=String(t||'').replace(/```json|```/g,'').trim();const a=s.indexOf('{'),b=s.lastIndexOf('}');if(a<0||b<a)return null;try{return JSON.parse(s.slice(a,b+1))}catch(e){return null}}
 function shrink(f,max){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.8).split(',')[1])};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Rasm ochilmadi'))};img.src=u})}
 async function fdPic(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;try{FDI=await shrink(f,900);render()}catch(e){alert(e.message)}}
@@ -2930,7 +2937,7 @@ function ieMatDraw(){const b=document.getElementById('iemb'),m=ieM().find(x=>x.i
   const bar=`<div class="ieb">${busy?`<div class="mu" style="margin-bottom:6px">🔍 AI tahlil qilmoqda… ${IMA.i}/${IMA.n}</div>`:`<button class="btn" style="flex:1" onclick="ieAnalyze(${m.id})">🔍 ${an?'Qayta tahlil':'AI bilan tahlil'} (${np} so‘rov)</button>`}${m.dn===dk()?'<span class="chip">✓ bugun</span>':`<button class="btn s" onclick="ieDone()">✓ Tugatdim</button>`}</div>${IMA&&IMA.id===m.id&&IMA.err?`<p style="color:var(--bad);margin:6px 0">${esc(IMA.err)}</p>`:''}`;
   const res=an?ieResults(m):'';
   let body;
-  if(m.c&&m.c.length)body=m.c.map((c,i)=>`<div class="iecu" data-i="${i}" id="icu${i}"><button class="iet" onclick="ieCueGo(${i})" aria-label="${ieFmt(c[0])} ga o‘tish">${ieFmt(c[0])}</button><span class="iep">${ieMark(c[2],m)}</span></div>`).join('');
+  if(m.c&&m.c.length)body=m.c.map((c,i)=>`<div class="iecu" data-i="${i}" id="icu${i}"><button class="iet" onclick="ieCueGo(${i})" aria-label="${ieFmt(c[0])} ga o‘tish">${ieFmt(c[0])}</button>${m.au&&IMAU?`<button class="iet" onclick="ieDictOpen(${i})" aria-label="Diktant">✍</button>`:''}<span class="iep">${ieMark(c[2],m)}</span></div>`).join('');
   else body=full.split(/\n{2,}|\n/).filter(p=>p.trim()).map(p=>`<p class="iep">${ieMark(p,m)}</p>`).join('')||`<p class="iep">${ieMark(full,m)}</p>`;
   b.innerHTML=bar+(an?`<details class="iesum" ${IMSEL._o?'open':''}><summary>📋 Tahlil natijalari: tanlab qo‘shish</summary>${res}</details>`:'')+`<div class="ietx" style="font-size:${17}px">${body}</div><p class="mu" style="font-size:12px;margin-top:12px">Ajratilgan so‘z yoki iborani bos. Boshqa so‘zni bossang, AI dan so‘rashing mumkin. O‘zbekcha ma’nolarni AI yozadi: ishonchsiz bo‘lsa tekshirib ol.</p>`;
   b.scrollTop=sc;iePlayer(m);IMC=-1;if(ieAu())ieTU()}
@@ -2973,7 +2980,7 @@ function ieRate(){const R=[.75,1,1.25,1.5],a=ieAu();IMF.rate=R[(R.indexOf(IMF.ra
 function ieLoop(){IMF.loop=IMF.loop?0:1;const b=document.getElementById('ieloop');if(b)b.classList.toggle('on',!!IMF.loop)}
 function ieCueIdx(m,t){const C=m.c||[];for(let i=C.length-1;i>=0;i--)if(t>=C[i][0]-0.05)return t<=C[i][1]+0.6||i===C.length-1?i:i;return -1}
 let IMC=-1;
-function ieTU(){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!a||!m)return;const t=a.currentTime,i=ieCueIdx(m,t),sk=document.getElementById('iesk');if(sk&&a.duration)sk.value=Math.round(t/a.duration*1000);
+function ieTU(){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!a||!m)return;const t=a.currentTime,i=ieCueIdx(m,t),sk=document.getElementById('iesk');if(typeof IDK!=='undefined'&&IDK&&IDK.stop&&t>=IDK.stop){a.pause();IDK.stop=0;a.playbackRate=IMF.rate}if(sk&&a.duration)sk.value=Math.round(t/a.duration*1000);
   if(IMF.loop&&IMC>=0&&m.c[IMC]&&t>=m.c[IMC][1]){a.currentTime=m.c[IMC][0];return}
   if(i!==IMC){document.querySelectorAll('#iemb .iecu.on').forEach(x=>x.classList.remove('on'));IMC=i;const n=document.getElementById('icu'+i);if(n){n.classList.add('on');if(IMF.follow)n.scrollIntoView({block:'center',behavior:'smooth'})}}}
 function ieCueGo(i){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!m||!m.c[i])return;if(!a){toast('Audio yo‘q: faqat matn.');return}a.currentTime=m.c[i][0];IMC=-1;ieTU();a.play()}
@@ -2995,20 +3002,21 @@ function ieReady(){const st=ieStat(),T=S.ie.target||7,sk=Object.keys(SK).filter(
   if(due>0)next=due+' ta so‘z takrori navbatda: 5 daqiqada tugat';else if(!mats.length&&!W.length)next='Birinchi maqolani Materiallar bo‘limiga qo‘sh: AI qiyin so‘zlarni topib beradi';else if(!mocks)next='30 kundan beri mock topshirmagansan: bitta to‘liq mock yoz';
   else if(gaps[0]&&gaps[0].g>0)next=SK[gaps[0].k]+' ni mashq qil: maqsadgacha '+r1(gaps[0].g)+' ball';else next=mats.length?'Yangi maqola yoki podkast tahlil qil va 5 ta yangi so‘z ol':'Birinchi maqolani Materiallar bo‘limiga qo‘sh';
   return{pc,skill:Math.round(skill*100),vocab:Math.round(vocab*100),cons:Math.round(cons*100),mock:Math.round(mk*100),learned,vg,mocks,week,due,mat:mats.length,fromMat,next}}
-function dualPanel(){const R=ieReady(),H=hifzStats(),st=ieStat(),T=S.ie.target||7,exd=S.ie.ex?dl(S.ie.ex):null,bar=(n,v)=>`<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${n}</span><b>${v}%</b></div><div class="dpb"><i style="width:${v}%"></i></div></div>`,d=H.eta?new Date(H.eta+'T12:00'):null;
+function dualPanel(mode){const R=ieReady(),H=hifzStats(),st=ieStat(),T=S.ie.target||7,exd=S.ie.ex?dl(S.ie.ex):null,bar=(n,v)=>`<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${n}</span><b>${v}%</b></div><div class="dpb"><i style="width:${v}%"></i></div></div>`,d=H.eta?new Date(H.eta+'T12:00'):null;
   const ie=`<div class="dpc2"><div class="h"><b>🎓 IELTS tayyorgarligi</b><span class="mu">${st.ov===null?'ball yo‘q':st.ov+' / '+T}</span></div><div class="dpr2">${rwRing(R.pc,78,R.pc+'%')}<div class="t"><div class="mu" style="font-size:13px;margin-bottom:6px">${exd!==null?(exd>=0?'Imtihongacha '+exd+' kun':'Imtihon o‘tib ketdi'):'Imtihon sanasi qo‘yilmagan'}</div>${bar('Ko‘nikmalar',R.skill)}${bar('Lug‘at',R.vocab)}${bar('Izchillik (14 kun)',R.cons)}${bar('Mock (30 kun)',R.mock)}</div></div>
     <div class="dpm"><span>Yodlangan so‘z</span><b>${R.learned} / ${R.vg}</b><span>Navbatda</span><b>${R.due} ta</b><span>Bu hafta takror</span><b>${R.week} ta</b><span>Materiallar</span><b>${R.mat} (${R.fromMat} so‘z)</b></div><div class="nx">👉 ${esc(R.next)}</div></div>`;
   const hf=`<div class="dpc2"><div class="h"><b>📖 Qur‘on hifzi</b><span class="mu">${H.done} / ${H.tot} bet</span></div><div class="dpr2">${rwRing(H.pc,78,H.pc+'%')}<div class="t"><b style="font-size:21px">${H.rem>0?H.rem+' bet qoldi':'Hammasi yodlangan'}</b><div class="mu" style="font-size:13px;margin-top:2px">${H.days?`Kuniga ${H.ppd} bet bilan ~${H.days} kun (${d.getDate()} ${MON[d.getMonth()]} ${d.getFullYear()})`:H.rem<=0?'Alhamdulillah!':'Kunlik reja belgilanmagan'}</div></div></div>
     <div class="dpm"><span>To‘liq juz’lar</span><b>${H.juz} / 30</b><span>Bu hafta yodlandi</span><b>${H.week} bet</b><span>Bugungi sabaq</span><b>${H.sabaq} / ${H.ppd} bet</b><span>Sabqi · manzil</span><b>${H.parts?H.partsDone+' / '+H.parts+' bajarildi':'bugun yo‘q'}</b></div><div class="nx">${H.sabaq>=H.ppd&&H.ppd>0?'✅ Bugungi sabaq bajarildi.':'👉 Bugun '+Math.max(0,r1(H.ppd-H.sabaq))+' bet sabaq qoldi.'} <br><button class="btn s" style="margin-top:6px" onclick="tab='q';QT='t';TKV='s';render()">Takrorni ochish</button></div></div>`;
-  return `<div class="dpn">${ie}${hf}</div>`}
+  return `<div class="dpn">${ie}${mode==='i'?hifzMini():hf}</div>`}
+function hifzMini(){const H=hifzStats();return `<div class="dpc2" style="padding:12px"><div class="h" style="margin-bottom:6px"><b>📖 Qur‘on hifzi</b><span class="mu">${H.done} / ${H.tot} bet · ${H.pc}%</span></div><div class="dpb" style="height:8px"><i style="width:${H.pc}%"></i></div><div class="dpm"><span>${H.rem>0?H.rem+' bet qoldi':'Hammasi yodlangan'}</span><b>${H.days?'~'+H.days+' kun':''}</b><span>Bugun</span><b>${H.sabaq}/${H.ppd} bet${H.parts?' · '+H.partsDone+'/'+H.parts+' takror':''}</b></div><div class="in" style="margin-top:8px"><button class="btn s" style="flex:1" onclick="tab='q';QT='t';TKV='s';render()">Takrorni ochish</button></div></div>`}
 // ---- so'z kartochkasi ----
 let IRM='f',ILF='a';
 function ieBlank(s,w){if(!s||!w)return '';const st=w.length>5?w.slice(0,w.length-2):w,re=new RegExp('(^|[^A-Za-z])('+ieEsc(st).replace(/\s+/g,'\\s+')+'[A-Za-z]*)','i');return re.test(s)?esc(s).replace(new RegExp('('+ieEsc(esc(st)).replace(/\s+/g,'\\s+')+'[A-Za-z]*)','i'),'_____'):''}
 function ieCard(w){const sp=`<button class="x" style="color:#fff" onclick="ieSay(${JSON.stringify(w.w).replace(/"/g,'&quot;')})" aria-label="Talaffuz">🔊</button>`,bl=IRM==='z'?ieBlank(w.c||w.e,w.w):'',
   back=`<p style="font-size:20px;margin:6px 0 0">${esc(w.u||w.m||'Ma’no yozilmagan')}</p>${w.d?`<p style="margin:6px 0 0;opacity:.92">${esc(w.d)}</p>`:''}${w.e?`<p style="margin:6px 0 0"><i>${esc(w.e)}</i></p>`:''}${w.c?`<p style="margin:6px 0 0;font-size:13px;opacity:.8">“${esc(w.c)}”</p>`:''}`,
   btns='<div class="in" style="margin-top:12px"><button class="btn s" style="flex:1" onclick="iAns(0)">Bilmadim</button><button class="btn" style="flex:1" onclick="iAns(1)">Bildim</button></div>';
-  if(bl)return `<div class="cz2">${bl}</div>${w.u||w.m?`<p style="margin:6px 0 0;opacity:.85">Ishora: ${esc(w.u||w.m)}</p>`:''}${IR?`<h1 style="font-size:32px;margin-top:8px">${esc(w.w)} ${sp}</h1>${back}${btns}`:'<button class="big" onclick="IR=1;render()">Javobni ko‘rsat</button>'}`;
-  return `<h1 style="font-size:34px">${esc(w.w)} ${sp}</h1>${w.pos||w.lv||w.k==='c'?`<p style="margin:0;opacity:.8">${esc([w.pos,w.lv,w.k==='c'?'chunk':''].filter(Boolean).join(' · '))}</p>`:''}${IR?back+btns:'<button class="big" onclick="IR=1;render()">Ma’nosini ko‘rsat</button>'}`}
+  if(bl)return `<div class="cz2">${bl}</div>${w.u||w.m?`<p style="margin:6px 0 0;opacity:.85">Ishora: ${esc(w.u||w.m)}</p>`:''}${IR?`<h1 style="font-size:32px;margin-top:8px">${esc(w.w)} ${sp}</h1>${back}${btns}${ieSckUi(w)}`:'<button class="big" onclick="IR=1;render()">Javobni ko‘rsat</button>'}`;
+  return `<h1 style="font-size:34px">${esc(w.w)} ${sp}</h1>${w.pos||w.lv||w.k==='c'?`<p style="margin:0;opacity:.8">${esc([w.pos,w.lv,w.k==='c'?'chunk':''].filter(Boolean).join(' · '))}</p>`:''}${IR?back+btns+ieSckUi(w):'<button class="big" onclick="IR=1;render()">Ma’nosini ko‘rsat</button>'}`}
 const ieMode=()=>S.ie.words.some(w=>w.c||w.e)?`<div class="seg" style="margin:0 0 10px"><button class="${IRM==='f'?'on':''}" onclick="IRM='f';IR=0;render()">Kartochka</button><button class="${IRM==='z'?'on':''}" onclick="IRM='z';IR=0;render()">Gapni to‘ldir</button></div>`:'';
 function ieList(){const f=ILF,fl=x=>(!IQS||sn(x.w+' '+(x.m||'')).includes(sn(IQS)))&&(f==='a'||(f==='n'&&x.box===0)||(f==='h'&&(x.lv==='C1'||x.lv==='C2'))||(f==='c'&&x.k==='c')),
   chips=[['a','Hammasi'],['n','Yangi'],['h','C1–C2'],['c','Chunklar']].map(x=>`<button class="${ILF===x[0]?'on':''}" onclick="ILF='${x[0]}';render()">${x[1]}</button>`).join('');
@@ -3017,6 +3025,99 @@ function ieList(){const f=ILF,fl=x=>(!IQS||sn(x.w+' '+(x.m||'')).includes(sn(IQS
 const ieNd=()=>{const n=S.ie.nd;return n&&n.d===dk()?n.n:0};
 function ieNl(d){S.ie.nl=Math.max(3,Math.min(40,(S.ie.nl||10)+d));save()}
 const ieNlUi=()=>`<div class="ssst"><span>Kuniga yangi so‘z</span><div><button class="btn s" onclick="ieNl(-1)">−</button><b>${S.ie.nl||10}</b><button class="btn s" onclick="ieNl(1)">+</button></div></div><p class="mu" style="margin:0 0 8px;font-size:12px">Bugun ${ieNd()} ta yangi so‘z ko‘rildi. Limitdan keyingi yangi so‘zlar ertaga chiqadi (ortiqcha yuk bo‘lmasin).</p>`;
+// ---- IELTS: AI mashq (Reading yaratish), Xatolar daftari va mashqi, so'z bilan gap tuzishni tekshirish ----
+const IMG=['m','w','s','x'];
+let IRD={topic:'',useW:1,busy:0,err:'',d:null,ans:{},done:0,sc:0},ISC=null,IED=null;
+const IRT=['Environment','Technology','Education','Health','Cities','Science','Society','History'];
+const ieNorm=s=>String(s||'').toLowerCase().replace(/[’‘]/g,"'").replace(/[^a-z0-9' ]+/g,' ').replace(/\s+/g,' ').trim();
+function ieLev(a,b){const m=a.length,n=b.length;if(!m)return n;if(!n)return m;let p=[...Array(n+1).keys()];for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+const ieNear=(a,b)=>{const x=ieNorm(a),y=ieNorm(b);return !!x&&(x===y||(y.length>=6&&ieLev(x,y)<=1))};
+// ---- Reading mashqi ----
+const ieRdPick=()=>S.ie.words.filter(w=>w.k!=='c'&&String(w.w).length>3&&!/\s/.test(w.w)).sort((a,b)=>(a.box-b.box)||((a.t||0)-(b.t||0))).slice(0,6).map(w=>w.w);
+function ieRdValid(j,words){if(!j||typeof j.passage!=='string')throw new Error('AI matn bermadi. Qayta urinib ko‘ring.');
+  const passage=j.passage.replace(/\r/g,'').trim(),wc=passage.split(/\s+/).length;if(wc<120)throw new Error('AI yaratgan matn juda qisqa. Qayta urinib ko‘ring.');
+  const low=passage.toLowerCase(),Q=[];
+  (Array.isArray(j.questions)?j.questions:[]).forEach(q=>{if(!q||!q.q)return;const a=String(q.a||'').trim(),qq=ieCl(q.q,300),why=ieCl(q.why,260);
+    if(q.t==='tfng'&&['TRUE','FALSE','NOT GIVEN'].includes(a.toUpperCase()))Q.push({t:'tfng',q:qq,a:a.toUpperCase(),why});
+    else if(q.t==='mcq'&&Array.isArray(q.o)&&q.o.length===4&&/^[ABCD]$/i.test(a))Q.push({t:'mcq',q:qq,o:q.o.map(x=>ieCl(x,200)),a:a.toUpperCase(),why});
+    else if(q.t==='gap'&&a&&a.split(/\s+/).length<=2&&/_{2,}/.test(qq)&&ieIn(low,a.toLowerCase()))Q.push({t:'gap',q:qq,a:a.toLowerCase(),why})});   // gap javobi matnda aynan bo'lishi shart
+  if(Q.length<5)throw new Error('AI savollari ishonchli chiqmadi (javoblarni matndan tekshirib bo‘lmadi). Qayta urinib ko‘ring.');
+  return{title:ieCl(j.title,80)||'Reading mashqi',passage,wc,q:Q.slice(0,10),words,used:words.filter(w=>new RegExp('\\b'+ieEsc(w.slice(0,Math.max(4,w.length-2)))+'\\w*','i').test(passage))}}
+async function ieRdGen(){if(IRD.busy)return;const topic=(IRD.topic||'').trim().slice(0,80),words=IRD.useW?ieRdPick():[];IRD.busy=1;IRD.err='';render();
+  try{const d=await fnAI({action:'reading',topic,band:S.ie.target||7,words}),j=parseJson(d.text);IRD.d=ieRdValid(j,words);IRD.ans={};IRD.done=0;IRD.sc=0}
+  catch(e){IRD.err=String(e.message||e).slice(0,200)}IRD.busy=0;render()}
+function ieRdSet(i,v){if(IRD.done)return;IRD.ans[i]=v;render()}
+function ieRdCheck(){const D=IRD.d;if(!D||IRD.done)return;const un=D.q.filter((_,i)=>!String(IRD.ans[i]||'').trim()).length;if(un&&!confirm(un+' ta savolga javob berilmadi. Baribir tekshiraymi?'))return;
+  let sc=0;D.q.forEach((q,i)=>{const a=String(IRD.ans[i]||'').trim();q.ok=q.t==='gap'?ieNear(a,q.a):a.toUpperCase()===q.a;if(q.ok)sc++});IRD.sc=sc;IRD.done=1;
+  (S.ie.pr=S.ie.pr||[]).push({id:Date.now(),d:dk(),k:'R',s:sc,n:D.q.length,topic:(IRD.topic||D.title).slice(0,60),wc:D.wc});S.ie.pr=S.ie.pr.slice(-60);ieDp().R=1;save()}
+const ieRdNew=()=>{IRD.d=null;IRD.ans={};IRD.done=0;render()};
+function ieRdToMat(){const D=IRD.d;if(!D)return;ieM().unshift({id:Date.now(),t:D.title,k:'a',x:D.passage,c:[],au:0,an:null,d:dk()});while(ieM().length>15)ieM().pop();toast('Materiallarga qo‘shildi: tahlil qilib so‘z olishing mumkin');save()}
+function ieHlWords(text,words){const stems=words.map(w=>w.toLowerCase().slice(0,Math.max(4,w.length-2)));return String(text).replace(/([A-Za-z][A-Za-z'’-]*)|([^A-Za-z]+)/g,(m,w,o)=>w?(stems.some(s=>w.toLowerCase().startsWith(s))?'<mark class="mw2">'+esc(w)+'</mark>':esc(w)):esc(o))}
+function ieRdUi(){const D=IRD.d;
+  if(!D){const nw=ieRdPick().length;return `<div class="goal"><div class="h"><b>📖 AI Reading mashqi</b><span class="mu">1 so‘rov</span></div><p class="mu" style="margin:0 0 8px">AI sen uchun yangi matn yozadi (band ${S.ie.target||7} darajasida) va 8 ta IELTS savol beradi: True/False/Not Given, test, gapni to‘ldirish. Javoblar matndan tekshiriladi.</p>
+    <input id="rdt" placeholder="Mavzu (ixtiyoriy), masalan: urban planning" value="${esc(IRD.topic)}" oninput="IRD.topic=this.value" style="width:100%;margin-bottom:6px"><div class="seg sc" style="margin:0 0 8px">${IRT.map(t=>`<button onclick="IRD.topic='${t}';render()">${t}</button>`).join('')}</div>
+    <label class="mu" style="display:flex;gap:8px;align-items:center;margin-bottom:8px"><input type="checkbox" ${IRD.useW&&nw>=3?'checked':''} ${nw<3?'disabled':''} onchange="IRD.useW=this.checked?1:0"> Lug‘atimdagi zaif so‘zlarni matnga kirit (${nw>=3?nw+' ta':'kamida 3 ta so‘z kerak'})</label>
+    ${IRD.err?`<p style="color:var(--bad);margin:0 0 8px">${esc(IRD.err)}</p>`:''}<button class="big" onclick="ieRdGen()" ${IRD.busy?'disabled':''}>${IRD.busy?'AI matn yozmoqda… (20–40 soniya)':'✨ Mashq yaratish'}</button></div>`}
+  const ps=D.passage.split(/\n{2,}|\n/).filter(x=>x.trim()).map(p=>`<p class="iep">${ieHlWords(p,D.used)}</p>`).join('');
+  const qs=D.q.map((q,i)=>{const a=IRD.ans[i],mark=IRD.done?(q.ok?'<span class="chip" style="color:var(--ac)">✓</span>':'<span class="chip" style="color:var(--bad)">✗</span>'):'';
+    let inp='';if(q.t==='tfng')inp=`<div class="tfo">${['TRUE','FALSE','NOT GIVEN'].map(v=>`<button class="${a===v?'on':''}${IRD.done&&q.a===v?' ok':''}" onclick="ieRdSet(${i},'${v}')">${v}</button>`).join('')}</div>`;
+    else if(q.t==='mcq')inp=q.o.map((o,k)=>{const L='ABCD'[k];return `<button class="qopt ${a===L?'on':''} ${IRD.done&&q.a===L?'ok':IRD.done&&a===L?'no':''}" onclick="ieRdSet(${i},'${L}')">${L}. ${esc(o.replace(/^[A-D][.)]\s*/,''))}</button>`}).join('');
+    else inp=`<input class="rdg" value="${esc(a||'')}" placeholder="1–2 so‘z" ${IRD.done?'disabled':''} oninput="IRD.ans[${i}]=this.value">`;
+    return `<div class="rdq"><div class="h"><b>${i+1}. ${esc(q.q)}</b>${mark}</div>${inp}${IRD.done?`<p class="mu" style="margin:6px 0 0;font-size:13px">To‘g‘ri javob: <b>${esc(q.a)}</b>. ${esc(q.why)}</p>`:''}</div>`}).join('');
+  const hist=(S.ie.pr||[]).slice(-5);
+  return `<div class="goal"><div class="h"><b>📖 ${esc(D.title)}</b><span class="mu">${D.wc} so‘z</span></div>${D.used.length?`<p class="mu" style="margin:0 0 6px;font-size:12px">Sariq belgilangan so‘zlar sening lug‘atingdan: ${esc(D.used.join(', '))}</p>`:''}<div class="ietx">${ps}</div></div>
+    <h2>Savollar</h2>${qs}${IRD.done?`<div class="goal"><div class="h"><b>Natija</b><span style="font:700 22px Fraunces,serif">${IRD.sc} / ${D.q.length}</span></div><div class="in" style="flex-wrap:wrap"><button class="btn" onclick="ieRdNew()">Yangi mashq</button><button class="btn s" onclick="ieRdToMat()">📰 Materiallarga qo‘sh</button></div></div>`:'<button class="big" onclick="ieRdCheck()">✅ Tekshirish</button><button class="btn s" style="width:100%;margin-top:8px" onclick="ieRdNew()">Bekor qilish</button>'}
+    ${hist.length?`<p class="mu" style="margin-top:10px">Oxirgi mashqlar: ${hist.map(h=>h.s+'/'+h.n).join(' · ')}</p>`:''}`}
+// ---- so'z bilan gap tuzish (productive vocabulary) ----
+function ieSck(id){ISC=ISC&&ISC.id===id?null:{id,txt:'',busy:0,res:null,err:''};render()}
+async function ieSckGo(){const q=ISC;if(!q||q.busy)return;const w=S.ie.words.find(x=>x.id===q.id),s=String(q.txt||'').trim();if(!w)return;if(s.length<8){q.err='Gap juda qisqa: to‘liq gap yoz.';render();return}
+  q.busy=1;q.err='';render();try{const d=await fnAI({action:'vocab',mode:'check',word:w.w,sentence:s}),j=parseJson(d.text);if(!j||typeof j.ok!=='boolean')throw new Error('AI javobi tushunarsiz.');q.res={ok:j.ok,fix:ieCl(j.fix,300),better:ieCl(j.better,300),note:ieCl(j.note,300)};w.pu=(w.pu||0)+1;if(j.ok)w.po=(w.po||0)+1;save()}catch(e){q.err=String(e.message||e).slice(0,160)}q.busy=0;if(ISC===q)render()}
+function ieSckUi(w){if(!ISC||ISC.id!==w.id)return `<div class="in" style="margin-top:8px"><button class="btn s" style="flex:1" onclick="ieSck(${w.id})">✍ Gap tuz va AI tekshirsin</button></div>`;const q=ISC,r=q.res;
+  return `<div style="margin-top:10px;background:rgba(255,255,255,.12);border-radius:12px;padding:10px"><p style="margin:0 0 6px;font-size:13px">“${esc(w.w)}” so‘zi bilan o‘z gapingni yoz:</p><textarea rows="2" style="width:100%" placeholder="Masalan: The government mitigated…" oninput="ISC.txt=this.value">${esc(q.txt)}</textarea>${q.err?`<p style="color:#ffb4a8;margin:6px 0">${esc(q.err)}</p>`:''}
+   <div class="in" style="margin-top:6px"><button class="btn" onclick="ieSckGo()" ${q.busy?'disabled':''}>${q.busy?'Tekshirilmoqda…':'Tekshirish'}</button><button class="btn s" onclick="ieSck(${w.id})">Yopish</button></div>
+   ${r?`<div style="margin-top:8px"><p style="margin:0;font-weight:700">${r.ok?'✅ To‘g‘ri va tabiiy':'⚠ Tuzatish kerak'}</p>${r.fix?`<p style="margin:4px 0 0">Tuzatilgani: <i>${esc(r.fix)}</i></p>`:''}${r.better?`<p style="margin:4px 0 0">Yaxshiroq (band 7+): <i>${esc(r.better)}</i></p>`:''}${r.note?`<p style="margin:4px 0 0;opacity:.9;font-size:13px">${esc(r.note)}</p>`:''}</div>`:''}</div>`}
+// ---- Xatolar daftari ----
+const IET={grammar:'Grammatika',vocab:'So‘z tanlash',collocation:'Kollokatsiya',spelling:'Imlo',other:'Boshqa'};
+const ieErrT=x=>{const v=String(x&&x.t||'').toLowerCase();return IET[v]&&v!=='other'?v:'other'};
+function ieErrs(){const M={};(S.ie.tests||[]).concat(S.ie.wr||[]).forEach(t=>{const e=t.fb&&Array.isArray(t.fb.errors)?t.fb.errors:[];e.forEach(x=>{if(!x||!x.o||!x.c)return;const o=ieCl(x.o,200),c=ieCl(x.c,200);if(ieNorm(o)===ieNorm(c))return;const k=ieNorm(o)+'|'+ieNorm(c),r=M[k]||(M[k]={o,c,w:ieCl(x.w,240),t:ieErrT(x),d:t.d||'',n:0});r.n++;if((t.d||'')>r.d)r.d=t.d})});
+  return Object.values(M).sort((a,b)=>b.n-a.n||(b.d>a.d?1:-1))}
+const ieErrKey=e=>ieNorm(e.o)+'|'+ieNorm(e.c);
+const ieErrOpen=()=>ieErrs().filter(e=>((S.ie.ed||{})[ieErrKey(e)]||{ok:0}).ok<3);
+function ieErrCard(){const E=ieErrs(),open=ieErrOpen(),cnt={};E.forEach(e=>cnt[e.t]=(cnt[e.t]||0)+e.n);const tot=E.reduce((a,e)=>a+e.n,0),rep=E.filter(e=>e.n>=2).slice(0,4);
+  if(!E.length)return `<div class="goal"><div class="h"><b>📒 Xatolar daftari</b></div><p class="mu" style="margin:0">Writing yoki Speaking javobingni AI bilan tekshirtirsang, xatolaring shu yerda yig‘iladi va o‘zingga mos mashq tuziladi.</p></div>`;
+  return `<div class="goal"><div class="h"><b>📒 Xatolar daftari</b><span class="mu">${E.length} xil · ${tot} marta</span></div>${Object.keys(IET).filter(k=>cnt[k]).map(k=>`<div style="margin-bottom:5px"><div style="display:flex;justify-content:space-between;font-size:12px"><span>${IET[k]}</span><b>${cnt[k]}</b></div><div class="dpb"><i style="width:${Math.round(cnt[k]/tot*100)}%"></i></div></div>`).join('')}
+    ${rep.length?`<p class="mu" style="margin:10px 0 4px">Qayta-qayta takrorlanayotgan xatolar:</p>${rep.map(e=>`<p style="margin:0 0 6px;font-size:14px"><span class="mu">×${e.n}</span> <s>${esc(e.o)}</s> → <b>${esc(e.c)}</b></p>`).join('')}`:''}
+    <p class="mu" style="margin:10px 0 4px">Oxirgilari:</p>${E.slice().sort((a,b)=>b.d>a.d?1:-1).slice(0,3).map(e=>`<p style="margin:0 0 6px;font-size:14px"><s>${esc(e.o)}</s> → <b>${esc(e.c)}</b>${e.w?`<br><small class="mu">${esc(e.w)}</small>`:''}</p>`).join('')}
+    ${open.length>=3?`<button class="big" style="margin-top:8px" onclick="ieDrillStart()">🎯 Xatolarim bo‘yicha mashq (${Math.min(5,open.length)} savol)</button>`:`<p class="mu" style="margin:8px 0 0">${open.length?'Mashq uchun kamida 3 ta ochiq xato kerak.':'Hamma xato o‘zlashtirilgan, barakalla!'}</p>`}</div>`}
+function ieErrBrief(){const E=ieErrs();if(!E.length)return '';const top=Object.entries(E.reduce((c,e)=>(c[e.t]=(c[e.t]||0)+e.n,c),{})).sort((a,b)=>b[1]-a[1])[0];return `<button class="row" style="margin:10px 0" onclick="IVW='x';render()"><span class="t">📒 Xatolar daftari: ${E.length} xil xato<br><small class="mu">Ko‘pi bilan: ${IET[top[0]]} (${top[1]})</small></span><span class="tm">mashq</span></button>`}
+function ieDrillStart(){const open=ieErrOpen();if(open.length<3)return;const pick=open.slice().sort((a,b)=>b.n-a.n||Math.random()-.5).slice(0,5).sort(()=>Math.random()-.5);IED={q:pick,i:0,sc:0,ans:'',res:null,end:0};render()}
+function ieDrillCheck(){const D=IED;if(!D||D.res)return;const q=D.q[D.i],ok=ieNear(D.ans,q.c);D.res=ok?'ok':'no';if(ok)D.sc++;S.ie.ed=S.ie.ed||{};const r=S.ie.ed[ieErrKey(q)]=S.ie.ed[ieErrKey(q)]||{ok:0,bad:0};ok?r.ok++:r.bad++;save()}
+function ieDrillNext(){const D=IED;if(!D)return;if(D.i+1>=D.q.length)D.end=1;else{D.i++;D.ans='';D.res=null}render()}
+const ieDrillClose=()=>{IED=null;render()};
+function ieDrillUi(){const D=IED;if(!D)return '';
+  if(D.end)return `<div class="goal"><div class="h"><b>🎯 Mashq tugadi</b><span style="font:700 22px Fraunces,serif">${D.sc} / ${D.q.length}</span></div><p class="mu">${D.sc===D.q.length?'Zo‘r! Bu xatolarni endi qilmaysan.':'To‘g‘ri yozgan xatolaring 3 martadan keyin daftardan chiqadi. Qolganini yana mashq qil.'}</p><button class="btn" onclick="ieDrillClose()">Yopish</button></div>`;
+  const q=D.q[D.i];return `<div class="goal"><div class="h"><b>🎯 Xatoni tuzat ${D.i+1}/${D.q.length}</b><span class="chip">${IET[q.t]}</span></div><p style="font:500 20px Georgia,serif;margin:6px 0 10px"><s>${esc(q.o)}</s></p><input value="${esc(D.ans)}" placeholder="To‘g‘ri variantni yoz" ${D.res?'disabled':''} oninput="IED.ans=this.value" style="width:100%">
+    ${D.res?`<p style="margin:8px 0 0;font-weight:700;color:${D.res==='ok'?'var(--ac)':'var(--bad)'}">${D.res==='ok'?'✅ To‘g‘ri':'✗ To‘g‘ri variant:'} <b>${esc(q.c)}</b></p>${q.w?`<p class="mu" style="margin:4px 0 0;font-size:13px">${esc(q.w)}</p>`:''}<button class="btn" style="margin-top:8px" onclick="ieDrillNext()">${D.i+1>=D.q.length?'Natija':'Keyingisi'}</button>`:'<div class="in" style="margin-top:8px"><button class="btn" onclick="ieDrillCheck()">Tekshirish</button><button class="btn s" onclick="ieDrillClose()">Chiqish</button></div>'}</div>`}
+// ---- AI mashq tabi ----
+function ieAiTab(){return `<section class="hero"><p class="lab">AI mashq</p><h1 style="font-size:26px">Sening xatolaring, sening so‘zlaring</h1><p class="mu">${aiUseLabel()}. Har AI mashq 1 ta so‘rov sarflaydi.</p></section>${IED?ieDrillUi():ieErrCard()}${ieRdUi()}<div class="goal"><b>Yana nima bor</b><p class="mu" style="margin:6px 0 0">✍ <b>Gap tuzish:</b> Lug‘at kartochkasida “Gap tuz” tugmasi. 🎧 <b>Diktant:</b> Materiallar ichidagi podkast qatorlari yonidagi ✍ tugmasi. 🔤 <b>So‘z olish:</b> Materiallar bo‘limida maqola yoki podkastni AI bilan tahlil qil.</p></div>`}
+// ---- Diktant: podkast qatorini eshitib yoz, xatolarni ko'r ----
+let IDK=null;
+function ieDiff(ref,txt){const R=String(ref).match(/[A-Za-z0-9’']+|[^A-Za-z0-9’']+/g)||[],rw=[];R.forEach((x,i)=>{if(/[A-Za-z0-9]/.test(x))rw.push({i,t:x.toLowerCase().replace(/’/g,"'")})});
+  const U=(String(txt).toLowerCase().replace(/’/g,"'").match(/[a-z0-9']+/g)||[]),n=rw.length,m=U.length,D=[...Array(n+1)].map(()=>Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=rw[i].t===U[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  const ok=new Set();let i=0,j=0;while(i<n&&j<m){if(rw[i].t===U[j]){ok.add(rw[i].i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
+  const hit=ok.size;return{parts:R.map((x,k)=>/[A-Za-z0-9]/.test(x)?{t:x,ok:ok.has(k)}:{t:x,p:1}),pct:n?Math.round(hit/n*100):0,missed:rw.filter(w=>!ok.has(w.i)).map(w=>R[w.i]),extra:Math.max(0,m-hit),n}}
+function ieDictOpen(i){const m=ieM().find(x=>x.id===IMT);if(!m||!m.c[i])return;if(!ieAu()){toast('Diktant uchun audio kerak.');return}ieSheetClose();IDK={i,txt:'',res:null,stop:0,err:''};const e=document.createElement('div');e.id='iesh';e.className='mfs';document.getElementById('iem').appendChild(e);ieDictDraw();ieDictPlay()}
+function ieDictPlay(slow){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!a||!m||!IDK)return;const c=m.c[IDK.i];a.currentTime=c[0];IDK.stop=c[1]+0.15;a.playbackRate=slow?0.75:IMF.rate;a.play()}
+function ieDictDraw(){const e=document.getElementById('iesh'),m=ieM().find(x=>x.id===IMT);if(!e||!m||!IDK)return;const q=IDK,c=m.c[q.i],r=q.res;
+  e.innerHTML=`<div class="mfsh"><b>🎧 Diktant · ${ieFmt(c[0])}</b><button class="x" onclick="ieDictClose()" aria-label="Yopish">✕</button></div><div class="in" style="margin:0 0 8px"><button class="btn" onclick="ieDictPlay()">▶ Eshit</button><button class="btn s" onclick="ieDictPlay(1)">🐢 Sekin</button></div>
+   <textarea id="idt" rows="3" style="width:100%" placeholder="Eshitganingni yoz…" ${r?'disabled':''} oninput="IDK.txt=this.value">${esc(q.txt)}</textarea>${q.err?`<p style="color:var(--bad);margin:6px 0">${esc(q.err)}</p>`:''}
+   ${r?`<p style="margin:10px 0 4px;font-weight:700">${r.pct}% to‘g‘ri${r.extra?` · ${r.extra} ta ortiqcha so‘z`:''}</p><p class="ietx" style="margin:0 0 8px">${r.parts.map(p=>p.p?esc(p.t):`<span class="${p.ok?'dok':'dno'}">${esc(p.t)}</span>`).join('')}</p>${r.missed.length?`<p class="mu" style="margin:0 0 4px">Eshita olmagan so‘zlar (bosib lug‘atga qo‘sh):</p><div class="rwch">${[...new Set(r.missed.map(x=>x.toLowerCase()))].map(w=>`<button class="chip" style="border:0" onclick="ieDictAdd('${esc(w).replace(/'/g,"\\'")}')">+ ${esc(w)}</button>`).join('')}</div>`:'<p style="margin:0">Mukammal! 🎉</p>'}<div class="in" style="margin-top:8px">${q.i+1<m.c.length?'<button class="btn" onclick="ieDictNext()">Keyingi qator ›</button>':''}<button class="btn s" onclick="ieDictClose()">Yopish</button></div>`
+   :'<div class="in" style="margin-top:8px"><button class="btn" onclick="ieDictCheck()">Tekshirish</button></div>'}`}
+function ieDictCheck(){const m=ieM().find(x=>x.id===IMT),q=IDK;if(!m||!q)return;if(String(q.txt).trim().length<2){q.err='Avval eshitganingni yoz.';ieDictDraw();return}q.res=ieDiff(m.c[q.i][2],q.txt);q.err='';ieDp().L=1;save();ieDictDraw()}
+function ieDictNext(){const q=IDK,m=ieM().find(x=>x.id===IMT);if(!q||!m||q.i+1>=m.c.length)return;ieDictOpen(q.i+1)}
+function ieDictAdd(w){const m=ieM().find(x=>x.id===IMT),q=IDK;if(!m||!q)return;if(ieVocAdd({w,ctx:m.c[q.i][2]},'w',m.id)){toast('Lug‘atga qo‘shildi: '+w);save()}else toast('Bu so‘z lug‘atda bor')}
+function ieDictClose(){const a=ieAu();if(a){try{a.pause()}catch(e){}a.playbackRate=IMF.rate}IDK=null;ieSheetClose()}
 </script>
 </body>
 </html>
