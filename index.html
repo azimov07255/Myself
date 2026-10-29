@@ -291,6 +291,10 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .apr .ck{flex:none;width:22px;height:22px;border-radius:7px;border:2px solid var(--ln);background:var(--bg);color:var(--ac);font-weight:800;display:grid;place-items:center;padding:0;margin-top:1px}
 .apr.done{opacity:.55}.apr.done b{text-decoration:line-through}.apr.now{background:var(--c2);border-radius:10px;margin:0 -6px;padding:7px 6px}
 .dpc,.apc{overflow-wrap:anywhere}.dpc>*,.apr>div,.dpr>div{min-width:0}
+.updb{position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);left:10px;right:10px;z-index:100;display:flex;align-items:center;gap:8px;padding:10px 12px;border-radius:14px;background:#1e5f4b;color:#fff;box-shadow:0 8px 24px rgba(0,0,0,.3);font-size:14px}
+.updb span{flex:1;min-width:0}.updb .btn{padding:7px 12px;background:#f1c778;color:#1b2a22;white-space:nowrap}.updb .btn:disabled{opacity:.7}.updb .x{color:#fff;font-size:18px}
+.erb{display:inline-block;font-size:11px;font-weight:700;padding:2px 7px;border-radius:8px;margin-right:4px}.erb.new{background:#f1c778;color:#1b2a22}.erb.old{background:#9bc7b6;color:#123}
+.erg{border-top:1px solid var(--ln);padding:10px 0}.erg details{margin-top:6px}.erg pre{white-space:pre-wrap;word-break:break-word;font-size:11px;background:var(--c2);border-radius:8px;padding:8px;max-height:160px;overflow:auto}
 </style>
 </head>
 <body>
@@ -347,7 +351,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.10.28-2';
+const APP_VER='2026.10.29-1';
+const APP_BUILD='c376cdd557'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -1174,7 +1179,7 @@ function sozlama(){const t=getTh();
   <h2>Ko‘rinish</h2><div class="seg">${[['auto','Tizim'],['light','Yorug‘'],['dark','Qorong‘u']].map(x=>`<button class="${t===x[0]?'on':''}" onclick="setTh('${x[0]}')">${x[1]}</button>`).join('')}</div><p class="mu">Tizim tanlansa, telefonning kunduz va tun rejimiga qarab o‘zi almashadi. Bu tanlov faqat shu qurilmada saqlanadi.</p>
   <h2>Profil</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div>
   <h2>Hisob</h2><p class="mu" style="margin:0 0 6px">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':'Kirilmagan.'):'Hozircha faqat shu telefonda saqlanadi.'}</p><p class="mu" style="margin:0 0 6px">${SYNC==='ok'?'Sinxronlash: hamma narsa saqlangan.':SYNC==='wait'?'Sinxronlash: internet kelganda yuboriladi.':'Internet yo‘q. Ma‘lumot shu telefonda saqlanadi va keyin sinxronlanadi.'}</p>${PROF?`<p style="margin:0 0 6px">⭐ ${subLine()}</p>${PROF.lifetime?'':tgBtn('Obunani uzaytirish')}`:''}${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}
-  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)',errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
+  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)'+errBadge(),errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
   <p class="mu" style="text-align:center;margin-top:28px;letter-spacing:.14em;font-size:12px">KUNLIK TIZIM BY AZIMOV</p>`}
 
 applyTheme();try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTh()==='auto')applyTheme()})}catch(e){}
@@ -2612,8 +2617,8 @@ function errView(e){return `<div class="auth"><h1>Kechirasan</h1><p class="mu">B
 let DG={p:null,u:0,q:0};
 function ensurePersist(){try{if(navigator.storage&&navigator.storage.persist){navigator.storage.persisted().then(p=>{DG.p=p;if(!p)navigator.storage.persist().then(x=>{DG.p=x})}).catch(()=>{});if(navigator.storage.estimate)navigator.storage.estimate().then(e=>{DG.u=e.usage||0;DG.q=e.quota||0}).catch(()=>{})}}catch(e){}}
 function diagText(){const sts=+lsGet('trk_sts_'+UID)||0,standalone=!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
-  return ['Versiya: '+APP_VER,'Sinxron: '+(SYNC==='ok'?'saqlangan':SYNC==='wait'?'kutmoqda':'oflayn')+(NORPC?' (eski rejim)':''),'Server nusxasi (rev): '+(REV==null?'—':REV),'Oxirgi sinxron: '+(sts?new Date(sts).toLocaleString('sv'):'—'),'O‘rnatilgan ilova: '+(standalone?'ha':'yo‘q (brauzer)'),'Doimiy xotira: '+(DG.p==null?'noma‘lum':DG.p?'yoqilgan':'yoqilmagan'),'Xotira: '+(DG.u/1048576).toFixed(1)+' MB / '+Math.round(DG.q/1048576)+' MB','Bildirishnoma: '+(typeof Notification!=='undefined'?Notification.permission:'yo‘q'),'Internet: '+(navigator.onLine===false?'yo‘q':'bor'),'Qurilma: '+(navigator.userAgent||'').slice(0,90)].join('\n')}
-function diagCard(){ensurePersist();return `<pre class="dgp">${esc(diagText())}</pre><div class="in"><button class="btn s" style="flex:1" onclick="try{navigator.clipboard.writeText(diagText());toast('Nusxalandi')}catch(e){}">Nusxalash</button><button class="btn s" style="flex:1" onclick="pull().then(c=>{toast(c?'Yangilandi':'Hammasi yangi');render()})">Hozir sinxronlash</button></div>`}
+  return ['Versiya: '+APP_VER+' ('+APP_BUILD+')','Sinxron: '+(SYNC==='ok'?'saqlangan':SYNC==='wait'?'kutmoqda':'oflayn')+(NORPC?' (eski rejim)':''),'Server nusxasi (rev): '+(REV==null?'—':REV),'Oxirgi sinxron: '+(sts?new Date(sts).toLocaleString('sv'):'—'),'O‘rnatilgan ilova: '+(standalone?'ha':'yo‘q (brauzer)'),'Doimiy xotira: '+(DG.p==null?'noma‘lum':DG.p?'yoqilgan':'yoqilmagan'),'Xotira: '+(DG.u/1048576).toFixed(1)+' MB / '+Math.round(DG.q/1048576)+' MB','Bildirishnoma: '+(typeof Notification!=='undefined'?Notification.permission:'yo‘q'),'Internet: '+(navigator.onLine===false?'yo‘q':'bor'),'Qurilma: '+(navigator.userAgent||'').slice(0,90)].join('\n')}
+function diagCard(){ensurePersist();return `<pre class="dgp">${esc(diagText())}</pre><div class="in"><button class="btn s" style="flex:1" onclick="try{navigator.clipboard.writeText(diagText());toast('Nusxalandi')}catch(e){}">Nusxalash</button><button class="btn s" style="flex:1" onclick="pull().then(c=>{toast(c?'Yangilandi':'Hammasi yangi');render()})">Hozir sinxronlash</button></div>${updCard()}`}
 // ---- Avtomatik zaxiralar (serverda) ----
 let HIST=null,HISTERR='',ERRL=null;
 async function histLoad(){if(!sb||!UID)return;HIST=[];HISTERR='';const r=await sb.from('app_state_history').select('id,day,kind,created_at').order('created_at',{ascending:false}).limit(20);if(r.error){HISTERR=r.error.message||'xato'}else HIST=r.data||[];render()}
@@ -2629,11 +2634,20 @@ function histCard(){if(!sb||!UID)return '<p class="mu">Hisobga kirgach ishlaydi.
   ${HIST===null?'<button class="btn" style="width:100%" onclick="histLoad()">Zaxiralarni ko‘rsat</button>':HISTERR?`<p style="color:var(--bad);font-size:13px">Zaxira jadvali hali yoqilmagan (reliability.sql ishga tushirilmagan).</p>`:L||'<p class="mu">Hali zaxira yo‘q. Ma‘lumot o‘zgargach, birinchi zaxira paydo bo‘ladi.</p>'}
   ${lsGet('trk_prerestore')?'<button class="btn s" style="width:100%;margin-top:8px" onclick="histUndo()">Tiklashdan oldingi holatga qaytish</button>':''}`}
 // ---- Xatolar paneli (faqat egasi uchun) ----
-async function loadErrs(){const r=await sb.from('client_errors').select('*').order('created_at',{ascending:false}).limit(80);ERRL=r.error?[]:r.data;render()}
+async function loadErrs(){const r=await sb.from('client_errors').select('*').order('created_at',{ascending:false}).limit(300);ERRL=r.error?[]:r.data;render()}
 async function clearErrs(){if(!confirm('Hamma xatolar o‘chirilsinmi?'))return;await sb.from('client_errors').delete().neq('id',0);ERRL=[];render()}
-function errCard(){if(!Array.isArray(OW))return '';const g={};(ERRL||[]).forEach(e=>{const k=e.msg;(g[k]=g[k]||{n:0,last:e.created_at,ver:e.ver,tab:e.tab,ua:e.ua,st:e.stack}).n++});
-  const rows=Object.entries(g).sort((a,b)=>b[1].n-a[1].n).map(([m,x])=>`<div class="fbe"><b style="overflow-wrap:anywhere">${esc(m)}</b><div class="mu" style="font-size:12px">${x.n} marta · ${esc(x.tab||'')} · v${esc(x.ver||'')} · ${new Date(x.last).toLocaleString('sv').slice(0,16)}<br>${esc((x.ua||'').slice(0,70))}</div></div>`).join('');
-  return `<p class="mu" style="margin:0 0 8px">Foydalanuvchilar telefonida chiqqan xatolar (guruhlangan).</p><div class="in"><button class="btn" style="flex:1" onclick="loadErrs()">Yuklash</button><button class="btn s" onclick="clearErrs()">Tozalash</button></div>${ERRL===null?'':rows||'<p class="mu">Xato yo‘q. 🎉</p>'}`}
+const errSeenKey=()=>'trk_errseen_'+(UID||''),errSeen=()=>lsGet(errSeenKey())||'';
+const errSig=m=>String(m||'').replace(/https?:\/\/\S+/g,'URL').replace(/0x[0-9a-f]+/gi,'#').replace(/\b[0-9a-f]{8,}\b/gi,'#').replace(/\d+/g,'#').replace(/\s+/g,' ').trim().slice(0,110);
+function errGroups(rows,seen,cur){const g={};(rows||[]).forEach(e=>{const k=errSig(e.msg),x=g[k]||(g[k]={sig:k,n:0,users:new Set(),vers:{},tabs:{},first:e.created_at,last:e.created_at,st:e.stack||'',sample:e.msg,sa:0,br:0});
+  x.n++;x.users.add(e.user_id);x.vers[e.ver||'?']=(x.vers[e.ver||'?']||0)+1;x.tabs[e.tab||'?']=(x.tabs[e.tab||'?']||0)+1;if(e.created_at<x.first)x.first=e.created_at;if(e.created_at>x.last){x.last=e.created_at;x.sample=e.msg;if(e.stack)x.st=e.stack}e.standalone?x.sa++:x.br++});
+  return Object.values(g).map(x=>({...x,u:x.users.size,isNew:!!x.first&&new Date(x.first)>new Date(seen||0),old:Object.keys(x.vers).every(v=>v!=='?'&&verCmp(v,cur)<0)})).sort((a,b)=>Number(b.isNew)-Number(a.isNew)||Number(a.old)-Number(b.old)||b.n-a.n)}
+const errTop=(o,n)=>Object.entries(o).sort((a,b)=>b[1]-a[1]).slice(0,n);
+function errStats(){const rows=ERRL||[],w=rows.filter(e=>new Date(e.created_at)>Date.now()-7*864e5),G=errGroups(rows,errSeen(),APP_VER);return{G,w:w.length,wu:new Set(w.map(e=>e.user_id)).size,nw:G.filter(x=>x.isNew).length}}
+function errDigest(){const s=errStats();return ['📋 Xatolar xulosasi (oxirgi 7 kun)','Jami: '+s.w+' ta xato, '+s.wu+' foydalanuvchi, '+s.G.length+' xil xato ('+s.nw+' yangi)','Joriy versiya: v'+APP_VER,''].concat(s.G.slice(0,6).map((x,i)=>(i+1)+') '+(x.isNew?'[yangi] ':'')+(x.old?'[eski versiyada] ':'')+x.sig+' — '+x.n+' marta, '+x.u+' kishi, '+errTop(x.vers,3).map(([v,n])=>'v'+v+'×'+n).join(' '))).join('\n')}
+function errSeenAll(){lsSet(errSeenKey(),new Date().toISOString());render()}
+const errBadge=()=>{if(!Array.isArray(OW)||ERRL===null)return '';const n=errStats().nw;return n?' ('+n+' yangi)':''};
+function errCard(){if(!Array.isArray(OW))return '';const s=errStats(),rows=s.G.map(x=>`<div class="erg"><div>${x.isNew?'<span class="erb new">yangi</span>':''}${x.old?'<span class="erb old">faqat eski versiyada</span>':''}<b style="overflow-wrap:anywhere">${esc(x.sample)}</b></div><div class="mu" style="font-size:12px;margin-top:4px">${x.n} marta · ${x.u} kishi · ${errTop(x.vers,3).map(([v,n])=>'v'+esc(v)+'×'+n).join(' ')} · ${errTop(x.tabs,2).map(([t,n])=>esc(t)).join(', ')}<br>${x.sa} ilova / ${x.br} brauzer · birinchi: ${new Date(x.first).toLocaleString('sv').slice(0,16)} · oxirgi: ${new Date(x.last).toLocaleString('sv').slice(0,16)}</div>${x.st?`<details><summary class="mu" style="font-size:12px">Stack</summary><pre>${esc(x.st)}</pre></details>`:''}</div>`).join('');
+  return `<p class="mu" style="margin:0 0 8px">Foydalanuvchilar telefonida chiqqan xatolar. O‘xshash xabarlar (raqamlari farq qiladigan) bitta guruhga yig‘iladi.</p><div class="in" style="flex-wrap:wrap"><button class="btn" style="flex:1" onclick="loadErrs()">Yuklash</button><button class="btn s" onclick="errSeenAll()">✓ Ko‘rildi</button><button class="btn s" onclick="try{navigator.clipboard.writeText(errDigest());toast('Xulosa nusxalandi')}catch(e){}">📋 Xulosa</button><button class="btn s" onclick="clearErrs()">Tozalash</button></div>${ERRL===null?'':ERRL.length?`<p style="margin:10px 0 4px"><b>${s.w}</b> xato · <b>${s.wu}</b> foydalanuvchi (7 kun) · <b>${s.G.length}</b> xil${s.nw?` · <span class="erb new">${s.nw} yangi</span>`:''}</p>${rows}`:'<p class="mu">Xato yo‘q. ✅</p>'}`}
 
 // ---- Telegram bot: ulash, eslatmalar va pochta qutisi ----
 let TGB='',TGL=null,TGW=false;
@@ -2681,7 +2695,7 @@ async function fn(body){const r=await sb.functions.invoke('create-user',{body});
   if(!r.error)return r.data;
   try{return await r.error.context.json()}catch(e){return{error:'Funksiya topilmadi yoki ishlamadi'}}}
 let OS='7',OA='',OST=null,PROF=null;
-async function loadOw(){const d=await fn({action:'list'});OW=d&&d.users?d.users:false;OST=d&&d.stats||null;render()}
+async function loadOw(){const d=await fn({action:'list'});OW=d&&d.users?d.users:false;OST=d&&d.stats||null;render();if(Array.isArray(OW)&&ERRL===null)loadErrs()}
 function genP(){const c='abcdefghjkmnpqrstuvwxyz23456789';OP=[...crypto.getRandomValues(new Uint8Array(8))].map(x=>c[x%c.length]).join('');render()}
 const ago=t=>{if(!t)return 'hali kirmagan';const m=Math.floor((Date.now()-new Date(t))/60000);return m<2?'hozirgina':m<60?m+' daqiqa oldin':m<1440?Math.floor(m/60)+' soat oldin':Math.floor(m/1440)+' kun oldin'};
 async function ownAct(body){const d=await fn(body);OE=d&&d.error?d.error:'';await loadOw();return !OE}
@@ -2794,6 +2808,40 @@ function apCard(k,fu){const P=(S.ap||{})[k];
   const rows=P.it.map(x=>{const dn=x.fx?!!D[x.id]:!!x.x,on=isT&&cur>=x.s&&cur<x.e&&!dn;return `<div class="apr${dn?' done':''}${on?' now':''}"><button class="ck" ${fu?'disabled':''} onclick="apT('${k}','${x.id}')" aria-label="Belgilash">${dn?'✓':''}</button><span class="dpt">${hm(x.s)}–${hm(x.e)}</span><div><b>${esc(x.t)}</b>${x.n?`<div class="mu">${esc(x.n)}</div>`:''}</div></div>`}).join('');
   const done=P.it.filter(x=>x.fx?!!D[x.id]:!!x.x).length;
   return `<div class="goal apc" style="margin-top:12px;border-left:4px solid var(--ac)"><div class="h"><b style="font:700 18px Fraunces,serif">📅 ${dpWord(k)} rejasi</b><span class="mu">${done}/${P.it.length}</span></div>${rows}${P.tip?`<p class="mu" style="margin:8px 0 0">${esc(P.tip)}</p>`:''}<div class="in" style="margin-top:8px">${aiOk()?`<button class="btn s" onclick="aiOpen('${k===dk()?'Bugungi':'Ertangi'} kunni qayta rejalashtir')">↻ Qayta tuz</button>`:''}<button class="btn s" onclick="apDel('${k}')">O‘chirish</button></div></div>`}
+// ---- Yangi versiya xabari: version.json ni tekshiradi, "Yangilash" bosilganda ma'lumotni saqlab, keshni tozalab qayta yuklaydi ----
+const SWC='trk-v2'; // sw.js dagi kesh nomi bilan bir xil
+const verCmp=(a,b)=>{const p=x=>String(x||'').split(/[.\-]/).map(n=>parseInt(n,10)||0),A=p(a),B=p(b);for(let i=0;i<Math.max(A.length,B.length);i++){const d=(A[i]||0)-(B[i]||0);if(d)return d<0?-1:1}return 0};
+const skGet=k=>{try{return sessionStorage.getItem(k)}catch(e){return null}},skSet=(k,v)=>{try{v===null?sessionStorage.removeItem(k):sessionStorage.setItem(k,v)}catch(e){}};
+let UPD=null,UPDT=0,UPDMSG='',UPDX=skGet('trk_updx')||'';
+async function updCheck(manual){
+  if(typeof location==='undefined'||!/^https?:/.test(location.protocol)){if(manual){UPDMSG='Bu yerda tekshirib bo‘lmaydi (ilova sayt orqali ochilishi kerak).';render()}return}
+  UPDT=Date.now();let j=null;
+  try{const r=await fetch('version.json?t='+Date.now(),{cache:'no-store'});if(r.ok)j=await r.json()}catch(e){}
+  if(!j||!j.v){if(manual){UPDMSG='Tekshirib bo‘lmadi (internet yoki server).';render()}return}
+  const c=verCmp(j.v,APP_VER),newer=c>0||(c===0&&!!j.b&&j.b!==APP_BUILD);   // eski versiya ko'rsatilsa (tarqalish kechikishi yoki orqaga qaytarish) e'tibor bermaymiz
+  if(newer){UPD={v:j.v,b:j.b||''};if(manual)UPDMSG='Yangi versiya bor: v'+j.v+'. Yuqoridagi “Yangilash” tugmasini bosing.'}
+  else{UPD=null;skSet('trk_updtry',null);if(manual)UPDMSG='Eng so‘nggi versiya o‘rnatilgan (v'+APP_VER+').'}
+  updShow();if(manual)render()}
+function updShow(){let b=document.getElementById('updb');const tok=UPD?UPD.v+'|'+UPD.b:'';
+  if(!UPD||tok===UPDX){if(b)b.remove();return}
+  if(!b){b=document.createElement('div');b.id='updb';b.className='updb';b.setAttribute('role','status');document.body.appendChild(b)}
+  b.innerHTML=`<span>🔄 Yangi versiya tayyor (v${esc(UPD.v)})</span><button class="btn" onclick="updGo()">Yangilash</button><button class="x" onclick="updLater()" aria-label="Keyinroq">✕</button>`}
+function updLater(){if(UPD){UPDX=UPD.v+'|'+UPD.b;skSet('trk_updx',UPDX)}updShow()}
+function updReload(){location.reload()}
+async function updGo(){
+  const last=+skGet('trk_updtry')||0;
+  if(Date.now()-last<120000){toast('Yangilanish hali tarqalmagan bo‘lishi mumkin. 1–2 daqiqadan keyin yana bosing.');return}   // qayta-qayta yuklanib qolmaslik uchun
+  const b=document.querySelector('#updb .btn');if(b){b.disabled=true;b.textContent='Saqlanmoqda…'}
+  try{await Promise.race([push(),new Promise(r=>setTimeout(r,3500))])}catch(e){}          // avval hamma ma'lumot serverga ketsin (mahalliy nusxa baribir saqlangan)
+  skSet('trk_updtry',String(Date.now()));
+  try{if(window.caches){const c=await caches.open(SWC),ks=await c.keys();await Promise.all(ks.filter(r=>!/\/(fonts|data)\//.test(new URL(r.url).pathname)).map(r=>c.delete(r)))}}catch(e){}   // ilova fayllari yangilanadi, katta Qur'on fayllari qoladi
+  try{const reg=navigator.serviceWorker&&await navigator.serviceWorker.getRegistration();if(reg)await reg.update()}catch(e){}
+  updReload()}
+function updCard(){return `<div class="in"><button class="btn s" style="flex:1" onclick="updCheck(true)">🔄 Yangilanishni tekshirish</button></div>${UPDMSG?`<p class="mu" style="margin:8px 0 0">${esc(UPDMSG)}</p>`:''}`}
+if(typeof window!=='undefined'&&typeof location!=='undefined'&&/^https?:/.test(location.protocol)){
+  setTimeout(()=>updCheck(),4000);
+  document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible'&&Date.now()-UPDT>30*60*1000)updCheck()});
+  window.addEventListener('online',()=>{if(Date.now()-UPDT>5*60*1000)updCheck()})}
 </script>
 </body>
 </html>

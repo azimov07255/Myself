@@ -17,6 +17,11 @@ self.addEventListener('activate', (e) => {
 self.addEventListener('fetch', (e) => {
   const r = e.request, u = new URL(r.url);
   if (r.method !== 'GET' || u.hostname.endsWith('supabase.co')) return;
+  // Versiya fayli hech qachon keshlanmaydi (yangi versiya borligini ko'rish uchun)
+  if (u.origin === location.origin && /\/version\.json$/.test(u.pathname)) {
+    e.respondWith(fetch(r, { cache: 'no-store' }).catch(() => new Response('{}', { headers: { 'Content-Type': 'application/json' } })));
+    return;
+  }
   // Mushaf matni va shriftlari (katta, o‘zgarmaydi): avval keshdan, bo‘lmasa internetdan
   if (u.origin === location.origin && /\/(fonts|data)\//.test(u.pathname)) {
     e.respondWith(
