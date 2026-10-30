@@ -374,8 +374,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.01-2';
-const APP_BUILD='9388169eee'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.01-3';
+const APP_BUILD='51c7ff3464'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -2358,7 +2358,7 @@ function psPast(){const A=S.gym.past||[];if(!A.length)return '';
 // ---- Ovqat: AI bilan kaloriya va makrolar ----
 const FDMS=['Nonushta','Tushlik','Kechki ovqat','Snack'];
 function b64(buf){const u=new Uint8Array(buf);let s='';for(let i=0;i<u.length;i+=8192)s+=String.fromCharCode.apply(null,u.subarray(i,i+8192));return btoa(s)}
-async function fnAI(body){const d=await fnPost(body,body.action==='ielts'?95000:60000);if(!d.text)throw new Error('AI javob bermadi.');aiCount();return d}
+async function fnAI(body){const d=await fnPost(body,({ielts:95000,vocab:105000,reading:105000})[body.action]||60000);if(!d.text)throw new Error('AI javob bermadi.');aiCount();return d}
 function parseJson(t){let s=String(t||'').replace(/```json|```/g,'').trim();const a=s.indexOf('{'),b=s.lastIndexOf('}');if(a<0||b<a)return null;try{return JSON.parse(s.slice(a,b+1))}catch(e){return null}}
 function shrink(f,max){return new Promise((res,rej)=>{const img=new Image(),u=URL.createObjectURL(f);img.onload=()=>{const s=Math.min(1,max/Math.max(img.width,img.height)),c=document.createElement('canvas');c.width=Math.round(img.width*s);c.height=Math.round(img.height*s);c.getContext('2d').drawImage(img,0,0,c.width,c.height);URL.revokeObjectURL(u);res(c.toDataURL('image/jpeg',.8).split(',')[1])};img.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('Rasm ochilmadi'))};img.src=u})}
 async function fdPic(inp){const f=inp.files&&inp.files[0];inp.value='';if(!f)return;try{FDI=await shrink(f,900);render()}catch(e){alert(e.message)}}
@@ -2904,12 +2904,15 @@ function ieMerge(res,j,full){if(!j||typeof j!=='object')return;const norm=s=>s.r
   (Array.isArray(j.chunks)?j.chunks:[]).forEach(c=>{const p=ieCl(c&&c.p,60),n=p.split(/\s+/).length;if(n<2||n>6||seen.has(p.toLowerCase())||!ieIn(full,p))return;seen.add(p.toLowerCase());
     const ctx=ieCl(c.ctx,240);res.chunks.push({p,k:/^(collocation|phrasal|idiom|phrase)$/.test(c.k)?c.k:'phrase',def:ieCl(c.def),uz:ieCl(c.uz,60),ctx:ctx&&fn.includes(norm(ctx))?ctx:'',ex:ieCl(c.ex,200)})});
   res.words=res.words.slice(0,60);res.chunks=res.chunks.slice(0,30)}
+let IMP=null;   // to'xtab qolgan tahlil: {id,res,next,n} - "Davom ettirish" shu joydan boshlaydi
+const ieSlowErr=e=>/sekin|vaqt|ulanib|502|503|504|546/i.test(String(e&&e.message||e));
 async function ieAnalyze(id){const m=ieM().find(x=>x.id===id);if(!m||(IMA&&IMA.busy))return;const full=ieText(m),parts=iePartsOf(full),known=S.ie.words.slice(-120).map(w=>w.w);
-  IMA={id,busy:1,i:0,n:parts.length,err:''};ieMatDraw();const res={words:[],chunks:[],lv:'',topic:''};
-  for(let i=0;i<parts.length;i++){IMA.i=i+1;ieMatDraw();
-    try{const d=await fnAI({action:'vocab',mode:'analyze',text:parts[i],known}),j=parseJson(d.text);if(!j)throw new Error('AI javobi tushunarsiz.');ieMerge(res,j,full)}
-    catch(e){IMA.err='Qism '+(i+1)+'/'+parts.length+': '+String(e.message||e).slice(0,170);break}}
-  res.n=parts.length;res.at=dk();if(res.words.length||res.chunks.length)m.an=res;IMA.busy=0;if(IMA.err&&!(res.words.length||res.chunks.length)){}save();ieMatDraw()}
+  const rs=IMP&&IMP.id===id&&IMP.n===parts.length&&IMP.next>0?IMP:null,res=rs?rs.res:{words:[],chunks:[],lv:'',topic:''};let i=rs?rs.next:0,fail=false;IMP=null;
+  IMA={id,busy:1,i:i,n:parts.length,err:''};ieMatDraw();
+  for(;i<parts.length;i++){IMA.i=i+1;ieMatDraw();let ok=false,last=null;
+    for(let at=0;at<2&&!ok;at++){try{const d=await fnAI({action:'vocab',mode:'analyze',text:parts[i],known}),j=parseJson(d.text);if(!j)throw new Error('AI javobi tushunarsiz.');ieMerge(res,j,full);ok=true}catch(e){last=e;if(!ieSlowErr(e))break}}   // sekin javob bo'lsa bir marta o'zi qayta urinadi
+    if(!ok){IMA.err='Qism '+(i+1)+'/'+parts.length+': '+String(last&&last.message||last).slice(0,170);IMP={id,res,next:i,n:parts.length};fail=true;break}}
+  res.n=parts.length;res.at=dk();if(res.words.length||res.chunks.length)m.an=res;IMA.busy=0;save();ieMatDraw()}
 // ---- lug'atga qo'shish ----
 const ieHave=w=>S.ie.words.some(x=>String(x.w).toLowerCase()===String(w).toLowerCase());
 function ieVocAdd(it,kind,src){const w=String(kind==='c'?it.p:it.w).trim();if(!w||ieHave(w))return false;
@@ -2935,7 +2938,7 @@ function ieMatClose(quiet){ieReadStop();ieWFStop();IWC=null;const a=document.get
 function ieMatDraw(){const b=document.getElementById('iemb'),m=ieM().find(x=>x.id===IMT);if(!b||!m)return;const an=m.an,sc=b.scrollTop,st=an?`${an.words.length} so‘z · ${an.chunks.length} chunk${an.lv?' · '+an.lv:''}${an.topic?' · '+an.topic:''}`:'tahlil qilinmagan';
   document.getElementById('iemt').textContent=m.t;document.getElementById('iems').textContent=(m.k==='p'?'🎧 Podkast':'📰 Maqola')+' · '+st;
   const busy=IMA&&IMA.busy&&IMA.id===m.id,full=ieText(m),np=iePartsOf(full).length;
-  const bar=ieVoiceBar(m)+(full.length?`<div class="ieb">${busy?`<div class="mu" style="margin-bottom:6px">🔍 AI tahlil qilmoqda… ${IMA.i}/${IMA.n}</div>`:`<button class="btn" style="flex:1" onclick="ieAnalyze(${m.id})">🔍 ${an?'Qayta tahlil':'AI bilan tahlil'} (${np} so‘rov)</button>`}${m.dn===dk()?'<span class="chip">✓ bugun</span>':`<button class="btn s" onclick="ieDone()">✓ Tugatdim</button>`}</div>${IMA&&IMA.id===m.id&&IMA.err?`<p style="color:var(--bad);margin:6px 0">${esc(IMA.err)}</p>`:''}`:'');
+  const bar=ieVoiceBar(m)+(full.length?`<div class="ieb">${busy?`<div class="mu" style="margin-bottom:6px">🔍 AI tahlil qilmoqda… ${IMA.i}/${IMA.n}</div>`:`<button class="btn" style="flex:1" onclick="ieAnalyze(${m.id})">${IMP&&IMP.id===m.id&&IMP.n===np&&IMP.next>0?`↻ Davom ettirish (qism ${IMP.next+1}/${np}, oldingilari saqlangan)`:`🔍 ${an?'Qayta tahlil':'AI bilan tahlil'} (${np} so‘rov)`}</button>`}${m.dn===dk()?'<span class="chip">✓ bugun</span>':`<button class="btn s" onclick="ieDone()">✓ Tugatdim</button>`}</div>${IMA&&IMA.id===m.id&&IMA.err?`<p style="color:var(--bad);margin:6px 0">${esc(IMA.err)}</p>`:''}`:'');
   const res=an?ieResults(m):'';
   let body;
   if(m.c&&m.c.length)body=m.c.map((c,i)=>`<div class="iecu" data-i="${i}" id="icu${i}"><button class="iet" onclick="ieCueGo(${i})" aria-label="${ieFmt(c[0])} ga o‘tish">${ieFmt(c[0])}</button>${m.au&&IMAU?`<button class="iet" onclick="ieDictOpen(${i})" aria-label="Diktant">✍</button>`:''}<span class="iep">${ieMark(c[2],m)}</span></div>`).join('');
