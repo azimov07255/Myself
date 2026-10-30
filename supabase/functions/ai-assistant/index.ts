@@ -140,6 +140,9 @@ Qoidalar: 1) "passage" - ORIGINAL, o'zing yozgan akademik matn: 220-320 so'z, 3-
 const VOCAB_CHECK_SYSTEM = `Sen IELTS o'qituvchisisan. O'quvchi berilgan inglizcha so'z yoki iborani gapda ishlatdi. Uni to'g'ri va tabiiy ishlatganini tekshir. FAQAT shu JSON ko'rinishida javob ber: {"ok":true,"fix":"...","better":"...","note":"..."}
 Qoidalar: "ok" - so'z ma'nosi, grammatikasi va kollokatsiyasi to'g'ri bo'lsa true, aks holda false. "fix" - agar ok false bo'lsa, o'quvchi gapining to'g'rilangan varianti (o'quvchining fikrini saqlagan holda), aks holda "". "better" - shu so'z saqlangan, tabiiyroq va band 7+ darajadagi variant. "note" - 1-2 gap sodda o'zbek (lotin) tilida: nima to'g'ri yoki xato, qaysi kollokatsiya yoki predlog kerak. Hech qanday markdown qo'shma.`
 
+const COACH_SYSTEM = `Sen foydalanuvchining shaxsiy haftalik murabbiyisan (IELTS, Qur'on hifzi va kundalik odatlar). Foydalanuvchining oxirgi 7 kunlik JSON ma'lumoti beriladi. FAQAT shu JSON ko'rinishida javob ber: {"summary":"...","wins":["..."],"focus":[{"t":"...","why":"..."}],"week":[{"d":"Du","tasks":["..."]}],"tip":"..."}
+Qoidalar: 1) "summary" - 2 gap: o'tgan haftaning haqiqiy holati, ma'lumotga tayanib va raqamlar bilan. 2) "wins" - 2-3 ta aniq yutuq (faqat ma'lumotda bor narsa). 3) "focus" - aynan 3 ta ustuvor yo'nalish: "t" - qisqa nom, "why" - ma'lumotdagi raqam bilan sabab. 4) "week" - aynan 7 kun, "kunlar" ro'yxatidagi tartibda; "d" - shu ro'yxatdagi kun nomi. Har kunga 2-3 ta aniq, vaqti ko'rsatilgan vazifa (masalan "IELTS lug'at: 15 daqiqa"). Vazifalar "kunlik_maqsad_xp" dan oshib ketmasin; "yengil_kun" bo'lsa kam va yengil bo'lsin. 5) Faqat berilgan ma'lumotga tayan: yo'q ma'lumotni o'ylab topma; ma'lumoti yo'q bo'lim uchun "birinchi qadam" taklif qil. 6) Qur'on yodlash bo'yicha faqat reja (necha bet, qachon takror) taklif qil, diniy hukm berma. Tibbiy maslahat berma. 7) "tip" - bitta mehribon rag'batlantiruvchi gap (140 belgigacha). 8) O'zbek (lotin) tilida yoz, hech qanday markdown yoki izoh qo'shma.`
+
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
 FAQAT JSON qaytar, boshqa matn yozma:
 {"items":[{"name":"taom nomi (o'zbekcha)","grams":son,"kcal":son,"p":oqsil_gramm,"f":yog_gramm,"c":uglevod_gramm}],"note":"qisqa izoh, natija taxminiy ekanini ayt"}
@@ -177,6 +180,69 @@ async function oneShot(key: string, models: string[], parts: unknown[], system: 
   }
   const finalRate = rate as Rate | null
   return { error: finalRate ? finalRate.msg : 'AI javob bera olmadi: ' + lastErr, rate: finalRate }
+}
+
+// ---- Linkdan maqola olish (SSRF himoyasi: faqat ochiq veb-sahifalar, yo'naltirish va hajm cheklangan) ----
+class ArtErr extends Error { status: number; constructor(m: string, s: number) { super(m); this.status = s } }
+function articleBadHost(h: string): boolean {
+  const x = h.toLowerCase().replace(/\.$/, '')
+  if (!x.includes('.') || x.includes(':') || x.startsWith('[') || /^\d+\.\d+\.\d+\.\d+$/.test(x)) return true   // IP manzillar va nuqtasiz nomlar
+  return /(^|\.)(localhost|local|internal|lan|home|corp|intranet|test|invalid)$/.test(x)
+}
+function privateIp(ip: string): boolean {
+  const m = ip.match(/^(\d+)\.(\d+)\.(\d+)\.(\d+)$/)
+  if (m) { const a = +m[1], b = +m[2]; return a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || (a === 100 && b >= 64 && b <= 127) || a >= 224 }
+  const v = ip.toLowerCase(); return v === '::1' || v === '::' || v.startsWith('fc') || v.startsWith('fd') || v.startsWith('fe8') || v.startsWith('fe9') || v.startsWith('fea') || v.startsWith('feb')
+}
+async function resolvesPrivate(host: string): Promise<boolean> {
+  try {
+    const d: any = (globalThis as any).Deno
+    if (!d || typeof d.resolveDns !== 'function') return false
+    for (const t of ['A', 'AAAA']) { try { const r: string[] = await d.resolveDns(host, t); if (r.some(privateIp)) return true } catch (_e) { /* yozuv yo'q */ } }
+  } catch (_e) { /* qo'llab-quvvatlanmaydi */ }
+  return false
+}
+async function fetchArticlePage(start: URL): Promise<{ html: string; url: string }> {
+  let cur = start
+  for (let hop = 0; hop < 4; hop++) {
+    if (!/^https?:$/.test(cur.protocol) || cur.username || cur.password || articleBadHost(cur.hostname) || await resolvesPrivate(cur.hostname)) throw new ArtErr('Bu havola ruxsat etilmagan (faqat ochiq veb-sahifalar).', 400)
+    const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 12000)
+    let r: Response
+    try { r = await fetch(cur.toString(), { redirect: 'manual', signal: ctl.signal, headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KunlikTizim/1.0)', Accept: 'text/html,application/xhtml+xml,text/plain;q=0.9' } }) }
+    catch (_e) { clearTimeout(to); throw new ArtErr('Sahifa ochilmadi yoki juda sekin javob berdi.', 504) }
+    clearTimeout(to)
+    if (r.status >= 300 && r.status < 400) { const loc = r.headers.get('location'); if (!loc) throw new ArtErr('Sahifa noto‘g‘ri yo‘naltirdi.', 502); try { cur = new URL(loc, cur) } catch (_e) { throw new ArtErr('Sahifa noto‘g‘ri yo‘naltirdi.', 502) } continue }
+    if (!r.ok) throw new ArtErr(r.status === 404 ? 'Sahifa topilmadi (404).' : (r.status === 401 || r.status === 403) ? 'Sahifa kirishni rad etdi (yopiq yoki pullik).' : 'Sahifa xatosi: HTTP ' + r.status, 502)
+    const ct = (r.headers.get('content-type') || '').toLowerCase()
+    if (ct && !/text\/(html|plain)|application\/xhtml/.test(ct)) throw new ArtErr('Bu havola matnli sahifa emas (PDF, rasm yoki fayl).', 415)
+    const rd = r.body ? r.body.getReader() : null; const chunks: Uint8Array[] = []; let n = 0
+    if (rd) { for (;;) { const { done, value } = await rd.read(); if (done) break; if (value) { chunks.push(value); n += value.length; if (n > 1500000) { try { await rd.cancel() } catch (_e) { /* */ } break } } } }
+    const all = new Uint8Array(n); let o = 0; for (const c of chunks) { all.set(c, o); o += c.length }
+    return { html: new TextDecoder('utf-8', { fatal: false }).decode(all), url: cur.toString() }
+  }
+  throw new ArtErr('Havola juda ko‘p marta yo‘naltiriladi.', 400)
+}
+function decEnt(s: string): string {
+  return s.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0*39;|&apos;/g, "'")
+    .replace(/&rsquo;|&#8217;/g, '’').replace(/&lsquo;|&#8216;/g, '‘').replace(/&ldquo;|&rdquo;|&#8220;|&#8221;/g, '"').replace(/&ndash;|&mdash;|&#8211;|&#8212;/g, '—')
+    .replace(/&#(\d+);/g, (_m, n) => String.fromCodePoint(Math.min(+n, 0x10FFFF))).replace(/&#x([0-9a-f]+);/gi, (_m, h) => String.fromCodePoint(Math.min(parseInt(h, 16), 0x10FFFF)))
+}
+function extractArticle(html: string): { title: string; text: string } {
+  const tm = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i) || html.match(/<title[^>]*>([\s\S]*?)<\/title>/i)
+  const title = decEnt(tm ? tm[1] : '').replace(/\s+/g, ' ').trim().slice(0, 120)
+  const h = html.replace(/<!--[\s\S]*?-->/g, '').replace(/<(script|style|noscript|svg|iframe|form|nav|header|footer|aside|button|select|template)\b[\s\S]*?<\/\1>/gi, '')
+  const pick = (tag: string) => { const m = h.match(new RegExp('<' + tag + '\\b[^>]*>([\\s\\S]*?)<\\/' + tag + '>', 'i')); return m ? m[1] : '' }
+  const body = pick('article') || pick('main') || pick('body') || h
+  const out: string[] = []; let prev = ''
+  for (const m of body.matchAll(/<(p|h2|h3|li)\b[^>]*>([\s\S]*?)<\/\1>/gi)) {
+    const tag = m[1].toLowerCase()
+    const x = decEnt(m[2].replace(/<br\s*\/?>/gi, ' ').replace(/<[^>]+>/g, ' ')).replace(/\s+/g, ' ').trim()
+    if (tag === 'p' ? x.length < 40 : tag === 'li' ? x.length < 60 : (x.length < 5 || x.length > 120)) continue
+    if (x === prev) continue
+    prev = x; out.push(x)
+  }
+  let text = out.join('\n\n'); if (text.length > 12000) text = text.slice(0, 12000).replace(/\s+\S*$/, '')
+  return { title, text }
 }
 
 Deno.serve(async (req) => {
@@ -247,6 +313,16 @@ Deno.serve(async (req) => {
   const p: any = pr.data
   if (!isOwner && p && (p.blocked || (!p.lifetime && (!p.expires_at || new Date(p.expires_at) <= new Date()))))
     return json({ error: 'Obuna faol emas. AI yordamchidan foydalanish uchun obunani yangilang.' }, 403)
+  if (b.action === 'article') {   // AI emas: kunlik AI limitiga kirmaydi, lekin kirish va obuna tekshiriladi
+    const raw = String(b.url || '').trim().slice(0, 500)
+    let u0: URL
+    try { u0 = new URL(raw) } catch (_e) { return json({ error: 'Havola noto‘g‘ri. https:// bilan boshlanadigan to‘liq havolani kiriting.' }, 400) }
+    try {
+      const pgx = await fetchArticlePage(u0); const ar = extractArticle(pgx.html)
+      if (ar.text.length < 300) return json({ error: 'Sahifadan matn topilmadi (u JavaScript bilan yuklanadi yoki yopiq). Matnni qo‘lda nusxalab qo‘ying.' }, 422)
+      return json({ title: ar.title, text: ar.text, host: new URL(pgx.url).hostname, chars: ar.text.length })
+    } catch (e) { if (e instanceof ArtErr) return json({ error: e.message }, e.status); return json({ error: 'Sahifani o‘qib bo‘lmadi.' }, 502) }
+  }
   const used = (us.data as any)?.n || 0
   if (!isOwner && used >= DAILY_LIMIT) return json({ error: `Bugungi limit tugadi (${DAILY_LIMIT} ta so‘rov). Ertaga davom etamiz.` }, 429)
 
@@ -309,14 +385,20 @@ Deno.serve(async (req) => {
     return json({ videos: (j.items || []).map((x: any) => ({ id: x.id?.videoId, t: x.snippet?.title, ch: x.snippet?.channelTitle, th: x.snippet?.thumbnails?.medium?.url })).filter((x: any) => x.id) })
   }
 
-  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan' || b.action === 'vocab' || b.action === 'reading') {
+  if (b.action === 'food' || b.action === 'transcribe' || b.action === 'ielts' || b.action === 'plan' || b.action === 'dayplan' || b.action === 'vocab' || b.action === 'reading' || b.action === 'coach') {
     const list = await candidates(key).catch(() => [] as string[])
     if (!list.length) return json({ error: 'Mos Gemini modeli topilmadi.' }, 502)
     const parts: unknown[] = []
     let system = FOOD_SYSTEM
     let extra: Record<string, unknown> = { responseMimeType: 'application/json', maxOutputTokens: 1500 }
     let tmo = 30000
-    if (b.action === 'reading') {
+    if (b.action === 'coach') {
+      const cx = String(b.ctx || '').trim()
+      if (cx.length < 20) return json({ error: 'Murabbiy uchun ma‘lumot yo‘q.' }, 400)
+      if (cx.length > 9000) return json({ error: 'Ma‘lumot juda katta.' }, 400)
+      tmo = 45000; system = COACH_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 3500 }
+      parts.push({ text: 'Ma‘lumotlar (JSON):\n' + cx })
+    } else if (b.action === 'reading') {
       const topic = String(b.topic || '').trim().slice(0, 80) || 'a current academic topic'
       const band = Math.min(9, Math.max(5, Number(b.band) || 7))
       const words = (Array.isArray(b.words) ? b.words : []).slice(0, 8).map((x: unknown) => String(x).replace(/[^\p{L}' -]/gu, '').slice(0, 30)).filter(Boolean)
