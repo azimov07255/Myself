@@ -374,8 +374,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.01-1';
-const APP_BUILD='b3357425cb'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.01-2';
+const APP_BUILD='9388169eee'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -3121,7 +3121,7 @@ function ieDictAdd(w){const m=ieM().find(x=>x.id===IMT),q=IDK;if(!m||!q)return;i
 function ieDictClose(){const a=ieAu();if(a){try{a.pause()}catch(e){}a.playbackRate=IMF.rate}IDK=null;ieSheetClose()}
 // ---- Talaffuz (US / UK), "o'qib ber", so'zma-so'z yuruvchi subtitr, audiodan avtomatik transkript ----
 const ieTts=()=>window.__tts||(typeof speechSynthesis!=='undefined'?speechSynthesis:null);
-const ieAcc=()=>S.ie.acc==='uk'?'uk':'us',ieAccLabel=()=>ieAcc()==='uk'?'🇬🇧 UK':'🇺🇸 US';
+const ieAcc=()=>S.ie.acc==='uk'?'uk':'us',ieAccLabel=()=>ieAcc()==='uk'?'🗣 UK':'🗣 US';
 const IE_VP={us:['Samantha','Ava','Allison','Alex','Google US English','Aria','Jenny','Zira','David'],uk:['Daniel','Serena','Kate','Oliver','Google UK English Female','Google UK English Male','Sonia','Libby','Ryan','Hazel','George']};
 function ieVoice(acc){const T=ieTts();if(!T)return null;let V=[];try{V=T.getVoices()||[]}catch(e){}const want=acc==='uk'?'en-gb':'en-us',L=V.filter(v=>String(v.lang||'').replace('_','-').toLowerCase()===want);if(!L.length)return null;
   for(const p of IE_VP[acc]){const v=L.find(x=>String(x.name).includes(p));if(v)return v}return L.find(v=>v.localService)||L[0]}
