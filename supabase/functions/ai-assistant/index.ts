@@ -330,7 +330,7 @@ Deno.serve(async (req) => {
         system = VOCAB_CHECK_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 700 }
         parts.push({ text: 'So‘z yoki ibora: ' + w + '\nO‘quvchining gapi: ' + s })
       } else if (b.mode === 'define') {
-        const w = String(b.word || '').trim().slice(0, 40), c = String(b.ctx || '').trim().slice(0, 300)
+        const w = String(b.word || '').trim().slice(0, 80), c = String(b.ctx || '').trim().slice(0, 300)
         if (!w) return json({ error: 'So‘z yozilmagan.' }, 400)
         system = VOCAB_DEFINE_SYSTEM; extra = { responseMimeType: 'application/json', maxOutputTokens: 600 }
         parts.push({ text: 'So‘z yoki ibora: ' + w + '\nGap: ' + c })
