@@ -318,6 +318,13 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .seg.ssub button{flex-direction:row;padding:10px 4px;font-size:14px;white-space:nowrap}
 .chip.accchip,.chip.slwchip,#irabtn{border:0;cursor:pointer;font-weight:600}.hero .chip.accchip{background:rgba(255,255,255,.18);color:#fff}
 .iew.wp,mark.wp{background:rgba(241,199,120,.7);border-radius:4px;box-shadow:0 0 0 2px rgba(241,199,120,.7)}.iecu.tts,p.iep.tts{background:rgba(93,187,99,.16);border-radius:10px}
+mark.mw2.lvB1,mark.mc.lvB1{border-bottom-color:#3f9f9e;background:rgba(63,159,158,.17)}
+mark.mw2.lvC1,mark.mc.lvC1{border-bottom-color:#e07b39;background:rgba(224,123,57,.17)}
+mark.mw2.lvC2,mark.mc.lvC2{border-bottom-color:#d6455d;background:rgba(214,69,93,.17)}
+mark.mw2.hv,mark.mc.hv,mark.mw2[class*=lv].hv,mark.mc[class*=lv].hv{border-bottom-color:#5dbb63;background:rgba(93,187,99,.16)}
+.iew.mg{background:rgba(150,100,220,.14);border-radius:3px}mark.mg{box-shadow:0 0 0 1.5px rgba(150,100,220,.45)}
+.lgd{display:inline-block;padding:0 6px;border-radius:6px;font-size:11px;font-weight:700;color:var(--tx)}.lgd.lvB1{background:rgba(63,159,158,.3)}.lgd.lvB2{background:rgba(217,164,65,.35)}.lgd.lvC1{background:rgba(224,123,57,.35)}.lgd.lvC2{background:rgba(214,69,93,.3)}
+.chip.on{background:var(--go);color:var(--on-go)}.ied{max-height:86vh;overflow:auto}.ied label{display:block;font-size:13px}
 </style>
 </head>
 <body>
@@ -374,8 +381,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.01-3';
-const APP_BUILD='51c7ff3464'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.02-1';
+const APP_BUILD='6e643df8d5'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -1341,7 +1348,7 @@ function ieBosh(){const st=ieStat(),T=S.ie.target||7,dp=ieDp(),due=wDue().length
     line=n>1?`<svg viewBox="0 0 300 70" width="100%" height="70"><polyline fill="none" stroke="var(--ac)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" points="${mocks.map((m,i)=>`${i*300/(n-1)},${66-(m.o-4)/5*60}`).join(' ')}"/></svg>`:'';
   return `${dualPanel('i')}<h2>Bugungi reja</h2>${plan}<h2>Ko‘nikmalar</h2>${skl}${line?`<h2>Mock natijalari o‘sishi</h2>${line}`:''}${ieErrBrief()}
   <details class="sd" style="margin-top:14px"><summary>⚙️ Sozlamalar</summary><div class="in" style="margin-top:8px"><span style="align-self:center;min-width:110px">Maqsad ball</span><input type="number" step="0.5" min="4" max="9" value="${T}" onchange="S.ie.target=+this.value||7;save()"></div><div class="in"><span style="align-self:center;min-width:110px">Imtihon sanasi</span><input type="date" value="${S.ie.ex||''}" onchange="S.ie.ex=this.value;save()"></div><div class="in"><span style="align-self:center;min-width:110px">Talaffuz</span>${ieAccChip()}<button class="chip slwchip" onclick="ieSlowToggle()" aria-pressed="${S.ie.slow?'true':'false'}">🐢 ${S.ie.slow?'sekin':'oddiy'}</button></div><div class="in"><span style="align-self:center;min-width:110px">Lug‘at maqsadi</span><input type="number" min="100" step="100" value="${S.ie.vg||1500}" onchange="S.ie.vg=Math.max(100,+this.value||1500);save()"></div></details>`}
-function ieQuiz(){const W=S.ie.words.filter(w=>w.m);if(W.length<4){IQ={err:1};render();return}
+function ieQuiz(){const W=S.ie.words.filter(w=>w.m&&w.k!=='g');if(W.length<4){IQ={err:1};render();return}
   const w=W[Math.floor(Math.random()*W.length)],o=W.filter(x=>x.id!==w.id).sort(()=>Math.random()-.5).slice(0,3),opts=[...o,w].sort(()=>Math.random()-.5);
   IQ={w,opts,ans:null,sc:(IQ&&IQ.sc)||0,n:(IQ&&IQ.n)||0};render()}
 function ieAns(i){if(IQ.ans!==null)return;IQ.ans=i;IQ.n++;if(IQ.opts[i].id===IQ.w.id)IQ.sc++;render()}
@@ -2625,7 +2632,7 @@ function duolar(){
 
 // ---- Bulut hajmi: Supabase bepul rejasida 1 GB umumiy, shuning uchun har kimga chegara ----
 const CLOUD_MB=300;
-function cloudMB(){let b=0;S.qa.list.forEach(x=>{if(x.cloud)b+=x.sz||0});S.gym.ex.forEach(e=>{if(e.m&&e.m.cloud)b+=e.m.sz||0});(S.kt.books||[]).forEach(k=>{if(k.cloud)b+=k.sz||0});return b/1048576}
+function cloudMB(){let b=0;S.qa.list.forEach(x=>{if(x.cloud)b+=x.sz||0});S.gym.ex.forEach(e=>{if(e.m&&e.m.cloud)b+=e.m.sz||0});(S.kt.books||[]).forEach(k=>{if(k.cloud)b+=k.sz||0});((S.ie&&S.ie.mat)||[]).forEach(m=>{if(m.cl)b+=m.sz||0});return b/1048576}
 const cloudOk=bytes=>cloudMB()+bytes/1048576<=CLOUD_MB;
 function cloudBar(){const u=cloudMB(),pc=Math.min(100,u/CLOUD_MB*100);
   return `<div class="goal" style="padding:10px 14px"><div class="h"><span>☁️ Bulut hajmi</span><span class="mu">${u.toFixed(u<10?1:0)} / ${CLOUD_MB} MB</span></div><div class="bar" style="margin-top:6px"><i style="width:${pc}%;${pc>85?'background:var(--bad)':''}"></i></div><p class="mu" style="font-size:12px;margin:6px 0 0">Limit to‘lsa, yangi fayllar faqat shu telefonda saqlanadi. Eskisini o‘chirsang, joy bo‘shaydi.</p></div>`}
@@ -2887,69 +2894,86 @@ async function ieMatAdd(){const t=V('mt').trim()||'Nomsiz',k=V('mk')==='p'?'p':'
   const lim=k==='p'?15000:12000;let cut=false;if(text.length>lim){cut=true;if(cues.length){let n=0;cues=cues.filter(c=>(n+=c.t.length+1)<=lim)}else x=x.slice(0,lim)}
   const m={id:Date.now(),t:t.slice(0,80),k,x,c:cues.map(c=>[+c.s.toFixed(2),+c.e.toFixed(2),c.t]),au:0,an:null,d:dk()};
   const f=document.getElementById('mf2')&&document.getElementById('mf2').files&&document.getElementById('mf2').files[0];
-  if(k==='p'&&f){if(f.size>60*1048576)toast('Audio 60 MB dan katta, saqlanmadi.');else try{await idbSet('ieau'+m.id,f);m.au=1}catch(e){toast('Audio saqlanmadi.')}}
-  const A=ieM();A.unshift(m);while(A.length>15){const o=A.pop();try{idbDel('ieau'+o.id)}catch(e){}}
-  IMT=m.id;save();if(cut)toast('Matn uzun edi, boshidan '+lim+' belgi olindi.');ieMatOpen(m.id)}
-function ieMatDel(id){if(!confirm('Material o‘chirilsinmi? (Lug‘atga qo‘shilgan so‘zlar qoladi.)'))return;S.ie.mat=ieM().filter(m=>m.id!==id);try{idbDel('ieau'+id)}catch(e){}save()}
+  if(k==='p'&&f){if(f.size>50*1048576)toast('Audio 50 MB dan katta, saqlanmadi.');else try{await idbSet('ieau'+m.id,f);m.au=1;m.sz=f.size}catch(e){toast('Audio saqlanmadi.')}}
+  const A=ieM();A.unshift(m);while(A.length>15){const o=A.pop();try{idbDel('ieau'+o.id)}catch(e){}ieAudDelCloud(o.id)}
+  IMT=m.id;save();if(cut)toast('Matn uzun edi, boshidan '+lim+' belgi olindi.');ieMatOpen(m.id);if(m.au&&f)ieAudUp(m,f)}
+function ieMatDel(id){if(!confirm('Material o‘chirilsinmi? (Lug‘atga qo‘shilgan so‘zlar qoladi.)'))return;S.ie.mat=ieM().filter(m=>m.id!==id);try{idbDel('ieau'+id)}catch(e){}ieAudDelCloud(id);save()}
 // ---- AI tahlil ----
 function iePartsOf(text){const S2=String(text).replace(/\s+/g,' ').trim().match(/[^.!?]+[.!?]*\s*/g)||[text],out=[];let cur='';S2.forEach(s=>{if((cur+s).length>3500&&cur){out.push(cur.trim());cur=s}else cur+=s});if(cur.trim())out.push(cur.trim());
   return out.flatMap(p=>p.length>3500?p.match(/[\s\S]{1,3400}/g):[p]).slice(0,4)}
 const ieIn=(text,f)=>{try{return new RegExp('(^|[^A-Za-z])'+ieEsc(f).replace(/\s+/g,'\\s+')+'($|[^A-Za-z])','i').test(text)}catch(e){return false}};
 const ieCl=(v,n)=>String(v==null?'':v).replace(/\s+/g,' ').trim().slice(0,n||160);
-function ieMerge(res,j,full){if(!j||typeof j!=='object')return;const norm=s=>s.replace(/\s+/g,' ').toLowerCase(),fn=norm(full);
+function ieMerge(res,j,full){if(!j||typeof j!=='object')return;const norm=s=>s.replace(/\s+/g,' ').toLowerCase(),fn=norm(full);res.grammar=res.grammar||[];
   if(!res.lv&&/^(B1|B2|C1|C2)$/.test(j.level||''))res.lv=j.level;if(!res.topic&&j.topic)res.topic=ieCl(j.topic,40);
-  const seen=new Set(res.words.map(x=>x.w.toLowerCase()).concat(res.chunks.map(x=>x.p.toLowerCase())));
+  const LV=v=>/^(B1|B2|C1|C2)$/.test(v)?v:'',cx=s=>{const c=ieCl(s,240);return c&&fn.includes(norm(c))?c:''},
+    seen=new Set(res.words.map(x=>x.w.toLowerCase()).concat(res.chunks.map(x=>x.p.toLowerCase()),res.grammar.map(x=>x.p.toLowerCase())));
   (Array.isArray(j.words)?j.words:[]).forEach(w=>{const lem=ieCl(w&&w.w,40),f=ieCl(w&&(w.f||w.w),40);if(lem.length<3||/\s/.test(lem)||seen.has(lem.toLowerCase())||!ieIn(full,f))return;seen.add(lem.toLowerCase());
-    const ctx=ieCl(w.ctx,240);res.words.push({w:lem,f,pos:/^(n|v|adj|adv)$/.test(w.pos)?w.pos:'',lv:/^(B2|C1|C2)$/.test(w.lv)?w.lv:'',def:ieCl(w.def),uz:ieCl(w.uz,60),ctx:ctx&&fn.includes(norm(ctx))?ctx:'',ex:ieCl(w.ex,200)})});
+    res.words.push({w:lem,f,pos:/^(n|v|adj|adv)$/.test(w.pos)?w.pos:'',lv:LV(w.lv),def:ieCl(w.def),uz:ieCl(w.uz,60),ctx:cx(w.ctx),ex:ieCl(w.ex,200)})});
   (Array.isArray(j.chunks)?j.chunks:[]).forEach(c=>{const p=ieCl(c&&c.p,60),n=p.split(/\s+/).length;if(n<2||n>6||seen.has(p.toLowerCase())||!ieIn(full,p))return;seen.add(p.toLowerCase());
-    const ctx=ieCl(c.ctx,240);res.chunks.push({p,k:/^(collocation|phrasal|idiom|phrase)$/.test(c.k)?c.k:'phrase',def:ieCl(c.def),uz:ieCl(c.uz,60),ctx:ctx&&fn.includes(norm(ctx))?ctx:'',ex:ieCl(c.ex,200)})});
-  res.words=res.words.slice(0,60);res.chunks=res.chunks.slice(0,30)}
+    res.chunks.push({p,k:/^(collocation|phrasal|idiom|phrase)$/.test(c.k)?c.k:'phrase',lv:LV(c.lv),def:ieCl(c.def),uz:ieCl(c.uz,60),ctx:cx(c.ctx),ex:ieCl(c.ex,200)})});
+  (Array.isArray(j.grammar)?j.grammar:[]).forEach(g=>{const p=ieCl(g&&g.p,120),n=p.split(/\s+/).length;if(n<3||n>14||seen.has(p.toLowerCase())||!ieIn(full,p))return;seen.add(p.toLowerCase());
+    res.grammar.push({p,g:ieCl(g.g,40)||'Grammar',lv:LV(g.lv),def:ieCl(g.def),uz:ieCl(g.uz,100),ctx:cx(g.ctx),ex:ieCl(g.ex,200)})});
+  res.words=res.words.slice(0,60);res.chunks=res.chunks.slice(0,30);res.grammar=res.grammar.slice(0,20)}
 let IMP=null;   // to'xtab qolgan tahlil: {id,res,next,n} - "Davom ettirish" shu joydan boshlaydi
 const ieSlowErr=e=>/sekin|vaqt|ulanib|502|503|504|546/i.test(String(e&&e.message||e));
 async function ieAnalyze(id){const m=ieM().find(x=>x.id===id);if(!m||(IMA&&IMA.busy))return;const full=ieText(m),parts=iePartsOf(full),known=S.ie.words.slice(-120).map(w=>w.w);
   const rs=IMP&&IMP.id===id&&IMP.n===parts.length&&IMP.next>0?IMP:null,res=rs?rs.res:{words:[],chunks:[],lv:'',topic:''};let i=rs?rs.next:0,fail=false;IMP=null;
   IMA={id,busy:1,i:i,n:parts.length,err:''};ieMatDraw();
   for(;i<parts.length;i++){IMA.i=i+1;ieMatDraw();let ok=false,last=null;
-    for(let at=0;at<2&&!ok;at++){try{const d=await fnAI({action:'vocab',mode:'analyze',text:parts[i],known}),j=parseJson(d.text);if(!j)throw new Error('AI javobi tushunarsiz.');ieMerge(res,j,full);ok=true}catch(e){last=e;if(!ieSlowErr(e))break}}   // sekin javob bo'lsa bir marta o'zi qayta urinadi
+    for(let at=0;at<2&&!ok;at++){try{const d=await fnAI({action:'vocab',mode:'analyze',text:parts[i],known,min:S.ie.minlv||'B1'}),j=parseJson(d.text);if(!j)throw new Error('AI javobi tushunarsiz.');ieMerge(res,j,full);ok=true}catch(e){last=e;if(!ieSlowErr(e))break}}   // sekin javob bo'lsa bir marta o'zi qayta urinadi
     if(!ok){IMA.err='Qism '+(i+1)+'/'+parts.length+': '+String(last&&last.message||last).slice(0,170);IMP={id,res,next:i,n:parts.length};fail=true;break}}
-  res.n=parts.length;res.at=dk();if(res.words.length||res.chunks.length)m.an=res;IMA.busy=0;save();ieMatDraw()}
+  res.n=parts.length;res.at=dk();if(res.words.length||res.chunks.length||(res.grammar||[]).length)m.an=res;IMA.busy=0;save();ieMatDraw()}
 // ---- lug'atga qo'shish ----
 const ieHave=w=>S.ie.words.some(x=>String(x.w).toLowerCase()===String(w).toLowerCase());
-function ieVocAdd(it,kind,src){const w=String(kind==='c'?it.p:it.w).trim();if(!w||ieHave(w))return false;
-  S.ie.words.push({id:Date.now()+Math.floor(Math.random()*1000),w,m:it.uz||it.def||'',d:it.def||'',u:it.uz||'',e:it.ex||'',c:it.ctx||'',pos:it.pos||'',lv:it.lv||'',k:kind==='c'?'c':'w',src:src||0,box:0,due:dk(),t:0});return true}
-function ieAddOne(kind,i){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;const it=(kind==='c'?m.an.chunks:m.an.words)[i];if(it&&ieVocAdd(it,kind,m.id)){toast('Lug‘atga qo‘shildi: '+(kind==='c'?it.p:it.w));save();ieMatDraw();ieSheetClose()}}
-function ieAddSel(){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;let n=0;Object.keys(IMSEL).filter(k=>IMSEL[k]).forEach(k=>{const[kind,i]=k.split(':'),it=(kind==='c'?m.an.chunks:m.an.words)[+i];if(it&&ieVocAdd(it,kind,m.id))n++});IMSEL={};toast(n+' ta qo‘shildi');save();ieMatDraw()}
+let IVC=0,IMU=null;
+function ieVocAdd(it,kind,src){const k=kind==='c'?'c':kind==='g'?'g':'w',w=String(k==='w'?it.w:it.p).trim();if(!w||ieHave(w))return false;
+  S.ie.words.push({id:Date.now()*1000+(IVC=(IVC+1)%1000),w,m:it.uz||it.def||'',d:it.def||'',u:it.uz||'',e:it.ex||'',c:it.ctx||'',pos:it.pos||'',lv:it.lv||'',k,gn:k==='g'?(it.g||''):'',src:src||0,box:0,due:dk(),t:0});return true}
+const ieAnL=(an,k)=>k==='c'?an.chunks:k==='g'?(an.grammar||[]):an.words,ieKT=(k,it)=>k==='w'?it.w:it.p;
+function ieAddOne(kind,i){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;const it=ieAnL(m.an,kind)[i];if(it&&ieVocAdd(it,kind,m.id)){toast('Lug‘atga qo‘shildi: '+ieKT(kind,it));save();ieMatDraw();ieSheetClose()}}
+function ieAddSel(){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;let n=0;const ids=[];Object.keys(IMSEL).filter(k=>k!=='_o'&&IMSEL[k]).forEach(k=>{const[kind,i]=k.split(':'),it=ieAnL(m.an,kind)[+i];if(it&&ieVocAdd(it,kind,m.id)){n++;ids.push(S.ie.words[S.ie.words.length-1].id)}});IMSEL={};if(n)IMU={ids,mat:m.id,n};toast(n+' ta qo‘shildi');save();ieMatDraw()}
+function ieSelAll(on){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;ieRows(m).forEach(r=>{if(!ieHave(r[2]))IMSEL[r[0]+':'+r[1]]=!!on});IMSEL._o=1;ieMatDraw()}
+function ieAddAll(){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;const ids=[];ieRows(m).forEach(r=>{const it=ieAnL(m.an,r[0])[r[1]];if(it&&!ieHave(r[2])&&ieVocAdd(it,r[0],m.id))ids.push(S.ie.words[S.ie.words.length-1].id)});
+  if(!ids.length){toast('Qo‘shiladigan yangi element yo‘q');return}IMU={ids,mat:m.id,n:ids.length};IMSEL={_o:1};toast(ids.length+' ta qo‘shildi. Xato bo‘lsa "Bekor qilish" tugmasi bor.');save();ieMatDraw()}
+function ieUndoAdd(){if(!IMU)return;const set=new Set(IMU.ids);let k=0;S.ie.words=S.ie.words.filter(w=>{if(set.has(w.id)&&!w.t&&w.box===0){k++;return false}return true});IMU=null;IMSEL={_o:1};toast(k+' ta bekor qilindi');save();ieMatDraw()}
 function ieDone(){const m=ieM().find(x=>x.id===IMT);if(!m)return;S.ie.mr=S.ie.mr||{};S.ie.mr[dk()]=1;ieDp().a=1;m.dn=dk();toast('Zo‘r! Bugungi mashqqa belgilandi (+15 XP)');save();ieMatDraw()}
 // ---- matnni belgilash (chunk va so'zlar) ----
-function ieMark(text,m){const an=m.an;let out=text;const R=[];
+function ieMark(text,m){const an=m.an,R=[],G=[];
   const add=(s,kind,i)=>{if(!s)return;const re=new RegExp('(^|[^A-Za-z])('+ieEsc(s).replace(/\s+/g,'\\s+')+')(?=$|[^A-Za-z])','gi');let x;while((x=re.exec(text))){const a=x.index+x[1].length,b=a+x[2].length;if(!R.some(r=>a<r.b&&b>r.a))R.push({a,b,kind,i})}};
-  if(an){an.chunks.forEach((c,i)=>add(c.p,'c',i));an.words.forEach((w,i)=>{add(w.f,'w',i);if(w.w.toLowerCase()!==w.f.toLowerCase())add(w.w,'w',i)})}
-  R.sort((a,b)=>a.a-b.a);let h='',p=0;const plain=s=>String(s).replace(/([A-Za-z][A-Za-z'’-]*)|([^A-Za-z]+)/g,(m,w,o)=>w?'<span class="iew">'+esc(w)+'</span>':esc(o));
-  R.forEach(r=>{if(r.a<p)return;h+=plain(text.slice(p,r.a));const it=(r.kind==='c'?an.chunks:an.words)[r.i],have=ieHave(r.kind==='c'?it.p:it.w);h+=`<mark class="${r.kind==='c'?'mc':'mw2'}${have?' hv':''}" data-k="${r.kind}" data-i="${r.i}">${esc(text.slice(r.a,r.b))}</mark>`;p=r.b});
-  return h+plain(text.slice(p))}
+  if(an){an.chunks.forEach((c,i)=>add(c.p,'c',i));an.words.forEach((w,i)=>{add(w.f,'w',i);if(w.w.toLowerCase()!==w.f.toLowerCase())add(w.w,'w',i)});
+    (an.grammar||[]).forEach((g,i)=>{const re=new RegExp('(^|[^A-Za-z])('+ieEsc(g.p).replace(/\s+/g,'\\s+')+')(?=$|[^A-Za-z])','i'),x=re.exec(text);if(x){const a=x.index+x[1].length;G.push({a,b:a+x[2].length,i})}})}
+  R.sort((a,b)=>a.a-b.a);const gi=a=>{const g=G.find(r=>a>=r.a&&a<r.b);return g?g.i:-1};
+  const plain=(s,base)=>{let h='',x;const re=/([A-Za-z][A-Za-z'’-]*)|([^A-Za-z]+)/g;while((x=re.exec(s))){if(x[1]){const g=gi(base+x.index);h+='<span class="iew'+(g>=0?' mg" data-g="'+g:'')+'">'+esc(x[1])+'</span>'}else h+=esc(x[2])}return h};
+  let h='',p=0;R.forEach(r=>{if(r.a<p)return;h+=plain(text.slice(p,r.a),p);const it=(r.kind==='c'?an.chunks:an.words)[r.i],have=ieHave(r.kind==='c'?it.p:it.w),g=gi(r.a);
+    h+=`<mark class="${r.kind==='c'?'mc':'mw2'}${it.lv?' lv'+it.lv:''}${have?' hv':''}${g>=0?' mg':''}" data-k="${r.kind}" data-i="${r.i}">${esc(text.slice(r.a,r.b))}</mark>`;p=r.b});
+  return h+plain(text.slice(p),p)}
 // ---- o'qish oynasi ----
 async function ieMatOpen(id){IMT=id;const m=ieM().find(x=>x.id===id);if(!m)return;if(document.getElementById('iem'))ieMatClose(true);
   const el=document.createElement('div');el.id='iem';el.className='mfo iemo';
-  el.innerHTML='<div class="mft"><button class="x" onclick="ieMatClose()" aria-label="Yopish">✕</button><div class="mfti"><b id="iemt" style="font:700 17px Fraunces,serif"></b><small id="iems"></small></div><span style="width:38px"></span></div><div class="mfp" id="iemb"></div><div id="iepl"></div>';
+  el.innerHTML='<div class="mft"><button class="x" onclick="ieMatClose()" aria-label="Yopish">✕</button><div class="mfti"><b id="iemt" style="font:700 17px Fraunces,serif"></b><small id="iems"></small></div><button class="x" onclick="ieEdSheet()" aria-label="Tahrirlash" style="width:38px">✏️</button></div><div class="mfp" id="iemb"></div><div id="iepl"></div>';
   document.body.appendChild(el);ovLock(el);el.addEventListener('click',ieTap);IMAU=null;
-  if(m.au){try{const b=await idbGet('ieau'+m.id);if(b){IMAU=URL.createObjectURL(b)}}catch(e){}}
+  if(m.au){try{const b=await ieAudGet(m);if(b){IMAU=URL.createObjectURL(b)}}catch(e){}}
   ieMatDraw()}
 function ieMatClose(quiet){ieReadStop();ieWFStop();IWC=null;const a=document.getElementById('ieau');if(a){try{a.pause()}catch(e){}}if(IMAU){try{URL.revokeObjectURL(IMAU)}catch(e){}IMAU=null}ovUnlock();const e=document.getElementById('iem');if(e)e.remove();IMT=null;IMS=null;if(!quiet)render()}
-function ieMatDraw(){const b=document.getElementById('iemb'),m=ieM().find(x=>x.id===IMT);if(!b||!m)return;const an=m.an,sc=b.scrollTop,st=an?`${an.words.length} so‘z · ${an.chunks.length} chunk${an.lv?' · '+an.lv:''}${an.topic?' · '+an.topic:''}`:'tahlil qilinmagan';
+function ieMatDraw(){const b=document.getElementById('iemb'),m=ieM().find(x=>x.id===IMT);if(!b||!m)return;const an=m.an,sc=b.scrollTop,st=an?`${an.words.length} so‘z · ${an.chunks.length} chunk · ${(an.grammar||[]).length} grammar${an.lv?' · '+an.lv:''}${an.topic?' · '+an.topic:''}`:'tahlil qilinmagan';
   document.getElementById('iemt').textContent=m.t;document.getElementById('iems').textContent=(m.k==='p'?'🎧 Podkast':'📰 Maqola')+' · '+st;
   const busy=IMA&&IMA.busy&&IMA.id===m.id,full=ieText(m),np=iePartsOf(full).length;
-  const bar=ieVoiceBar(m)+(full.length?`<div class="ieb">${busy?`<div class="mu" style="margin-bottom:6px">🔍 AI tahlil qilmoqda… ${IMA.i}/${IMA.n}</div>`:`<button class="btn" style="flex:1" onclick="ieAnalyze(${m.id})">${IMP&&IMP.id===m.id&&IMP.n===np&&IMP.next>0?`↻ Davom ettirish (qism ${IMP.next+1}/${np}, oldingilari saqlangan)`:`🔍 ${an?'Qayta tahlil':'AI bilan tahlil'} (${np} so‘rov)`}</button>`}${m.dn===dk()?'<span class="chip">✓ bugun</span>':`<button class="btn s" onclick="ieDone()">✓ Tugatdim</button>`}</div>${IMA&&IMA.id===m.id&&IMA.err?`<p style="color:var(--bad);margin:6px 0">${esc(IMA.err)}</p>`:''}`:'');
+  const bar=ieVoiceBar(m)+(full.length?ieMinLv()+`<div class="ieb">${busy?`<div class="mu" style="margin-bottom:6px">🔍 AI tahlil qilmoqda… ${IMA.i}/${IMA.n}</div>`:`<button class="btn" style="flex:1" onclick="ieAnalyze(${m.id})">${IMP&&IMP.id===m.id&&IMP.n===np&&IMP.next>0?`↻ Davom ettirish (qism ${IMP.next+1}/${np}, oldingilari saqlangan)`:`🔍 ${an?'Qayta tahlil':'AI bilan tahlil'} (${np} so‘rov)`}</button>`}${m.dn===dk()?'<span class="chip">✓ bugun</span>':`<button class="btn s" onclick="ieDone()">✓ Tugatdim</button>`}</div>${IMA&&IMA.id===m.id&&IMA.err?`<p style="color:var(--bad);margin:6px 0">${esc(IMA.err)}</p>`:''}`:'');
   const res=an?ieResults(m):'';
   let body;
-  if(m.c&&m.c.length)body=m.c.map((c,i)=>`<div class="iecu" data-i="${i}" id="icu${i}"><button class="iet" onclick="ieCueGo(${i})" aria-label="${ieFmt(c[0])} ga o‘tish">${ieFmt(c[0])}</button>${m.au&&IMAU?`<button class="iet" onclick="ieDictOpen(${i})" aria-label="Diktant">✍</button>`:''}<span class="iep">${ieMark(c[2],m)}</span></div>`).join('');
+  if(m.c&&m.c.length)body=m.c.map((c,i)=>`<div class="iecu" data-i="${i}" id="icu${i}"><button class="iet" onclick="ieCueGo(${i})" aria-label="${ieFmt(c[0])} ga o‘tish">${ieFmt(c[0])}</button>${m.au&&IMAU?`<button class="iet" onclick="ieDictOpen(${i})" aria-label="Diktant">✍</button>`:''}${IMF.ce?`<button class="iet" onclick="ieCueEdit(${i})" aria-label="Qatorni tahrirla">✏️</button>`:''}<span class="iep">${ieMark(c[2],m)}</span></div>`).join('');
   else body=full.split(/\n{2,}|\n/).filter(p=>p.trim()).map(p=>`<p class="iep">${ieMark(p,m)}</p>`).join('')||`<p class="iep">${ieMark(full,m)}</p>`;
   b.innerHTML=bar+(an?`<details class="iesum" ${IMSEL._o?'open':''}><summary>📋 Tahlil natijalari: tanlab qo‘shish</summary>${res}</details>`:'')+`<div class="ietx" style="font-size:${17}px">${body}</div><p class="mu" style="font-size:12px;margin-top:12px">Ajratilgan so‘z yoki iborani bos. Boshqa so‘zni bossang, AI dan so‘rashing mumkin. O‘zbekcha ma’nolarni AI yozadi: ishonchsiz bo‘lsa tekshirib ol.</p>`;
   b.scrollTop=sc;iePlayer(m);IMC=-1;if(ieAu())ieTU()}
-function ieResults(m){const an=m.an,rows=[];const flt=x=>IMFL==='a'||(IMFL==='h'&&(x.lv==='C1'||x.lv==='C2'))||(IMFL==='c'&&x.p);
-  an.chunks.forEach((c,i)=>{if(flt(c))rows.push(['c',i,c.p,'chunk',c.uz||c.def])});an.words.forEach((w,i)=>{if(IMFL!=='c'&&flt(w))rows.push(['w',i,w.w,w.lv,w.uz||w.def])});
-  const fl=[['a','Hammasi'],['h','C1–C2'],['c','Chunklar']].map(x=>`<button class="${IMFL===x[0]?'on':''}" onclick="IMFL='${x[0]}';IMSEL._o=1;ieMatDraw()">${x[1]}</button>`).join('');
-  const n=Object.keys(IMSEL).filter(k=>k!=='_o'&&IMSEL[k]).length;
-  return `<div class="seg" style="margin:8px 0">${fl}</div>${rows.map(r=>{const have=ieHave(r[2]);return `<label class="ierow ${have?'hv':''}"><input type="checkbox" ${have?'checked disabled':IMSEL[r[0]+':'+r[1]]?'checked':''} onchange="IMSEL['${r[0]}:${r[1]}']=this.checked;IMSEL._o=1;ieMatDraw()"><span class="t"><b>${esc(r[2])}</b> <span class="erb ${r[3]==='chunk'?'old':'new'}">${esc(r[3]||'')}</span><br><small class="mu">${esc(r[4]||'')}</small></span><button class="x" onclick="ieSheet('${r[0]}',${r[1]})" aria-label="Batafsil">ⓘ</button></label>`}).join('')||'<p class="mu">Hech narsa topilmadi.</p>'}<button class="big" style="margin-top:8px" onclick="ieAddSel()" ${n?'':'disabled'}>➕ Tanlanganlarni qo‘shish (${n})</button>`}
+function ieRows(m){const an=m.an,f=IMFL,rows=[],lvF=/^(B1|B2|C1|C2)$/.test(f),ok=x=>!lvF||x.lv===f;
+  if(f==='a'||lvF)an.words.forEach((w,i)=>{if(ok(w))rows.push(['w',i,w.w,w.lv,w.uz||w.def,'so‘z'])});
+  if(f==='a'||lvF||f==='c')an.chunks.forEach((c,i)=>{if(ok(c))rows.push(['c',i,c.p,c.lv,c.uz||c.def,'chunk'])});
+  if(f==='a'||lvF||f==='g')(an.grammar||[]).forEach((g,i)=>{if(ok(g))rows.push(['g',i,g.p,g.lv,(g.g?g.g+' · ':'')+(g.uz||g.def||''),'grammar'])});return rows}
+function ieResults(m){const rows=ieRows(m),n=Object.keys(IMSEL).filter(k=>k!=='_o'&&IMSEL[k]).length,fresh=rows.filter(r=>!ieHave(r[2])).length,
+  fl=[['a','Hammasi'],['B1','B1'],['B2','B2'],['C1','C1'],['C2','C2'],['c','Chunklar'],['g','Grammar']].map(x=>`<button class="${IMFL===x[0]?'on':''}" onclick="IMFL='${x[0]}';IMSEL._o=1;ieMatDraw()">${x[1]}</button>`).join('');
+  return `<div class="seg sc" style="margin:8px 0">${fl}</div><p class="mu" style="font-size:12px;margin:2px 0 6px"><span class="lgd lvB1">B1</span> <span class="lgd lvB2">B2</span> <span class="lgd lvC1">C1</span> <span class="lgd lvC2">C2</span> so‘z matnda shu rangda chiziladi; binafsha fon: grammatika</p>
+  <div class="in" style="flex-wrap:wrap;margin-bottom:6px"><button class="btn s" onclick="ieSelAll(1)">☑ Hammasini belgilash</button><button class="btn s" onclick="ieSelAll(0)">☐ Tozalash</button><span class="mu" style="align-self:center">${fresh} ta yangi</span></div>
+  ${rows.map(r=>{const have=ieHave(r[2]);return `<label class="ierow ${have?'hv':''}"><input type="checkbox" ${have?'checked disabled':IMSEL[r[0]+':'+r[1]]?'checked':''} onchange="IMSEL['${r[0]}:${r[1]}']=this.checked;IMSEL._o=1;ieMatDraw()"><span class="t"><b>${esc(r[2])}</b> ${r[3]?`<span class="erb new">${esc(r[3])}</span>`:''}${r[5]!=='so‘z'?`<span class="erb old">${r[5]}</span>`:''}<br><small class="mu">${esc(r[4]||'')}</small></span><button class="x" onclick="ieSheet('${r[0]}',${r[1]})" aria-label="Batafsil">ⓘ</button></label>`}).join('')||'<p class="mu">Hech narsa topilmadi.</p>'}
+  <button class="big" style="margin-top:8px" onclick="ieAddSel()" ${n?'':'disabled'}>➕ Tanlanganlarni qo‘shish (${n})</button><button class="big" style="margin-top:8px;background:var(--ac);color:#fff" onclick="ieAddAll()" ${fresh?'':'disabled'}>⚡ Ko‘ringanlarning hammasini qo‘shish (${fresh})</button>${IMU&&IMU.mat===m.id?`<button class="btn s" style="width:100%;margin-top:8px" onclick="ieUndoAdd()">↩ Oxirgi ${IMU.n} ta qo‘shilganni bekor qilish</button>`:''}`}
 // ---- so'z kartochkasi (bottom sheet) ----
 function ieSheetClose(){IMS=null;const e=document.getElementById('iesh');if(e)e.remove()}
 function ieSheetHtml(it,kind,have,idx){const w=kind==='c'?it.p:it.w,hl=s=>esc(s).replace(new RegExp('('+ieEsc(esc(kind==='c'?it.p:(it.f||it.w)))+')','ig'),'<b>$1</b>');
@@ -2957,10 +2981,16 @@ function ieSheetHtml(it,kind,have,idx){const w=kind==='c'?it.p:it.w,hl=s=>esc(s)
    <div style="margin-bottom:6px">${it.pos?`<span class="erb old">${esc(it.pos)}</span>`:''}${it.lv?`<span class="erb new">${esc(it.lv)}</span>`:''}${kind==='c'?`<span class="erb old">${esc(it.k||'chunk')}</span>`:''}</div>
    ${it.uz?`<p style="margin:0 0 4px;font-size:18px"><b>${esc(it.uz)}</b></p>`:''}${it.def?`<p style="margin:0 0 6px">${esc(it.def)}</p>`:''}${it.ctx?`<p class="mu" style="margin:0 0 6px">“${hl(it.ctx)}” ${ieSpk(it.ctx)}</p>`:''}${it.ex?`<p style="margin:0 0 8px"><i>${esc(it.ex)}</i> ${ieSpk(it.ex)}</p>`:''}
    ${have?'<button class="btn s" disabled>✓ Lug‘atda bor</button>':`<button class="btn" style="width:100%" onclick="${idx!==undefined?`ieAddOne('${kind}',${idx})`:'ieAddDef()'}">➕ Lug‘atga qo‘shish</button>`}`}
-function ieSheet(kind,i){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;const it=(kind==='c'?m.an.chunks:m.an.words)[i];if(!it)return;ieSheetClose();IMS={kind,i};const e=document.createElement('div');e.id='iesh';e.className='mfs';e.innerHTML=ieSheetHtml(it,kind,ieHave(kind==='c'?it.p:it.w),i);document.getElementById('iem').appendChild(e)}
+function ieGramHtml(it,have,idx,word){return `<div class="mfsh"><b style="font:700 19px Fraunces,serif">${esc(it.g||'Grammar')}</b><span>${ieAccChip()}${ieSpk(it.p)}<button class="x" onclick="ieSheetClose()" aria-label="Yopish">✕</button></span></div>
+   <div style="margin-bottom:6px"><span class="erb new">grammar</span>${it.lv?`<span class="erb new">${esc(it.lv)}</span>`:''}</div><p style="margin:0 0 6px;font-size:17px"><b>“${esc(it.p)}”</b></p>${it.def?`<p style="margin:0 0 4px"><code>${esc(it.def)}</code></p>`:''}${it.uz?`<p style="margin:0 0 6px">${esc(it.uz)}</p>`:''}
+   ${it.ctx&&it.ctx!==it.p?`<p class="mu" style="margin:0 0 6px">“${esc(it.ctx)}” ${ieSpk(it.ctx)}</p>`:''}${it.ex?`<p style="margin:0 0 8px"><i>${esc(it.ex)}</i> ${ieSpk(it.ex)}</p>`:''}
+   ${have?'<button class="btn s" disabled>✓ Lug‘atda bor</button>':`<button class="btn" style="width:100%" onclick="ieAddOne('g',${idx})">➕ Lug‘atga qo‘shish</button>`}${word?`<button class="btn s" style="width:100%;margin-top:6px" onclick="ieGramWord(${JSON.stringify(word).replace(/"/g,'&quot;')},${idx})">“${esc(word)}” so‘zini izohlash</button>`:''}`}
+function ieSheet(kind,i,word){const m=ieM().find(x=>x.id===IMT);if(!m||!m.an)return;const it=ieAnL(m.an,kind)[i];if(!it)return;ieSheetClose();IMS={kind,i};const e=document.createElement('div');e.id='iesh';e.className='mfs';
+  e.innerHTML=kind==='g'?ieGramHtml(it,ieHave(it.p),i,word):ieSheetHtml(it,kind,ieHave(kind==='c'?it.p:it.w),i);document.getElementById('iem').appendChild(e)}
+function ieGramWord(word,gi){const m=ieM().find(x=>x.id===IMT),g=m&&m.an&&(m.an.grammar||[])[gi];ieSheetClose();IMS={word,ctx:(g&&(g.ctx||g.p))||'',def:null,busy:0,err:''};const el=document.createElement('div');el.id='iesh';el.className='mfs';document.getElementById('iem').appendChild(el);ieSheetWord()}
 function ieSentence(node){const p=node.closest('.iep');if(!p)return '';const t=p.textContent||'',w=node.textContent||'',i=t.indexOf(w),S3=t.match(/[^.!?]+[.!?]*\s*/g)||[t];let pos=0;for(const s of S3){if(i>=pos&&i<pos+s.length)return s.trim().slice(0,300);pos+=s.length}return t.slice(0,300)}
 function ieTap(e){const mk=e.target.closest&&e.target.closest('mark[data-k]');if(mk){ieSheet(mk.dataset.k,+mk.dataset.i);return}
-  const w=e.target.closest&&e.target.closest('.iew');if(w){const word=w.textContent.replace(/[’']s?$/,''),ctx=ieSentence(w);ieSheetClose();IMS={word,ctx,def:null,busy:0,err:''};const el=document.createElement('div');el.id='iesh';el.className='mfs';document.getElementById('iem').appendChild(el);ieSheetWord()}}
+  const w=e.target.closest&&e.target.closest('.iew');if(w){if(w.dataset.g!==undefined){ieSheet('g',+w.dataset.g,w.textContent);return}const word=w.textContent.replace(/[’']s?$/,''),ctx=ieSentence(w);ieSheetClose();IMS={word,ctx,def:null,busy:0,err:''};const el=document.createElement('div');el.id='iesh';el.className='mfs';document.getElementById('iem').appendChild(el);ieSheetWord()}}
 function ieSheetWord(){const el=document.getElementById('iesh');if(!el||!IMS||!IMS.word)return;const q=IMS;
   if(q.def){el.innerHTML=ieSheetHtml(q.def,'w',ieHave(q.def.w||q.word));return}
   el.innerHTML=`<div class="mfsh"><b style="font:700 22px Fraunces,serif">${esc(q.word)}</b><span>${ieAccChip()}<button class="x" onclick="ieSay(${JSON.stringify(q.word).replace(/"/g,'&quot;')})" aria-label="Talaffuz">🔊</button><button class="x" onclick="ieSheetClose()" aria-label="Yopish">✕</button></span></div>${q.ctx?`<p class="mu" style="margin:0 0 8px">“${esc(q.ctx)}” ${ieSpk(q.ctx)}</p>`:''}${q.err?`<p style="color:var(--bad);margin:0 0 8px">${esc(q.err)}</p>`:''}${q.busy?'<p class="mu">AI izohlamoqda…</p>':`<div class="in" style="flex-wrap:wrap"><button class="btn" onclick="ieDefine()">✨ AI dan ma’nosini so‘rash</button><button class="btn s" onclick="ieQuickAdd()">➕ Faqat so‘zni qo‘sh</button></div>`}`}
@@ -2972,7 +3002,7 @@ function ieAddDef(){const q=IMS;if(!q||!q.def)return;const m=ieM().find(x=>x.id=
 function ieQuickAdd(){const q=IMS;if(!q)return;const m=ieM().find(x=>x.id===IMT);if(ieVocAdd({w:q.word,ctx:q.ctx},'w',m?m.id:0)){toast('Qo‘shildi. Ma’nosini keyin yozib qo‘y.');save();ieMatDraw()}else toast('Bu so‘z lug‘atda bor');ieSheetClose()}
 // ---- podkast pleyeri (subtitr bilan) ----
 function iePlayer(m){const pl=document.getElementById('iepl');if(!pl)return;if(!(m.c&&m.c.length)&&!m.au){pl.innerHTML='';return}
-  if(!IMAU){pl.innerHTML=m.au?'<div class="iepb"><span class="mu">Audio bu qurilmada yo‘q.</span></div>':'<div class="iepb"><span class="mu">Audio qo‘shilmagan: matnni subtitr kabi o‘qiysiz.</span></div>';return}
+  if(!IMAU){pl.innerHTML=`<div class="iepb"><span class="mu" style="flex:1">${m.au?(m.cl?'Audio yuklanmadi (internetni tekshir).':'Audio bu qurilmada yo‘q.'):'Audio qo‘shilmagan: matnni subtitr kabi o‘qiysiz.'}</span><button class="btn s" onclick="ieAudPick(${m.id})">🎧 Audio qo‘shish</button></div>`;return}
   if(document.getElementById('ieau'))return;
   pl.innerHTML=`<div class="iepb"><audio id="ieau" src="${IMAU}" preload="metadata"></audio><button class="x" id="iepp" onclick="iePlay()" aria-label="Boshlash">▶</button><button class="x" onclick="ieSkip(-5)" aria-label="5 soniya orqaga">⟲5</button><button class="x" onclick="ieSkip(5)" aria-label="5 soniya oldinga">5⟳</button><input id="iesk" type="range" min="0" max="1000" value="0" oninput="ieSeekR(this.value)" aria-label="Joylashuv"><button class="btn s" id="ierate" onclick="ieRate()">${IMF.rate}×</button><button class="btn s ${IMF.loop?'on':''}" id="ieloop" onclick="ieLoop()">⟲ gap</button></div>`;
   const a=document.getElementById('ieau');a.playbackRate=IMF.rate;ieWFAttach(a);a.addEventListener('timeupdate',ieTU);a.addEventListener('play',()=>{const b=document.getElementById('iepp');if(b)b.textContent='⏸'});a.addEventListener('pause',()=>{const b=document.getElementById('iepp');if(b)b.textContent='▶'})}
@@ -2989,9 +3019,9 @@ function ieTU(){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!a||!m)return;cons
   if(i!==IMC){document.querySelectorAll('#iemb .iecu.on').forEach(x=>x.classList.remove('on'));IMC=i;const n=document.getElementById('icu'+i);if(n){n.classList.add('on');if(IMF.follow)n.scrollIntoView({block:'center',behavior:'smooth'})}}}
 function ieCueGo(i){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!m||!m.c[i])return;if(!a){toast('Audio yo‘q: faqat matn.');return}a.currentTime=m.c[i][0];IMC=-1;ieTU();a.play()}
 // ---- material ro'yxati va qo'shish formasi ----
-function ieMat(){const A=ieM(),adding=IMF.add,list=A.map(m=>{const an=m.an,hv=an?an.words.concat(an.chunks).filter(x=>ieHave(x.w||x.p)).length:0;
-    return `<div class="row iemr"><button class="x" style="flex:1;text-align:left;color:var(--tx);font:inherit" onclick="ieMatOpen(${m.id})"><b>${m.k==='p'?'🎧':'📰'} ${esc(m.t)}</b><br><small class="mu">${esc(m.d)} · ${ieText(m).length} belgi${m.au?' · audio':''}${m.c&&m.c.length?' · subtitr':''}${an?` · ${an.words.length} so‘z, ${an.chunks.length} chunk (${hv} qo‘shilgan)`:' · tahlil qilinmagan'}</small></button><button class="x" onclick="ieMatDel(${m.id})" aria-label="O‘chirish">✕</button></div>`}).join('');
-  const form=adding?`<div class="goal"><b>Yangi material</b><div class="seg" style="margin:8px 0"><button class="${IMF.mk!=='p'?'on':''}" onclick="IMF.mk='a';render()">📰 Maqola</button><button class="${IMF.mk==='p'?'on':''}" onclick="IMF.mk='p';render()">🎧 Podkast</button></div><input type="hidden" id="mk" value="${IMF.mk==='p'?'p':'a'}"><input id="mt" placeholder="Nomi" style="width:100%;margin-bottom:6px"><textarea id="mx" rows="7" placeholder="${IMF.mk==='p'?'Transkript yoki subtitr (SRT, VTT yoki [01:23] qatorlar) shu yerga qo‘yiladi. Vaqtlari bo‘lsa audio bilan birga yuradi.':'Maqola matnini shu yerga qo‘y (BBC, Guardian, Cambridge, TED transkript…)'}" style="width:100%"></textarea>${IMF.mk==='p'?'<div class="mu" style="margin:6px 0 4px">Audio (ixtiyoriy, shu qurilmada saqlanadi):</div><input type="file" id="mf2" accept="audio/*,video/mp4">':''}<div class="in" style="margin-top:8px"><button class="btn" onclick="ieMatAdd()">Saqlash va ochish</button><button class="btn s" onclick="IMF.add=0;render()">Bekor</button></div></div>`:`<button class="big" onclick="IMF.add=1;IMF.mk=IMF.mk||'a';render()">➕ Maqola yoki podkast qo‘shish</button>`;
+function ieMat(){const A=ieM(),adding=IMF.add,list=A.map(m=>{const an=m.an,hv=an?an.words.concat(an.chunks,an.grammar||[]).filter(x=>ieHave(x.w||x.p)).length:0;
+    return `<div class="row iemr"><button class="x" style="flex:1;text-align:left;color:var(--tx);font:inherit" onclick="ieMatOpen(${m.id})"><b>${m.k==='p'?'🎧':'📰'} ${esc(m.t)}</b><br><small class="mu">${esc(m.d)} · ${ieText(m).length} belgi${m.au?(m.cl?' · audio ☁':' · audio'):''}${m.c&&m.c.length?' · subtitr':''}${an?` · ${an.words.length} so‘z, ${an.chunks.length} chunk, ${(an.grammar||[]).length} grammar (${hv} qo‘shilgan)`:' · tahlil qilinmagan'}</small></button><button class="x" onclick="ieEdOpen(${m.id})" aria-label="Tahrirlash">✏️</button><button class="x" onclick="ieMatDel(${m.id})" aria-label="O‘chirish">✕</button></div>`}).join('');
+  const form=adding?`<div class="goal"><b>Yangi material</b><div class="seg" style="margin:8px 0"><button class="${IMF.mk!=='p'?'on':''}" onclick="IMF.mk='a';render()">📰 Maqola</button><button class="${IMF.mk==='p'?'on':''}" onclick="IMF.mk='p';render()">🎧 Podkast</button></div><input type="hidden" id="mk" value="${IMF.mk==='p'?'p':'a'}"><input id="mt" placeholder="Nomi" style="width:100%;margin-bottom:6px"><textarea id="mx" rows="7" placeholder="${IMF.mk==='p'?'Transkript yoki subtitr (SRT, VTT yoki [01:23] qatorlar) shu yerga qo‘yiladi. Vaqtlari bo‘lsa audio bilan birga yuradi.':'Maqola matnini shu yerga qo‘y (BBC, Guardian, Cambridge, TED transkript…)'}" style="width:100%"></textarea>${IMF.mk==='p'?'<div class="mu" style="margin:6px 0 4px">Audio (ixtiyoriy). Bulutga ham yuklanadi, telefon va kompyuterda chalinadi:</div><input type="file" id="mf2" accept="audio/*,video/mp4">':''}<div class="in" style="margin-top:8px"><button class="btn" onclick="ieMatAdd()">Saqlash va ochish</button><button class="btn s" onclick="IMF.add=0;render()">Bekor</button></div></div>`:`<button class="big" onclick="IMF.add=1;IMF.mk=IMF.mk||'a';render()">➕ Maqola yoki podkast qo‘shish</button>`;
   return `<section class="hero"><p class="lab">Materiallar</p><h1 style="font-size:26px">O‘qi, eshit, so‘zni ol</h1><p class="mu">Maqola yoki podkast transkriptini qo‘y. AI qiyin so‘z va iboralarni topib, <b>so‘z · ta’rif · misol</b> ko‘rinishida lug‘atga qo‘shadi. Kuniga bitta material ham yetarli.</p></section>${form}<h2>Kutubxona</h2>${list||'<p class="mu">Hali material yo‘q. Birinchisini qo‘sh: masalan BBC 6 Minute English transkripti.</p>'}`}
 // ---- IELTS tayyorgarligi + Qur'on hifzi paneli, so'z kartochkasi (ta'rif, misol, cloze), kuniga yangi so'z limiti ----
 function hifzStats(){const q=ssC(),done=r1(mdone()),tot=r1(TOT),rem=r1(Math.max(0,TOT-mdone())),ppd=q.ppd||0,mem=ssMem(),P=ssParts();
@@ -3016,15 +3046,18 @@ function hifzMini(){const H=hifzStats();return `<div class="dpc2" style="padding
 // ---- so'z kartochkasi ----
 let IRM='f',ILF='a';
 function ieBlank(s,w){if(!s||!w)return '';const st=w.length>5?w.slice(0,w.length-2):w,re=new RegExp('(^|[^A-Za-z])('+ieEsc(st).replace(/\s+/g,'\\s+')+'[A-Za-z]*)','i');return re.test(s)?esc(s).replace(new RegExp('('+ieEsc(esc(st)).replace(/\s+/g,'\\s+')+'[A-Za-z]*)','i'),'_____'):''}
-function ieCard(w){const sp=`<button class="x" style="color:#fff" onclick="ieSay(${JSON.stringify(w.w).replace(/"/g,'&quot;')})" aria-label="Talaffuz">🔊</button>`,bl=IRM==='z'?ieBlank(w.c||w.e,w.w):'',
+function ieCardG(w){const sp=`<button class="x" style="color:#fff" onclick="ieSay(${JSON.stringify(w.w).replace(/"/g,'&quot;')})" aria-label="Talaffuz">🔊</button>`,
+  btns='<div class="in" style="margin-top:12px"><button class="btn s" style="flex:1" onclick="iAns(0)">Bilmadim</button><button class="btn" style="flex:1" onclick="iAns(1)">Bildim</button></div>';
+  return `<h1 style="font-size:24px">“${esc(w.w)}” ${sp} ${ieAccChip()}</h1><p style="margin:0;opacity:.8">grammar${w.lv?' · '+esc(w.lv):''}</p>${IR?`<p style="font-size:20px;margin:8px 0 0">${esc(w.gn||'Grammar')}</p>${w.d?`<p style="margin:6px 0 0"><code>${esc(w.d)}</code></p>`:''}${w.u?`<p style="margin:6px 0 0">${esc(w.u)}</p>`:''}${w.e?`<p style="margin:6px 0 0"><i>${esc(w.e)}</i> ${ieSpk(w.e,'color:#fff')}</p>`:''}${w.c?`<p style="margin:6px 0 0;font-size:13px;opacity:.8">“${esc(w.c)}” ${ieSpk(w.c,'color:#fff')}</p>`:''}${btns}`:'<button class="big" onclick="IR=1;render()">Qaysi tuzilma? Ko‘rsat</button>'}`}
+function ieCard(w){if(w.k==='g')return ieCardG(w);const sp=`<button class="x" style="color:#fff" onclick="ieSay(${JSON.stringify(w.w).replace(/"/g,'&quot;')})" aria-label="Talaffuz">🔊</button>`,bl=IRM==='z'?ieBlank(w.c||w.e,w.w):'',
   back=`<p style="font-size:20px;margin:6px 0 0">${esc(w.u||w.m||'Ma’no yozilmagan')}</p>${w.d?`<p style="margin:6px 0 0;opacity:.92">${esc(w.d)}</p>`:''}${w.e?`<p style="margin:6px 0 0"><i>${esc(w.e)}</i> ${ieSpk(w.e,'color:#fff')}</p>`:''}${w.c?`<p style="margin:6px 0 0;font-size:13px;opacity:.8">“${esc(w.c)}” ${ieSpk(w.c,'color:#fff')}</p>`:''}`,
   btns='<div class="in" style="margin-top:12px"><button class="btn s" style="flex:1" onclick="iAns(0)">Bilmadim</button><button class="btn" style="flex:1" onclick="iAns(1)">Bildim</button></div>';
   if(bl)return `<div class="cz2">${bl}</div>${w.u||w.m?`<p style="margin:6px 0 0;opacity:.85">Ishora: ${esc(w.u||w.m)}</p>`:''}${IR?`<h1 style="font-size:32px;margin-top:8px">${esc(w.w)} ${sp} ${ieAccChip()}</h1>${back}${btns}${ieSckUi(w)}`:'<button class="big" onclick="IR=1;render()">Javobni ko‘rsat</button>'}`;
   return `<h1 style="font-size:34px">${esc(w.w)} ${sp} ${ieAccChip()}</h1>${w.pos||w.lv||w.k==='c'?`<p style="margin:0;opacity:.8">${esc([w.pos,w.lv,w.k==='c'?'chunk':''].filter(Boolean).join(' · '))}</p>`:''}${IR?back+btns+ieSckUi(w):'<button class="big" onclick="IR=1;render()">Ma’nosini ko‘rsat</button>'}`}
 const ieMode=()=>S.ie.words.some(w=>w.c||w.e)?`<div class="seg" style="margin:0 0 10px"><button class="${IRM==='f'?'on':''}" onclick="IRM='f';IR=0;render()">Kartochka</button><button class="${IRM==='z'?'on':''}" onclick="IRM='z';IR=0;render()">Gapni to‘ldir</button></div>`:'';
-function ieList(){const f=ILF,fl=x=>(!IQS||sn(x.w+' '+(x.m||'')).includes(sn(IQS)))&&(f==='a'||(f==='n'&&x.box===0)||(f==='h'&&(x.lv==='C1'||x.lv==='C2'))||(f==='c'&&x.k==='c')),
-  chips=[['a','Hammasi'],['n','Yangi'],['h','C1–C2'],['c','Chunklar']].map(x=>`<button class="${ILF===x[0]?'on':''}" onclick="ILF='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="seg sc" style="margin:0 0 8px">${chips}</div>`+(S.ie.words.filter(fl).slice(-40).reverse().map(x=>`<div class="row"><span class="t">${esc(x.w)}${x.k==='c'?' <span class="erb old">chunk</span>':''}${x.lv?` <span class="erb new">${esc(x.lv)}</span>`:''}<br><span class="mu">${esc(x.u||x.m||'')}</span>${x.e?`<br><small class="mu"><i>${esc(x.e)}</i></small>`:''}</span><span class="tm">${['yangi','1','2','3','4','✓'][x.box]||''}</span><button class="x" onclick="iDel(${x.id})">✕</button></div>`).join('')||'<p class="mu">Bu yerda hali so‘z yo‘q.</p>')}
+function ieList(){const f=ILF,fl=x=>(!IQS||sn(x.w+' '+(x.m||'')).includes(sn(IQS)))&&(f==='a'||(f==='n'&&x.box===0)||(f===x.lv&&/^(B1|B2|C1|C2)$/.test(f))||(f==='c'&&x.k==='c')||(f==='g'&&x.k==='g')),
+  chips=[['a','Hammasi'],['n','Yangi'],['B1','B1'],['B2','B2'],['C1','C1'],['C2','C2'],['c','Chunklar'],['g','Grammar']].map(x=>`<button class="${ILF===x[0]?'on':''}" onclick="ILF='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="seg sc" style="margin:0 0 8px">${chips}</div>`+(S.ie.words.filter(fl).slice(-40).reverse().map(x=>`<div class="row"><span class="t">${esc(x.w)}${x.k==='c'?' <span class="erb old">chunk</span>':x.k==='g'?' <span class="erb old">grammar</span>':''}${x.lv?` <span class="erb new">${esc(x.lv)}</span>`:''}<br><span class="mu">${esc(x.u||x.m||'')}</span>${x.e?`<br><small class="mu"><i>${esc(x.e)}</i></small>`:''}</span><span class="tm">${['yangi','1','2','3','4','✓'][x.box]||''}</span><button class="x" onclick="iDel(${x.id})">✕</button></div>`).join('')||'<p class="mu">Bu yerda hali so‘z yo‘q.</p>')}
 // ---- kuniga yangi so'zlar limiti ----
 const ieNd=()=>{const n=S.ie.nd;return n&&n.d===dk()?n.n:0};
 function ieNl(d){S.ie.nl=Math.max(3,Math.min(40,(S.ie.nl||10)+d));save()}
@@ -3173,7 +3206,7 @@ function ieAlign(text,w,s,e){const T=ieTok(text),W=(Array.isArray(w)?w:[]).map(x
   return out.map(x=>Math.round(Math.max(s,Math.min(e,x))*100)/100)}
 const ieAudExt=t=>/mp4|m4a|aac/.test(t)?'.m4a':/wav/.test(t)?'.wav':/ogg|opus/.test(t)?'.ogg':/webm/.test(t)?'.webm':/flac/.test(t)?'.flac':'.mp3';
 async function ieTranscribe(id){const m=ieM().find(x=>x.id===id);if(!m||(ITR&&ITR.busy))return;ITR={id,busy:1,err:''};ieMatDraw();
-  try{const blob=await idbGet('ieau'+m.id);if(!blob)throw new Error('Audio bu qurilmada topilmadi.');if(blob.size>24*1048576)throw new Error('Audio 24 MB dan katta (bepul chegara 25 MB).');
+  try{const blob=await ieAudGet(m);if(!blob)throw new Error('Audio bu qurilmada topilmadi.');if(blob.size>24*1048576)throw new Error('Audio 24 MB dan katta (bepul chegara 25 MB).');
     const d=await fnUpload({action:'transcript'},blob,'audio'+ieAudExt(blob.type||''));if(!Array.isArray(d.cues)||!d.cues.length)throw new Error('Transkript bo‘sh chiqdi.');
     m.c=d.cues.map(c=>{const s=+c.s||0,e=Math.max(s+0.1,+c.e||s+1),t=String(c.t||'').trim();return [Math.round(s*100)/100,Math.round(e*100)/100,t,ieAlign(t,c.w,s,e)]}).filter(c=>c[2]);
     m.x='';m.tr=1;m.an=null;ITR=null;toast('Transkript tayyor: '+m.c.length+' qator');save()}
@@ -3182,6 +3215,41 @@ function ieTrAgain(id){if(confirm('Hozirgi matn va tahlil o‘chiriladi, audio q
 function ieVoiceBar(m){const full=ieText(m).length>0,busy=ITR&&ITR.busy&&ITR.id===m.id,need=m.au&&!(m.c&&m.c.length);
   return `<div class="ieb" style="flex-wrap:wrap">${ieAccChip()}<button class="chip slwchip" onclick="ieSlowToggle()" aria-pressed="${S.ie.slow?'true':'false'}">🐢 ${S.ie.slow?'sekin':'oddiy'}</button>${full?`<button class="chip" id="irabtn" onclick="ieReadAll()">${IRA?'⏹ To‘xtat':'🔊 O‘qib ber'}</button>`:''}${m.au&&m.c&&m.c.length&&m.tr?`<button class="chip" onclick="ieTrAgain(${m.id})">↻ Qayta transkript</button>`:''}</div>
    ${need?`<div class="goal"><b>🤖 Avtomatik transkript</b><p class="mu" style="margin:6px 0 8px">Audiodan matn va <b>har bir so‘zning vaqti</b> olinadi: chalinayotganda so‘zlar birga ajralib yuradi. 1 ta so‘rov, audio 24 MB gacha (Groq Whisper).</p><button class="big" style="margin-top:0" onclick="ieTranscribe(${m.id})" ${busy?'disabled':''}>${busy?'Transkript qilinmoqda… (1–2 daqiqagacha)':'Transkript qilish'}</button></div>`:''}${ITR&&ITR.id===m.id&&ITR.err?`<p style="color:var(--bad);margin:6px 0">${esc(ITR.err)}</p>`:''}`}
+// ---- Material tahriri (✏️): nom, matn/subtitr, audio (bulutga ham saqlanadi), transkript qatorlari; tahlil darajasi ----
+const ieSb=()=>window.__sb||(typeof sb!=='undefined'?sb:null),ieCloudOn=()=>!!ieSb()&&!!UID,ieAudPath=id=>UID+'/i/'+id;   // ieSb: sinovlar uchun almashtiriladigan nuqta
+async function ieAudGet(m){let b=null;try{b=await idbGet('ieau'+m.id)}catch(e){}if(b)return b;
+  if(m.cl&&ieCloudOn()){try{toast('Audio bulutdan yuklanmoqda…');const r=await ieSb().storage.from('books').download(ieAudPath(m.id));if(r.error)throw r.error;b=r.data;try{await idbSet('ieau'+m.id,b)}catch(e){}return b}catch(e){toast('Audio yuklanmadi: '+String(e.message||e).slice(0,80))}}return null}
+async function ieAudUp(m,blob){if(!ieCloudOn())return false;if(typeof cloudOk==='function'&&!cloudOk(blob.size)){toast('Bulut hajmi to‘lgan: audio faqat shu qurilmada qoladi.');return false}
+  try{const r=await ieSb().storage.from('books').upload(ieAudPath(m.id),blob,{upsert:true,contentType:blob.type||'audio/mpeg'});if(r.error)throw r.error;m.cl=1;m.sz=blob.size;save();toast('Audio bulutga yuklandi ☁');return true}catch(e){toast('Audio bulutga yuklanmadi: '+String(e.message||e).slice(0,80));return false}}
+function ieAudDelCloud(id){if(ieCloudOn())try{ieSb().storage.from('books').remove([ieAudPath(id)]).catch(()=>{})}catch(e){}}
+async function ieAudReload(m){if(IMAU){try{URL.revokeObjectURL(IMAU)}catch(e){}IMAU=null}const o=document.getElementById('ieau');if(o){try{o.pause()}catch(e){}}const pl=document.getElementById('iepl');if(pl)pl.innerHTML='';
+  const b=m.au?await ieAudGet(m):null;if(b)IMAU=URL.createObjectURL(b);IMC=-1;ieMatDraw();if(document.getElementById('ied'))ieEdSheet()}
+function ieAudPick(id){const inp=document.createElement('input');inp.type='file';inp.accept='audio/*,video/mp4,.mp3,.m4a,.wav,.ogg,.aac';inp.style.display='none';document.body.appendChild(inp);const rm=()=>{try{inp.remove()}catch(e){}};setTimeout(rm,180000);
+  inp.onchange=async()=>{const f=inp.files&&inp.files[0];rm();if(!f)return;if(f.size>50*1048576){toast('Audio 50 MB dan katta (bulut chegarasi).');return}const m=ieM().find(x=>x.id===id);if(!m)return;
+    try{await idbSet('ieau'+id,f)}catch(e){toast('Audio saqlanmadi.');return}m.au=1;m.cl=0;m.sz=f.size;save();await ieAudReload(m);ieAudUp(m,f).then(()=>{if(document.getElementById('ied'))ieEdSheet()})};inp.click()}
+async function ieAudUpLocal(id){const m=ieM().find(x=>x.id===id);if(!m)return;let b=null;try{b=await idbGet('ieau'+id)}catch(e){}if(!b){toast('Audio bu qurilmada yo‘q.');return}toast('Bulutga yuklanmoqda…');await ieAudUp(m,b);ieEdSheet()}
+async function ieAudDel(id){const m=ieM().find(x=>x.id===id);if(!m||!confirm('Audio shu qurilmadan va bulutdan o‘chirilsinmi? (Matn qoladi.)'))return;try{await idbDel('ieau'+id)}catch(e){}ieAudDelCloud(id);m.au=0;m.cl=0;m.sz=0;save();await ieAudReload(m)}
+// ---- tahrirlash oynasi ----
+async function ieEdOpen(id){await ieMatOpen(id);ieEdSheet()}
+function ieEdClose(){const e=document.getElementById('ied');if(e)e.remove()}
+async function ieEdSheet(){const m=ieM().find(x=>x.id===IMT);if(!m)return;ieSheetClose();ieEdClose();let loc=false;if(m.au){try{loc=!!(await idbGet('ieau'+m.id))}catch(e){}}
+  const st=!m.au?'yo‘q':loc&&m.cl?'✓ shu qurilmada va bulutda (boshqa qurilmalarda ham chaladi)':loc?'✓ shu qurilmada, bulutga yuklanmagan':m.cl?'☁ bulutda (ochilganda shu qurilmaga yuklanadi)':'✗ bu qurilmada yo‘q',e=document.createElement('div');e.id='ied';e.className='mfs ied';
+  e.innerHTML=`<div class="mfsh"><b>✏️ Tahrirlash</b><button class="x" onclick="ieEdClose()" aria-label="Yopish">✕</button></div><label class="mu">Nomi</label><input id="edt" value="${esc(m.t)}" style="width:100%;margin:2px 0 8px">
+   ${m.k==='p'?`<label class="mu">Transkript yoki subtitrni almashtirish (ixtiyoriy)</label><textarea id="edx" rows="4" style="width:100%" placeholder="Yangi SRT, VTT, [01:23] qatorlar yoki oddiy matn. Bo‘sh qoldirsang o‘zgarmaydi. Almashtirsang AI tahlili yangilanadi."></textarea>`:`<label class="mu">Matn</label><textarea id="edx" rows="8" style="width:100%">${esc(m.x||'')}</textarea>`}
+   ${m.k==='p'?`<p style="margin:10px 0 4px"><b>🎧 Audio:</b> ${st}</p><div class="in" style="flex-wrap:wrap"><button class="btn" onclick="ieAudPick(${m.id})">${m.au?'Almashtirish':'Audio qo‘shish'}</button>${loc&&!m.cl?`<button class="btn s" onclick="ieAudUpLocal(${m.id})">☁ Bulutga yuklash</button>`:''}${m.au?`<button class="btn s" onclick="ieAudDel(${m.id})">🗑 Audioni o‘chirish</button>`:''}</div>`:''}
+   ${m.k==='p'&&m.c&&m.c.length?`<button class="btn s" style="width:100%;margin-top:8px" onclick="ieCeToggle()">${IMF.ce?'✓ Qator tahriri yoqilgan (o‘chirish)':'✏️ Transkript qatorlarini tuzatish'}</button>`:''}
+   <div class="in" style="margin-top:10px"><button class="btn" style="flex:1" onclick="ieEdSave()">Saqlash</button><button class="btn s" onclick="ieEdClose()">Bekor</button></div>`;
+  document.getElementById('iem').appendChild(e)}
+function ieEdSave(){const m=ieM().find(x=>x.id===IMT);if(!m)return;const t=(V('edt')||'').trim().slice(0,80)||m.t,raw=(V('edx')||'').trim();let changed=false;
+  if(m.k==='p'){if(raw){const cues=ieCues(raw);if(cues.length){m.c=cues.map(c=>[+c.s.toFixed(2),+c.e.toFixed(2),c.t,null]);m.x='';changed=true}else if(raw.length>=200){m.x=raw.slice(0,15000);m.c=[];changed=true}else{toast('Matn juda qisqa (kamida 200 belgi) yoki subtitr formati tanilmadi.');return}}}
+  else if(raw!==(m.x||'').trim()){if(raw.length<200){toast('Matn juda qisqa (kamida 200 belgi).');return}m.x=raw.slice(0,12000);changed=true}
+  m.t=t;if(changed){m.an=null;m.tr=0;IMSEL={};IMU=null}save();ieEdClose();ieMatDraw();toast(changed?'Saqlandi. Matn o‘zgargani uchun tahlilni qayta qil.':'Saqlandi')}
+// ---- transkript qatorini tuzatish (ismlar, noto'g'ri so'zlar) ----
+function ieCeToggle(){IMF.ce=IMF.ce?0:1;ieEdClose();ieMatDraw()}
+function ieCueEdit(i){const m=ieM().find(x=>x.id===IMT);if(!m||!m.c[i])return;const v=prompt('Qatorni tahrirla',m.c[i][2]);if(v===null)return;const t=v.replace(/\s+/g,' ').trim();if(!t)return;m.c[i][2]=t;m.c[i][3]=null;save();ieMatDraw()}   // so'z vaqtlari qayta hisoblanadi (proporsional)
+// ---- tahlil darajasi ----
+const ieMinLv=()=>{const mn=S.ie.minlv||'B1';return `<div class="ieb" style="margin:0 0 6px;gap:6px"><span class="mu" style="font-size:13px">So‘zlar darajasi (shu va undan yuqori):</span>${['B1','B2','C1'].map(v=>`<button class="chip ${mn===v?'on':''}" style="border:0;cursor:pointer;font-weight:600" onclick="ieMinSet('${v}')" aria-label="${v} va undan yuqori">${v}+</button>`).join('')}</div>`};
+function ieMinSet(v){S.ie.minlv=v;save();ieMatDraw()}
 </script>
 </body>
 </html>
