@@ -185,7 +185,13 @@ Deno.serve(async (req) => {
   const json = (o: unknown, s = 200) =>
     new Response(JSON.stringify(o), { status: s, headers: { ...cors, 'Content-Type': 'application/json' } })
 
-  const b = await req.json().catch(() => ({}))
+  // Oddiy so'rov JSON, audio yuklash esa multipart (fayl base64 ga o'tmasin: 33% kichikroq va tezroq)
+  let form: FormData | null = null
+  let b: any = {}
+  if (/multipart\/form-data/i.test(req.headers.get('content-type') || '')) {
+    form = await req.formData().catch(() => null)
+    b = form ? { action: String(form.get('action') || '') } : {}
+  } else b = await req.json().catch(() => ({}))
   const key = Deno.env.get('GEMINI_API_KEY')
 
   // Tekshiruv (health): funksiya ishlayaptimi, kalit bormi, qaysi modellar tanlanadi. Sir ma'lumot qaytarilmaydi.
@@ -243,6 +249,53 @@ Deno.serve(async (req) => {
     return json({ error: 'Obuna faol emas. AI yordamchidan foydalanish uchun obunani yangilang.' }, 403)
   const used = (us.data as any)?.n || 0
   if (!isOwner && used >= DAILY_LIMIT) return json({ error: `Bugungi limit tugadi (${DAILY_LIMIT} ta so‘rov). Ertaga davom etamiz.` }, 429)
+
+  // Audiodan transkript (Groq Whisper, bepul tarif): jumlalar va HAR BIR SO'ZNING vaqti
+  if (b.action === 'transcript') {
+    const gk = Deno.env.get('GROQ_API_KEY')
+    if (!gk) return json({ error: 'Transkript uchun GROQ_API_KEY sozlanmagan. console.groq.com da bepul kalit oling va Supabase → Edge Functions → Secrets ga GROQ_API_KEY nomi bilan qo‘shing.', code: 'nokey' }, 501)
+    const f = form ? form.get('file') : null
+    if (!f || typeof f === 'string') return json({ error: 'Audio fayl topilmadi.' }, 400)
+    const file = f as File
+    if (file.size < 2000) return json({ error: 'Audio fayl juda kichik.' }, 400)
+    if (file.size > 24 * 1048576) return json({ error: 'Audio 24 MB dan katta (bepul tarif chegarasi 25 MB). Qisqaroq yoki kichikroq hajmdagi audio tanlang.' }, 413)
+    const fd = new FormData()
+    fd.append('file', file, file.name || 'audio.mp3')
+    fd.append('model', 'whisper-large-v3-turbo')
+    fd.append('response_format', 'verbose_json')
+    fd.append('timestamp_granularities[]', 'word')
+    fd.append('timestamp_granularities[]', 'segment')
+    fd.append('language', 'en')
+    fd.append('temperature', '0')
+    const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 110000)
+    let gr: Response
+    try { gr = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', { method: 'POST', headers: { Authorization: 'Bearer ' + gk }, body: fd, signal: ctl.signal }) }
+    catch (_e) { clearTimeout(to); return json({ error: 'Transkript vaqti tugadi yoki Groq bilan ulanib bo‘lmadi. Qisqaroq audio bilan urinib ko‘ring.' }, 504) }
+    clearTimeout(to)
+    const gj: any = await gr.json().catch(() => ({}))
+    if (!gr.ok) {
+      const gm = String(gj?.error?.message || '').slice(0, 160)
+      if (gr.status === 401) return json({ error: 'GROQ_API_KEY noto‘g‘ri yoki o‘chirilgan.' }, 502)
+      if (gr.status === 429) return json({ error: 'Groq bepul limiti vaqtincha tugadi (soatiga/kuniga). Birozdan keyin urinib ko‘ring.' }, 429)
+      if (gr.status === 413) return json({ error: 'Audio Groq uchun juda katta (25 MB gacha).' }, 413)
+      return json({ error: 'Transkript xatosi: ' + (gm || ('HTTP ' + gr.status)) }, 502)
+    }
+    const r2 = (x: unknown) => Math.round(Number(x) * 100) / 100
+    const segs: any[] = Array.isArray(gj.segments) ? gj.segments : []
+    const words: any[] = Array.isArray(gj.words) ? gj.words : []
+    let cues = segs.map((sg: any) => {
+      const s = Number(sg.start) || 0, e = Number(sg.end) || s
+      return {
+        s: r2(s), e: r2(e), t: String(sg.text || '').replace(/\s+/g, ' ').trim(),
+        w: words.filter((w: any) => Number(w.start) >= s - 0.15 && Number(w.start) < e + 0.05).slice(0, 90)
+          .map((w: any) => [String(w.word || '').slice(0, 40), r2(w.start), r2(w.end)]),
+      }
+    }).filter((c) => c.t)
+    if (!cues.length && String(gj.text || '').trim()) cues = [{ s: 0, e: r2(gj.duration), t: String(gj.text).trim(), w: [] }]
+    if (!cues.length) return json({ error: 'Audioda nutq topilmadi.' }, 422)
+    await db.from('ai_usage').upsert({ user_id: u.user.id, day, n: used + 1 })
+    return json({ cues: cues.slice(0, 800), dur: r2(gj.duration), lang: String(gj.language || 'en') })
+  }
 
   if (b.action === 'videos') {
     // YouTube Data API (ixtiyoriy): YOUTUBE_API_KEY secret bo'lsa haqiqiy video havolalari qaytariladi
