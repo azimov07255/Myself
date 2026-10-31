@@ -102,7 +102,7 @@ textarea{width:100%;min-height:90px;padding:12px 14px;border-radius:12px;border:
 .rdo{position:fixed;inset:0;z-index:100;background:var(--bg);display:flex;flex-direction:column;padding-top:env(safe-area-inset-top,0px)}.rdt{display:flex;align-items:center;gap:10px;padding:8px 12px}.rdc{flex:1;overflow:auto;background:#7c8794;-webkit-overflow-scrolling:touch}.rdc canvas{display:block;margin:0 auto;background:#fff;max-width:none}.rdb{display:flex;gap:8px;padding:10px 12px calc(env(safe-area-inset-bottom,0px) + 10px);align-items:center}.rdb input{flex:0 0 74px!important;text-align:center}
 .hw{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center}.hw>div{padding:4px 0;border-radius:8px;display:grid;place-items:center}.hwh{color:var(--mu);margin:0 0 6px;padding:0 8px}.hwh b{color:var(--tx)}.hwh .td,.hwh .td b{color:var(--go)}.hcard{background:var(--c1);border:1px solid var(--ln);border-radius:14px;padding:10px 8px;margin-bottom:8px}
 .mg{display:flex;border:1px solid var(--ln);border-radius:14px;background:var(--c1);overflow:hidden}
-.mn{flex:0 0 138px;border-right:1px solid var(--ln)}
+.mn{flex:0 0 var(--nw,138px);width:var(--nw,138px);min-width:0;overflow:hidden;position:relative;touch-action:pan-y;border-right:1px solid var(--ln)}.mn::after{content:'';position:absolute;top:0;right:0;bottom:0;width:8px;cursor:col-resize}
 .mn .mh{height:56px;box-sizing:border-box;border-bottom:1px solid var(--ln)}
 .mn .mr{height:var(--rh);box-sizing:border-box;padding:6px 10px;border-bottom:1px solid var(--ln);overflow:hidden;font-size:13px;line-height:1.25;color:var(--tx)}
 .mn .mr:last-child{border-bottom:0}
@@ -199,6 +199,8 @@ input[type=date]::-webkit-date-and-time-value,input[type=time]::-webkit-date-and
 .un-ed{background:var(--c2);border-radius:14px;padding:12px;margin:8px 0}.un-ed label{display:block;margin-bottom:8px;min-width:0}.un-ed input,.un-ed select{width:100%;margin-top:4px;box-sizing:border-box}.un-ed .in input{width:auto}.ucs{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}.ucb{width:34px;height:34px;border-radius:50%;border:2px solid var(--ln);color:#fff;font-weight:700;padding:0}
 .qab .qa-g{opacity:.55;font-size:18px;line-height:1}.qab.qbc{padding:0;border-radius:50%;justify-content:center}.qab .qa-bub{width:100%;height:100%;border-radius:50%;background:transparent;font-size:20px;pointer-events:none}
 .dgp{background:var(--c2);border-radius:12px;padding:10px 12px;font:12px/1.5 ui-monospace,Menlo,monospace;white-space:pre-wrap;overflow-wrap:anywhere;margin:0 0 8px}
+
+.hbc .mn .mr .mu{display:none}.wide #app{max-width:900px}.wide nav div{max-width:900px}
 @font-face{font-family:QPC;src:url(fonts/UthmanicHafs1Ver18.ttf) format('truetype');font-display:block}
 @font-face{font-family:QAM;src:url(fonts/AmiriQuran-arabic.woff2) format('woff2');font-display:block}
 .qam{font-family:QAM,'Amiri Quran',serif}
@@ -397,8 +399,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.05-1';
-const APP_BUILD='7979a1f528'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.05-2';
+const APP_BUILD='7fad73a907'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -500,7 +502,7 @@ function hozir(){
     return o+`<div class="tl ${x?'done':cur?'now':miss?'miss':''}" style="animation-delay:${Math.min(ix++,10)*.05+.15}s"><div class="tt"><b>${hm(b.s)}</b><span>${b.pt?'📍 lahza':fmt(b.e-b.s).trim()}</span></div><div class="tc"><span class="ck" onclick="${f}">${x?'✓':''}</span></div><div class="tb"><div style="display:flex;justify-content:space-between;gap:8px"><span class="t" onclick="${f}">${esc(b.t)}</span><button class="x" onclick="eb(${i})">✎</button></div>${st?`<p class="mu" style="margin:2px 0 0;font-size:13px${miss?';color:var(--bad)':''}">${st}</p>`:''}${ALLV?`<p class="mu" style="margin:2px 0 0;font-size:12px">${b.d.length===7?'Har kuni':b.d.map(j=>DAYS[j].slice(0,2)).join(' ')}</p>`:''}${cur&&!b.pt?`<div class="bar" style="margin-top:8px"><i style="width:${fr}%"></i></div>`:''}</div></div>`}).join('');
   const sm=`<div style="margin-bottom:4px"><span class="chip" style="color:var(--ac)">${cD} bajarildi</span><span class="chip">${cL} qoldi</span>${cM?`<span class="chip bad">${cM} o‘tkazildi</span>`:''}</div>`;
   const chk=(on,fn,t)=>`<button class="row ${on?'done':''}" onclick="${act(fn)}"><span class="ck">${on?'✓':''}</span><span class="t">${esc(t)}</span></button>`;
-  const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,(x.e?x.e+' ':'')+x.t)).join(''):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
+  const hh=S.hab.length?S.hab.map(x=>chk(hb[x.id],`hbT('${x.id}','${k}')`,(x.e?x.e+' ':'')+x.t+(!hb[x.id]&&hkOn(k,x.id)?' · dam kuni':''))).join('')+hbRest(k):'<p class="mu">Odat bo‘limida o‘z odatlaringni yoz, ular shu yerda ko‘rinadi.</p>';
   const rr=RULES.map(r=>chk(rd[r.id],`rl('${r.id}')`,r.t)).join('');
   const nmB=PR.map(([pp,t])=>{const s_=((S.nm.d[k]||{})[pp])||0;return `<button class="${s_===1?'on':s_===2?'bad':''}" onclick="nmS('${k}','${pp}')">${s_===1?'✓ ':s_===2?'✗ ':''}${t}${ptT(PK[pp])?`<small>${ptT(PK[pp])}</small>`:''}</button>`}).join(''),qzT=Object.values(S.nm.debt).reduce((a,c)=>a+c,0);
   const tt=tasks.map((t,i)=>`<div class="row ${t.x?'done':''}"><span class="ck" onclick="tk(${i})">${t.x?'✓':''}</span><span class="t" onclick="tk(${i})">${esc(t.t)}</span><button class="x" onclick="dt(${i})">×</button></div>`).join('');
@@ -531,7 +533,7 @@ function hozir(){
   const bvs=[['j','📅 Jadval'],['m','✅ Kunlik'],['h','💚 Holat'],['t','📊 Tahlil']].map(x=>`<button class="${BV===x[0]?'on':''}" style="font-size:13px;padding:9px 2px" onclick="BV='${x[0]}';render()">${x[1]}</button>`).join('');
   return `<div class="top"><div>${head}</div>
   <svg width="64" height="64" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
-  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${edForm()}${isT?rwCard():''}${isT?coBar():''}${mdBar()} ${hero}${rit}${apCard(k,fu)}${wkTop}${rzCard()}${topC}${dueCard()}${uniCard()}${zkCard()}${mgRow}${aiCard()}
+  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${edForm()}${isT?bkBar():''}${isT?rwCard():''}${isT?coBar():''}${mdBar()} ${hero}${rit}${apCard(k,fu)}${wkTop}${rzCard()}${topC}${dueCard()}${uniCard()}${zkCard()}${mgRow}${aiCard()}
   <div class="seg" style="margin-top:16px">${bvs}</div>${BV==='j'?jadval:BV==='m'?kunlik:BV==='h'?holat:tahlil}`;
 }
 
@@ -606,7 +608,7 @@ function odatlar(){
     const cs=[...Array(n)].map((_,q)=>{const k=key(q+1),on=(S.hb[k]||{})[x.id],fu=k>today;if(!fu&&!(!on&&hkOn(k,x.id))){tot++;if(on)got++}return `<td class="${gCls(y,m,q+1,today)}"><button class="cell ${on?'on':hkOn(k,x.id)?'hsk':''}" style="--hc:${col}" ${fu?'disabled':''} onclick="hbC('${x.id}','${k}')"></button></td>`}).join('');
     NL.push(`<div class="mr">${x.e?`<span style="margin-right:6px">${x.e}</span>`:`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}<span onclick="hbE(${hi})" style="cursor:pointer;border-bottom:1px dotted var(--mu)">${esc(x.t)}</span><br><span class="mu" style="font-size:12px">🔥 ${st}&nbsp; ${hbMeta(x,wn)} <button class="x" style="font-size:15px" onclick="delH(${hi})">×</button></span></div>`);return `<tr style="height:64px">${cs}</tr>`}).join('');
   return `<p class="mu" style="margin:0">Odatlar jadvali</p><h1 class="gr">${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h1><p class="mu" style="margin:0 0 4px">Bugun: ${now.getDate()}-${MON[now.getMonth()]}, ${DAYS[now.getDay()]}</p>
-  ${habNav()}
+  ${habNav()}${hbCtl()}
   <div class="sum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
   ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
   <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${habInsUi()}${suggCard()}`;
@@ -1226,7 +1228,7 @@ function sozlama(){const t=getTh();
   <h2>Ko‘rinish</h2><div class="seg">${[['auto','Tizim'],['light','Yorug‘'],['dark','Qorong‘u']].map(x=>`<button class="${t===x[0]?'on':''}" onclick="setTh('${x[0]}')">${x[1]}</button>`).join('')}</div><p class="mu">Tizim tanlansa, telefonning kunduz va tun rejimiga qarab o‘zi almashadi. Bu tanlov faqat shu qurilmada saqlanadi.</p>
   <h2>Profil</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div>
   <h2>Hisob</h2><p class="mu" style="margin:0 0 6px">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':'Kirilmagan.'):'Hozircha faqat shu telefonda saqlanadi.'}</p><p class="mu" style="margin:0 0 6px">${SYNC==='ok'?'Sinxronlash: hamma narsa saqlangan.':SYNC==='wait'?'Sinxronlash: internet kelganda yuboriladi.':'Internet yo‘q. Ma‘lumot shu telefonda saqlanadi va keyin sinxronlanadi.'}</p>${PROF?`<p style="margin:0 0 6px">⭐ ${subLine()}</p>${PROF.lifetime?'':tgBtn('Obunani uzaytirish')}`:''}${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}
-  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('us','📊 Foydalanish',usCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)'+errBadge(),errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
+  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('us','📊 Foydalanish',usCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('rd','✅ Ishga tayyormi?',rdCard())}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)'+errBadge(),errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
   <p class="mu" style="text-align:center;margin-top:28px;letter-spacing:.14em;font-size:12px">KUNLIK TIZIM BY AZIMOV</p>`}
 
 applyTheme();try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTh()==='auto')applyTheme()})}catch(e){}
@@ -3716,6 +3718,48 @@ function hbE(i){const x=S.hab[i];if(!x)return;hbX();const e=document.createEleme
 function hbF(n){const e=document.getElementById('hbs');if(!e)return;e.dataset.f=n;[...document.querySelectorAll('#hbf button')].forEach(b=>b.classList.toggle('on',+b.textContent===n))}
 function hbSave(i){const x=S.hab[i],e=document.getElementById('hbs'),v=($('#hbn').value||'').trim();if(!x||!e||!v)return;x.t=v.slice(0,60);x.e=($('#hbe2').value||'').trim().slice(0,4);const f=+e.dataset.f;if(f>=1&&f<7)x.f=f;else delete x.f;hbX();save()}
 function hbX(){const e=document.getElementById('hbs');if(e)e.remove()}
+// ---- Jadval ustuni kengligi, ixcham va keng ko'rinish, Bugun'da dam kuni, zaxira eslatmasi, "Ishga tayyormi?" ----
+const uiG=k=>{try{return localStorage.getItem(k)}catch(e){return null}},uiS=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
+const NWMIN=90,NWMAX=260,NWDEF=138,hbNwGet=()=>{const v=+uiG('trk_nw');return v>=NWMIN&&v<=NWMAX?v:NWDEF};
+function hbNwSet(px){px=Math.max(NWMIN,Math.min(NWMAX,Math.round(px)));document.documentElement.style.setProperty('--nw',px+'px');uiS('trk_nw',px);return px}
+function hbNw(d){hbNwSet(hbNwGet()+d);render()}
+function hbNwReset(){uiS('trk_nw','');document.documentElement.style.removeProperty('--nw');render()}
+function hbCompact(){const on=uiG('trk_hbc')!=='1';uiS('trk_hbc',on?'1':'0');document.documentElement.classList.toggle('hbc',on);render()}
+function wideToggle(){const on=uiG('trk_wide')!=='1';uiS('trk_wide',on?'1':'0');document.documentElement.classList.toggle('wide',on);render()}
+function uiInit(){const d=document.documentElement;if(+uiG('trk_nw'))d.style.setProperty('--nw',hbNwGet()+'px');else d.style.removeProperty('--nw');d.classList.toggle('hbc',uiG('trk_hbc')==='1');d.classList.toggle('wide',uiG('trk_wide')==='1')}
+try{uiInit()}catch(e){}
+try{(function(){let dr=null;
+  document.addEventListener('pointerdown',e=>{const n=e.target.closest&&e.target.closest('.mn');if(!n)return;const r=n.getBoundingClientRect();if(e.clientX<r.right-8)return;dr={x:e.clientX,w:r.width,mv:0}});
+  document.addEventListener('pointermove',e=>{if(!dr)return;if(!dr.mv&&Math.abs(e.clientX-dr.x)<4)return;dr.mv=1;hbNwSet(dr.w+e.clientX-dr.x)});
+  const up=()=>{dr=null};document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)})()}catch(e){}
+function hbCtl(){const c=uiG('trk_hbc')==='1',w=uiG('trk_wide')==='1';return `<div class="in" style="flex-wrap:wrap;margin:8px 0"><span class="mu" style="align-self:center;font-size:13px">Ustun:</span><button class="btn s" onclick="hbNw(-20)" aria-label="Torroq">◀ Tor</button><button class="btn s" onclick="hbNw(20)" aria-label="Kengroq">Keng ▶</button><button class="btn s" onclick="hbCompact()">${c?'Batafsil':'Ixcham'}</button><button class="btn s" onclick="wideToggle()">${w?'Tor ekran':'↔ Keng ekran'}</button></div>`}
+// ---- Bugun'da dam kuni ----
+function hbS(id,k){k=k||dk();S.hb[k]=S.hb[k]||{};S.hk=S.hk||{};const hk=S.hk[k]=S.hk[k]||{};if(hk[id]){delete hk[id];if(!Object.keys(hk).length)delete S.hk[k]}else{hk[id]=1;S.hb[k][id]=false}save()}
+function hbRest(k){if(!S.hab.length)return '';const rs=x=>hkOn(k,x.id)&&!(S.hb[k]||{})[x.id],n=S.hab.filter(rs).length;
+  return `<details class="sd"${n?' open':''}><summary>🛌 Dam kuni belgilash${n?' ('+n+')':''}</summary><div class="rwch" style="margin-top:6px">${S.hab.map(x=>`<button class="chip ${rs(x)?'on':''}" style="border:0" onclick="hbS('${x.id}','${k}')">${x.e?x.e+' ':''}${esc(x.t)}</button>`).join('')}</div><p class="mu" style="font-size:12px;margin:6px 0 0">Kasal yoki safarda: odat bajarilmagan hisoblanmaydi va seriya uzilmaydi.</p></details>`}
+// ---- zaxira eslatmasi ----
+function bkAge(){const b=uiG('trk_bk'),m=b&&String(b).match(/\d{4}-\d{2}-\d{2}/);return m?Math.floor((new Date(dk()+'T12:00')-new Date(m[0]+'T12:00'))/864e5):null}
+const bkUsed=()=>Object.keys(S.hb||{}).filter(k=>Object.values(S.hb[k]||{}).some(Boolean)).length>=3||(S.money||[]).length>=10||((S.ie&&S.ie.words)||[]).length>=20;
+function bkBar(){const age=bkAge();if(!bkUsed()||(age!==null&&age<7)||(uiG('trk_bksn')||'')>dk())return '';
+  return `<div class="goal"><b>💾 Zaxira nusxa</b><p class="mu" style="margin:6px 0">${age===null?'Hali zaxira olinmagan.':age+' kun oldin zaxira olgansan.'} Ma‘lumot serverda saqlanadi, lekin faylga ham saqlab qo‘yish xavfsizroq.</p><div class="in"><button class="btn" style="flex:1" onclick="bkDl()">Faylga saqlash</button><button class="btn s" onclick="bkSn()">Keyinroq</button></div></div>`}
+function bkSn(){const d=new Date(dk()+'T12:00');d.setDate(d.getDate()+3);uiS('trk_bksn',d.toLocaleDateString('sv'));render()}
+// ---- Ishga tayyormi? ----
+let RDY={run:0,res:null};
+async function rdRun(){if(RDY.run)return;RDY.run=1;RDY.res=null;render();const R=[],add=(ok,t,h)=>R.push({ok,t,h});
+  try{const d=await fnPost({action:'limit'},15000);add(true,'Server va AI ishlayapti',d.owner?'Egasi hisobi: AI cheksiz.':'AI limiti: kuniga '+d.limit+' ta (bugun '+d.used+' ta).')}catch(e){add(false,'Server javob bermayapti',String(e.message||e).slice(0,110)+' Internetni va Supabase funksiyasini tekshir.')}
+  add(SYNC==='ok'||SYNC==='wait','Sinxronlash',SYNC==='ok'?'Ma‘lumot serverga saqlangan.':SYNC==='wait'?'Kutilmoqda, birozdan keyin saqlanadi.':'Oflayn: internet yo‘q yoki server javob bermayapti.');
+  const a=bkAge();add(a!==null&&a<=7,'Zaxira nusxa',a===null?'Hali olinmagan: Sozlama → Zaxira nusxa → Faylga saqlash.':a>7?a+' kun oldin. Yangisini ol.':'Oxirgi zaxira '+a+' kun oldin.');
+  const r=S.rem||{},tg=!!(r.tg||r.tgOn||r.telegram),np=typeof Notification!=='undefined'?Notification.permission:'yo‘q';add(!!(r.on||tg),'Eslatmalar',r.on||tg?'Yoqilgan'+(r.on?' (bildirishnoma)':'')+(tg?' (Telegram)':'')+'.':'Yoqilmagan: Sozlama → Eslatmalar.');
+  const sa=!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));add(sa,'Ilova sifatida o‘rnatilgan',sa?'Ha.':'Yo‘q: iPhone’da Safari → Ulashish → Bosh ekranga qo‘shish (bildirishnoma uchun shart).');
+  if(np!=='yo‘q')add(np==='granted'||tg,'Bildirishnoma ruxsati',np==='granted'?'Berilgan.':tg?'Berilmagan, lekin Telegram yoqilgan.':'Berilmagan: Sozlama → Eslatmalar → Bildirishnomani yoqish.');
+  add(S.hab.length>0,'Odatlar',S.hab.length?S.hab.length+' ta odat.':'Odat bo‘limida o‘z odatlaringni yoz.');
+  add((S.goals||[]).length>0,'Maqsadlar',(S.goals||[]).length?(S.goals||[]).length+' ta maqsad.':'Maqsad bo‘limida kamida bitta maqsad yoz.');
+  add(!!(S.ie&&S.ie.ex),'IELTS imtihon sanasi',S.ie&&S.ie.ex?S.ie.ex+'.':'IELTS → Bosh’da sanani qo‘y (yo‘l xaritasi shundan tuziladi).');
+  add(!!(S.ie&&S.ie.target),'IELTS maqsad bali',S.ie&&S.ie.target?String(S.ie.target):'IELTS → Bosh’da maqsad ballni tanla.');
+  add(!!(S.q&&S.q.ppd>0),'Hifz: kuniga bet',S.q&&S.q.ppd>0?S.q.ppd+' bet.':'Qur‘on bo‘limida kuniga necha bet yodlashni sozla.');
+  RDY.res=R;RDY.run=0;render()}
+function rdCard(){const R=RDY.res,n=R?R.filter(x=>x.ok).length:0;
+  return `<p class="mu" style="margin:0 0 8px">Ilovani real ishlatishdan oldin hamma muhim narsa joyidami, tekshirib beradi.</p><button class="btn" onclick="rdRun()" ${RDY.run?'disabled':''}>${RDY.run?'Tekshirilmoqda…':R?'Qayta tekshirish':'Tekshirish'}</button>${R?`<p style="margin:10px 0 6px"><b>${n} / ${R.length}</b> tayyor</p>${R.map(x=>`<div class="row" style="cursor:default"><span class="ck" style="${x.ok?'':'background:var(--bad);border-color:var(--bad);color:#fff'}">${x.ok?'✓':'!'}</span><span class="t">${esc(x.t)}<br><span class="mu" style="font-size:13px">${esc(x.h)}</span></span></div>`).join('')}`:''}`}
 </script>
 </body>
 </html>
