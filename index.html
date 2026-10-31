@@ -395,8 +395,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.04-1';
-const APP_BUILD='bbe2968987'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.04-2';
+const APP_BUILD='62c28de40e'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -2020,7 +2020,14 @@ const stick=html=>html.replace(/<h2([^>]*)>([^<]+)/g,(m,a,t)=>{const k=STKK.find
 // ================= AI YORDAMCHI =================
 const aiUk=()=>'trk_aiu_'+dk();
 function aiCount(n,act){try{usAi(act)}catch(e){}try{const k=aiUk();for(let i=localStorage.length-1;i>=0;i--){const x=localStorage.key(i);if(x&&x.startsWith('trk_aiu_')&&x!==k)localStorage.removeItem(x)}localStorage.setItem(k,String((+localStorage.getItem(k)||0)+(n||1)))}catch(e){}}
-const aiUsed=()=>{try{return +localStorage.getItem(aiUk())||0}catch(e){return 0}},aiLeft=()=>Math.max(0,40-aiUsed()),aiUseLabel=()=>'AI: '+aiUsed()+'/40 bugun';
+const aiUsed=()=>{try{return +localStorage.getItem(aiUk())||0}catch(e){return 0}};
+let ALM=null,ALB=0;
+function aiLimGet(){if(ALM)return ALM;try{ALM=JSON.parse(localStorage.getItem('trk_ailim_'+(UID||''))||'null')}catch(e){}return ALM}
+async function aiLimRefresh(force){const c=aiLimGet();if(ALB||typeof aiOk!=='function'||!aiOk())return;if(!force&&c&&c.d===dk()&&Date.now()-c.t<600000)return;ALB=1;
+  try{const d=await fnPost({action:'limit'},15000);ALM={o:!!d.owner,l:+d.limit||40,u:+d.used||0,d:dk(),t:Date.now()};try{localStorage.setItem('trk_ailim_'+(UID||''),JSON.stringify(ALM))}catch(e){}const sb2=document.getElementById('aisub');if(sb2)sb2.textContent='Kunlik tizim AI · '+aiUseLabel()}catch(e){}ALB=0}
+const aiLimit=()=>{const c=aiLimGet();return c&&c.d===dk()&&!c.o?c.l:40},aiIsOwner=()=>{const c=aiLimGet();return !!(c&&c.o)};
+const aiUsedAll=()=>{const c=aiLimGet();return Math.max(aiUsed(),c&&c.d===dk()&&!c.o?c.u:0)},aiLeft=()=>aiIsOwner()?Infinity:Math.max(0,aiLimit()-aiUsedAll()),aiUseLabel=()=>{aiLimRefresh();return aiIsOwner()?'AI: cheksiz (egasi)':'AI: '+aiUsedAll()+'/'+aiLimit()+' bugun'};
+function aiLimDiag(){const c=aiLimGet();return !c?'hali tekshirilmagan':c.o?'egasi hisobi: cheksiz':'oddiy hisob: kuniga '+c.l+' ta (bugun serverda '+c.u+' ta sarflangan). Egasi bo‘lsang, Supabase Secrets’dagi OWNER_EMAIL kirgan emailing bilan bir xil bo‘lishi kerak.'}
 const AIQ=['Bugun nimaga e‘tibor qarataman?','Haftamni tahlil qil','Ertangi kunni rejalashtir','Maqsadlarim bo‘yicha maslahat ber','Odatlarimni qanday yaxshilayman?','Hifz tezligim va takrorimni baholab, maslahat ber','IELTS tayyorgarligimni baholab, haftalik reja tuz','Xatolarim bo‘yicha nimani takrorlay?','IELTS Writing Task 2 bo‘yicha video top','Meni ruhlantir'];
 let AIL=false,AIT=null,AITL=false,AIW=null,AIT0=0;
 const aiS=()=>{S.ai=S.ai||{};S.ai.chat=S.ai.chat||[];S.ai.sh=S.ai.sh||{core:1,quran:1,study:1,health:1,money:0};S.ai.tip=S.ai.tip||{};return S.ai};
@@ -2662,7 +2669,7 @@ function errView(e){return `<div class="auth"><h1>Kechirasan</h1><p class="mu">B
 let DG={p:null,u:0,q:0};
 function ensurePersist(){try{if(navigator.storage&&navigator.storage.persist){navigator.storage.persisted().then(p=>{DG.p=p;if(!p)navigator.storage.persist().then(x=>{DG.p=x})}).catch(()=>{});if(navigator.storage.estimate)navigator.storage.estimate().then(e=>{DG.u=e.usage||0;DG.q=e.quota||0}).catch(()=>{})}}catch(e){}}
 function diagText(){const sts=+lsGet('trk_sts_'+UID)||0,standalone=!!(navigator.standalone||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches));
-  return ['Versiya: '+APP_VER+' ('+APP_BUILD+')','Sinxron: '+(SYNC==='ok'?'saqlangan':SYNC==='wait'?'kutmoqda':'oflayn')+(NORPC?' (eski rejim)':''),'Server nusxasi (rev): '+(REV==null?'—':REV),'Oxirgi sinxron: '+(sts?new Date(sts).toLocaleString('sv'):'—'),'O‘rnatilgan ilova: '+(standalone?'ha':'yo‘q (brauzer)'),'Doimiy xotira: '+(DG.p==null?'noma‘lum':DG.p?'yoqilgan':'yoqilmagan'),'Xotira: '+(DG.u/1048576).toFixed(1)+' MB / '+Math.round(DG.q/1048576)+' MB','Bildirishnoma: '+(typeof Notification!=='undefined'?Notification.permission:'yo‘q'),'Internet: '+(navigator.onLine===false?'yo‘q':'bor'),'Qurilma: '+(navigator.userAgent||'').slice(0,90)].join('\n')}
+  return ['Versiya: '+APP_VER+' ('+APP_BUILD+')','AI limit: '+aiLimDiag(),'Sinxron: '+(SYNC==='ok'?'saqlangan':SYNC==='wait'?'kutmoqda':'oflayn')+(NORPC?' (eski rejim)':''),'Server nusxasi (rev): '+(REV==null?'—':REV),'Oxirgi sinxron: '+(sts?new Date(sts).toLocaleString('sv'):'—'),'O‘rnatilgan ilova: '+(standalone?'ha':'yo‘q (brauzer)'),'Doimiy xotira: '+(DG.p==null?'noma‘lum':DG.p?'yoqilgan':'yoqilmagan'),'Xotira: '+(DG.u/1048576).toFixed(1)+' MB / '+Math.round(DG.q/1048576)+' MB','Bildirishnoma: '+(typeof Notification!=='undefined'?Notification.permission:'yo‘q'),'Internet: '+(navigator.onLine===false?'yo‘q':'bor'),'Qurilma: '+(navigator.userAgent||'').slice(0,90)].join('\n')}
 function diagCard(){ensurePersist();return `<pre class="dgp">${esc(diagText())}</pre><div class="in"><button class="btn s" style="flex:1" onclick="try{navigator.clipboard.writeText(diagText());toast('Nusxalandi')}catch(e){}">Nusxalash</button><button class="btn s" style="flex:1" onclick="pull().then(c=>{toast(c?'Yangilandi':'Hammasi yangi');render()})">Hozir sinxronlash</button></div>${updCard()}`}
 // ---- Avtomatik zaxiralar (serverda) ----
 let HIST=null,HISTERR='',ERRL=null;
