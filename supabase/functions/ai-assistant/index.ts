@@ -4,7 +4,9 @@ import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 // Egasining emaili kodda emas, Supabase Secrets'da saqlanadi (OWNER_EMAIL), shunda ochiq repoda ko'rinmaydi
 const OWNER = (Deno.env.get('OWNER_EMAIL') || '').trim().toLowerCase()
-const DAILY_LIMIT = 40 // oddiy foydalanuvchi uchun kuniga so'rov soni (owner uchun cheksiz)
+// Oddiy foydalanuvchi uchun kuniga so'rov soni (egasi uchun cheksiz). Supabase Secrets'da AI_DAILY_LIMIT bilan o'zgartiriladi.
+// Eslatma: bepul Gemini'ning O'Z kunlik kvotasi bor, bu raqamni oshirish uni oshirmaydi.
+const DAILY_LIMIT = Math.min(1000, Math.max(1, Math.floor(Number(Deno.env.get('AI_DAILY_LIMIT')) || 40)))
 
 const cors = {
   'Access-Control-Allow-Origin': '*',
@@ -343,6 +345,7 @@ Deno.serve(async (req) => {
     } catch (e) { if (e instanceof ArtErr) return json({ error: e.message }, e.status); return json({ error: 'Sahifani o‘qib bo‘lmadi.' }, 502) }
   }
   const used = (us.data as any)?.n || 0
+  if (b.action === 'limit') return json({ owner: isOwner, limit: DAILY_LIMIT, used })   // AI sarfiga kirmaydi: ilova "men egasimanmi" va haqiqiy limitni shu yerdan biladi
   if (!isOwner && used >= DAILY_LIMIT) return json({ error: `Bugungi limit tugadi (${DAILY_LIMIT} ta so‘rov). Ertaga davom etamiz.` }, 429)
 
   // Audiodan transkript (Groq Whisper, bepul tarif): jumlalar va HAR BIR SO'ZNING vaqti
