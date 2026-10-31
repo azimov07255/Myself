@@ -400,8 +400,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.06-1';
-const APP_BUILD='08f5f0b30a'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.07-1';
+const APP_BUILD='1b602364c3'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -534,8 +534,8 @@ function hozir(){
   const bvs=[['j','📅 Jadval'],['m','✅ Kunlik'],['h','💚 Holat'],['t','📊 Tahlil']].map(x=>`<button class="${BV===x[0]?'on':''}" style="font-size:13px;padding:9px 2px" onclick="BV='${x[0]}';render()">${x[1]}</button>`).join('');
   return `<div class="top"><div>${head}</div>
   <svg width="64" height="64" viewBox="0 0 48 48"><circle cx="24" cy="24" r="20" fill="none" stroke="var(--c2)" stroke-width="5"/><circle cx="24" cy="24" r="20" fill="none" stroke="var(--ac)" stroke-width="5" stroke-linecap="round" stroke-dasharray="${C*sc/100} ${C}" transform="rotate(-90 24 24)"/><text x="24" y="28" text-anchor="middle" font-size="12" font-weight="700" fill="var(--tx)">${sc}%</text></svg></div>
-  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${edForm()}${isT?bkBar():''}${isT?rwCard():''}${isT?coBar():''}${mdBar()} ${hero}${rit}${apCard(k,fu)}${wkTop}${rzCard()}${topC}${dueCard()}${uniCard()}${zkCard()}${mgRow}${aiCard()}
-  <div class="seg" style="margin-top:16px">${bvs}</div>${BV==='j'?jadval:BV==='m'?kunlik:BV==='h'?holat:tahlil+hpCard()+askCard()}`;
+  <div class="wk">${wk}</div><div class="in" style="margin-top:6px"><button class="btn s" onclick="WO--;render()">‹</button><button class="btn s" onclick="WO=0;vd('${T0}')">Bugun</button><button class="btn s" onclick="WO++;render()">›</button></div>${edForm()}${isT?bkBar()+wrBar():''}${isT?rwCard():''}${isT?coBar():''}${mdBar()} ${hero}${rit}${apCard(k,fu)}${wkTop}${rzCard()}${topC}${dueCard()}${uniCard()}${zkCard()}${mgRow}${aiCard()}
+  <div class="seg" style="margin-top:16px">${bvs}</div>${BV==='j'?jadval:BV==='m'?kunlik:BV==='h'?holat:tahlil+wrCard()+hpCard()+askCard()}`;
 }
 
 const GT={'Hofizi Qur‘on bo‘lish':['Juz Amma (30-pora) yodlash','5 pora yodlash','10 pora yodlash','20 pora yodlash','30 pora to‘liq yodlash'],'IELTS 8–9 ball':['Diagnostik test topshirish','1000 ta akademik so‘z yodlash','Haftasiga 2 ta Writing','5 ta to‘liq mock test','Imtihonga ro‘yxatdan o‘tish'],'O‘qituvchi bo‘lib ishlash':['Fan va yo‘nalishni aniqlash','Pedagogik kurs yoki sertifikat','Birinchi dars rejasini tayyorlash','Sinov darsi o‘tkazish','Doimiy ish topish'],'Prava olish':['Nazariy kursga yozilish','Nazariy testdan o‘tish','Amaliy mashg‘ulotlar','Imtihonga yozilish','Pravani olish'],'Zalda yaxshi tana qurish':['Mashq dasturini tuzish','Haftasiga 3 marta zalga borish (4 hafta)','Vazn va o‘lchamlarni yozib borish','Oyiga +1 kg mushak','3 oy izchil mashq']};
@@ -612,7 +612,7 @@ function odatlar(){
   ${habNav()}${hbCtl()}
   <div class="sum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
   ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
-  <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${habInsUi()}${suggCard()}`;
+  <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${habInsUi()}${habArcUi()}${suggCard()}`;
 }
 
 // ================= PUL =================
@@ -1253,7 +1253,7 @@ function ritual(k,sc){
   <p class="mu" style="margin-top:10px">1. Kunni bahola (bugungi ball ${sc}%)</p><div class="stars">${[1,2,3,4,5].map(n=>`<button class="${(cl.r||0)>=n?'on':''}" onclick="setRate('${k}',${n})">★</button>`).join('')}</div>
   <p class="mu">2. Ertangi 3 ta asosiy ish (${tt.length}/3)</p>${list}${tt.length<3?`<div class="in"><input id="tpb" placeholder="Ertangi ish" onkeydown="if(event.key==='Enter')addTopTo('tpb','${tom}')"><button class="btn" onclick="addTopTo('tpb','${tom}')">+</button></div>`:''}
   <p class="mu">3. Telefon</p><button class="row ${cl.p?'done':''}" onclick="togPh('${k}')"><span class="ck">${cl.p?'✓':''}</span><span class="t">Telefonni chetga qo‘ydim</span></button>
-  <button class="big" onclick="closeDay('${k}',true)">Kunni yopish</button></section>`}
+  ${eodExtra(k)}<button class="big" onclick="closeDay('${k}',true)">Kunni yopish</button></section>`}
 
 // ---- Zaxira nusxa ----
 const bkMark=()=>{try{localStorage.setItem('trk_bk',dk())}catch(e){}};
@@ -1282,6 +1282,7 @@ function remRows(){
     rows.push({hhmm:'20:30',days:[0],title:'📊 Haftalik hisobot',body:rwRepShort(),tz,kind:'wk@'+sun})}
   if(r.rz&&rzInfo().on)rows.push({hhmm:'21:30',days:A,title:'Ro‘za: bugun tutdingmi?',body:'Belgilab qo‘y: ro‘za tutdingmi yoki qazo bo‘ldimi.',tz,kind:'rz'});
   r.custom.forEach(c=>rows.push({hhmm:c.time,days:A,title:c.t,body:'',tz}));
+  S.hab.forEach(x=>{if(x.rt&&/^\d\d:\d\d$/.test(x.rt))rows.push({hhmm:x.rt,days:A,title:'🔔 '+(x.e?x.e+' ':'')+x.t,body:'Odatni belgilashni unutma.',tz,kind:'hb:'+x.id})});
   return rows}
 async function syncRem(force){
   if(!sb||!UID)return;const rows=remRows(),sig=JSON.stringify(rows);let last=null;try{last=localStorage.getItem('trk_remsig')}catch(e){}
@@ -3706,7 +3707,7 @@ function hbC(id,k){k=k||dk();S.hb[k]=S.hb[k]||{};S.hk=S.hk||{};const hk=S.hk[k]=
 function hbStart(x){const t=+String(x.id).replace(/\D/g,'');return t>1e12?new Date(t).toLocaleDateString('sv'):'2000-01-01'}
 function hbPct(x,days){let d=0,s=0,n=0;const st=hbStart(x);for(let i=0;i<days;i++){const k=dAgo(i),on=(S.hb[k]||{})[x.id];if(k<st)break;if(i===0&&!on&&!hkOn(k,x.id))continue;if(on)d++;else if(hkOn(k,x.id))s++;n++}const den=n-s;return den>0?Math.round(d/den*100):null}
 function hsW(x){const f=x.f||7,dow=(new Date().getDay()+6)%7,T0=dk();let wk=0;for(let w=0;w<60;w++){let c=0,sk=0;for(let j=0;j<7;j++){const k=dAgo(dow+7*w-j);if(k>T0)continue;if((S.hb[k]||{})[x.id])c++;else if(hkOn(k,x.id))sk++}if(c>=Math.min(f,7-sk))wk++;else if(w>0)break}return wk}
-function hbMeta(x,wn){const f=x.f||7,p=hbPct(x,30);return 'haftada '+wn+(f<7?'/'+f:'')+' kun'+(f<7?' · '+hsW(x)+' hafta':'')+(p===null?'':'<br>30 kun: '+p+'%')}
+function hbMeta(x,wn){const f=x.f||7,p=hbPct(x,30);return 'haftada '+wn+(f<7?'/'+f:'')+' kun'+(f<7?' · '+hsW(x)+' hafta':'')+(x.rt?' · 🔔 '+x.rt:'')+(p===null?'':'<br>30 kun: '+p+'%')}
 function hbStats(){const H=S.hab.map(x=>({x,p:hbPct(x,30)})).filter(o=>o.p!==null).sort((a,b)=>b.p-a.p),wd=[0,0,0,0,0,0,0],wn=[0,0,0,0,0,0,0];
   for(let i=1;i<=90;i++){const k=dAgo(i),w=new Date(k+'T12:00').getDay();S.hab.forEach(x=>{if(k<hbStart(x))return;if((S.hb[k]||{})[x.id]){wd[w]++;wn[w]++}else if(!hkOn(k,x.id))wn[w]++})}
   const r=wd.map((v,i)=>wn[i]>=7?v/wn[i]:null),best=r.reduce((a,v,i)=>v!==null&&(a<0||v>r[a])?i:a,-1),worst=r.reduce((a,v,i)=>v!==null&&(a<0||v<r[a])?i:a,-1);return{H,best,worst,r}}
@@ -3715,9 +3716,9 @@ function habInsUi(){if(!S.hab.length)return '';const st=hbStats();if(!st.H.lengt
    <p class="mu" style="margin:8px 0 0">${st.H.length>1?`Eng kuchli: <b>${esc(b.x.t)}</b> (${b.p}%). Eng zaif: <b>${esc(w.x.t)}</b> (${w.p}%). `:''}${st.best>=0&&st.worst>=0&&st.best!==st.worst?`Eng yaxshi kuning: <b>${DAYS[st.best]}</b> (${Math.round(st.r[st.best]*100)}%), eng zaifi: <b>${DAYS[st.worst]}</b> (${Math.round(st.r[st.worst]*100)}%).`:''}</p>
    <p class="mu" style="margin:6px 0 0;font-size:12px">Dam kuni (kasal, safar): katakchani ikki marta bosing, ✓ keyin “–”. Dam kuni seriyani uzmaydi va foizga kirmaydi. Odat nomiga bossang tahrirlaysan, haftalik maqsad qo‘yasan.</p>`}
 function hbE(i){const x=S.hab[i];if(!x)return;hbX();const e=document.createElement('div');e.id='hbs';e.className='hbsh';e.dataset.f=x.f||7;
-  e.innerHTML=`<div class="mfsh"><b>Odatni tahrirlash</b><button class="x" onclick="hbX()" aria-label="Yopish">✕</button></div><div class="in"><input id="hbe2" value="${esc(x.e||'')}" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="hbn" value="${esc(x.t)}"></div><p class="mu" style="margin:10px 0 4px">Haftada necha kun? (7 = har kuni)</p><div class="seg" id="hbf">${[1,2,3,4,5,6,7].map(n=>`<button class="${(x.f||7)===n?'on':''}" onclick="hbF(${n})">${n}</button>`).join('')}</div><button class="big" onclick="hbSave(${i})">Saqlash</button><button class="btn s" style="width:100%;margin-top:8px" onclick="hbX();delH(${i})">O‘chirish</button>`;document.body.appendChild(e)}
+  e.innerHTML=`<div class="mfsh"><b>Odatni tahrirlash</b><button class="x" onclick="hbX()" aria-label="Yopish">✕</button></div><div class="in"><input id="hbe2" value="${esc(x.e||'')}" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="hbn" value="${esc(x.t)}"></div><p class="mu" style="margin:10px 0 4px">Haftada necha kun? (7 = har kuni)</p><div class="seg" id="hbf">${[1,2,3,4,5,6,7].map(n=>`<button class="${(x.f||7)===n?'on':''}" onclick="hbF(${n})">${n}</button>`).join('')}</div><p class="mu" style="margin:10px 0 4px">Eslatma vaqti (eslatmalar yoqilgan bo‘lsa)</p><div class="in"><input id="hbrt" type="time" value="${esc(x.rt||'')}"><button class="btn s" onclick="document.getElementById('hbrt').value=''">Eslatmasiz</button></div><button class="big" onclick="hbSave(${i})">Saqlash</button><button class="btn s" style="width:100%;margin-top:8px" onclick="hbX();hbArc(${i})">📦 Arxivlash</button><button class="btn s" style="width:100%;margin-top:8px" onclick="hbX();delH(${i})">O‘chirish</button>`;document.body.appendChild(e)}
 function hbF(n){const e=document.getElementById('hbs');if(!e)return;e.dataset.f=n;[...document.querySelectorAll('#hbf button')].forEach(b=>b.classList.toggle('on',+b.textContent===n))}
-function hbSave(i){const x=S.hab[i],e=document.getElementById('hbs'),v=($('#hbn').value||'').trim();if(!x||!e||!v)return;x.t=v.slice(0,60);x.e=($('#hbe2').value||'').trim().slice(0,4);const f=+e.dataset.f;if(f>=1&&f<7)x.f=f;else delete x.f;hbX();save()}
+function hbSave(i){const x=S.hab[i],e=document.getElementById('hbs'),v=($('#hbn').value||'').trim();if(!x||!e||!v)return;x.t=v.slice(0,60);x.e=($('#hbe2').value||'').trim().slice(0,4);const f=+e.dataset.f;if(f>=1&&f<7)x.f=f;else delete x.f;const rt=($('#hbrt').value||'').trim();if(/^\d\d:\d\d$/.test(rt))x.rt=rt;else delete x.rt;hbX();save()}
 function hbX(){const e=document.getElementById('hbs');if(e)e.remove()}
 // ---- Jadval ustuni kengligi, ixcham va keng ko'rinish, Bugun'da dam kuni, zaxira eslatmasi, "Ishga tayyormi?" ----
 const uiG=k=>{try{return localStorage.getItem(k)}catch(e){return null}},uiS=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}};
@@ -3823,6 +3824,36 @@ function fkWeek(){const lo=dAgo(6),o={};(S.fl||[]).filter(x=>x.d>=lo).forEach(x=
 function fkUi(){const a=(S.fk&&S.fk.a)||'Boshqa',w=fkWeek(),tot=Object.values(w).reduce((x,y)=>x+y,0),mx=Math.max(1,...Object.values(w));
   return `<div class="chips" style="margin-top:8px">${FKA.map(x=>`<button class="${a===x?'on':''}" onclick="fkA('${x}')">${x}</button>`).join('')}</div>${tot?`<p style="margin:8px 0 4px">Oxirgi 7 kun: <b>${Math.floor(tot/60)} soat ${tot%60} daq</b></p>${Object.entries(w).sort((p,q)=>q[1]-p[1]).map(([k,v])=>`<div class="usr"><span class="usk" style="flex-basis:80px">${esc(k)}</span><span class="usb"><i style="width:${Math.round(v/mx*100)}%"></i></span><span class="usv">${v} daq</span></div>`).join('')}`:''}`}
 function fkBar(){let e=document.getElementById('fkb');if(!FR||FS<=0){if(e)e.remove();return}if(!e){e=document.createElement('button');e.id='fkb';e.className='fkb';e.onclick=()=>{tab='h';BV='h';render()};document.body.appendChild(e)}e.textContent='⏱ '+fmtT(FS)+' · '+((S.fk&&S.fk.a)||'Boshqa')}
+// ---- Kun yakuniga qo'shimcha (odat, kayfiyat, minnatdorlik), Haftalik sharh, odat arxivi ----
+function eodExtra(k){const hb=S.hb[k]||{},todo=S.hab.filter(x=>!hb[x.id]&&!hkOn(k,x.id)),mv=(S.mood||{})[k]||0;
+  return `<p class="mu" style="margin-top:10px">4. Odatlar${todo.length?' ('+todo.length+' ta qoldi)':''}</p>${S.hab.length?(todo.length?`<div class="rwch">${todo.map(x=>`<button class="chip" style="border:0" onclick="hbT('${x.id}','${k}')">${x.e?x.e+' ':''}${esc(x.t)}</button>`).join('')}</div><p class="mu" style="font-size:12px;margin:4px 0 0">Bajargan bo‘lsang bos, bajarmagan bo‘lsang shunday qoldir.</p>`:'<p style="margin:0">✓ Hamma odat belgilangan</p>'):'<p class="mu" style="margin:0">Odatlar bo‘limida odat qo‘shsang, shu yerda tekshirasan.</p>'}
+   <p class="mu">5. Kayfiyat</p><div class="mood">${['😞','😕','😐','🙂','😄'].map((f,i)=>`<button class="${mv===i+1?'on':''}" onclick="S.mood['${k}']=${i+1};save()">${f}</button>`).join('')}</div>
+   <p class="mu">6. Bugun nimaga minnatdorsan?</p><textarea rows="2" style="width:100%" placeholder="Bitta yaxshi narsa…" onchange="S.note['${k}']=this.value;save()">${esc((S.note||{})[k]||'')}</textarea>`}
+// ---- haftalik sharh ----
+const wrKey=()=>{const d=new Date(dk()+'T12:00');d.setDate(d.getDate()-(d.getDay()+6)%7);return d.toLocaleDateString('sv')},wrAdd=(k,n)=>{const d=new Date(k+'T12:00');d.setDate(d.getDate()+n);return d.toLocaleDateString('sv')};
+const wrRid=()=>{const w=new Date(dk()+'T12:00').getDay();return w===0?wrKey():w===1?wrAdd(wrKey(),-7):null},wrTarget=()=>new Date(dk()+'T12:00').getDay()===1?wrKey():wrAdd(wrKey(),7);
+function wrAgg(from){const D=[...Array(7)].map((_,i)=>hpDay(dAgo(from+i))),hd=D.filter(d=>d.hd!==null).map(d=>d.hd),k0=dAgo(from+6),k1=dAgo(from);let inn=0,out=0;(S.money||[]).filter(m=>m.w==='p'&&m.d>=k0&&m.d<=k1).forEach(m=>{if(m.k==='in')inn+=m.a;else if(m.k==='out')out+=m.a});
+  const ms=S.goals.reduce((a,g)=>a+(g.ms||[]).filter(m=>m.x&&m.xd&&m.xd>=k0&&m.xd<=k1).length,0),mv=D.map(d=>d.md).filter(Boolean);
+  return{hab:hd.length?Math.round(hpAvg(hd)*100):null,nm:D.reduce((a,d)=>a+d.nm,0),hf:D.reduce((a,d)=>a+d.hf,0),fm:D.reduce((a,d)=>a+d.fm,0),ie:D.filter(d=>d.ie>0).length,inn,out,ms,mood:mv.length?Math.round(hpAvg(mv)*10)/10:null}}
+const wrFh=m=>m>=60?Math.floor(m/60)+' soat '+(m%60)+' daq':m+' daq';
+function wrRows(){const a=wrAgg(0),b=wrAgg(7),dl=(x,y,u)=>x===null||y===null?'':(x-y>=0?'+':'')+Math.round((x-y)*10)/10+(u||'');
+  return[['Odatlar',a.hab===null?'—':a.hab+'%',dl(a.hab,b.hab,'%')],['Namoz (farz)',a.nm+' / 35',dl(a.nm,b.nm)],['Hifz: yangi bet',String(a.hf),dl(a.hf,b.hf)],['Fokus',wrFh(a.fm),dl(a.fm,b.fm,' daq')],['IELTS mashq kunlari',a.ie+' / 7',dl(a.ie,b.ie)],['Maqsad bosqichlari',a.ms+' ta',dl(a.ms,b.ms)],['Kayfiyat',a.mood===null?'—':a.mood+' / 5',dl(a.mood,b.mood)],['Pul (shaxsiy)','kirim '+num(a.inn)+', chiqim '+num(a.out),'']]}
+function wrText(){const g=((S.wr||{})[wrTarget()]||{}).g||[];return '📅 Haftalik sharh ('+dAgo(6)+' → '+dk()+')\n'+wrRows().map(r=>'• '+r[0]+': '+r[1]+(r[2]?' ('+r[2]+')':'')).join('\n')+(g.length?'\n\nKeyingi hafta maqsadlari:\n'+g.map((x,i)=>(i+1)+'. '+x.t).join('\n'):'')}
+function wrSave(){const T=wrTarget(),old=((S.wr=S.wr||{})[T]||{}).g||[],g=[0,1,2].map(i=>{const t=(V('wrg'+i)||'').trim().slice(0,100);return t?{t,x:(old[i]&&old[i].t===t&&old[i].x)?1:0}:null}).filter(Boolean);S.wr[T]={g};S.wrd=wrRid()||wrKey();toast('Haftalik sharh saqlandi');save()}
+function wrT(key,i){const g=((S.wr||{})[key]||{}).g;if(g&&g[i]){g[i].x=g[i].x?0:1;save()}}
+function wrShare(){const t=wrText();S.wrd=wrRid()||wrKey();const done=()=>{toast('Nusxalandi, Telegramga yopishtir');save()};if(navigator.share){navigator.share({text:t}).then(()=>save()).catch(()=>{})}else if(navigator.clipboard)navigator.clipboard.writeText(t).then(done).catch(()=>prompt('Nusxalang:',t));else prompt('Nusxalang:',t)}
+function wrBar(){const r=wrRid();if(!r||S.wrd===r)return '';return `<div class="goal"><b>📅 Haftalik sharh tayyor</b><p class="mu" style="margin:6px 0">Hafta natijalari va keyingi hafta maqsadlari.</p><button class="btn" onclick="BV='t';render()">Ko‘rish</button></div>`}
+function wrCard(){const cur=((S.wr||{})[wrKey()]||{}).g||[],nx=((S.wr||{})[wrTarget()]||{}).g||[],isCur=wrTarget()===wrKey();
+  return `<h2>📅 Haftalik sharh</h2><p class="mu" style="margin:0 0 6px">Oxirgi 7 kun, oldingi 7 kun bilan solishtirilgan.</p>${wrRows().map(r=>`<div class="row" style="cursor:default"><span class="t">${esc(r[0])}<br><span class="mu" style="font-size:13px">${esc(r[1])}${r[2]?' · '+esc(r[2]):''}</span></span></div>`).join('')}
+   ${!isCur&&cur.length?`<p class="mu" style="margin:10px 0 4px">Shu hafta maqsadlaring</p>${cur.map((x,i)=>`<button class="row ${x.x?'done':''}" onclick="wrT('${wrKey()}',${i})"><span class="ck">${x.x?'✓':''}</span><span class="t">${esc(x.t)}</span></button>`).join('')}`:''}
+   <p class="mu" style="margin:10px 0 4px">${isCur?'Shu hafta uchun 3 ta maqsad':'Keyingi hafta uchun 3 ta maqsad'}</p>${[0,1,2].map(i=>`<input id="wrg${i}" placeholder="${i+1}-maqsad" value="${esc((nx[i]||{}).t||'')}" style="width:100%;margin-bottom:6px">`).join('')}
+   ${isCur&&nx.length?nx.map((x,i)=>`<button class="row ${x.x?'done':''}" onclick="wrT('${wrKey()}',${i})"><span class="ck">${x.x?'✓':''}</span><span class="t">${esc(x.t)}</span></button>`).join(''):''}
+   <div class="in"><button class="btn" style="flex:1" onclick="wrSave()">Saqlash</button><button class="btn s" onclick="wrShare()">📤 Ulashish</button></div>`}
+// ---- odat arxivi ----
+function hbArc(i){const x=S.hab[i];if(!x||!confirm('“'+x.t+'” arxivga o‘tkazilsinmi? Tarixi saqlanadi, istalgan vaqt qaytarasan.'))return;S.hab.splice(i,1);x.ar=dk();(S.habA=S.habA||[]).push(x);save()}
+function hbRes(id){const A=S.habA||[],i=A.findIndex(x=>x.id===id);if(i<0)return;const x=A.splice(i,1)[0];delete x.ar;S.hab.push(x);save()}
+function hbArcDel(id){if(!confirm('Arxivdagi odat butunlay o‘chirilsinmi?'))return;S.habA=(S.habA||[]).filter(x=>x.id!==id);save()}
+function habArcUi(){const A=S.habA||[];if(!A.length)return '';return `<details class="sd"><summary>📦 Arxiv (${A.length})</summary>${A.map(x=>`<div class="row" style="cursor:default"><span style="font-size:20px">${esc(x.e||'•')}</span><span class="t">${esc(x.t)}<br><span class="mu" style="font-size:12px">arxivga: ${esc(x.ar||'')}</span></span><button class="btn s" onclick="hbRes('${x.id}')">Qaytarish</button><button class="x" onclick="hbArcDel('${x.id}')" aria-label="O‘chirish">✕</button></div>`).join('')}</details>`}
 </script>
 </body>
 </html>
