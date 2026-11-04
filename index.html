@@ -346,6 +346,89 @@ mark.mw2.hv,mark.mc.hv,mark.mw2[class*=lv].hv,mark.mc[class*=lv].hv{border-botto
 .fkb{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom,0px) + 84px);z-index:130;border:0;border-radius:999px;padding:8px 16px;background:var(--go);color:var(--on-go);font:700 14px Figtree,system-ui;box-shadow:0 6px 18px rgba(0,0,0,.3)}
 .btabs{position:sticky;top:0;z-index:30;background:var(--bg);padding:8px 0 6px;margin-top:10px}.btchips{margin:4px 0 6px}
 .btabs.btc{padding:0;margin-top:16px}
+/* ===== YANGI DIZAYN (ui2): hamma qoida html.ui2 ostida, klassik ko'rinishga tegmaydi ===== */
+/* 1) rang palitralari: qorong'i (standart), yorug', 6 ta urg'u rangi */
+html.ui2{--bg:#0a1520;--c1:#122230;--c2:#1a2f40;--tx:#e8f0ee;--mu:#8ea6a0;--ln:rgba(255,255,255,.09);--bad:#ef7f72;--on-ac:#06201a;--on-go:#1a1405;--hp:rgba(255,255,255,.045);--sh:0 1px 0 rgba(255,255,255,.04),0 14px 30px -20px rgba(0,0,0,.7);--hlab:#f6c98f;--hmu:rgba(255,255,255,.7);--htx:#f6f3ea;
+ --ac-d:#45cfae;--go-d:#f0b45a;--hbg-d:#0e3f37;--ac-l:#0f6b52;--go-l:#c0541c;--hbg-l:#0f5f4a;--ac:var(--ac-d);--go:var(--go-d);--hbg:var(--hbg-d);color-scheme:dark}
+@media(prefers-color-scheme:light){html.ui2:not([data-theme=dark]){--bg:#f4efe6;--c1:#ffffff;--c2:#ece6d8;--tx:#17251e;--mu:#62746a;--ln:rgba(23,37,30,.10);--bad:#c0503f;--on-ac:#fff;--on-go:#fff;--hp:rgba(255,255,255,.07);--sh:0 1px 0 rgba(23,37,30,.04),0 14px 30px -22px rgba(23,37,30,.45);--hlab:#ffd2a8;--ac:var(--ac-l);--go:var(--go-l);--hbg:var(--hbg-l);color-scheme:light}}
+html.ui2[data-theme=light]{--bg:#f4efe6;--c1:#ffffff;--c2:#ece6d8;--tx:#17251e;--mu:#62746a;--ln:rgba(23,37,30,.10);--bad:#c0503f;--on-ac:#fff;--on-go:#fff;--hp:rgba(255,255,255,.07);--sh:0 1px 0 rgba(23,37,30,.04),0 14px 30px -22px rgba(23,37,30,.45);--hlab:#ffd2a8;--ac:var(--ac-l);--go:var(--go-l);--hbg:var(--hbg-l);color-scheme:light}
+html.ui2[data-acc=kok]{--ac-d:#62a5f5;--go-d:#f2b45a;--hbg-d:#12365f;--ac-l:#1f5fbf;--go-l:#b45d0e;--hbg-l:#1d4f9f}
+html.ui2[data-acc=binafsha]{--ac-d:#a58af0;--go-d:#f0b45a;--hbg-d:#2d2260;--ac-l:#6a46c9;--go-l:#c35217;--hbg-l:#55389f}
+html.ui2[data-acc=atirgul]{--ac-d:#f07a9b;--go-d:#f0c060;--hbg-d:#5a1a35;--ac-l:#c2335b;--go-l:#a36817;--hbg-l:#a52a4d}
+html.ui2[data-acc=oltin]{--ac-d:#e6b450;--go-d:#4fcfa8;--hbg-d:#4a3410;--ac-l:#a06a12;--go-l:#1f7a5e;--hbg-l:#8a5a10}
+html.ui2[data-acc=grafit]{--ac-d:#9fb4c4;--go-d:#f0b45a;--hbg-d:#1c2830;--ac-l:#2f3d48;--go-l:#c0541c;--hbg-l:#2b3640}
+/* 2) asos */
+html.ui2 body{background:var(--bg) radial-gradient(900px 420px at 90% -8%,color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%) fixed,radial-gradient(700px 420px at -10% 8%,color-mix(in srgb,var(--go) 11%,transparent),transparent 70%) fixed;-webkit-font-smoothing:antialiased;font-feature-settings:'tnum' 1,'ss01' 1}
+html.ui2 #app{padding:calc(env(safe-area-inset-top,0px) + 20px) 18px calc(env(safe-area-inset-bottom,0px) + 118px)}
+html.ui2 h2{font-size:20px;font-weight:700;letter-spacing:-.015em;margin:30px 0 12px}
+html.ui2 ::selection{background:color-mix(in srgb,var(--ac) 32%,transparent)}
+html.ui2 .top .d{font-size:25px;letter-spacing:-.02em}
+/* 3) kartochkalar */
+html.ui2 .hero{border:0;border-radius:28px;padding:24px 22px;isolation:isolate;position:relative;overflow:hidden;background:linear-gradient(155deg,color-mix(in srgb,var(--hbg) 80%,#fff 20%),var(--hbg) 52%,color-mix(in srgb,var(--hbg) 80%,#000 20%));box-shadow:0 24px 46px -24px color-mix(in srgb,var(--hbg) 85%,#000),inset 0 1px 0 rgba(255,255,255,.16)}
+html.ui2 .hero::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:repeating-conic-gradient(from 45deg,transparent 0 25%,var(--hp) 0 50%) 0 0/30px 30px}
+html.ui2 .hero::after{content:'';position:absolute;z-index:-1;pointer-events:none;width:280px;height:280px;right:-90px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.2),transparent 70%)}
+html.ui2 .hero .lab{font-size:12px;letter-spacing:.09em;text-transform:uppercase}
+html.ui2 .hero h1{letter-spacing:-.03em}
+html.ui2 .goal,html.ui2 .sum div,html.ui2 .sd,html.ui2 .dpc{background:var(--c1);border:1px solid var(--ln);border-radius:20px;box-shadow:var(--sh)}
+html.ui2 .goal{padding:16px 16px;margin-bottom:12px}
+html.ui2 .sum{gap:10px}html.ui2 .sum div{padding:14px 15px}html.ui2 .sum .w{border-color:color-mix(in srgb,var(--go) 60%,transparent)}
+html.ui2 .sum b{font-size:21px;letter-spacing:-.02em}
+html.ui2 .sd{margin:12px 0;padding:0 16px}html.ui2 .sd summary{padding:15px 0;position:relative;padding-right:22px}
+html.ui2 .sd summary::after{content:'›';position:absolute;right:2px;top:50%;transform:translateY(-52%) rotate(90deg);color:var(--mu);font-size:22px;transition:transform .2s}
+html.ui2 .sd[open] summary::after{transform:translateY(-52%) rotate(-90deg)}
+html.ui2 .rwc{background:linear-gradient(135deg,color-mix(in srgb,var(--hbg) 82%,#fff 18%),var(--hbg));border-radius:22px;box-shadow:0 18px 34px -22px color-mix(in srgb,var(--hbg) 90%,#000)}
+/* 4) qatorlar, tugmalar */
+html.ui2 .row{background:var(--c1);border:1px solid var(--ln);border-left:3px solid transparent;border-radius:18px;padding:14px;margin-bottom:8px;box-shadow:var(--sh);transition:transform .12s,background .2s}
+html.ui2 .row.now{border-left-color:var(--go);background:color-mix(in srgb,var(--go) 9%,var(--c1))}
+html.ui2 .row:active{transform:scale(.99)}
+html.ui2 .ck{width:25px;height:25px;border-width:2px;transition:background .2s,box-shadow .2s}
+html.ui2 .done .ck{box-shadow:0 0 0 5px color-mix(in srgb,var(--ac) 20%,transparent)}
+html.ui2 .big{min-height:54px;border-radius:18px;font-size:17px;font-weight:700;letter-spacing:-.01em;background:linear-gradient(180deg,color-mix(in srgb,var(--go) 88%,#fff 12%),var(--go));box-shadow:0 14px 26px -14px color-mix(in srgb,var(--go) 80%,#000),inset 0 1px 0 rgba(255,255,255,.28);transition:transform .12s,box-shadow .2s}
+html.ui2 .big.ok{background:var(--c2);color:var(--ac);box-shadow:none}
+html.ui2 .ghost{border-radius:16px;min-height:46px}
+html.ui2 .btn{min-height:44px;border-radius:14px;padding:11px 18px;font-weight:700;background:var(--ac);box-shadow:0 10px 20px -14px color-mix(in srgb,var(--ac) 85%,#000);transition:transform .12s,box-shadow .2s,background .2s}
+html.ui2 .btn.s{background:var(--c1);color:var(--tx);border:1px solid var(--ln);box-shadow:none}
+html.ui2 .btn:active,html.ui2 .big:active{transform:scale(.97)}
+html.ui2 .btn:disabled,html.ui2 .big:disabled{opacity:.5}
+/* 5) formalar */
+html.ui2 input:not([type=checkbox]):not([type=radio]):not([type=range]),html.ui2 select,html.ui2 textarea{min-height:46px;border-radius:14px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);padding:12px 14px;transition:border-color .15s,box-shadow .15s}
+html.ui2 textarea{min-height:78px}
+html.ui2 input:focus,html.ui2 select:focus,html.ui2 textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 22%,transparent)}
+html.ui2 input::placeholder,html.ui2 textarea::placeholder{color:color-mix(in srgb,var(--mu) 75%,transparent)}
+html.ui2 .seg{background:var(--c2);border-radius:16px;padding:4px;gap:2px}
+html.ui2 .seg button{border-radius:12px;padding:10px 6px;transition:background .2s,color .2s,box-shadow .2s}
+html.ui2 .seg button.on{background:var(--c1);color:var(--tx);box-shadow:0 3px 10px -4px rgba(0,0,0,.35)}
+html.ui2 .chips button,html.ui2 .cchips button{background:var(--c1);color:var(--tx);border:1px solid var(--ln);border-radius:999px;padding:9px 14px;transition:background .15s,transform .12s}
+html.ui2 .chips .on,html.ui2 .chips button.on,html.ui2 .cchips .on{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}
+html.ui2 .chip{border-radius:999px;padding:4px 11px}html.ui2 .chip.on{background:var(--go);color:var(--on-go)}
+html.ui2 .mood button{transition:transform .15s,opacity .15s}html.ui2 .mood .on{transform:scale(1.15);border-color:var(--ac);background:color-mix(in srgb,var(--ac) 15%,transparent)}
+/* 6) hafta chiziqchasi, jadval */
+html.ui2 .wd{border-radius:16px;padding:9px 0;background:var(--c1);box-shadow:var(--sh);transition:transform .12s}
+html.ui2 .wd.on{background:var(--ac);color:var(--on-ac);box-shadow:0 12px 22px -12px var(--ac)}
+html.ui2 .cell{width:32px;height:32px;transition:background .15s,transform .12s}html.ui2 .cell:active{transform:scale(.9)}
+html.ui2 .bar,html.ui2 .usb{height:10px;border-radius:8px}
+html.ui2 .bar i,html.ui2 .usb i{background:linear-gradient(90deg,var(--ac),color-mix(in srgb,var(--ac) 55%,var(--go)));border-radius:8px}
+/* 7) pastki panel: suzuvchi shisha */
+html.ui2 nav{background:none;border:0;pointer-events:none;padding:0 12px calc(env(safe-area-inset-bottom,0px) + 10px)}
+html.ui2 nav div{pointer-events:auto;background:color-mix(in srgb,var(--c1) 84%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid var(--ln);border-radius:28px;padding:7px 8px;box-shadow:0 18px 40px -16px rgba(0,0,0,.55)}
+html.ui2 nav button{border-radius:18px;transition:background .2s,color .2s}
+html.ui2 nav button .ni{transition:transform .2s}
+html.ui2 nav button.on{background:color-mix(in srgb,var(--ac) 17%,transparent);color:var(--ac)}
+html.ui2 nav button.on .ni{transform:translateY(-1px) scale(1.12)}
+html.ui2 .navai{border:4px solid color-mix(in srgb,var(--c1) 100%,transparent)!important;box-shadow:0 12px 24px -8px color-mix(in srgb,var(--ac) 70%,#000)!important}
+/* 8) varaqlar, xabarlar */
+html.ui2 .mfs,html.ui2 .hbsh{background:var(--c1);border-radius:28px 28px 0 0;box-shadow:0 -18px 50px rgba(0,0,0,.45);border-top:1px solid var(--ln)}
+html.ui2 #toast{border-radius:16px!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 30px -10px rgba(0,0,0,.5)!important}
+html.ui2 .updb{border-radius:18px;background:var(--hbg)}
+html.ui2 ::-webkit-scrollbar{width:10px;height:10px}html.ui2 ::-webkit-scrollbar-thumb{background:var(--ln);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+html.ui2 button:focus-visible,html.ui2 summary:focus-visible,html.ui2 a:focus-visible{outline:3px solid color-mix(in srgb,var(--ac) 65%,transparent);outline-offset:2px}
+html.ui2 .x{min-width:36px;min-height:36px;border-radius:12px}
+/* 9) katta ekran */
+@media(min-width:1000px){html.ui2 #app{max-width:560px}html.ui2.wide #app,html.ui2.wide nav div{max-width:900px}}
+/* ===== ikkala uslub uchun: matn o'lchami va animatsiya tanlovi ===== */
+html[data-fs=s] #app{zoom:.94}html[data-fs=l] #app{zoom:1.08}html[data-fs=xl] #app{zoom:1.16}
+html[data-mo=off] *,html[data-mo=off] *::before,html[data-mo=off] *::after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){html.ui2 *,html.ui2 *::before,html.ui2 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
 </style>
 </head>
 <body>
@@ -402,8 +485,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>fillDef(o,blank());
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.11.12-1';
-const APP_BUILD='9fa8d7ae45'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.11.13-1';
+const APP_BUILD='7b15793bbe'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -1229,7 +1312,7 @@ function sozlama(){const t=getTh();
   <h2>Ko‘rinish</h2><div class="seg">${[['auto','Tizim'],['light','Yorug‘'],['dark','Qorong‘u']].map(x=>`<button class="${t===x[0]?'on':''}" onclick="setTh('${x[0]}')">${x[1]}</button>`).join('')}</div><p class="mu">Tizim tanlansa, telefonning kunduz va tun rejimiga qarab o‘zi almashadi. Bu tanlov faqat shu qurilmada saqlanadi.</p>
   <h2>Profil</h2><div class="in"><input placeholder="Ismingiz" value="${esc(S.name)}" onchange="S.name=this.value.trim();save()"></div>
   <h2>Hisob</h2><p class="mu" style="margin:0 0 6px">${sb?(UID?'Ma‘lumot hisobingizga saqlanadi va boshqa qurilmada ham ko‘rinadi.':'Kirilmagan.'):'Hozircha faqat shu telefonda saqlanadi.'}</p><p class="mu" style="margin:0 0 6px">${SYNC==='ok'?'Sinxronlash: hamma narsa saqlangan.':SYNC==='wait'?'Sinxronlash: internet kelganda yuboriladi.':'Internet yo‘q. Ma‘lumot shu telefonda saqlanadi va keyin sinxronlanadi.'}</p>${PROF?`<p style="margin:0 0 6px">⭐ ${subLine()}</p>${PROF.lifetime?'':tgBtn('Obunani uzaytirish')}`:''}${sb&&UID?`<button class="ghost" onclick="out()">Chiqish</button>`:''}
-  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('us','📊 Foydalanish',usCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('bm','🗂 Bugun ko‘rinishi',bmCard())}${grp('nw','🆕 Yangiliklar va qo‘llanma',newsCard())}${grp('rd','✅ Ishga tayyormi?',rdCard())}${grp('wd','📱 Vidjet (iPhone)',wdCard())}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)'+errBadge(),errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
+  ${grp('ai','✨ AI yordamchi',aiSet())}${grp('rem','🔔 Eslatmalar',remCard())}${grp('us','📊 Foydalanish',usCard())}${grp('mod','🔀 Reja rejimlari',modesCard())}${MUSHAF_MODE!=='off'?grp('mf','📖 Mushaf bo‘limi',mfSet()):''}${grp('dz','🎨 Dizayn',dzCard())}${grp('bm','🗂 Bugun ko‘rinishi',bmCard())}${grp('nw','🆕 Yangiliklar va qo‘llanma',newsCard())}${grp('rd','✅ Ishga tayyormi?',rdCard())}${grp('wd','📱 Vidjet (iPhone)',wdCard())}${grp('bk','💾 Zaxira nusxa',bk)}${grp('hs','🕘 Avtomatik zaxiralar',histCard())}${grp('dg','🩺 Diagnostika',diagCard())}${Array.isArray(OW)?grp('er','🐞 Xatolar (egasi uchun)'+errBadge(),errCard()):''}${grp('own','👥 Foydalanuvchilar va obuna',owner())}
   <p class="mu" style="text-align:center;margin-top:28px;letter-spacing:.14em;font-size:12px">KUNLIK TIZIM BY AZIMOV</p>`}
 
 applyTheme();try{matchMedia('(prefers-color-scheme:dark)').addEventListener('change',()=>{if(getTh()==='auto')applyTheme()})}catch(e){}
@@ -3955,7 +4038,7 @@ function pWlUi(){if(W!=='p')return '';const L=(S.fin&&S.fin.wl)||[],sv=(S.fin&&S
   return `<details class="sd"${L.length?' open':''}><summary>🛒 Xohish ro‘yxati: 24 soat kut${L.length?' ('+L.length+')':''}${sv?' · tejaldi '+num(sv):''}</summary><p class="mu" style="margin:6px 0">Kerak bo‘lmagan narsani impuls bilan olmaslik uchun: yoz, 24 soat kut, keyin hali ham kerakmi, o‘zing hal qilasan.${sv?` Shu paytgacha tejading: <b>${num(sv)}</b> so‘m.`:''}</p>${L.map(x=>{const l=wlLeft(x);return `<div class="row" style="cursor:default"><span class="t">${esc(x.t)} · ${num(x.a)}<br><span class="mu" style="font-size:13px">${l?'⏳ '+wlFmt(l)+' qoldi':'✅ 24 soat o‘tdi: hali ham kerakmi?'}</span></span><button class="btn s" onclick="wlBuy(${x.id})" ${l?'disabled':''}>Olaman</button><button class="btn s" onclick="wlNo(${x.id})">Kerak emas</button></div>`}).join('')}<div class="in"><input id="wlt" placeholder="Nima olmoqchisan?"><input id="wla" type="text" inputmode="numeric" placeholder="Narxi" style="flex:0 0 100px"><button class="btn" onclick="wlAdd()">+</button></div></details>`}
 // ---- Yangiliklar va qo'llanma ----
 const NEWS=[
- ['Eng yangisi',[['Uyqu bo‘limi: yotish va turish vaqti, grafik, AI tahlil','Odat → Uyqu; Bugun’da 😴 chipi'],['Bugun: tablar aylantirganda tepada qotib turadi; kun yakunida “Yotdim”; ixtiyoriy Ixcham ko‘rinish','Bugun; Sozlama → Bugun ko‘rinishi (Klassik / Ixcham)'],['Kunlik chegara qanday hisoblanishi va uni qo‘lda belgilash','Pul → Bosh → Chegara qanday hisoblanadi?'],['Jamg‘arma maqsadi: muddat, kunlik/haftalik/oylik kerakli summa, sur‘at, tezlatgich, belgi tanlash','Pul → Reja']]],
+ ['Eng yangisi',[['Dizayn: Klassik (hozirgi) yoki Yangi uslub, 6 ta rang, matn o‘lchami, animatsiyani o‘chirish','Sozlama → 🎨 Dizayn; istalgan payt almashtirsa bo‘ladi'],['Uyqu bo‘limi: yotish va turish vaqti, grafik, AI tahlil','Odat → Uyqu; Bugun’da 😴 chipi'],['Bugun: tablar aylantirganda tepada qotib turadi; kun yakunida “Yotdim”; ixtiyoriy Ixcham ko‘rinish','Bugun; Sozlama → Bugun ko‘rinishi (Klassik / Ixcham)'],['Kunlik chegara qanday hisoblanishi va uni qo‘lda belgilash','Pul → Bosh → Chegara qanday hisoblanadi?'],['Jamg‘arma maqsadi: muddat, kunlik/haftalik/oylik kerakli summa, sur‘at, tezlatgich, belgi tanlash','Pul → Reja']]],
  ['Pul nazorati',[['Hozirgi qoldiq','Pul → Reja: hozirgi pulni yoz, bosh sahifadagi balans aynan shunday bo‘ladi'],['Bugungi chegara va erkin pul','Pul → Bosh: bugun yana qancha sarflasa bo‘ladi'],['Xarajat turi: zarur, xohish, keraksiz','Xarajat kiritishda; Pul → Hisobot: qayerga ko‘p ketayotgani'],['Xohish ro‘yxati (24 soat kutish)','Pul → Bosh: impuls xaridlardan saqlaydi'],['Kategoriya byudjetlari, oy prognozi, takroriy yozuvlar, tez qo‘shish, CSV','Pul → Reja, Bosh va Hisobot']]],
  ['Odatlar',[['Dam kuni, haftalik maqsad, tahrirlash, arxiv, eslatma vaqti','Odat nomiga bos; katakni 2 marta bos'],['Odat kuchi (30 kun) va qonuniyatlar','Odatlar jadvalining pastida'],['Ustun kengligi, ixcham va keng ekran','Odatlar tepasidagi tugmalar']]],
  ['Bugun',[['Haftalik sharh','Bugun → Tahlil; yakshanba kechqurun banner chiqadi'],['Hayot paneli va kashfiyotlar','Bugun → Tahlil'],['Ma‘lumotdan so‘rash (AI)','Bugun → Tahlil'],['Fokus sohalari va suzuvchi taymer','Bugun → Holat'],['Kun yakuni: odat, kayfiyat, minnatdorlik','Bugun, 20:00 dan keyin “Kunni yopish”']]],
@@ -4067,6 +4150,20 @@ function pSgUi(){const L=S.fin.sg,cur=dlS();
    <details class="sd"><summary>Sozlamalar va tarix</summary><p class="mu" style="margin:6px 0 4px">Belgi</p><div class="rwch">${SGE.map(e=>`<button class="chip ${g.e===e?'on':''}" style="border:0" onclick="sgIc(${g.id},'${e}')">${e}</button>`).join('')}</div><p class="mu" style="margin:8px 0 4px">Muddat</p><input type="date" value="${esc(g.dl||'')}" onchange="sgDl(${g.id},this.value)" style="width:100%">
    <button class="btn s" style="width:100%;margin-top:8px" onclick="dlGoal(${g.id})">${cur.m==='g'&&cur.g===g.id?'✓ Kunlik chegara shu maqsadga moslangan':'Kunlik chegarani shu maqsadga moslash'}</button>${h.length?`<p class="mu" style="margin:8px 0 2px">So‘nggi harakatlar</p>${h.map(x=>`<p style="margin:0 0 2px;font-size:13px">${esc(x.d)} · <b class="${x.a>0?'in-c':'out-c'}">${x.a>0?'+':'−'}${num(Math.abs(x.a))}</b></p>`).join('')}`:''}<button class="btn s" style="width:100%;margin-top:8px" onclick="sgDel(${g.id})">O‘chirish</button></details></div>`}).join('')}
    <div class="goal" id="sgnew"><b>Yangi maqsad</b><div class="in" style="margin-top:8px"><input id="sgt" placeholder="Nima uchun? Masalan: Noutbuk"></div><div class="in"><input id="sga" type="text" inputmode="numeric" placeholder="Kerakli summa, so‘m"><input id="sgd" type="date" style="flex:0 0 150px" aria-label="Muddat"></div><div class="rwch" style="margin-bottom:8px">${SGE.map(e=>`<button class="chip ${(SGEN||'💎')===e?'on':''}" style="border:0" onclick="sgPick(this,'${e}')">${e}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="sgAddG()">Maqsad qo‘sh</button></div>`}
+// ---- DIZAYN: Klassik (hozirgi) yoki Yangi uslub, urg'u rangi, matn o'lchami, animatsiya. Faqat shu qurilmada saqlanadi ----
+const DZA=[['zumrad','Zumrad','#0f6b52'],['kok','Ko‘k','#1f5fbf'],['binafsha','Binafsha','#6a46c9'],['atirgul','Atirgul','#c2335b'],['oltin','Oltin','#a06a12'],['grafit','Grafit','#2f3d48']];
+function dzMeta(){try{const m=document.querySelector('meta[name=theme-color]');if(m){const c=getComputedStyle(document.body).backgroundColor;if(c)m.setAttribute('content',c)}}catch(e){}}
+function dzApply(){try{const d=document.documentElement,g=k=>uiG('trk_'+k);d.classList.toggle('ui2',g('ui')==='2');d.dataset.acc=g('acc')||'zumrad';d.dataset.fs=g('fs')||'m';d.dataset.mo=g('mo')==='0'?'off':'on';dzMeta()}catch(e){}}
+function dzSet(k,v){uiS('trk_'+k,v);dzApply();render()}
+const dzIs=()=>uiG('trk_ui')==='2';
+function dzPrev(n){const n2=!!n,bg=n2?'linear-gradient(160deg,#102431,#0a1520)':'#f8f4ea',hero=n2?'linear-gradient(155deg,#1b6a5a,#0e3f37)':'#17604a',card=n2?'#122230':'#fffdf8',rad=n2?'10px':'6px';
+  return `<button class="dzp ${dzIs()===n2?'on':''}" onclick="dzSet('ui','${n2?'2':'1'}')" aria-label="${n2?'Yangi':'Klassik'} uslub" style="flex:1;border:2px solid ${dzIs()===n2?'var(--ac)':'var(--ln)'};border-radius:16px;padding:8px;background:var(--c1);color:var(--tx);text-align:left"><div style="background:${bg};border-radius:12px;padding:8px;height:92px;position:relative;overflow:hidden"><div style="background:${hero};border-radius:${rad};height:34px"></div><div style="background:${card};border-radius:${rad};height:16px;margin-top:6px;box-shadow:${n2?'0 4px 8px -4px #0008':'none'}"></div><div style="background:${card};border-radius:${rad};height:16px;margin-top:5px;box-shadow:${n2?'0 4px 8px -4px #0008':'none'}"></div>${n2?'<div style="position:absolute;left:12px;right:12px;bottom:5px;height:11px;border-radius:8px;background:#ffffff26"></div>':'<div style="position:absolute;left:0;right:0;bottom:0;height:9px;background:#e5dfcf"></div>'}</div><b style="display:block;margin-top:8px">${n2?'Yangi':'Klassik'}</b><span class="mu" style="font-size:12px">${n2?'Yumshoq kartochkalar, shisha panel':'Hozirgi ko‘rinish'}</span></button>`}
+function dzCard(){const a=uiG('trk_acc')||'zumrad',fs=uiG('trk_fs')||'m',mo=uiG('trk_mo')!=='0';
+  return `<p class="mu" style="margin:0 0 8px">Ilovaning ko‘rinishini o‘zing tanla. Klassik hozirgidek qoladi, Yangi esa yumshoqroq va zamonaviyroq. Istalgan payt almashtirsa bo‘ladi, ma‘lumotlarga ta‘sir qilmaydi.</p><p style="margin:10px 0 6px"><b>Uslub</b></p><div class="in">${dzPrev(false)}${dzPrev(true)}</div>
+   <p style="margin:12px 0 6px"><b>Rang</b> <span class="mu" style="font-size:12px">(Yangi uslubda)</span></p><div class="rwch">${DZA.map(x=>`<button class="chip ${a===x[0]?'on':''}" style="border:0;display:inline-flex;align-items:center;gap:6px" onclick="dzSet('acc','${x[0]}')"><i style="width:14px;height:14px;border-radius:50%;background:${x[2]};display:inline-block"></i>${x[1]}</button>`).join('')}</div>
+   <p style="margin:12px 0 6px"><b>Matn o‘lchami</b></p><div class="seg">${[['s','Kichik'],['m','O‘rta'],['l','Katta'],['xl','Juda katta']].map(x=>`<button class="${fs===x[0]?'on':''}" onclick="dzSet('fs','${x[0]}')">${x[1]}</button>`).join('')}</div>
+   <p style="margin:12px 0 6px"><b>Animatsiyalar</b></p><div class="seg"><button class="${mo?'on':''}" onclick="dzSet('mo','1')">Yoqilgan</button><button class="${mo?'':'on'}" onclick="dzSet('mo','0')">O‘chirilgan</button></div>`}
+try{dzApply()}catch(e){}
 </script>
 </body>
 </html>
