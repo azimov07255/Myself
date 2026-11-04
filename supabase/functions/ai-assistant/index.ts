@@ -486,6 +486,47 @@ Deno.serve(async (req) => {
     return json({ cues: cues.slice(0, 800), dur: r2(gj.duration), lang: String(gj.language || 'en') })
   }
 
+  // AI ovoz (Gemini TTS): 1-2 kishi gapirishi mumkin; natija PCM (base64). Modelni TTS_MODEL secret bilan almashtirish mumkin (preview modellar tez-tez yangilanadi)
+  if (b.action === 'tts') {
+    const VOICES = new Set(['Zephyr', 'Puck', 'Charon', 'Kore', 'Fenrir', 'Leda', 'Orus', 'Aoede', 'Callirrhoe', 'Autonoe', 'Enceladus', 'Iapetus', 'Umbriel', 'Algieba', 'Despina', 'Erinome', 'Algenib', 'Rasalgethi', 'Laomedeia', 'Achernar', 'Alnilam', 'Schedar', 'Gacrux', 'Pulcherrima', 'Achird', 'Zubenelgenubi', 'Vindemiatrix', 'Sadachbia', 'Sadaltager', 'Sulafat'])
+    const ACC: Record<string, string> = { uk: 'British', us: 'American', au: 'Australian' }
+    const acc = ACC[String(b.acc || '')] ? String(b.acc) : 'uk'
+    const va = VOICES.has(String(b.va)) ? String(b.va) : 'Kore', vb = VOICES.has(String(b.vb)) ? String(b.vb) : 'Charon'
+    const turns = (Array.isArray(b.items) ? b.items : []).slice(0, 14).map((x: any) => ({ s: x?.s === 'B' ? 'B' : 'A', t: String(x?.t ?? '').slice(0, 700).trim() })).filter((x: { t: string }) => x.t)
+    const single = turns.length ? turns.map((x: { t: string }) => x.t).join(' ') : String(b.text ?? '').slice(0, 1000).trim()
+    if (single.length < 2) return json({ error: 'Matn yozilmagan.' }, 400)
+    if ((turns.length ? turns.reduce((n: number, x: { t: string }) => n + x.t.length, 0) : single.length) > 900) return json({ error: 'Matn juda uzun (bir so‘rovda 900 belgigacha).' }, 400)
+    const multi = turns.some((x: { s: string }) => x.s === 'A') && turns.some((x: { s: string }) => x.s === 'B')
+    const style = `Say exactly the words written, adding nothing. Use a natural ${ACC[acc]} English accent, a calm and clear pace suitable for an IELTS listening test, with natural intonation.`
+    const prompt = multi
+      ? `Read this conversation between two people, Anna and Mark, the way real speakers talk (small natural pauses). ${style}\n\n` + turns.map((x: { s: string; t: string }) => (x.s === 'A' ? 'Anna' : 'Mark') + ': ' + x.t).join('\n')
+      : `Read the following aloud. ${style}\n\n${single}`
+    const speechConfig = multi
+      ? { multiSpeakerVoiceConfig: { speakerVoiceConfigs: [{ speaker: 'Anna', voiceConfig: { prebuiltVoiceConfig: { voiceName: va } } }, { speaker: 'Mark', voiceConfig: { prebuiltVoiceConfig: { voiceName: vb } } }] } }
+      : { voiceConfig: { prebuiltVoiceConfig: { voiceName: va } } }
+    const models = [...new Set([String(Deno.env.get('TTS_MODEL') || '').trim(), 'gemini-3.8-flash-tts', 'gemini-3.1-flash-tts-preview', 'gemini-2.5-flash-preview-tts'].filter(Boolean))]
+    let lastErr = ''
+    for (const model of models) {
+      const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 110000)
+      let r: Response
+      try { r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig } }) }) }
+      catch (_e) { clearTimeout(to); lastErr = 'AI ovoz xizmati javob bermadi.'; continue }
+      clearTimeout(to)
+      if (r.status === 429) return json({ error: 'AI ovoz limiti vaqtincha tugadi. Bir ozdan keyin qayta urinib ko‘ring yoki telefon ovozidan foydalaning.' }, 429)
+      const raw = await r.text()
+      if (!r.ok) { lastErr = 'AI ovoz xatosi (' + r.status + ').'; if (r.status === 404 || (r.status === 400 && /not found|not supported|unsupported|no longer/i.test(raw))) continue; return json({ error: lastErr }, 502) }
+      let j: any; try { j = JSON.parse(raw) } catch (_e) { lastErr = 'AI ovoz javobi tushunarsiz.'; continue }
+      const part = (j?.candidates?.[0]?.content?.parts || []).find((p: any) => p?.inlineData?.data)
+      if (!part) { lastErr = 'AI ovoz yaratmadi (bo‘sh javob yoki xavfsizlik filtri).'; continue }
+      const data = String(part.inlineData.data)
+      if (data.length > 7000000) return json({ error: 'Audio juda katta chiqdi, matnni qisqartiring.' }, 413)
+      const rate = Number(/rate=(\d{4,6})/.exec(String(part.inlineData.mimeType || ''))?.[1] || 24000)
+      await db.from('ai_usage').upsert({ user_id: u.user.id, day, n: used + 1 })
+      return json({ audio: data, rate, model })
+    }
+    return json({ error: lastErr || 'AI ovoz hozir mavjud emas.' }, 502)
+  }
+
   if (b.action === 'videos') {
     // YouTube Data API (ixtiyoriy): YOUTUBE_API_KEY secret bo'lsa haqiqiy video havolalari qaytariladi
     const yk = Deno.env.get('YOUTUBE_API_KEY')
