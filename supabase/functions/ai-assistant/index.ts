@@ -168,6 +168,8 @@ Qoidalar: 1) "answer" - sodda o'zbek (lotin) tilida, 100 so'zdan oshmasin, aniq 
 Qoidalar: 1) "unit": muddat 84 kundan kam bo'lsa "hafta", ko'p bo'lsa "oy". 2) "steps": muddatga mos 2-12 ta bosqich; har birida "label" ("1-hafta" yoki "1-oy"), "focus" (12 so'zgacha) va 2-4 ta aniq, o'lchanadigan "tasks" (har biri 14 so'zgacha). Haftalik soat byudjetiga mos bo'lsin. 3) "daily" - maqsadga olib boradigan bitta kichik kundalik odat ("t" 8 so'zgacha, "min" 5-60). 4) "risks" - 2 ta ehtimoliy to'siq va uni yengish yo'li (har biri 20 so'zgacha). 5) "summary" - 1-2 gap. 6) Hamma matn sodda o'zbek (lotin) tilida, muddatdan keyingi qadam qo'shma. Faqat JSON, markdown qo'shma.`,
   sleep: `Sen uyqu odatlari bo'yicha murabbiysan (shifokor emassan, tashxis qo'yma). Foydalanuvchining uyqu yozuvlari asosida FAQAT shu JSON ko'rinishida javob ber: {"score":72,"summary":"...","patterns":["..."],"advice":["..."],"watch":"..."}
 Qoidalar: 1) "score" 0-100: uyqu davomiyligining maqsadga yaqinligi va yotish-turish vaqtining izchilligi bo'yicha. 2) "summary" - 1-2 gap, aniq raqamlar bilan. 3) "patterns" - 2-4 ta kuzatilgan qonuniyat (hafta oxiri farqi, kech yotish, uyqu qarzi va h.k.), har biri 20 so'zgacha. 4) "advice" - 3 ta kichik, bajarsa bo'ladigan maslahat (masalan yotish vaqtini 15 daqiqa erta qilish), har biri 18 so'zgacha. 5) "watch" - uyqu doimiy 5 soatdan kam yoki juda tartibsiz bo'lsa, shifokorga murojaat qilishni yumshoq tarzda eslat, aks holda bo'sh qator "". 6) Yozuv 5 kundan kam bo'lsa, buni ayt va ehtiyotkor bo'l. 7) Sodda o'zbek (lotin) tilida. Faqat JSON, markdown qo'shma.`,
+  gloss: `Sen ingliz tili o'qituvchisisan. Berilgan inglizcha MATN dagi har bir noyob so'zning shu matnga mos o'zbekcha ma'nosini ber. FAQAT shu JSON ko'rinishida javob ber: {"words":{"cities":"shaharlar","mitigate":"yumshatmoq"}}
+Qoidalar: 1) Kalit - so'zning matnda uchragan shakli, kichik harfda ("cities", "mitigated"). Qiymat - o'zbekcha (lotin) 1-3 so'zli ma'no, shu matndagi ma'noga mos. 2) Artikllar, predloglar, olmoshlar, yordamchi fe'llar (be, have, do, will, can...), bog'lovchilar va juda oddiy so'zlarni (the, a, of, and, is, in, to, it, you, he...) KIRITMA. 3) Shaxs va joy nomlarini kiritma. 4) Har bir noyob so'zni bir marta yoz, 260 tadan oshirma. 5) Hech qanday izoh yoki markdown qo'shma, faqat JSON.`,
 }
 
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
@@ -248,6 +250,38 @@ async function fetchArticlePage(start: URL): Promise<{ html: string; url: string
     return { html: new TextDecoder('utf-8', { fatal: false }).decode(all), url: cur.toString() }
   }
   throw new ArtErr('Havola juda ko‘p marta yo‘naltiriladi.', 400)
+}
+async function fetchBytes(start: URL, accept: string, max: number, ctOk: RegExp, timeoutMs: number): Promise<{ bytes: Uint8Array; url: string; ct: string }> {
+  let cur = start
+  for (let hop = 0; hop < 5; hop++) {
+    if (!/^https?:$/.test(cur.protocol) || cur.username || cur.password || articleBadHost(cur.hostname) || await resolvesPrivate(cur.hostname)) throw new ArtErr('Bu havola ruxsat etilmagan (faqat ochiq veb-manzillar).', 400)
+    const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), timeoutMs)
+    let r: Response
+    try { r = await fetch(cur.toString(), { redirect: 'manual', signal: ctl.signal, headers: { 'User-Agent': 'Mozilla/5.0 (compatible; KunlikTizim/1.0)', Accept: accept } }) }
+    catch (_e) { clearTimeout(to); throw new ArtErr('Manzil ochilmadi yoki juda sekin javob berdi.', 504) }
+    if (r.status >= 300 && r.status < 400) { clearTimeout(to); const loc = r.headers.get('location'); if (!loc) throw new ArtErr('Manzil noto‘g‘ri yo‘naltirdi.', 502); try { cur = new URL(loc, cur) } catch (_e) { throw new ArtErr('Manzil noto‘g‘ri yo‘naltirdi.', 502) } continue }
+    if (!r.ok) { clearTimeout(to); throw new ArtErr(r.status === 404 ? 'Topilmadi (404).' : (r.status === 401 || r.status === 403) ? 'Kirish rad etildi (yopiq yoki pullik).' : 'Manzil xatosi: HTTP ' + r.status, 502) }
+    const ct = (r.headers.get('content-type') || '').toLowerCase()
+    if (ct && !ctOk.test(ct)) { clearTimeout(to); throw new ArtErr('Bu manzil kutilgan turdagi fayl emas.', 415) }
+    const cl = Number(r.headers.get('content-length') || 0); if (cl > max) { clearTimeout(to); throw new ArtErr('Fayl juda katta (' + Math.round(max / 1048576) + ' MB gacha).', 413) }
+    const rd = r.body ? r.body.getReader() : null; const chunks: Uint8Array[] = []; let n = 0
+    try { if (rd) { for (;;) { const { done, value } = await rd.read(); if (done) break; if (value) { chunks.push(value); n += value.length; if (n > max) { try { await rd.cancel() } catch (_e) { /* */ } throw new ArtErr('Fayl juda katta (' + Math.round(max / 1048576) + ' MB gacha).', 413) } } } } }
+    catch (e) { clearTimeout(to); if (e instanceof ArtErr) throw e; throw new ArtErr('Yuklab olish uzildi.', 504) }
+    clearTimeout(to)
+    const all = new Uint8Array(n); let o = 0; for (const c of chunks) { all.set(c, o); o += c.length }
+    return { bytes: all, url: cur.toString(), ct }
+  }
+  throw new ArtErr('Manzil juda ko‘p marta yo‘naltiriladi.', 400)
+}
+function parseFeed(xml: string): { title: string; items: any[] } {
+  const tg = (s: string, n: string) => { const m = s.match(new RegExp('<' + n + '(?:\\s[^>]*)?>([\\s\\S]*?)</' + n + '>', 'i')); return m ? decEnt(m[1].replace(/^\s*<!\[CDATA\[|\]\]>\s*$/g, '')).replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() : '' }
+  const items: any[] = []
+  for (const m of xml.matchAll(/<item[\s>][\s\S]*?<\/item>/gi)) {
+    const s = m[0], enc = s.match(/<enclosure[^>]*\surl=["']([^"']+)["'][^>]*>/i)
+    items.push({ t: tg(s, 'title').slice(0, 160), d: tg(s, 'pubDate').slice(0, 40), desc: tg(s, 'description').slice(0, 500), link: tg(s, 'link').slice(0, 400), au: enc ? decEnt(enc[1]).slice(0, 500) : '', dur: tg(s, 'itunes:duration').slice(0, 12) })
+    if (items.length >= 25) break
+  }
+  return { title: tg(xml.replace(/<item[\s>][\s\S]*$/i, ''), 'title').slice(0, 120), items }
 }
 function decEnt(s: string): string {
   return s.replace(/&nbsp;/g, ' ').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#0*39;|&apos;/g, "'")
@@ -350,6 +384,16 @@ Deno.serve(async (req) => {
       return json({ title: ar.title, text: ar.text, host: new URL(pgx.url).hostname, chars: ar.text.length })
     } catch (e) { if (e instanceof ArtErr) return json({ error: e.message }, e.status); return json({ error: 'Sahifani o‘qib bo‘lmadi.' }, 502) }
   }
+  if (b.action === 'feed') {   // AI emas: RSS/podkast ro'yxatini olish (kunlik AI limitiga kirmaydi)
+    let u1: URL
+    try { u1 = new URL(String(b.url || '').trim().slice(0, 500)) } catch (_e) { return json({ error: 'Havola noto‘g‘ri. https:// bilan boshlanadigan to‘liq havolani kiriting.' }, 400) }
+    try {
+      const r = await fetchBytes(u1, 'application/rss+xml,application/xml,text/xml;q=0.9,*/*;q=0.5', 2000000, /xml|rss|atom|text\//, 15000)
+      const fd = parseFeed(new TextDecoder('utf-8', { fatal: false }).decode(r.bytes))
+      if (!fd.items.length) return json({ error: 'Bu havolada podkast/maqola ro‘yxati (RSS) topilmadi.' }, 422)
+      return json({ title: fd.title, items: fd.items })
+    } catch (e) { if (e instanceof ArtErr) return json({ error: e.message }, e.status); return json({ error: 'Ro‘yxatni o‘qib bo‘lmadi.' }, 502) }
+  }
   const used = (us.data as any)?.n || 0
   if (b.action === 'limit') return json({ owner: isOwner, limit: DAILY_LIMIT, used })   // AI sarfiga kirmaydi: ilova "men egasimanmi" va haqiqiy limitni shu yerdan biladi
   if (!isOwner && used >= DAILY_LIMIT) return json({ error: `Bugungi limit tugadi (${DAILY_LIMIT} ta so‘rov). Ertaga davom etamiz.` }, 429)
@@ -359,8 +403,14 @@ Deno.serve(async (req) => {
     const gk = Deno.env.get('GROQ_API_KEY')
     if (!gk) return json({ error: 'Transkript uchun GROQ_API_KEY sozlanmagan. console.groq.com da bepul kalit oling va Supabase → Edge Functions → Secrets ga GROQ_API_KEY nomi bilan qo‘shing.', code: 'nokey' }, 501)
     const f = form ? form.get('file') : null
-    if (!f || typeof f === 'string') return json({ error: 'Audio fayl topilmadi.' }, 400)
-    const file = f as File
+    let file: File
+    if (f && typeof f !== 'string') file = f as File
+    else if (b.url) {   // havola bo'yicha: server audioni o'zi yuklab oladi (brauzer CORS to'sig'isiz)
+      let ua: URL
+      try { ua = new URL(String(b.url).trim().slice(0, 600)) } catch (_e) { return json({ error: 'Audio havolasi noto‘g‘ri.' }, 400) }
+      try { const r = await fetchBytes(ua, 'audio/*,*/*;q=0.5', 24 * 1048576, /audio|mpeg|mp3|mp4|aac|ogg|octet-stream/, 70000); file = new File([r.bytes], (ua.pathname.split('/').pop() || 'audio.mp3').slice(0, 60), { type: r.ct || 'audio/mpeg' }) }
+      catch (e) { if (e instanceof ArtErr) return json({ error: e.message }, e.status); return json({ error: 'Audioni yuklab bo‘lmadi.' }, 502) }
+    } else return json({ error: 'Audio fayl topilmadi.' }, 400)
     if (file.size < 2000) return json({ error: 'Audio fayl juda kichik.' }, 400)
     if (file.size > 24 * 1048576) return json({ error: 'Audio 24 MB dan katta (bepul tarif chegarasi 25 MB). Qisqaroq yoki kichikroq hajmdagi audio tanlang.' }, 413)
     const fd = new FormData()
@@ -434,10 +484,11 @@ Deno.serve(async (req) => {
       else if (kind === 'wfam') { const w = cl(b.word, 40); if (!w) return json({ error: 'So‘z yozilmagan.' }, 400); u = 'So‘z: ' + w }
       else if (kind === 'model') { const q = cl(b.question, 400); if (q.length < 8) return json({ error: 'Savol juda qisqa.' }, 400); u = 'Speaking Part ' + Math.min(3, Math.max(1, Math.round(Number(b.part)) || 2)) + '\nSavol: ' + q }
       else if (kind === 'sleep') { const c = cl(typeof b.ctx === 'string' ? b.ctx : JSON.stringify(b.ctx || {}), 5000); if (c.length < 20) return json({ error: 'Uyqu yozuvlari yetarli emas.' }, 400); u = 'Uyqu maqsadi: ' + Math.min(12, Math.max(4, Number(b.target) || 8)) + ' soat\n\nYozuvlar (JSON):\n' + c }
+      else if (kind === 'gloss') { const tx = cl(b.text, 3600); if (tx.length < 80) return json({ error: 'Matn juda qisqa.' }, 400); u = 'MATN:\n' + tx }
       else if (kind === 'ask') { const q = cl(b.question, 300); if (q.length < 3) return json({ error: 'Savol juda qisqa.' }, 400); u = 'Savol: ' + q + '\n\nMA\'LUMOT (JSON):\n' + cl(typeof b.ctx === 'string' ? b.ctx : JSON.stringify(b.ctx || {}), 6000) }
       else if (kind === 'goalplan') { const g = cl(b.goal, 120); if (g.length < 4) return json({ error: 'Maqsad juda qisqa.' }, 400); const days = Math.min(730, Math.max(1, Math.round(Number(b.days)) || 30)), hrs = Math.min(40, Math.max(1, Math.round(Number(b.hours)) || 5)); u = 'Maqsad: ' + g + '\nNima uchun: ' + cl(b.why, 200) + '\nMuddat: ' + cl(b.deadline, 10) + ' (' + days + ' kun qoldi)\nHaftasiga soat: ' + hrs + '\nQo\'shimcha: ' + cl(b.note, 400) }
       tmo = (kind === 'listening' || kind === 'task1') ? 55000 : 45000; system = sysP
-      extra = { responseMimeType: 'application/json', maxOutputTokens: kind === 'listening' ? 5000 : (kind === 'model' || kind === 'rewrite' || kind === 'plan' || kind === 'goalplan') ? 3500 : 2500 }
+      extra = { responseMimeType: 'application/json', maxOutputTokens: kind === 'listening' ? 5000 : (kind === 'model' || kind === 'rewrite' || kind === 'plan' || kind === 'goalplan') ? 3500 : kind === 'gloss' ? 4500 : 2500 }
       parts.push({ text: u })
     } else if (b.action === 'coach') {
       const cx = String(b.ctx || '').trim()
