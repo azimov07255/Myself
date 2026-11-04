@@ -497,34 +497,44 @@ Deno.serve(async (req) => {
     if (single.length < 2) return json({ error: 'Matn yozilmagan.' }, 400)
     if ((turns.length ? turns.reduce((n: number, x: { t: string }) => n + x.t.length, 0) : single.length) > 900) return json({ error: 'Matn juda uzun (bir so‘rovda 900 belgigacha).' }, 400)
     const multi = turns.some((x: { s: string }) => x.s === 'A') && turns.some((x: { s: string }) => x.s === 'B')
-    const style = `Say exactly the words written, adding nothing. Use a natural ${ACC[acc]} English accent, a calm and clear pace suitable for an IELTS listening test, with natural intonation.`
-    const prompt = multi
-      ? `Read this conversation between two people, Anna and Mark, the way real speakers talk (small natural pauses). ${style}\n\n` + turns.map((x: { s: string; t: string }) => (x.s === 'A' ? 'Anna' : 'Mark') + ': ' + x.t).join('\n')
-      : `Read the following aloud. ${style}\n\n${single}`
+    const accent = ACC[acc]
+    // Gemini TTS faqat o'qiladigan matnni kutadi: ko'rsatmalar uzun bo'lsa "matn yozmoqchi bo'ldi" deb 400 qaytaradi. Shuning uchun avval qisqa rasmiy shakl, keyin sof matn sinab ko'riladi
+    const body = multi ? turns.map((x: { s: string; t: string }) => (x.s === 'A' ? 'Anna' : 'Mark') + ': ' + x.t).join('\n') : single
+    const prompts = multi ? [`TTS the following conversation between Anna and Mark in calm ${accent} English accents:\n${body}`, body] : [`Say clearly in a calm ${accent} English accent: ${body}`, body]
     const speechConfig = multi
       ? { multiSpeakerVoiceConfig: { speakerVoiceConfigs: [{ speaker: 'Anna', voiceConfig: { prebuiltVoiceConfig: { voiceName: va } } }, { speaker: 'Mark', voiceConfig: { prebuiltVoiceConfig: { voiceName: vb } } }] } }
       : { voiceConfig: { prebuiltVoiceConfig: { voiceName: va } } }
     const models = [...new Set([String(Deno.env.get('TTS_MODEL') || '').trim(), 'gemini-3.8-flash-tts', 'gemini-3.1-flash-tts-preview', 'gemini-2.5-flash-preview-tts'].filter(Boolean))]
-    let lastErr = ''
-    for (const model of models) {
-      const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 110000)
+    const plan: { model: string; prompt: string }[] = []
+    models.forEach((m, k) => { prompts.forEach((pr, v) => { if (k === 0 || v === 0) plan.push({ model: m, prompt: pr }) }) })
+    let lastErr = '', last = 0; const t0 = Date.now(); const dead = new Set<string>()
+    for (const step of plan.slice(0, 5)) {
+      if (Date.now() - t0 > 95000) break
+      if (dead.has(step.model)) continue
+      const ctl = new AbortController(); const to = setTimeout(() => ctl.abort(), 60000)
       let r: Response
-      try { r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key }, body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig } }) }) }
-      catch (_e) { clearTimeout(to); lastErr = 'AI ovoz xizmati javob bermadi.'; continue }
+      try { r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${step.model}:generateContent`, { method: 'POST', signal: ctl.signal, headers: { 'Content-Type': 'application/json', 'x-goog-api-key': key }, body: JSON.stringify({ contents: [{ parts: [{ text: step.prompt }] }], generationConfig: { responseModalities: ['AUDIO'], speechConfig } }) }) }
+      catch (_e) { clearTimeout(to); lastErr = 'AI ovoz xizmati javob bermadi.'; last = 504; continue }
       clearTimeout(to)
       if (r.status === 429) return json({ error: 'AI ovoz limiti vaqtincha tugadi. Bir ozdan keyin qayta urinib ko‘ring yoki telefon ovozidan foydalaning.' }, 429)
       const raw = await r.text()
-      if (!r.ok) { lastErr = 'AI ovoz xatosi (' + r.status + ').'; if (r.status === 404 || (r.status === 400 && /not found|not supported|unsupported|no longer/i.test(raw))) continue; return json({ error: lastErr }, 502) }
-      let j: any; try { j = JSON.parse(raw) } catch (_e) { lastErr = 'AI ovoz javobi tushunarsiz.'; continue }
+      if (r.status === 401 || r.status === 403) return json({ error: 'AI ovoz uchun ruxsat yo‘q (' + r.status + '): GEMINI_API_KEY kalitida ovoz modeliga ruxsat bo‘lmasligi mumkin.' }, 502)
+      if (!r.ok) {
+        let msg = ''; try { msg = String(JSON.parse(raw)?.error?.message || '') } catch (_e) { msg = raw.slice(0, 160) }
+        lastErr = 'AI ovoz xatosi (' + r.status + ')' + (msg ? ': ' + msg.replace(/\s+/g, ' ').slice(0, 170) : '.'); last = r.status
+        if (r.status === 404) dead.add(step.model)
+        continue
+      }
+      let j: any; try { j = JSON.parse(raw) } catch (_e) { lastErr = 'AI ovoz javobi tushunarsiz.'; last = 502; continue }
       const part = (j?.candidates?.[0]?.content?.parts || []).find((p: any) => p?.inlineData?.data)
-      if (!part) { lastErr = 'AI ovoz yaratmadi (bo‘sh javob yoki xavfsizlik filtri).'; continue }
+      if (!part) { lastErr = 'AI ovoz yaratmadi (bo‘sh javob yoki xavfsizlik filtri).'; last = 502; continue }
       const data = String(part.inlineData.data)
       if (data.length > 7000000) return json({ error: 'Audio juda katta chiqdi, matnni qisqartiring.' }, 413)
       const rate = Number(/rate=(\d{4,6})/.exec(String(part.inlineData.mimeType || ''))?.[1] || 24000)
       await db.from('ai_usage').upsert({ user_id: u.user.id, day, n: used + 1 })
-      return json({ audio: data, rate, model })
+      return json({ audio: data, rate, model: step.model })
     }
-    return json({ error: lastErr || 'AI ovoz hozir mavjud emas.' }, 502)
+    return json({ error: lastErr || 'AI ovoz hozir mavjud emas.' }, last === 413 ? 413 : 502)
   }
 
   if (b.action === 'videos') {
