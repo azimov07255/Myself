@@ -170,6 +170,9 @@ Qoidalar: 1) "unit": muddat 84 kundan kam bo'lsa "hafta", ko'p bo'lsa "oy". 2) "
 Qoidalar: 1) "score" 0-100: uyqu davomiyligining maqsadga yaqinligi va yotish-turish vaqtining izchilligi bo'yicha. 2) "summary" - 1-2 gap, aniq raqamlar bilan. 3) "patterns" - 2-4 ta kuzatilgan qonuniyat (hafta oxiri farqi, kech yotish, uyqu qarzi va h.k.), har biri 20 so'zgacha. 4) "advice" - 3 ta kichik, bajarsa bo'ladigan maslahat (masalan yotish vaqtini 15 daqiqa erta qilish), har biri 18 so'zgacha. 5) "watch" - uyqu doimiy 5 soatdan kam yoki juda tartibsiz bo'lsa, shifokorga murojaat qilishni yumshoq tarzda eslat, aks holda bo'sh qator "". 6) Yozuv 5 kundan kam bo'lsa, buni ayt va ehtiyotkor bo'l. 7) Sodda o'zbek (lotin) tilida. Faqat JSON, markdown qo'shma.`,
   gloss: `Sen ingliz tili o'qituvchisisan. Berilgan inglizcha MATN dagi har bir noyob so'zning shu matnga mos o'zbekcha ma'nosini ber. FAQAT shu JSON ko'rinishida javob ber: {"words":{"cities":"shaharlar","mitigate":"yumshatmoq"}}
 Qoidalar: 1) Kalit - so'zning matnda uchragan shakli, kichik harfda ("cities", "mitigated"). Qiymat - o'zbekcha (lotin) 1-3 so'zli ma'no, shu matndagi ma'noga mos. 2) Artikllar, predloglar, olmoshlar, yordamchi fe'llar (be, have, do, will, can...), bog'lovchilar va juda oddiy so'zlarni (the, a, of, and, is, in, to, it, you, he...) KIRITMA. 3) Shaxs va joy nomlarini kiritma. 4) Har bir noyob so'zni bir marta yoz, 260 tadan oshirma. 5) Hech qanday izoh yoki markdown qo'shma, faqat JSON.`,
+  dict: `Sen IELTS o'qituvchisi va tajribali leksikografsan. Berilgan inglizcha SO'Z yoki IBORA uchun lug'at yozuvi tuz. FAQAT shu JSON ko'rinishida javob ber:
+{"w":"support","fix":"","lv":"B1","reg":"neutral","pos":["verb","noun"],"ipaUK":"/səˈpɔːt/","ipaUS":"/səˈpɔːrt/","uz":["qo'llab-quvvatlamoq","yordam"],"defs":[{"pos":"verb","d":"to help someone or something by giving encouragement or money","uz":"qo'llab-quvvatlamoq","ex":["Many people support the new policy.","She has always supported her family."]}],"col":["strongly support","support a claim"],"syn":["back","assist"],"ant":["oppose"],"fam":[["supporter","n"],["supportive","adj"]],"tip":"IELTS 8+ maslahat (o'zbekcha, 1-2 gap)","err":""}
+Qoidalar: 1) So'z imlosi xato bo'lsa, "fix" ga to'g'ri shaklini yoz va yozuvni shu to'g'ri so'z uchun tuz. 2) lv: A1, A2, B1, B2, C1 yoki C2. reg: formal, neutral yoki informal. 3) IPA: UK (Received Pronunciation) va US (General American) ALOHIDA yoz, ikkalasi ham / / ichida, ˈ va ˌ stress belgilari bilan. 4) defs: eng muhim 3 tagacha ma'no: pos, sodda inglizcha ta'rif (18 so'zdan oshmasin), o'zbekcha (lotin) ma'no, 2 ta tabiiy misol gap (Band 7-8 darajasida). 5) col: 4-6 ta tabiiy birikma (collocation). 6) fam: so'z oilasi [so'z, turkum]. 7) tip: shu so'zni IELTS Writing yoki Speaking'da qanday ishlatish yoki oddiy so'z o'rniga qanday kuchli variant sifatida qo'llash (o'zbekcha). 8) Ma'lumot berilgan "LUG'AT MA'LUMOTI" bilan ziddiyatga bormagin. 9) Bunday so'z mavjud bo'lmasa {"w":"","err":"sabab"} qaytar. Hech qanday markdown yoki izoh qo'shma.`,
 }
 
 const FOOD_SYSTEM = `Sen ovqat va kaloriya tahlilchisisan. Foydalanuvchi ovqat nomini yozadi yoki rasmini yuboradi (o'zbek, rus va xalqaro taomlar). Rasmdagi har bir ovqatni alohida aniqla, porsiyani ko'zda chamala. Matnda gramm yoki dona ko'rsatilgan bo'lsa, shunga tayan.
@@ -384,6 +387,32 @@ Deno.serve(async (req) => {
       return json({ title: ar.title, text: ar.text, host: new URL(pgx.url).hostname, chars: ar.text.length })
     } catch (e) { if (e instanceof ArtErr) return json({ error: e.message }, e.status); return json({ error: 'Sahifani o‘qib bo‘lmadi.' }, 502) }
   }
+  if (b.action === 'dict') {   // AI emas: ochiq lug'at (Wiktionary asosida): IPA, ovoz fayllari, ta'riflar. Kunlik AI limitiga kirmaydi
+    const w = String(b.word || '').trim().toLowerCase().replace(/\s+/g, ' ').slice(0, 60)
+    if (!/^[a-z][a-z' -]{0,58}$/.test(w)) return json({ error: 'So‘z noto‘g‘ri (faqat inglizcha harflar, 60 belgigacha).' }, 400)
+    try {
+      const r = await fetchBytes(new URL('https://api.dictionaryapi.dev/api/v2/entries/en/' + encodeURIComponent(w)), 'application/json', 700000, /json|text\//, 12000)
+      let arr: any
+      try { arr = JSON.parse(new TextDecoder('utf-8', { fatal: false }).decode(r.bytes)) } catch (_e) { return json({ error: 'Lug‘at xizmati tushunarsiz javob berdi.' }, 502) }
+      if (!Array.isArray(arr) || !arr.length) return json({ nf: true })
+      const okUrl = (x: unknown) => { const s = String(x || ''); return /^https:\/\/[^\s"'<>]{5,300}$/.test(s) ? s : '' }
+      const ph: { t: string; a: string }[] = []; const meanings: any[] = []; let src = ''
+      for (const en of arr.slice(0, 3)) {
+        for (const p of (Array.isArray(en?.phonetics) ? en.phonetics : [])) ph.push({ t: String(p?.text || '').slice(0, 60), a: okUrl(p?.audio) })
+        if (en?.phonetic) ph.push({ t: String(en.phonetic).slice(0, 60), a: '' })
+        for (const m of (Array.isArray(en?.meanings) ? en.meanings : []).slice(0, 4)) {
+          meanings.push({ pos: String(m?.partOfSpeech || '').slice(0, 20), defs: (Array.isArray(m?.definitions) ? m.definitions : []).slice(0, 3).map((d: any) => ({ d: String(d?.definition || '').slice(0, 240), ex: String(d?.example || '').slice(0, 200) })), syn: (Array.isArray(m?.synonyms) ? m.synonyms : []).slice(0, 6).map((x: unknown) => String(x).slice(0, 30)), ant: (Array.isArray(m?.antonyms) ? m.antonyms : []).slice(0, 6).map((x: unknown) => String(x).slice(0, 30)) })
+        }
+        if (!src) src = String((Array.isArray(en?.sourceUrls) ? en.sourceUrls[0] : '') || '').slice(0, 200)
+      }
+      const uk = ph.find((p) => /-uk\.mp3(\?|$)/i.test(p.a)), us = ph.find((p) => /-us\.mp3(\?|$)/i.test(p.a))
+      const anyT = (ph.find((p) => p.t) || { t: '' }).t
+      return json({ w, ipaUK: uk?.t || '', ipaUS: us?.t || '', ipa: anyT, auUK: uk?.a || '', auUS: us?.a || '', auAny: (ph.find((p) => p.a) || { a: '' }).a, meanings: meanings.slice(0, 5), src: /^https:\/\//.test(src) ? src : '' })
+    } catch (e) {
+      if (e instanceof ArtErr) { if (/404/.test(e.message)) return json({ nf: true }); return json({ error: e.message }, e.status) }
+      return json({ error: 'Lug‘atga ulanib bo‘lmadi.' }, 502)
+    }
+  }
   if (b.action === 'feed') {   // AI emas: RSS/podkast ro'yxatini olish (kunlik AI limitiga kirmaydi)
     let u1: URL
     try { u1 = new URL(String(b.url || '').trim().slice(0, 500)) } catch (_e) { return json({ error: 'Havola noto‘g‘ri. https:// bilan boshlanadigan to‘liq havolani kiriting.' }, 400) }
@@ -484,11 +513,12 @@ Deno.serve(async (req) => {
       else if (kind === 'wfam') { const w = cl(b.word, 40); if (!w) return json({ error: 'So‘z yozilmagan.' }, 400); u = 'So‘z: ' + w }
       else if (kind === 'model') { const q = cl(b.question, 400); if (q.length < 8) return json({ error: 'Savol juda qisqa.' }, 400); u = 'Speaking Part ' + Math.min(3, Math.max(1, Math.round(Number(b.part)) || 2)) + '\nSavol: ' + q }
       else if (kind === 'sleep') { const c = cl(typeof b.ctx === 'string' ? b.ctx : JSON.stringify(b.ctx || {}), 5000); if (c.length < 20) return json({ error: 'Uyqu yozuvlari yetarli emas.' }, 400); u = 'Uyqu maqsadi: ' + Math.min(12, Math.max(4, Number(b.target) || 8)) + ' soat\n\nYozuvlar (JSON):\n' + c }
+      else if (kind === 'dict') { const wd = cl(b.word, 60).trim(); if (!wd) return json({ error: 'So‘z yozilmagan.' }, 400); u = 'SO‘Z: ' + wd + (b.hint ? '\nLUG‘AT MA‘LUMOTI (ochiq manba): ' + cl(b.hint, 700) : '') }
       else if (kind === 'gloss') { const tx = cl(b.text, 3600); if (tx.length < 80) return json({ error: 'Matn juda qisqa.' }, 400); u = 'MATN:\n' + tx }
       else if (kind === 'ask') { const q = cl(b.question, 300); if (q.length < 3) return json({ error: 'Savol juda qisqa.' }, 400); u = 'Savol: ' + q + '\n\nMA\'LUMOT (JSON):\n' + cl(typeof b.ctx === 'string' ? b.ctx : JSON.stringify(b.ctx || {}), 6000) }
       else if (kind === 'goalplan') { const g = cl(b.goal, 120); if (g.length < 4) return json({ error: 'Maqsad juda qisqa.' }, 400); const days = Math.min(730, Math.max(1, Math.round(Number(b.days)) || 30)), hrs = Math.min(40, Math.max(1, Math.round(Number(b.hours)) || 5)); u = 'Maqsad: ' + g + '\nNima uchun: ' + cl(b.why, 200) + '\nMuddat: ' + cl(b.deadline, 10) + ' (' + days + ' kun qoldi)\nHaftasiga soat: ' + hrs + '\nQo\'shimcha: ' + cl(b.note, 400) }
       tmo = (kind === 'listening' || kind === 'task1') ? 55000 : 45000; system = sysP
-      extra = { responseMimeType: 'application/json', maxOutputTokens: kind === 'listening' ? 5000 : (kind === 'model' || kind === 'rewrite' || kind === 'plan' || kind === 'goalplan') ? 3500 : kind === 'gloss' ? 4500 : 2500 }
+      extra = { responseMimeType: 'application/json', maxOutputTokens: kind === 'listening' ? 5000 : (kind === 'model' || kind === 'rewrite' || kind === 'plan' || kind === 'goalplan') ? 3500 : kind === 'gloss' ? 4500 : kind === 'dict' ? 2600 : 2500 }
       parts.push({ text: u })
     } else if (b.action === 'coach') {
       const cx = String(b.ctx || '').trim()
