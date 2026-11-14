@@ -1,0 +1,27 @@
+const fs=require('fs'),esbuild=require('esbuild');
+let src=fs.readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
+const out=esbuild.transformSync(src,{loader:'ts',target:'es2022'}).code;
+let handler=null;const env={GEMINI_API_KEY:'k',SUPABASE_URL:'u',SUPABASE_SERVICE_ROLE_KEY:'s'};
+globalThis.Deno={env:{get:k=>env[k]},serve:h=>{handler=h}};
+let usage={n:0},ups=[];
+globalThis.__cc=()=>({auth:{getUser:async t=>t==='good'?{data:{user:{id:'u1',email:'a@x.com'}}}:{data:{user:null}}},from:tb=>({select:()=>({eq:()=>({eq:()=>({maybeSingle:async()=>({data:tb==='ai_usage'?usage:null})}),maybeSingle:async()=>({data:null})})}),upsert:async r=>{ups.push(r);return{}}})});
+new Function(out)();
+const rq=b=>new Request('http://x',{method:'POST',headers:{Authorization:'Bearer good'},body:JSON.stringify(b)});
+const ok=(l,c)=>console.log((c?'PASS ':'FAIL ')+l);
+const MODELS=['gemini-3.8-flash-lite','gemini-3.8-flash'].map(n=>({name:'models/'+n,supportedGenerationMethods:['generateContent']}));
+let last=null;
+globalThis.fetch=async(u,o)=>{if(/\/models\?pageSize/.test(u))return new Response(JSON.stringify({models:MODELS}),{status:200});last=JSON.parse(o.body);
+ const txt=JSON.stringify(last.contents);const isFood=/ovqat|Rasmdagi|osh/i.test(txt)&&!/inlineData":\{"mimeType":"audio/.test(txt);
+ return new Response(JSON.stringify({candidates:[{content:{parts:[{text:isFood?'{"items":[{"name":"Osh","grams":300,"kcal":620,"p":22,"f":28,"c":70}],"note":"taxminiy"}':'Bugun zalga boraman'}]}}]}),{status:200})};
+(async()=>{
+ let r=await handler(rq({action:'food',text:'300 g osh'}));let j=await r.json();const f=JSON.parse(j.text);
+ ok('food by text returns structured JSON: '+f.items[0].name+' '+f.items[0].kcal+' kkal',f.items[0].kcal===620&&/application\/json/.test(last.generationConfig.responseMimeType));
+ ok('food prompt asks for JSON with kcal, p, f, c',/"kcal"/.test(last.systemInstruction.parts[0].text)&&/"p"/.test(last.systemInstruction.parts[0].text));
+ r=await handler(rq({action:'food',image:'QUJD',mime:'image/jpeg'}));j=await r.json();ok('food by photo sends the image as inlineData',JSON.stringify(last.contents).includes('"inlineData":{"mimeType":"image/jpeg","data":"QUJD"}'));
+ r=await handler(rq({action:'food'}));ok('empty food request refused (400)',r.status===400);
+ r=await handler(rq({action:'food',image:'x'.repeat(3600000)}));ok('oversized image refused (400)',r.status===400);
+ r=await handler(rq({action:'transcribe',audio:'UklGRg==',mime:'audio/wav'}));j=await r.json();ok('transcribe returns plain text: '+j.text,j.text==='Bugun zalga boraman'&&/inlineData":\{"mimeType":"audio\/wav"/.test(JSON.stringify(last.contents)));
+ r=await handler(rq({action:'transcribe',audio:'x'.repeat(3600000)}));ok('too-long audio refused (400)',r.status===400);
+ ok('usage counted for these calls',ups.length===3);
+ usage={n:40};r=await handler(rq({action:'food',text:'osh'}));ok('daily limit applies to food/voice too (429)',r.status===429);
+})();

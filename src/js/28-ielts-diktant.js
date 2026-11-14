@@ -1,0 +1,18 @@
+// ---- Diktant: podkast qatorini eshitib yoz, xatolarni ko'r ----
+let IDK=null;
+function ieDiff(ref,txt){const R=String(ref).match(/[A-Za-z0-9’']+|[^A-Za-z0-9’']+/g)||[],rw=[];R.forEach((x,i)=>{if(/[A-Za-z0-9]/.test(x))rw.push({i,t:x.toLowerCase().replace(/’/g,"'")})});
+  const U=(String(txt).toLowerCase().replace(/’/g,"'").match(/[a-z0-9']+/g)||[]),n=rw.length,m=U.length,D=[...Array(n+1)].map(()=>Array(m+1).fill(0));
+  for(let i=n-1;i>=0;i--)for(let j=m-1;j>=0;j--)D[i][j]=rw[i].t===U[j]?D[i+1][j+1]+1:Math.max(D[i+1][j],D[i][j+1]);
+  const ok=new Set();let i=0,j=0;while(i<n&&j<m){if(rw[i].t===U[j]){ok.add(rw[i].i);i++;j++}else if(D[i+1][j]>=D[i][j+1])i++;else j++}
+  const hit=ok.size;return{parts:R.map((x,k)=>/[A-Za-z0-9]/.test(x)?{t:x,ok:ok.has(k)}:{t:x,p:1}),pct:n?Math.round(hit/n*100):0,missed:rw.filter(w=>!ok.has(w.i)).map(w=>R[w.i]),extra:Math.max(0,m-hit),n}}
+function ieDictOpen(i){const m=ieM().find(x=>x.id===IMT);if(!m||!m.c[i])return;if(!ieAu()){toast('Diktant uchun audio kerak.');return}ieSheetClose();IDK={i,txt:'',res:null,stop:0,err:''};const e=document.createElement('div');e.id='iesh';e.className='mfs';document.getElementById('iem').appendChild(e);ieDictDraw();ieDictPlay()}
+function ieDictPlay(slow){const a=ieAu(),m=ieM().find(x=>x.id===IMT);if(!a||!m||!IDK)return;const c=m.c[IDK.i];a.currentTime=c[0];IDK.stop=c[1]+0.15;a.playbackRate=slow?0.75:IMF.rate;ieP(a)}
+function ieDictDraw(){const e=document.getElementById('iesh'),m=ieM().find(x=>x.id===IMT);if(!e||!m||!IDK)return;const q=IDK,c=m.c[q.i],r=q.res;
+  e.innerHTML=`<div class="mfsh"><b>🎧 Diktant · ${ieFmt(c[0])}</b><button class="x" onclick="ieDictClose()" aria-label="Yopish">✕</button></div><div class="in" style="margin:0 0 8px"><button class="btn" onclick="ieDictPlay()">▶ Eshit</button><button class="btn s" onclick="ieDictPlay(1)">🐢 Sekin</button></div>
+   <textarea id="idt" rows="3" style="width:100%" placeholder="Eshitganingni yoz…" ${r?'disabled':''} oninput="IDK.txt=this.value">${esc(q.txt)}</textarea>${q.err?`<p style="color:var(--bad);margin:6px 0">${esc(q.err)}</p>`:''}
+   ${r?`<p style="margin:10px 0 4px;font-weight:700">${r.pct}% to‘g‘ri${r.extra?` · ${r.extra} ta ortiqcha so‘z`:''}</p><p class="ietx" style="margin:0 0 8px">${r.parts.map(p=>p.p?esc(p.t):`<span class="${p.ok?'dok':'dno'}">${esc(p.t)}</span>`).join('')}</p>${r.missed.length?`<p class="mu" style="margin:0 0 4px">Eshita olmagan so‘zlar (bosib lug‘atga qo‘sh):</p><div class="rwch">${[...new Set(r.missed.map(x=>x.toLowerCase()))].map(w=>`<button class="chip" style="border:0" onclick="ieDictAdd('${esc(w).replace(/'/g,"\\'")}')">+ ${esc(w)}</button>`).join('')}</div>`:'<p style="margin:0">Mukammal! 🎉</p>'}<div class="in" style="margin-top:8px">${q.i+1<m.c.length?'<button class="btn" onclick="ieDictNext()">Keyingi qator ›</button>':''}<button class="btn s" onclick="ieDictClose()">Yopish</button></div>`
+   :'<div class="in" style="margin-top:8px"><button class="btn" onclick="ieDictCheck()">Tekshirish</button></div>'}`}
+function ieDictCheck(){const m=ieM().find(x=>x.id===IMT),q=IDK;if(!m||!q)return;if(String(q.txt).trim().length<2){q.err='Avval eshitganingni yoz.';ieDictDraw();return}q.res=ieDiff(m.c[q.i][2],q.txt);q.err='';ieDp().L=1;save();ieDictDraw()}
+function ieDictNext(){const q=IDK,m=ieM().find(x=>x.id===IMT);if(!q||!m||q.i+1>=m.c.length)return;ieDictOpen(q.i+1)}
+function ieDictAdd(w){const m=ieM().find(x=>x.id===IMT),q=IDK;if(!m||!q)return;if(ieVocAdd({w,ctx:m.c[q.i][2]},'w',m.id)){toast('Lug‘atga qo‘shildi: '+w);save()}else toast('Bu so‘z lug‘atda bor')}
+function ieDictClose(){const a=ieAu();if(a){try{a.pause()}catch(e){}a.playbackRate=IMF.rate}IDK=null;ieSheetClose()}

@@ -1,0 +1,41 @@
+@font-face{font-family:QPC;src:url(fonts/UthmanicHafs1Ver18.ttf) format('truetype');font-display:block}
+@font-face{font-family:QAM;src:url(fonts/AmiriQuran-arabic.woff2) format('woff2');font-display:block}
+.qam{font-family:QAM,'Amiri Quran',serif}
+.mfo{position:fixed;inset:0;z-index:150;background:var(--bg);display:flex;flex-direction:column;color:var(--tx)}
+.mft{display:flex;align-items:center;gap:6px;padding:calc(env(safe-area-inset-top,0px) + 6px) 10px 6px;background:var(--c1);border-bottom:1px solid var(--ln)}
+.mft .x{font-size:22px;padding:6px 8px}
+.mfti{flex:1;text-align:center;line-height:1.25;min-width:0}
+.mfti b{display:block;font:400 22px/1.3 QPC,'Amiri Quran',serif;direction:rtl}
+.mfti small{color:var(--mu);font-size:12px}
+.mfst{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:6px 12px;background:var(--c2);font-size:13px}
+.mfp{flex:1;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:8px 6px 12px}
+.mpg{direction:rtl;margin:0 auto;max-width:680px;font-family:QPC,'Amiri Quran',serif;color:var(--tx);background:var(--c1);border-radius:12px;padding:12px 10px;user-select:none;-webkit-user-select:none;-webkit-touch-callout:none;font-size:20px;touch-action:pan-y}
+.mpg.cc{min-height:62vh;display:flex;flex-direction:column;justify-content:center}
+.mr{display:flex;justify-content:space-between;align-items:center;height:2.25em;line-height:1;white-space:nowrap}
+.mr.ct{justify-content:center;gap:.32em}
+.meas .mr{display:inline-flex;width:auto;gap:.32em;justify-content:flex-start}
+.mw{display:inline-block;position:relative;padding:.1em .02em;border-radius:.22em}
+.mw.mk{font-size:.92em}
+.mh{justify-content:center!important;height:2.1em;margin:.12em 0;border:1.5px solid var(--go);border-radius:.55em;background:linear-gradient(var(--c2),var(--c1));box-shadow:inset 0 0 0 2px var(--c1),inset 0 0 0 3px var(--go)}
+.h1{background:rgba(245,213,71,.38)}.h2{background:rgba(93,187,99,.38)}.h3{background:rgba(90,169,230,.38)}.h4{background:rgba(239,127,168,.38)}.h5{background:rgba(240,148,77,.42)}
+.hn::after{content:'✎';position:absolute;top:-.5em;left:50%;transform:translateX(-50%);font:600 .45em system-ui;color:var(--go)}
+.wkm{color:var(--bad)}
+.xh{color:transparent!important;background:var(--ln)!important;opacity:.6}
+.mfg{display:flex;flex-direction:column;gap:6px;padding:8px 12px;background:var(--c2);border-top:1px solid var(--ln);font-size:13px}
+.mfg[hidden],.mfst[hidden]{display:none}
+.mfg .in{margin:0}.mfg .btn{flex:1;padding:11px 6px;font-size:14px}
+.mfnv{display:flex;align-items:center;gap:8px;padding:8px 12px calc(env(safe-area-inset-bottom,0px) + 8px);background:var(--c1);border-top:1px solid var(--ln)}
+.mfnv .btn{flex:1;padding:11px 6px;font-size:14px}
+.mfnv input{width:62px;text-align:center;font:600 16px Figtree,system-ui;padding:9px 4px;border-radius:10px;border:1px solid var(--ln);background:var(--bg);color:var(--tx)}
+.mfs{position:absolute;left:0;right:0;bottom:0;z-index:5;background:var(--c1);border-radius:18px 18px 0 0;padding:14px 14px calc(env(safe-area-inset-bottom,0px) + 14px);box-shadow:0 -10px 34px rgba(0,0,0,.4)}
+.mfsh{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+.mfv{font:400 22px/1.8 QPC,'Amiri Quran',serif;margin:4px 0 10px;color:var(--tx)}
+.mfdots{display:flex;gap:10px;margin:0 0 12px;flex-wrap:wrap}
+.mfd{width:38px;height:38px;border-radius:50%;border:3px solid transparent;padding:0;font-size:16px;color:var(--mu)}
+.mfd.on{border-color:var(--tx)}.mfd.x0{background:var(--c2)}
+.mfs textarea{width:100%;border-radius:12px;border:1px solid var(--ln);background:var(--bg);color:var(--tx);padding:10px;font:inherit;margin-bottom:8px}
+.mfq{width:100%;padding:11px 12px;border-radius:12px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);font:inherit;margin-bottom:8px}
+.mfrc{display:flex;gap:6px;overflow-x:auto;margin-top:10px;padding-bottom:2px}
+.mfch{border:0;border-radius:12px;background:var(--c2);color:var(--tx);padding:7px 11px;font:600 14px Figtree,system-ui;white-space:nowrap}
+.mfch small{display:block;font-weight:400;color:var(--mu);font-size:11px}
+.mfdot{width:14px;height:14px;border-radius:50%;flex:none;display:inline-block}

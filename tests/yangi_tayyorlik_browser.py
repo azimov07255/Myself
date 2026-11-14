@@ -1,0 +1,55 @@
+# Ustun kengligi, ixcham/keng ko'rinish, Bugun'da dam kuni, zaxira eslatmasi, "Ishga tayyormi?". Soat: 2026-10-31 10:00.
+import sys
+sys.path.insert(0, '/mnt/user-data/outputs/tests')
+from _pw import Run
+with Run('tayyor') as R:
+    ev, chk, pg = R.ev, R.chk, R.pg
+    ev("""()=>{window.confirm=()=>true;localStorage.clear();localStorage.setItem('trk_bg','o');uiInit();S.hab=[{id:'h1700000000000',t:'Har kuni 3 bet Quron yodlash va takrorlash',e:'📖'},{id:'h1700000000001',t:'Kuniga 5 bet takror',f:3}];S.hb={};S.hk={};tab='o';OT='j';HV='m';render()}""")
+    W = lambda: ev("Math.round(document.querySelector('#app .mn').getBoundingClientRect().width)")
+    chk('the name column keeps its set width even with long names and the long note (before it grew to most of the screen)', abs(W() - 138) <= 1, W())
+    ev("hbNw(20)"); chk('"Keng ▶" widens by 20 px and remembers it', abs(W() - 158) <= 1 and ev("uiG('trk_nw')") == '158' and ev("document.documentElement.style.getPropertyValue('--nw')") == '158px')
+    pg.click('#app >> text=◀ Tor'); pg.wait_for_timeout(60); chk('"◀ Tor" narrows it', abs(W() - 138) <= 1)
+    ev("hbNw(1000)"); chk('it never goes wider than 260', abs(W() - 260) <= 1); ev("hbNw(-1000)"); chk('...or narrower than 90', abs(W() - 90) <= 1)
+    ev("hbNwReset()"); chk('reset returns to the default (138) and clears the saved value', abs(W() - 138) <= 1 and ev("uiG('trk_nw')") in ('', None))
+    b = ev("(()=>{const r=document.querySelector('#app .mn').getBoundingClientRect();return [r.right,r.top+r.height/2]})()")
+    pg.mouse.move(b[0] - 3, b[1]); pg.mouse.down(); pg.mouse.move(b[0] + 37, b[1], steps=5); pg.mouse.up(); pg.wait_for_timeout(60)
+    chk('dragging the right edge of the name column 40 px to the right widens it by about 40 px and saves it', abs(W() - 178) <= 3 and ev("+uiG('trk_nw')") >= 175, W())
+    w0 = W(); pg.mouse.move(b[0] + 37, b[1]); pg.mouse.down(); pg.mouse.up(); chk('a plain click on that edge does not change the width', W() == w0)
+    ev("hbNwReset()")
+    pg.click('#app >> text=Ixcham'); pg.wait_for_timeout(60)
+    chk('"Ixcham" hides the second line of every habit and the button now says "Batafsil"', ev("document.documentElement.classList.contains('hbc')") and ev("getComputedStyle(document.querySelector('#app .mn .mr .mu')).display") == 'none' and 'Batafsil' in pg.inner_text('#app') and ev("uiG('trk_hbc')") == '1')
+    pg.click('#app >> text=Batafsil'); pg.wait_for_timeout(60); chk('"Batafsil" brings it back', not ev("document.documentElement.classList.contains('hbc')") and ev("getComputedStyle(document.querySelector('#app .mn .mr .mu')).display") != 'none')
+    ev("(()=>{const a=Math.round(document.getElementById('app').getBoundingClientRect().width);window.__w0=a})()"); pg.click('#app >> text=Keng ekran'); pg.wait_for_timeout(100)
+    chk('"↔ Keng ekran" lets the page and the bottom bar grow to 900 px (wide windows)', ev("document.documentElement.classList.contains('wide')") and ev("getComputedStyle(document.getElementById('app')).maxWidth") == '900px' and ev("getComputedStyle(document.querySelector('nav div')).maxWidth") == '900px' and 'Tor ekran' in pg.inner_text('#app'))
+    ev("document.documentElement.classList.remove('wide','hbc');document.documentElement.style.removeProperty('--nw');uiS('trk_nw','200')"); ev("uiInit()"); chk('the saved choices are re-applied on start (wide, width 200)', ev("document.documentElement.classList.contains('wide')") and abs(W() - 200) <= 1 or ev("document.documentElement.style.getPropertyValue('--nw')") == '200px')
+    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');uiInit()}")
+    # ---------- Bugun: dam kuni ----------
+    ev("()=>{tab='h';BV='m';WO=0;render()}"); pg.wait_for_timeout(100); t = pg.inner_text('#app')
+    chk('Bugun has the "🛌 Dam kuni belgilash" section with a chip per habit', 'Dam kuni belgilash' in t and ev("document.querySelectorAll('#app details.sd .rwch .chip').length") >= 2, t[:120])
+    pg.click('#app details.sd summary >> text=Dam kuni'); pg.click('#app details.sd .chip >> nth=0'); pg.wait_for_timeout(100)
+    chk('tapping a chip marks that habit as a rest day today (not done), the row says so, the summary counts it', ev("hkOn(dk(),'h1700000000000')") and not ev("!!(S.hb[dk()]||{})['h1700000000000']") and 'dam kuni' in pg.inner_text('#app').lower() and '(1)' in pg.inner_text('#app'))
+    pg.click('#app details.sd .chip >> nth=0'); pg.wait_for_timeout(60); chk('tapping it again clears the rest day', not ev("hkOn(dk(),'h1700000000000')") and not ev("S.hk&&S.hk[dk()]"))
+    ev("()=>{hbT('h1700000000001',dk());hbS('h1700000000001',dk())}"); chk('a habit that was already done becomes a rest day (and not done)', ev("hkOn(dk(),'h1700000000001')") and not ev("!!(S.hb[dk()]||{})['h1700000000001']"))
+    ev("hbT('h1700000000001',dk())"); chk('ticking it as done afterwards removes the rest mark', not ev("hkOn(dk(),'h1700000000001')") and ev("!!S.hb[dk()]['h1700000000001']"))
+    # ---------- zaxira eslatmasi ----------
+    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');S.hb={};S.hk={};S.money=[];S.ie.words=[];tab='h';BV='m';render()}"); chk('with almost no data there is no backup reminder', ev("bkBar()") == '')
+    ev("()=>{for(let i=1;i<=3;i++){S.hb[dAgo(i)]={'h1700000000000':true}}render()}"); t = ev("bkBar()")
+    chk('after a few days of use and no backup: "Hali zaxira olinmagan" with save / later buttons, shown on Bugun', 'Hali zaxira olinmagan' in t and 'Faylga saqlash' in t and 'Keyinroq' in t and 'Zaxira nusxa' in pg.inner_text('#app'))
+    ev("uiS('trk_bk',dk())"); chk('a backup taken today hides it', ev("bkBar()") == '')
+    ev("uiS('trk_bk',dAgo(5))"); chk('5 days old: still hidden', ev("bkBar()") == '')
+    ev("uiS('trk_bk',dAgo(8))"); t = ev("bkBar()"); chk('8 days old: "8 kun oldin zaxira olgansan"', '8 kun oldin' in t and ev("bkAge()") == 8)
+    ev("render()"); pg.click('#app >> text=Keyinroq'); pg.wait_for_timeout(60); chk('"Keyinroq" hides it for 3 days', ev("bkBar()") == '' and ev("uiG('trk_bksn')") == ev("(()=>{const d=new Date(dk()+'T12:00');d.setDate(d.getDate()+3);return d.toLocaleDateString('sv')})()"))
+    ev("uiS('trk_bksn',dAgo(1))"); chk('after the snooze date it returns', 'Zaxira nusxa' in ev("bkBar()"))
+    ev("()=>{window.__bk=0;window.bkDl=()=>{window.__bk++}}"); ev("render()"); pg.click('#app >> text=Faylga saqlash'); chk('"Faylga saqlash" starts the backup download', ev("__bk") == 1)
+    chk('an unreadable backup date is treated as "no backup"', (ev("(()=>{uiS('trk_bk','xyz');return bkAge()})()") is None))
+    # ---------- Ishga tayyormi? ----------
+    ev("""()=>{localStorage.clear();localStorage.setItem('trk_bg','o');S.hab=[{id:'h1',t:'Kitob'}];S.goals=[{t:'Maqsad',ms:[]}];S.ie.ex='2026-12-20';S.ie.target=7;S.q.ppd=3;S.rem=S.rem||{};S.rem.on=false;S.rem.tg=false;SYNC='ok';uiS('trk_bk',dk());window.__calls=[];window.fnPost=async b=>{window.__calls.push(b);if(window.__down)throw new Error('Tarmoq xatosi');return {owner:false,limit:40,used:7}};tab='s';render()}""")
+    pg.wait_for_timeout(100); t = pg.inner_text('#app'); chk('Sozlama has the "✅ Ishga tayyormi?" group', 'Ishga tayyormi?' in t)
+    ev("document.querySelectorAll('#app details').forEach(d=>{if(d.textContent.includes('Ishga tayyormi'))d.open=true})"); pg.click('#app >> text="Tekshirish"'); pg.wait_for_timeout(400)
+    R_ = ev("RDY.res"); names = [x['t'] for x in R_]
+    chk('the check runs one free limit request and lists server, sync, backup, reminders, installation, habits, goals, IELTS date, IELTS target and Hifz', ev("__calls") == [{'action': 'limit'}] and all(n in names for n in ['Server va AI ishlayapti', 'Sinxronlash', 'Zaxira nusxa', 'Eslatmalar', 'Ilova sifatida o‘rnatilgan', 'Odatlar', 'Maqsadlar', 'IELTS imtihon sanasi', 'IELTS maqsad bali', 'Hifz: kuniga bet']), names)
+    st = {x['t']: x['ok'] for x in R_}; chk('statuses reflect the data: server, sync, backup, habits, goals, IELTS and Hifz ok; reminders off → not ready', all(st[k] for k in ['Server va AI ishlayapti', 'Sinxronlash', 'Zaxira nusxa', 'Odatlar', 'Maqsadlar', 'IELTS imtihon sanasi', 'IELTS maqsad bali', 'Hifz: kuniga bet']) and st['Eslatmalar'] is False, st)
+    t = pg.inner_text('#app'); n = sum(st.values()); chk('the card shows "N / M tayyor" and a hint for each missing item', ('%d / %d' % (n, len(R_))) in t and 'Sozlama → Eslatmalar' in t and 'kuniga 40 ta (bugun 7 ta)' in t.replace('\n', ' '))
+    ev("()=>{S.rem.tg=true;S.hab=[];S.ie.ex='';S.ie.target=0;S.q.ppd=0;localStorage.removeItem('trk_bk');window.__down=1}"); pg.click('#app >> text="Qayta tekshirish"'); pg.wait_for_timeout(400); st = {x['t']: x for x in ev("RDY.res")}
+    chk('a down server shows a red item with the reason; with Telegram on, reminders are ready; missing habits, dates, target, Hifz and backup are flagged', st['Server javob bermayapti']['ok'] is False and 'Tarmoq xatosi' in st['Server javob bermayapti']['h'] and st['Eslatmalar']['ok'] is True and not st['Odatlar']['ok'] and not st['IELTS imtihon sanasi']['ok'] and not st['IELTS maqsad bali']['ok'] and not st['Hifz: kuniga bet']['ok'] and not st['Zaxira nusxa']['ok'])
+    ev("window.__down=0;RDY.run=1"); ev("rdRun()"); chk('pressing it while a check runs does nothing (no duplicate request)', ev("__calls.length") == 2); ev("RDY.run=0")

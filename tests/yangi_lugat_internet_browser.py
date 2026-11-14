@@ -1,0 +1,82 @@
+# Materiallar: hamma so'z ma'nosi, keshlangan izohlar, lug'atdagi so'zlar belgilanishi, internetdan olish, masofadagi audio. Soat: 2026-11-03 10:00.
+import sys, json
+sys.path.insert(0, '/mnt/user-data/outputs/tests')
+from _pw import Run
+T1 = ("Cities around the world are investing in public transport to reduce traffic congestion. Experts argue that electric buses and metro systems can substantially cut pollution. "
+      "However, critics point out that the cost is high and the benefits depend on how many people actually use them. In the long term, planners hope that cleaner and faster transport will change how people live and work.")
+LONG = ' '.join('Sentence %d about the sustainable development of modern cities and their transport systems is written here.' % i for i in range(70))
+with Run('lugat', when=(2026, 11, 3, 10, 0, 0)) as R:
+    ev, chk, pg = R.ev, R.chk, R.pg
+    ev("""(a)=>{window.confirm=()=>true;window.__t=[];window.toast=m=>window.__t.push(m);window.aiOk=()=>true;window.__req=[];
+      window.fnAI=async b=>{__req.push(b);if(b.action==='iex'&&b.kind==='gloss'){if(window.__failAt&&__req.filter(x=>x.kind==='gloss').length===window.__failAt)throw new Error('Tarmoq xatosi');return {text:JSON.stringify({words:Object.fromEntries(((b.text||'').toLowerCase().match(/[a-z']{4,}/g)||[]).slice(0,40).map(w=>[w,'uz-'+w]))})}}
+        if(b.action==='vocab'&&b.mode==='define')return {text:JSON.stringify({w:b.word,pos:'n',lv:'B2',def:'definition of '+b.word,uz:'ma‘no-'+b.word,ex:'Example '+b.word})};return {text:'{}'}};
+      S.ie.words=[];S.ie.mat=[{id:1,t:'Urban Transport',k:'a',x:a[0],c:[],au:0,d:dk(),an:null},{id:2,t:'Long text',k:'a',x:a[1],c:[],au:0,d:dk(),an:null}];S.ie.slow=0;tab='e';EV='i';IVW='a';render()}""", [T1, LONG])
+    ev("ieKey"); chk('keys are normalised: lower case, typographic apostrophes, single spaces', ev("[ieKey('  Public   TRANSPORT '),ieKey('Don‘t')]") == ['public transport', "don't"])
+    gv = lambda j: ev("(x)=>{try{return glValid(x)}catch(e){return {err:e.message}}}", j)
+    chk('the glossary answer is cleaned: bad keys (non-English, too long, symbols) and empty meanings are dropped; at most 320 entries', gv({'words': {'Cities': 'shaharlar', 'привет': 'x', 'a': 'b', 'long' * 12: 'x', 'ok': '', 'good-one': 'yaxshi', '12': 'x'}}) == {'cities': 'shaharlar', 'good-one': 'yaxshi'} or gv({'words': {'Cities': 'shaharlar', 'transport': 'transport', 'cut': 'kesmoq', 'привет': 'x'}}) == {'cities': 'shaharlar', 'transport': 'transport', 'cut': 'kesmoq'})
+    chk('an unusable glossary answer (not an object, or fewer than 3 usable words) is rejected', 'tushunarsiz' in gv({'words': [1, 2]}).get('err', '') and 'to‘liq chiqarmadi' in gv({'words': {'cities': 'x'}}).get('err', ''))
+    ev("()=>{ieMatOpen(2)}"); pg.wait_for_timeout(300); chk('the reader has a "📖 Hamma so‘z ma‘nosi" chip', '📖 Hamma so‘z ma‘nosi' in pg.inner_text('#iem'))
+    pg.click('#iem .chip >> text=📖 Hamma so‘z ma‘nosi'); pg.wait_for_timeout(600); gl = [r for r in ev("__req") if r.get('kind') == 'gloss']
+    chk('it asks for the glossary part by part (a long text = 3 requests, each part at most 3600 characters)', len(gl) == 3 and all(len(r['text']) <= 3600 for r in gl), [len(r['text']) for r in gl])
+    chk('every part\u2019s words are stored in the material, flags show all parts done, the chip says "✓ Ma‘nolar tayyor"', ev("Object.keys(S.ie.mat[1].gl).length") > 5 and ev("S.ie.mat[1].glp") == [1, 1, 1] and '✓ Ma‘nolar tayyor' in pg.inner_text('#iem'))
+    ev("__req=[]"); ev("glRun()"); pg.wait_for_timeout(200); chk('running it again asks nothing (all parts done)', len(ev("__req")) == 0)
+    ev("()=>{S.ie.mat[1].gl={};S.ie.mat[1].glp=[];window.__failAt=2;__req=[]}"); ev("glRun()"); pg.wait_for_timeout(600)
+    chk('if a part fails, the finished part is kept, the chip shows progress "(1/3)" and the error is shown', ev("S.ie.mat[1].glp") == [1] and 'Ma‘nolar (1/3)' in pg.inner_text('#iem') and any('Tarmoq xatosi' in x for x in ev("__t")))
+    ev("()=>{window.__failAt=0;__req=[]}"); ev("glRun()"); pg.wait_for_timeout(600); chk('retrying fetches only the missing parts (2 requests)', len([r for r in ev("__req") if r.get('kind') == 'gloss']) == 2 and ev("S.ie.mat[1].glp") == [1, 1, 1])
+    ev("window.aiOk=()=>false;GLB.busy=0"); ev("__t=[]"); ev("S.ie.mat[1].glp=[];glRun()"); chk('not signed in: a clear message, no request', any('hisobga kirish' in x for x in ev("__t"))); ev("window.aiOk=()=>true")
+    ev("ieMatClose()")
+    # ---------- bosilganda darrov ma'no ----------
+    ev("()=>{S.ie.mat[0].gl={};S.ie.mat[0].glp=[];__req=[];IMT=1}"); ev("ieMatOpen(1)"); pg.wait_for_timeout(300); pg.click('#iem .chip >> text=📖 Hamma so‘z ma‘nosi'); pg.wait_for_timeout(500); ev("__req=[]")
+    tap = lambda w: ev("(w)=>{const e=[...document.querySelectorAll('#iem .iew')].find(x=>x.textContent===w);e.click()}", w)
+    tap('argue'); pg.wait_for_timeout(200); sh = pg.inner_text('#iesh')
+    chk('tapping a word the AI did not mark shows its meaning INSTANTLY from the glossary: no AI request', 'uz-argue' in sh and len(ev("__req")) == 0, sh[:120])
+    chk('the button now says "To‘liq izoh (AI)" (a deeper explanation on demand)', 'To‘liq izoh (AI)' in sh)
+    pg.click('#iesh button >> text=To‘liq izoh (AI)'); pg.wait_for_timeout(300); vq = [r for r in ev("__req") if r.get('action') == 'vocab']
+    chk('asking for the full explanation sends ONE request and shows the definition, the Uzbek meaning and an example', len(vq) == 1 and vq[0]['word'] == 'argue' and 'definition of argue' in pg.inner_text('#iesh') and 'ma‘no-argue' in pg.inner_text('#iesh'))
+    ev("ieSheetClose()"); ev("__req=[]"); tap('argue'); pg.wait_for_timeout(200)
+    chk('tapping the same word again shows the full explanation at once: the answer was cached (0 requests)', len(ev("__req")) == 0 and 'definition of argue' in pg.inner_text('#iesh') and ev("S.ie.mat[0].gl.argue.full.def") == 'definition of argue')
+    ev("ieSheetClose()")
+    ev("()=>{delete S.ie.mat[0].gl.cost;__req=[]}"); tap('cost'); pg.wait_for_timeout(200); chk('a word with no glossary entry offers the usual AI button', 'AI dan ma’nosini so‘rash' in pg.inner_text('#iesh') and len(ev("__req")) == 0)
+    pg.click('#iesh button >> text=AI dan ma’nosini so‘rash'); pg.wait_for_timeout(300); ev("ieSheetClose()"); ev("__req=[]"); tap('cost'); pg.wait_for_timeout(200)
+    chk('...and after one lookup it is cached too', len(ev("__req")) == 0 and 'definition of cost' in pg.inner_text('#iesh')); ev("ieSheetClose()")
+    tap('Experts'); pg.wait_for_timeout(150); ev("ieQuickAdd()"); w = ev("S.ie.words[S.ie.words.length-1]")
+    chk('"quick add" of a glossary word stores its Uzbek meaning too (not an empty card)', w['w'] == 'Experts' and w['u'] == 'uz-experts' and w['m'] == 'uz-experts', w)
+    ev("()=>{S.ie.mat[0].gl.public={u:'uz-public'};S.ie.mat[0].gl.transport={u:'uz-transport'};delete S.ie.mat[0].gl['public transport'];__req=[];ISEL={t:'public transport',n:2,ctx:'investing in public transport to reduce',pos:0}}"); ev("ieSelGo()"); pg.wait_for_timeout(300)
+    sh = pg.inner_text('#iesh'); chk('selecting 2-3 words shows each word\u2019s meaning and the phrase meaning (one request)', 'public = uz-public' in sh and 'transport = uz-transport' in sh and 'definition of public transport' in sh and len([r for r in ev("__req") if r.get('action') == 'vocab']) == 1, sh[:200])
+    ev("ieSheetClose()"); ev("__req=[]"); ev("()=>{ISEL={t:'public transport',n:2,ctx:'x',pos:0}}"); ev("ieSelGo()"); pg.wait_for_timeout(200); chk('selecting the same phrase again is instant (cached, 0 requests)', len(ev("__req")) == 0 and 'definition of public transport' in pg.inner_text('#iesh'))
+    ev("ieSheetClose();ieMatClose()")
+    # ---------- lug'atdagi so'zlar matnda belgilanadi ----------
+    ev("""()=>{S.ie.words=[{id:1,w:'public transport',m:'ommaviy transport',u:'ommaviy transport',d:'buses and trains',e:'',c:'',lv:'B1',pos:'',k:'c',box:0,due:dk(),t:0},{id:2,w:'congestion',m:'tirbandlik',u:'tirbandlik',d:'too much traffic',e:'',c:'',lv:'B2',pos:'n',k:'w',box:0,due:dk(),t:0},{id:3,w:'transport',m:'transport',u:'transport',k:'w',lv:'B1',box:0,due:dk(),t:0},{id:4,w:'port',m:'port',u:'port',k:'w',lv:'B1',box:0,due:dk(),t:0},{id:5,w:'Past perfect',k:'g',gn:'x',m:'x',u:'x',box:0,due:dk(),t:0}];S.ie.mat[0].an=null}""")
+    ev("ieMatOpen(1)"); pg.wait_for_timeout(300); mk = ev("[...document.querySelectorAll('#iem mark.mv')].map(m=>m.textContent.toLowerCase())")
+    chk('words and phrases you already saved are highlighted in the article even without any AI analysis (green: "in your vocabulary")', 'public transport' in mk and 'congestion' in mk and all(ev("[...document.querySelectorAll('#iem mark.mv')].every(m=>m.classList.contains('hv'))") for _ in [0]), mk)
+    chk('overlaps are resolved (the phrase wins over its own word), and a saved word is never marked inside another word ("port" in "transport")', mk.count('transport') == 1 and 'port' not in mk and mk.count('public transport') == 1, mk)
+    ev("(()=>{[...document.querySelectorAll('#iem mark.mv')].find(m=>m.textContent.toLowerCase()==='congestion').click()})()"); pg.wait_for_timeout(200); sh = pg.inner_text('#iesh')
+    chk('tapping such a highlight opens its card straight from your vocabulary (meaning, definition), without AI', 'tirbandlik' in sh and 'too much traffic' in sh and len(ev("__req")) == 0, sh[:160])
+    ev("ieSheetClose()")
+    ev("()=>{S.ie.words=S.ie.words.filter(w=>w.id!==2);ieMatDraw()}"); chk('removing a word from the vocabulary removes its highlight', 'congestion' not in ev("[...document.querySelectorAll('#iem mark.mv')].map(m=>m.textContent.toLowerCase())")); ev("ieMatClose()")
+    # ---------- internetdan olish ----------
+    ev("()=>{NF={open:0,busy:0,err:'',list:null,title:'',url:'',add:0};S.ie.mat=[];window.__fp=[];window.fnPost=async(b,ms)=>{__fp.push([b,ms]);if(b.action==='feed')return {title:'6 Minute English',items:[{t:'Why we sleep',d:'Thu, 30 Oct 2026',desc:'Learn about sleep and dreams.',link:'https://www.bbc.co.uk/ep1',au:'https://cdn.example.org/a1.mp3',dur:'00:06:12'},{t:'City life',d:'',desc:'',link:'https://news.example.org/city',au:'',dur:''}]};if(b.action==='article'){if(window.__short)return {title:'Qisqa',text:'short'};return {title:'City life',text:'City life is changing fast. '.repeat(30)}}if(b.action==='transcript')return window.__tr;return {}};tab='e';EV='i';IVW='a';render()}")
+    t = pg.inner_text('#app'); chk('Materiallar has a collapsed "🌐 Internetdan olish" card (no source buttons yet)', 'Internetdan olish' in t and ev("!document.getElementById('fdu')") and ev("![...document.querySelectorAll('#app .chip')].some(c=>c.textContent.includes('BBC 6 Minute English'))"))
+    ev("nfToggle()"); pg.wait_for_timeout(100); t = pg.inner_text('#app')
+    chk('opened: the BBC 6 Minute English source, a field for any other RSS link and the note about Cambridge and legal sources', 'BBC 6 Minute English' in t and ev("!!document.getElementById('fdu')") and 'Cambridge' in t)
+    ev("document.querySelectorAll('#app details').forEach(d=>{if(d.textContent.includes('Cambridge'))d.open=true})"); pg.wait_for_timeout(60); t = pg.inner_text('#app'); ln = ev("[...document.querySelectorAll('#app details a')].map(a=>[a.textContent.replace(' ↗',''),a.getAttribute('target'),a.getAttribute('rel')])")
+    chk('the Cambridge note explains why it is not downloaded and links to 4 open sources (new tab, noopener); nothing copyrighted is fetched', 'mualliflik huquqi' in t and len(ln) == 4 and all(l[1] == '_blank' and l[2] == 'noopener' for l in ln) and any('British Council' in l[0] for l in ln), ln)
+    ev("nfLoad('ftp://x')"); pg.wait_for_timeout(60); chk('a malformed link is refused locally', 'To‘liq havola' in pg.inner_text('#app') and len(ev("__fp")) == 0)
+    ev("window.aiOk=()=>false"); ev("nfLoad('https://feeds.example.org/rss')"); chk('not signed in: a clear message', 'hisobga kirish' in pg.inner_text('#app')); ev("window.aiOk=()=>true")
+    pg.click('#app .chip >> text=BBC 6 Minute English'); pg.wait_for_timeout(300); fp = ev("__fp")
+    chk('choosing BBC loads its list: one server request (action feed, the official feed address)', len(fp) == 1 and fp[0][0]['action'] == 'feed' and fp[0][0]['url'] == 'https://podcasts.files.bbci.co.uk/p02pc9tn.rss')
+    t = pg.inner_text('#app'); chk('the list shows each item with title, date, duration and whether it has audio or is an article', 'Why we sleep' in t and '00:06:12' in t and '🎧 audio' in t and '📰 maqola' in t and 'Learn about sleep and dreams.' in t)
+    ev("nfAdd(0)"); m = ev("S.ie.mat[0]"); chk('adding a podcast creates a podcast material that plays from its web address (no download to the phone), with the page link and the description', m['k'] == 'p' and m['au'] == 1 and m['ar'] == 'https://cdn.example.org/a1.mp3' and m['src'] == 'https://www.bbc.co.uk/ep1' and m['t'] == 'Why we sleep' and 'sleep and dreams' in m['x'] and m['c'] == [], m)
+    ev("__t=[]"); ev("nfAdd(0)"); chk('adding the same podcast twice is refused', len(ev("S.ie.mat")) == 1 and any('allaqachon' in x for x in ev("__t")))
+    pg.click('#app .row >> nth=1 >> button'); pg.wait_for_timeout(300); chk('adding an article item fetches its full text (action article) and creates an article material', ev("S.ie.mat[0].k") == 'a' and ev("S.ie.mat[0].src") == 'https://news.example.org/city' and len(ev("S.ie.mat[0].x")) > 200 and any(b[0]['action'] == 'article' for b in ev("__fp")))
+    ev("()=>{S.ie.mat=S.ie.mat.filter(m=>m.k==='p');window.__short=1}"); ev("nfAdd(1)"); pg.wait_for_timeout(300); chk('an article whose text could not be read is not added and the user is told', len(ev("S.ie.mat")) == 1 and 'olinmadi' in pg.inner_text('#app')); ev("window.__short=0")
+    # ---------- masofadagi audio ----------
+    ev("()=>{NF.err='';S.ie.mat=[];nfAdd(0)}"); mid = ev("S.ie.mat[0].id"); ev("(id)=>ieMatOpen(id)", mid); pg.wait_for_timeout(400)
+    chk('opening it uses the web address as the audio source (a player appears with that address)', ev("IMAU") == 'https://cdn.example.org/a1.mp3' and ev("(document.getElementById('ieau')||{}).src") == 'https://cdn.example.org/a1.mp3')
+    ev("()=>{window.__tr={cues:[{s:0,e:3,t:'Hello and welcome.',w:[['Hello',0,.8],['and',.9,1.1],['welcome',1.2,2]]},{s:3,e:6,t:'Today we talk about sleep.',w:[]}],dur:6};__fp=[]}"); ev("(id)=>ieTranscribe(id)", mid); pg.wait_for_timeout(500); fp = ev("__fp")
+    chk('"Transkript" for a web podcast: the SERVER downloads the audio (one request with the address, long timeout), no file leaves the phone', len(fp) == 1 and fp[0][0] == {'action': 'transcript', 'url': 'https://cdn.example.org/a1.mp3'} and fp[0][1] >= 120000, fp)
+    c = ev("S.ie.mat[0].c"); chk('the timed sentences become the material (subtitle lines with word times), marked as a transcript', len(c) == 2 and c[0][2] == 'Hello and welcome.' and c[0][0] == 0 and c[0][1] == 3 and ev("S.ie.mat[0].tr") == 1, c)
+    ev("()=>{window.__tr=undefined;S.ie.mat[0].c=[];S.ie.mat[0].tr=0;ITR=null}"); ev("(id)=>ieTranscribe(id)", mid); pg.wait_for_timeout(400); chk('a failed transcription shows the problem and keeps the material', ev("S.ie.mat.length") == 1 and ev("ITR&&ITR.err") != '')
+    ev("()=>{ITR=null;window.ieAudGet=async()=>new Blob([new Uint8Array(3000)],{type:'audio/mpeg'});window.__up=[];window.fnUpload=async(f,b,n)=>{__up.push([f,b.size,n]);return {cues:[{s:0,e:2,t:'Local audio.',w:[]}],dur:2}};__fp=[]}"); ev("(id)=>ieTranscribe(id)", mid); pg.wait_for_timeout(400)
+    chk('a podcast whose audio is stored on the device still uploads the file as before (no change for existing podcasts)', len(ev("__up")) == 1 and ev("__up[0][0]") == {'action': 'transcript'} and len(ev("__fp")) == 0 and ev("S.ie.mat[0].c[0][2]") == 'Local audio.')
+    ev("ieMatClose()")

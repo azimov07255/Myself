@@ -1,0 +1,56 @@
+# Tezkor yozuv (inbox) va ro'za kuzatuvi. Soat: 2026-11-06 (juma) 10:00.
+import sys
+sys.path.insert(0, '/mnt/user-data/outputs/tests')
+from _pw import Run
+with Run('inbox', when=(2026, 11, 6, 10, 0, 0)) as R:
+    ev, chk, pg = R.ev, R.chk, R.pg
+    ev("""()=>{window.__t=[];window.toast=m=>window.__t.push(m);S.ib=undefined;S.rz=undefined;S.top={};tab='m';MQV='k';render()}""")
+    pg.wait_for_timeout(100); t = pg.inner_text('#app')
+    chk('the Kun section has a "📥 Tezkor yozuvlar" card with an input and an empty-state message', '📥 Tezkor yozuvlar' in t and 'Hammasi saralangan' in t and ev("!!document.getElementById('ibi')"))
+    ev("ibAdd('   ')"); chk('an empty note is refused with a message', ev("ibL().length") == 0 and any('matn yozing' in m for m in ev("__t")))
+    pg.fill('#ibi', '  Dars uchun  kitob   olish  '); pg.press('#ibi', 'Enter'); pg.wait_for_timeout(100)
+    chk('Enter saves the note (spaces tidied, dated today), the field clears and the counter shows 1', ev("ibL()[0].t") == 'Dars uchun kitob olish' and ev("ibL()[0].d") == '2026-11-06' and ev("document.getElementById('ibi').value") == '' and '1 ta' in pg.inner_text('#app .goal[aria-label=\"Tezkor yozuvlar\"]'))
+    ev("ibAdd('x'.repeat(500))"); chk('a note is cut to 300 characters; the newest is first', len(ev("ibL()[0].t")) == 300)
+    ev("ibAdd('Ikkinchi fikr')"); chk('newest first order', ev("ibL().map(x=>x.t.slice(0,6))")[0] == 'Ikkinc')
+    id0 = ev("ibL().find(x=>x.t.startsWith('Dars')).id")
+    ev("(id)=>ibTop(id)", id0); chk('"🎯 Bugungi ish" moves the note into today\u2019s top-3 and removes it from the inbox', ev("S.top['2026-11-06'].map(x=>x.t)") == ['Dars uchun kitob olish'] and not any(x['t'].startswith('Dars') for x in ev("ibL()")))
+    ev("()=>{ibAdd('a');ibAdd('b');}"); ids = ev("ibL().slice(0,2).map(x=>x.id)")
+    ev("(ids)=>{S.top['2026-11-06']=[{t:'1',x:0},{t:'2',x:0},{t:'3',x:0}];__t=[];ibTop(ids[0])}", ids); chk('when today\u2019s three main tasks are full the note stays and a message explains', ev("ibL().some(x=>x.id===%d)" % ids[0]) and any('3 ta asosiy ish to‘lgan' in m for m in ev("__t")))
+    ev("(i)=>ibDone(i)", ids[1]); chk('"✓ Tayyor" marks it done (moves under the "Tayyor" list) and again restores it', ev("ibL().find(x=>x.id===%d).x" % ids[1]) == 1 and ev("ibN()") == ev("ibL().filter(x=>!x.x).length")); ev("(i)=>ibDone(i)", ids[1]); chk('...toggle', ev("ibL().find(x=>x.id===%d).x" % ids[1]) == 0)
+    ev("(i)=>ibDel(i)", ids[1]); chk('"🗑" deletes', not ev("ibL().some(x=>x.id===%d)" % ids[1]))
+    ev("()=>{S.ib=[{id:1,t:'eski tayyor',d:'2026-10-01',x:1},{id:2,t:'yangi tayyor',d:'2026-11-05',x:1},{id:3,t:'eski ochiq',d:'2026-10-01',x:0}];ibAdd('yangi')}"); chk('done notes older than 14 days are dropped; open notes are never dropped, however old', sorted(x['t'] for x in ev("ibL()")) == ['eski ochiq', 'yangi', 'yangi tayyor'])
+    ev("()=>{S.ib=Array.from({length:210},(_,i)=>({id:i+1,t:'n'+i,d:'2026-11-06',x:0}));ibAdd('eng yangi')}"); chk('at most 200 notes', len(ev("ibL()")) == 200 and ev("ibL()[0].t") == 'eng yangi')
+    ev("()=>{S.ib=[{id:1,t:'<img src=x onerror=alert(1)>',d:'2026-11-06',x:0}];render()}"); pg.wait_for_timeout(80); chk('note text is shown as plain text', ev("document.querySelectorAll('#app img[src=x]').length") == 0)
+    # sheet va Bugun
+    ev("()=>{S.ib=[];tab='h';BV='j';render();nwOpen()}"); pg.wait_for_timeout(100); chk('the 🎯 sheet has a quick-capture box at the top', ev("!!document.querySelector('#nwo #nwi')"))
+    pg.fill('#nwi', 'Telefon xarid qilish'); pg.press('#nwi', 'Enter'); pg.wait_for_timeout(120)
+    chk('writing there saves it, clears the box and shows how many are waiting', ev("ibL()[0].t") == 'Telefon xarid qilish' and ev("document.getElementById('nwi').value") == '' and '1 ta saralanmagan' in pg.inner_text('#nwo')); ev("nwClose()")
+    pg.wait_for_timeout(60); ev("()=>{render()}"); pg.wait_for_timeout(80); chk('Bugun shows a "📥 1 ta saralanmagan yozuv" row only while something is unsorted, and it opens the inbox', '1 ta saralanmagan yozuv' in pg.inner_text('#app'))
+    ev("()=>{[...document.querySelectorAll('#app button.row')].find(b=>b.textContent.includes('saralanmagan')).click()}"); pg.wait_for_timeout(120); chk('tapping it opens Maqsad → Kun', ev("tab") == 'm' and ev("MQV") == 'k')
+    ev("()=>{S.ib=[];tab='h';BV='j';render()}"); pg.wait_for_timeout(80); chk('with nothing unsorted the Bugun row is gone', 'saralanmagan yozuv' not in pg.inner_text('#app'))
+    # ---------- ro'za ----------
+    ev("()=>{window.__nsH=nsHijri;window.nsHijri=d=>{const x=new Date(d),k=x.toLocaleDateString('sv');if(k==='2026-11-13')return {d:13,m:5,y:1448};if(k==='2026-11-14')return {d:14,m:5,y:1448};if(k==='2026-11-20'||k==='2026-11-03')return {d:1,m:10,y:1448};if(k==='2026-11-04')return {d:11,m:12,y:1448};if(k==='2026-11-22')return {d:11,m:12,y:1448};if(k==='2026-11-25')return {d:9,m:9,y:1448};return {d:5,m:5,y:1448}};ROM=0;tab='m';MQV='k';render()}"); pg.wait_for_timeout(100); t = pg.inner_text('#app')
+    chk('the Kun section also has "🌙 Ro‘za kuzatuvi": qazo counter and a month calendar (November 2026 starts on Sunday: 6 blank cells before day 1; 30 days)', '🌙 Ro‘za kuzatuvi' in t and 'Qazo ro‘zalar' in t and 'Noyabr 2026' in t and ev("document.querySelectorAll('#app .rog button.roc').length") == 30 and ev("document.querySelectorAll('#app .rog i.roc').length") == 6)
+    K = lambda k: ev("(k)=>roKind(k)", k)
+    chk('markers: Monday/Thursday recommended; the 13th–14th (Hijri) white days; Eid 1 Shawwal and Tashriq (11 Dhul Hijjah) locked; Ramadan day flagged; Friday plain', K('2026-11-09')['rec'] and K('2026-11-12')['rec'] and K('2026-11-13')['white'] and K('2026-11-14')['white'] and K('2026-11-20')['no'] and K('2026-11-22')['no'] and K('2026-11-25')['ram'] and not K('2026-11-25')['white'] and not K('2026-11-06')['rec'] and not K('2026-11-06')['white'])
+    ev("roTog('2026-11-02')"); ev("roTog('2026-11-05')"); chk('tapping a past day marks it as fasted (saved by date); tapping again removes it', ev("S.rz.f") == {'2026-11-02': 1, '2026-11-05': 1}); ev("roTog('2026-11-05')"); chk('...toggle off', ev("S.rz.f") == {'2026-11-02': 1})
+    ev("__t=[]"); ev("roTog('2026-11-07')"); chk('a FUTURE day cannot be marked', '2026-11-07' not in ev("S.rz.f") and any('Kelajak' in m for m in ev("__t")))
+    ev("__t=[]"); ev("roTog('2026-11-03')"); ev("roTog('2026-11-04')"); chk('days when fasting is not allowed (Eid, Tashriq) cannot be marked and say so', '2026-11-03' not in ev("S.rz.f") and '2026-11-04' not in ev("S.rz.f") and any('ro‘za tutilmaydi' in m for m in ev("__t")))
+    ev("()=>{window.nsHijri=window.__nsH;tab='m';MQV='k';render()}")
+    ev("()=>{S.rz.f={};for(const k of ['2026-11-02','2026-11-05','2026-11-06','2026-10-01','2026-09-01'])S.rz.f[k]=1}"); St = ev("roStats()"); chk('the summary counts this month (3), the last 8 weeks (4: from 2026-09-11) and whether today is marked', St == {'m': 3, 'w8': 4, 'today': True} or (St['m'] == 3 and St['today']), St)
+    ev("roSetQ(12)"); chk('qazo: the owed number can be set (0–999, whole numbers)', ev("S.rz.q.n") == 12); ev("roSetQ(-5)"); chk('...never negative', ev("S.rz.q.n") == 0); ev("roSetQ(5000)"); chk('...and capped at 999', ev("S.rz.q.n") == 999); ev("roSetQ('abc')"); chk('...text becomes 0', ev("S.rz.q.n") == 0)
+    ev("roSetQ(3)"); ev("roQ()"); chk('"✓ Bugun qazo tutdim" lowers the owed number and logs today', ev("S.rz.q.n") == 2 and ev("S.rz.q.log") == ['2026-11-06'])
+    ev("__t=[]"); ev("roQ()"); chk('only one qazo per day', ev("S.rz.q.n") == 2 and any('Bugun qazo' in m for m in ev("__t")))
+    ev("roQUndo()"); chk('"↩︎" undoes it', ev("S.rz.q.n") == 3 and ev("S.rz.q.log") == [])
+    ev("roSetQ(0)"); ev("__t=[]"); ev("roQ()"); chk('with nothing owed there is a kind message and no negative number', ev("S.rz.q.n") == 0 and any('alhamdulillah' in m for m in ev("__t")))
+    ev("roNav(1)"); pg.wait_for_timeout(60); chk('the calendar moves to the next month (Dekabr 2026, 31 days)', 'Dekabr 2026' in pg.inner_text('#app') and ev("document.querySelectorAll('#app .rog button.roc').length") == 31); ev("roNav(-2)"); chk('...and back (Oktabr 2026)', 'Oktabr 2026' in pg.inner_text('#app')); ev("ROM=0")
+    ev("()=>{window.nsHijri=()=>null;render()}"); pg.wait_for_timeout(60); chk('without Hijri support the calendar still works (only Mon/Thu markers)', ev("document.querySelectorAll('#app .rog button.roc').length") == 30); ev("()=>{window.nsHijri=window.__nsH}")
+    bad = []
+    ev("()=>{S.ib=Array.from({length:6},(_,i)=>({id:i+1,t:'Uzun yozuv matni '.repeat(6),d:'2026-11-06',x:0}));S.rz={q:{n:12,log:[]},f:{'2026-11-02':1,'2026-11-05':1}};ROM=0}")
+    for ui in ('1', '2', '3'):
+        for th in ('light', 'dark'):
+            ev("(a)=>{uiS('trk_ui',a[0]);dzApply();document.documentElement.dataset.theme=a[1];tab='m';MQV='k';render()}", [ui, th]); pg.wait_for_timeout(80)
+            ok = ev("document.documentElement.scrollWidth<=window.innerWidth+1"); ev("()=>{nwOpen()}"); ok2 = ev("document.querySelector('#nwo .nws').scrollWidth<=document.querySelector('#nwo .nws').clientWidth+1"); ev("nwClose()")
+            if not (ok and ok2): bad.append(ui + th)
+    chk('the inbox, the fasting calendar and the quick-capture sheet fit the phone in Klassik, Yangi and Liquid Glass, light and dark', not bad, bad)
+    ev("()=>{uiS('trk_ui','1');dzApply();document.documentElement.dataset.theme='light'}")

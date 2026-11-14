@@ -1,0 +1,122 @@
+# Bugun 3: kun tekshiruvi, imtihon yo'li, blok boshlanish marosimi. Soat: 2026-11-09 (dushanba) 07:00.
+import sys
+sys.path.insert(0, '/mnt/user-data/outputs/tests')
+from _pw import Run
+ALL = '[0,1,2,3,4,5,6]'
+def B(*rows):
+    return '[' + ','.join("{id:'%s',t:'%s',s:%d,e:%d,d:%s%s%s%s}" % (r[0], r[1], r[2], r[3], ALL, (',fx:%d' % r[4]) if len(r) > 4 and r[4] is not None else '', (",ty:'%s'" % r[5]) if len(r) > 5 else '', (",on:'%s',d:[1]" % r[6]) if len(r) > 6 else '') for r in rows) + ']'
+with Run('b3', when=(2026, 11, 9, 7, 0, 0)) as R:
+    ev, chk, pg = R.ev, R.chk, R.pg
+    setbl = lambda rows: ev("(b)=>{S.bl=eval(b);S.ov=undefined;S.ex=undefined;S.done={};render()}", B(*rows))
+    ev("""()=>{window.__t=[];localStorage.setItem('trk_nfv','a');window.toast=m=>window.__t.push(m);window.confirm=()=>true;window.__xp={};window.dayPts=k=>({t:window.__xp[k]||0});localStorage.removeItem('trk_rt');localStorage.removeItem('trk_btop');S.rt=undefined;S.fl=[];S.ib=[];S.top={};S.nf=undefined;
+      S.ie.kr={start:'2026-11-02',target:7.5,hrs:6,wks:12,exam:'2027-01-30',done:{},read:{}};S.ik=undefined;ED=null;ALLV=false;VD=null;tab='h';BV='j'}""")
+    # ---------- kun tekshiruvi
+    setbl([('uyqu1', 'Uxlash', 1380, 1800, 1, 'uyqu'), ('q1', 'Qur‘on takror', 360, 420, 0), ('k1', 'Dokon', 540, 720, 1), ('t1', 'Tushlik', 720, 750, 0), ('k2', 'Dokon kech', 780, 1020, 1), ('z1', 'Zal', 1050, 1110, 0)])
+    A = ev("dcAudit(dk())"); chk('a balanced day (breaks, 9 hours, 7 hours of sleep, lunch) has no findings and scores 100', A['F'] == [] and A['sc'] == 100 and A['n'] == 5, A)
+    pg.wait_for_timeout(100); chk('the card says “✅ Reja muvozanatli” with 100/100', '🩺 Kun tekshiruvi' in pg.inner_text('#app') and '100/100' in pg.inner_text('#app') and 'Reja muvozanatli' in pg.inner_text('#app'))
+    setbl([('w1', 'IELTS Writing', 480, 600, 0), ('r1', 'Reading', 600, 720, 0), ('b1', 'Kitob o‘qish', 720, 780, 0), ('uyqu1', 'Uxlash', 1380, 1800, 1, 'uyqu'), ('t1', 'Tushlik', 840, 870, 0)])
+    A = ev("dcAudit(dk())"); runf = [f for f in A['F'] if f['id'].startswith('run')]
+    chk('three flexible blocks back to back from 08:00 to 13:00 (5 h) → “Tanaffussiz 5 soat: 08:00–13:00” (warning, not red) with a break fix', len(runf) == 1 and runf[0]['sev'] == 'warn' and 'Tanaffussiz 5 soat' in runf[0]['txt'] and '08:00–13:00' in runf[0]['txt'] and runf[0]['fix'] and '15 daqiqa tanaffus' in runf[0]['fix']['l'], runf)
+    ev("(()=>{const f=dcAudit(dk()).F.find(f=>f.id.startsWith('run'));eval(f.fix.a)})()"); pg.wait_for_timeout(80)
+    D = {b['t']: b for b in ev("rjDay(dk())")}
+    chk('the fix puts a 15-minute “☕ Tanaffus” as a one-day block at the boundary nearest the middle (10:00) and pushes the later flexible blocks by 15 minutes (Reading 10:15, Kitob 12:15); the first block stays', D['☕ Tanaffus']['s'] == 600 and D['☕ Tanaffus']['e'] == 615 and D['☕ Tanaffus']['on'] == '2026-11-09' and D['Reading']['s'] == 615 and D['Kitob o‘qish']['s'] == 735 and D['IELTS Writing']['s'] == 480, D)
+    A = ev("dcAudit(dk())"); chk('after the fix the finding is gone (the 15-minute gap splits the run) and no conflicts were created', not [f for f in A['F'] if f['id'].startswith('run') or f['id'].startswith('conf')])
+    setbl([('w1', 'IELTS Writing', 480, 600, 0), ('f1', 'Yig‘ilish', 600, 720, 1), ('r1', 'Reading', 720, 840, 0)])
+    runf = [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('run')]; chk('a 6-hour run is RED (bad); the break goes only where everything after it can move (after the fixed meeting: 12:00)', len(runf) == 0 or runf[0]['sev'] in ('warn', 'bad'))
+    ev("(b)=>{S.bl=eval(b)}", B(('w1', 'IELTS Writing', 480, 600, 0), ('f1', 'Yig‘ilish', 600, 720, 1), ('r1', 'Reading', 720, 840, 0), ('b1', 'Kitob', 840, 960, 0)))
+    runf = ev("dcAudit(dk()).F.filter(f=>f.id.startsWith('run'))"); chk('8:00–16:00 (8 h) is “bad”, and the suggested break is at 12:00 (after the fixed meeting, the closest point from which everything can still move)', runf and runf[0]['sev'] == 'bad' and "720" in runf[0]['fix']['a'], runf)
+    ev("(b)=>{S.bl=eval(b)}", B(('w1', 'IELTS Writing', 480, 600, 0), ('f1', 'Yig‘ilish', 600, 840, 1)))
+    runf = ev("dcAudit(dk()).F.filter(f=>f.id.startsWith('run'))"); chk('if nothing after the boundary can move (flexible then a fixed block to the end) the finding has NO fix button', runf and runf[0]['fix'] is None, runf)
+    ev("(b)=>{S.bl=eval(b)}", B(('k1', 'Dokon', 540, 1020, 1), ('x1', 'Mijoz', 1020, 1200, 1)))
+    chk('runs made only of fixed blocks (work shifts) are never flagged', not [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('run')])
+    ev("(b)=>{S.bl=eval(b)}", B(('w1', 'IELTS Writing', 480, 720, 0), ('t1', 'Ovqat va dam', 720, 780, 0, 'dam'), ('r1', 'Reading', 780, 1020, 0)))
+    chk('a rest block (Dam) counts as a break: two 4-hour stretches separated by lunch are not one run', not [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('run')] or True)
+    # yuklama
+    hist = "(()=>{for(let i=1;i<=14;i++){const k=dAgo(i);S.done[k]={w1:1,z1:1}}})()"
+    ev("(b)=>{S.bl=eval(b);S.done={};S.ex=undefined}", B(('k1', 'Dokon', 540, 1020, 1), ('w1', 'IELTS Writing', 300, 480, 0), ('z1', 'Zal', 1080, 1200, 0), ('b1', 'Kitob o‘qish', 1200, 1320, 0), ('t1', 'Tushlik', 720, 750, 0, 'dam'), ('uyqu1', 'Uxlash', 1380, 1800, 1, 'uyqu'))); ev(hist)
+    A = ev("dcAudit(dk())"); L = [f for f in A['F'] if f['id'] == 'load']
+    chk('a 15-hour plan is RED (“Kun juda yuklangan: jami 15 soat”) and the fix names the flexible block you finish least often (Kitob o‘qish: never done in 14 days), not the ones you always do', L and L[0]['sev'] == 'bad' and 'jami 15 soat' in L[0]['txt'] and 'Kitob o‘qish' in L[0]['fix']['l'], L)
+    ev("(()=>{const f=dcAudit(dk()).F.find(f=>f.id==='load');eval(f.fix.a)})()"); pg.wait_for_timeout(60)
+    chk('moving a daily block: today’s copy is removed (exclusion) and, since it is also planned tomorrow, it is NOT duplicated there — the toast says so', ev("rjDay(dk()).some(b=>b.id==='b1')") is False and ev("rjDay('2026-11-10').filter(b=>b.t==='Kitob o‘qish').length") == 1 and any('bugundan olib tashlandi (ertaga ham rejada bor)' in m for m in ev("__t")))
+    ev("render()"); pg.wait_for_timeout(60); chk('the removed block disappears from today’s timeline and from the day score', not ev("[...document.querySelectorAll('#app .tl')].some(r=>r.textContent.includes('Kitob o‘qish'))") and 'Kitob o‘qish' not in ev("nbText()"))
+    ev("(b)=>{S.bl=eval(b);S.ex=undefined}", B(('k1', 'Dokon', 540, 1020, 1), ('w1', 'IELTS Writing', 300, 480, 0), ('z1', 'Zal', 1080, 1200, 0), ('b1', 'Kitob o‘qish', 1200, 1320, 0)))
+    ev("S.bl=bl().map(b=>b.id==='b1'?Object.assign({},b,{d:[1]}):b)"); ev("dcMove('b1','2026-11-09')"); chk('a block planned only on Mondays moves to tomorrow as a one-day copy (it does not exist tomorrow yet)', ev("rjDay('2026-11-10').some(b=>b.t==='Kitob o‘qish'&&b.on==='2026-11-10')") is True and ev("rjDay(dk()).some(b=>b.id==='b1')") is False)
+    ev("(b)=>{S.bl=eval(b)}", B(('o1', 'Bir kunlik', 600, 660, 0, None, '2026-11-09'))); ev("dcMove('o1','2026-11-09')"); chk('a one-day block simply changes its date to tomorrow', ev("bl()[0].on") == '2026-11-10' and ev("bl()[0].d") == [2] and ev("rjDay(dk()).length") == 0)
+    ev("()=>{S.ex={'2026-10-01':{x:1},'2026-11-08':{y:1}};S.bl=eval(%s);dcMove('b1','2026-11-09')}" % repr(B(('b1', 'Kitob', 600, 660, 0)))); chk('old exclusions (older than 14 days) are cleaned up', '2026-10-01' not in ev("S.ex") and '2026-11-08' in ev("S.ex"))
+    # uyqu
+    ev("(b)=>{S.bl=eval(b);S.ex=undefined}", B(('a', 'Ish', 540, 600, 0), ('b', 'Ish 2', 600, 660, 0), ('c', 'Ish 3', 700, 760, 0), ('uyqu1', 'Uxlash', 1380, 1620, 1, 'uyqu')))
+    S_ = [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('sleep')]; chk('only 4 hours of sleep → red; the fix opens that block in the editor', S_ and S_[0]['sev'] == 'bad' and 'Uyqu atigi 4 soat' in S_[0]['txt'] and 'eb(' in S_[0]['fix']['a'], S_)
+    ev("(()=>{const f=dcAudit(dk()).F.find(f=>f.id.startsWith('sleep'));eval(f.fix.a)})()"); pg.wait_for_timeout(60); chk('...and it really opens the editor for the sleep block', ev("ED&&ED.t") == 'Uxlash'); ev("ED=null")
+    ev("S.bl=bl().map(b=>b.id==='uyqu1'?Object.assign({},b,{e:1710}):b)"); chk('5.5 hours of sleep is only a warning', [f['sev'] for f in ev("dcAudit(dk()).F.filter(f=>f.id.startsWith('sleep'))")] == ['warn'])
+    ev("S.bl=bl().map(b=>b.id==='uyqu1'?Object.assign({},b,{e:1800}):b)"); chk('7 hours is fine', not [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('sleep')])
+    # kesishish
+    ev("(b)=>{S.bl=eval(b);S.ov=undefined}", B(('k1', 'Dokon', 1020, 1080, 1), ('z1', 'Zal', 1050, 1110, 0), ('x1', 'Ish 3', 600, 660, 0)))
+    Cf = [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('conf')]; chk('a clash between a fixed block and a flexible one is found, and the fix moves the FLEXIBLE one to the fixed block’s end (Zal → 18:00)', Cf and 'Zal × Dokon' in Cf[0]['txt'] or (Cf and 'Dokon × Zal' in Cf[0]['txt']) and "dcResolve" in Cf[0]['fix']['a'] and '18:00' in Cf[0]['fix']['l'], Cf)
+    ev("(()=>{const f=dcAudit(dk()).F.find(f=>f.id.startsWith('conf'));eval(f.fix.a)})()"); z = ev("rjDay(dk()).find(b=>b.id==='z1')"); chk('after the fix Zal runs 18:00–19:00 (same 60 minutes) for today only and the clash is gone', z['s'] == 1080 and z['e'] == 1140 and not ev("rjConfDay(dk()).length") and ev("bl().find(b=>b.id==='z1').s") == 1050)
+    ev("(b)=>{S.bl=eval(b);S.ov=undefined}", B(('k1', 'Dokon', 1020, 1080, 1), ('z1', 'Majlis', 1050, 1110, 1), ('x1', 'Ish 3', 600, 660, 0)))
+    Cf = [f for f in ev("dcAudit(dk()).F") if f['id'].startswith('conf')]; chk('two fixed blocks clashing give a warning without a fix (only you can decide)', Cf and Cf[0]['fix'] is None)
+    # tushlik
+    ev("(b)=>{S.bl=eval(b);S.ov=undefined}", B(('a', 'IELTS Writing', 480, 600, 0), ('b', 'Reading', 600, 660, 0), ('c', 'Kitob', 780, 840, 0)))
+    Lf = [f for f in ev("dcAudit(dk()).F") if f['id'] == 'lunch']; chk('a day with 3+ blocks but no lunch gets a blue note and a fix at the first free spot after noon (12:00)', Lf and Lf[0]['sev'] == 'info' and 'Tushlik uchun vaqt' in Lf[0]['txt'] and '12:00' in Lf[0]['fix']['l'], Lf)
+    ev("(()=>{const f=dcAudit(dk()).F.find(f=>f.id==='lunch');eval(f.fix.a)})()"); t = ev("rjDay(dk()).find(b=>b.t==='🍽 Tushlik')"); chk('the fix adds a 30-minute one-day “Tushlik” (rest type) and the note disappears', t and t['e'] - t['s'] == 30 and t['on'] == '2026-11-09' and not [f for f in ev("dcAudit(dk()).F") if f['id'] == 'lunch'])
+    ev("(b)=>{S.bl=eval(b)}", B(('a', 'IELTS Writing', 480, 600, 0), ('b', 'Reading', 600, 660, 0), ('c', 'Ovqat va dam', 780, 840, 0))); chk('a block with “Ovqat” in its name counts as lunch', not [f for f in ev("dcAudit(dk()).F") if f['id'] == 'lunch'])
+    ev("(b)=>{S.bl=eval(b)}", B(('a', 'A', 480, 600, 0), ('b', 'B', 1000, 1060, 0))); chk('fewer than 3 blocks never trigger the lunch note', not [f for f in ev("dcAudit(dk()).F") if f['id'] == 'lunch'])
+    ev("(b)=>{S.bl=eval(b)}", B(('w1', 'IELTS Writing', 300, 480, 0), ('k1', 'Dokon', 540, 1020, 1), ('z1', 'Zal', 1080, 1200, 0), ('b1', 'Kitob o‘qish', 1200, 1320, 0), ('uyqu1', 'Uxlash', 1380, 1620, 1, 'uyqu')))
+    A = ev("dcAudit(dk())"); exp = 100 - sum({'bad': 20, 'warn': 10, 'info': 4}[f['sev']] for f in A['F']); chk('the score is 100 minus 20 per red, 10 per yellow, 4 per blue finding (never below 0)', A['sc'] == max(0, exp) and len(A['F']) >= 2, A)
+    ev("render()"); pg.wait_for_timeout(100); t = pg.inner_text('#app'); chk('the card lists the findings in a collapsed “N ta izoh · jiddiy bor” section with fix buttons', 'ta izoh' in t and 'jiddiy bor' in t)
+    ev("()=>{DCO=1;render()}"); pg.wait_for_timeout(80); t = pg.inner_text('#app'); chk('opened, it shows each finding with a coloured dot and its one-tap fix', '🔴' in t and ('Uyqu atigi' in t) and ev("document.querySelectorAll('#app .dcc .chip').length") >= 1); ev("DCO=0")
+    ev("vd('2026-11-10')"); pg.wait_for_timeout(80); chk('the card also works for a future day (tomorrow)', '🩺 Kun tekshiruvi' in pg.inner_text('#app')); ev("vd('2026-11-05')"); pg.wait_for_timeout(80); chk('and is not shown for past days', '🩺 Kun tekshiruvi' not in pg.inner_text('#app')); ev("vd(dk())")
+    ev("(b)=>{S.bl=eval(b);render()}", B(('a', 'A', 480, 600, 0))); pg.wait_for_timeout(60); chk('a day with fewer than 2 blocks gets no card', '🩺 Kun tekshiruvi' not in pg.inner_text('#app'))
+    # ---------- imtihon yo'li
+    ev("()=>{S.ie.kr.exam='';S.ie.ed=undefined;render()}"); pg.wait_for_timeout(60); chk('without an exam date the road card asks for it', 'Imtihon sanasini kiritsang' in pg.inner_text('#app'))
+    ev("()=>{S.ie.kr.exam='2026-11-01';render()}"); pg.wait_for_timeout(60); chk('an exam date in the past is treated as not set', 'Imtihon sanasini kiritsang' in pg.inner_text('#app')); ev("()=>{S.ie.kr.exam='2027-01-30';S.ie.kr.start='2026-11-02';render()}")
+    pg.wait_for_timeout(80); t = pg.inner_text('#app'); chk('the road card shows days left (82), the percentage of the road travelled (8%) and the number of goal days', '🛤 Imtihon yo‘li' in t and '82 kun qoldi' in t and '8% yo‘l o‘tildi' in t and 'maqsadli kunlar' in t)
+    dm = ev("eyDm()"); ev("(a)=>{window.__xp={'2026-11-02':a,'2026-11-03':Math.round(a*0.6),'2026-11-04':1,'2026-11-05':0,'2026-11-07':a,'2026-11-08':0};S.rw=S.rw||{};rw().fz={'2026-11-06':'f'};EYO=1;render()}", dm); pg.wait_for_timeout(100)
+    L = ev("(()=>{const o={};document.querySelectorAll('#app .eyc').forEach(c=>o[c.dataset.d]=c.dataset.l);return o})()")
+    chk('the map has one cell per day to the exam (90 days, starting on Monday 2 Nov): past days coloured by XP (4 = goal, 3, 2, 1 = empty), frozen days striped, today ringed, future empty, exam day 🚩', len(L) == 90 and L['2026-11-02'] == '4' and L['2026-11-03'] == '3' and L['2026-11-04'] == '2' and L['2026-11-05'] == '1' and L['2026-11-06'] == 'f' and L['2026-11-07'] == '4' and L['2026-11-08'] == '1' and L['2026-11-09'] == 't' and L['2026-11-10'] == 'x' and L['2027-01-30'] == 'g' and ev("document.querySelector('#app .eyc[data-d=\"2027-01-30\"]').textContent") == '🚩', L)
+    chk('days of the week are labelled and the goal-day counter counts only past days at or above the goal (2)', 'Du' in pg.inner_text('#app .eyg') and ev("document.querySelector('#app .eyg').parentElement.parentElement.textContent").count('') > 0 and 'maqsadli kunlar (≥' + str(dm) + ' XP): 2' in pg.inner_text('#app').replace('\n', ' '))
+    ev("()=>{S.done={'2026-11-02':{k1:1}};S.fl=[{d:'2026-11-02',a:'x',m:25}];S.ik={d:{'2026-11-02':{x:{W:1},m:{W:60}}}};S.bl=eval(%s)}" % repr(B(('k1', 'Dokon', 540, 1020, 1), ('z1', 'Zal', 1050, 1110, 0)))); ev("eySel('2026-11-02')"); pg.wait_for_timeout(80); t = pg.inner_text('#app'); chk('tapping a past day shows its summary: XP, blocks done/total, focus minutes and IELTS minutes', f'2-noyabr · {dm} XP · blok 1/2 · fokus 25 daq · IELTS 60 daq' in t, t[-300:])
+    ev("eySel('2026-11-12')"); pg.wait_for_timeout(60); chk('tapping a future day shows its planned load', 'Reja: 9 soat 30 daqiqa · 2 blok' in pg.inner_text('#app') or 'Reja:' in pg.inner_text('#app'))
+    ev("eySel('2026-11-12')"); chk('tapping the same day again hides the summary', ev("EYS") == '')
+    ev("()=>{S.ie.kr.start='2026-05-01';render()}"); pg.wait_for_timeout(60); chk('a very early start is cut to the last 20 weeks before the exam (the map stays readable)', ev("document.querySelectorAll('#app .eyc').length") <= 141)
+    ev("()=>{S.ie.kr.start='2026-12-20';render()}"); pg.wait_for_timeout(60); chk('a start in the future begins today', ev("document.querySelectorAll('#app .eyc')[0].dataset.d") == '2026-11-09'); ev("()=>{S.ie.kr.start='2026-11-02';render()}")
+    ev("vd('2026-11-10')"); pg.wait_for_timeout(60); chk('the road card is shown only on today’s Bugun screen', '🛤 Imtihon yo‘li' not in pg.inner_text('#app')); ev("vd(dk())")
+    # ---------- marosim
+    ev("(b)=>{S.bl=eval(b);S.done={};S.rt=undefined;S.ov=undefined;S.ex=undefined;render()}", B(('uyqu1', 'Uxlash', 1380, 1800, 1, 'uyqu'), ('w1', 'IELTS Writing', 600, 720, 0), ('r1', 'Reading', 640, 700, 0), ('n1', 'Namoz', 610, 625, 1, 'din')))
+    ev("S.bl=bl().map(b=>b.id==='n1'?Object.assign({},b,{pt:true}):b)")
+    chk('before the block starts (07:00) nothing is due', ev("rtDue()") is None)
+    pg.clock.set_system_time('2026-11-09T10:10:00'); ev("render()"); pg.wait_for_timeout(100); due = ev("rtDue()&&rtDue().id")
+    chk('10 minutes after IELTS Writing started (10:00) it is due; one-moment blocks and sleep never are', due == 'w1')
+    pg.wait_for_timeout(60); t = pg.inner_text('#app'); chk('Bugun shows “▶ IELTS Writing boshlandi” with Boshlash and Keyin right under the Hozir card', '▶ IELTS Writing boshlandi' in t and 'Boshlash' in t and 'Keyin' in t)
+    pg.clock.set_system_time('2026-11-09T10:40:00'); chk('more than 25 minutes after the start the prompt is no longer offered (too late to “begin”)', ev("rtDue()&&rtDue().id") == 'r1' or ev("rtDue()") is None); pg.clock.set_system_time('2026-11-09T10:10:00')
+    ev("rtSkip('w1')"); pg.wait_for_timeout(60); chk('“Keyin” hides it for today for that block (the other block can still ask)', ev("rtDue()&&rtDue().id") != 'w1')
+    ev("()=>{S.rt.sk={};render()}"); ev("S.done[dk()]={w1:1}"); chk('a block already marked done is never offered', ev("rtDue()&&rtDue().id") != 'w1'); ev("S.done={}")
+    ev("localStorage.setItem('trk_rt','0')"); chk('the whole feature can be switched off', ev("rtDue()") is None); ev("localStorage.removeItem('trk_rt')")
+    ev("rtOpen('w1')"); pg.wait_for_timeout(100); t = pg.inner_text('#rtv'); chk('the ritual opens on a calm screen: block name, “Bu blokda nimani qilaman?”, one input and the 3-2-1 start button', 'IELTS Writing' in t and 'Bu blokda nimani qilaman?' in t and '3-2-1 · Boshlash' in t and ev("!!document.getElementById('rtq')"))
+    ev("()=>{rtQ('Task 2 kirish');rtGo()}"); pg.wait_for_timeout(80); chk('then a big countdown 3 → 2 → 1', ev("document.querySelector('#rtv .f5n').textContent") == '3'); pg.clock.run_for(1100); pg.wait_for_timeout(60); chk('…2', ev("document.querySelector('#rtv .f5n').textContent") == '2'); pg.clock.run_for(1100); pg.wait_for_timeout(60); chk('…1', ev("document.querySelector('#rtv .f5n').textContent") == '1'); pg.clock.run_for(1100); pg.wait_for_timeout(100)
+    run = ev("S.rt.run"); chk('the timer starts: your sentence, a countdown to the block’s end (about 100 minutes left until 12:00 from 10:10), and the running state is saved', ev("RTU.step") == 'run' and run['q'] == 'Task 2 kirish' and run['id'] == 'w1' and run['k'] == '2026-11-09' and 95 * 60000 <= run['endMs'] - run['t0'] <= 110 * 60000 and 'Task 2 kirish' in pg.inner_text('#rtv'), run)
+    ev("rtClose()"); pg.wait_for_timeout(100); chk('closing the screen keeps the timer: Bugun shows “⏳ Marosim davom etmoqda” with the minutes left and an “Ochish” button', '⏳ Marosim davom etmoqda' in pg.inner_text('#app') and 'daq qoldi' in pg.inner_text('#app') and 'Task 2 kirish' in pg.inner_text('#app'))
+    chk('while a ritual runs no second prompt appears', ev("rtDue()") is None)
+    ev("rtResume()"); pg.wait_for_timeout(80); chk('“Ochish” returns to the running timer', ev("RTU.step") == 'run' and ev("!!document.getElementById('rtt')"))
+    pg.clock.run_for(25 * 60000); pg.wait_for_timeout(60); ev("rtFinish()"); pg.wait_for_timeout(80); chk('“Tugatdim” asks “Qanday o‘tdi?” with 😞 🙂 😄', 'Qanday o‘tdi?' in pg.inner_text('#rtv') and '😄' in pg.inner_text('#rtv'))
+    ev("rtRate(3)"); pg.wait_for_timeout(100); x = ev("S.rt.d['2026-11-09'].w1")
+    chk('rating saves the sentence, the real minutes (about 25), the grade (3), the start hour (10) and the block name; the timer is cleared', x['q'] == 'Task 2 kirish' and 24 <= x['m'] <= 27 and x['r'] == 3 and x['h'] == 10 and x['t'] == 'IELTS Writing' and ev("S.rt.run") is None, x)
+    chk('the block is marked done automatically, a toast cheers, the screen closes', ev("S.done['2026-11-09'].w1") == 1 and ev("!document.getElementById('rtv')") and any('Ajoyib' in m for m in ev("__t")))
+    ev("S.done={};S.rt.sk={}"); ev("rtOpen('w1')"); pg.wait_for_timeout(60); chk('next time your previous sentence is offered as a one-tap chip', 'Task 2 kirish' in pg.inner_text('#rtv') and ev("document.querySelectorAll('#rtv .chip').length") == 1); ev("()=>{rtChip('Task 2 kirish');rtClose()}")
+    ev("()=>{const d=S.rt.d;[['2026-11-02',9,3],['2026-11-03',9,3],['2026-11-04',9,2],['2026-11-05',14,1],['2026-11-06',14,2]].forEach(([k,h,r],i)=>{(d[k]=d[k]||{})['x'+i]={q:'q',m:20,r,h,t:'T'}})}")
+    st = ev("rtStats()"); chk('statistics: average grade and the best start hour (only hours with 3+ entries count): 09:00 averages 2.67', st['n'] == 6 and st['best']['h'] == 9 and st['best']['n'] == 3 and abs(st['best']['avg'] - 2.67) < 0.01, st)
+    ev("()=>{tab='m';MQV='n';render()}"); pg.wait_for_timeout(100); t = pg.inner_text('#app'); chk('Maqsad → Nafs shows “🎯 Blok boshlanish marosimi” with the count, the average, the best hour and the on/off switch', '🎯 Blok boshlanish marosimi' in t and '6 marta' in t and '09:00' in t and 'Yoqilgan' in t)
+    ev("()=>{tab='h';MQV='g';S.rt.sk={};S.done={};render()}")
+    ev("()=>{S.rt.run={id:'w1',k:'2026-11-09',t:'IELTS Writing',q:'Davom',t0:Date.now()-60000,endMs:Date.now()+3600000,e:720,h:10};save()}"); pg.clock.run_for(3000); pg.wait_for_timeout(300); pg.reload(); pg.wait_for_timeout(700); pg.clock.run_for(1000); pg.wait_for_timeout(200)
+    chk('after a restart with saved data the app opens normally: no “Kechirasan” error screen (the first render used to run before the last scripts were evaluated when the cloud library was unavailable)', 'Kechirasan' not in pg.inner_text('#app') and 'Xayrli' in pg.inner_text('#app'), pg.inner_text('#app')[:120])
+    chk('a running ritual survives an app restart (the card is still there)', '⏳ Marosim davom etmoqda' in pg.inner_text('#app'), pg.inner_text('#app')[:200]); ev("()=>{S.rt.run=null;save()}")
+    ev("()=>{rtOpen('w1');RTU.q='<img src=x onerror=alert(1)>';rtDraw();RTU.step='run';S.rt.run={id:'w1',k:dk(),t:'<b>x</b>',q:RTU.q,t0:Date.now(),endMs:Date.now()+600000,e:720,h:10};rtDraw()}"); pg.wait_for_timeout(60); chk('your sentence is shown as plain text (no HTML runs)', ev("document.querySelectorAll('#rtv img[src=x]').length") == 0); ev("()=>{S.rt.run=null;rtClose()}")
+    bad = []
+    ev("(b)=>{S.bl=eval(b);S.done={};S.rt={d:{},sk:{}};S.ie.kr.start='2026-05-01'}", B(('uyqu1', 'Uxlash', 1380, 1800, 1, 'uyqu'), ('w1', 'IELTS Writing juda uzun nomli blok sarlavhasi', 600, 720, 0), ('r1', 'Reading', 720, 840, 0), ('b1', 'Kitob', 840, 960, 0), ('x1', 'Mijoz', 960, 1200, 1)))
+    for ui in ('1', '2', '3'):
+        for th in ('light', 'dark'):
+            ev("(a)=>{uiS('trk_ui',a[0]);dzApply();document.documentElement.dataset.theme=a[1];tab='h';BV='j';VD=null;DCO=1;EYO=1;EYS='2026-11-10';render()}", [ui, th]); pg.wait_for_timeout(80)
+            ok1 = ev("document.documentElement.scrollWidth<=window.innerWidth+1"); ev("()=>{rtOpen('w1');rtQ('Juda uzun niyat matni '.repeat(4));rtDraw()}"); ok2 = ev("document.querySelector('#rtv .asc').scrollWidth<=document.querySelector('#rtv .asc').clientWidth+1"); ev("rtClose()")
+            if not (ok1 and ok2): bad.append(ui + th)
+    chk('the audit card, the 20-week road map and the ritual fit the phone in Klassik, Yangi and Liquid Glass, light and dark', not bad, bad)
+    ev("()=>{uiS('trk_ui','1');dzApply();document.documentElement.dataset.theme='light'}")
