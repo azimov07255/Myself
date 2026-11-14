@@ -122,3 +122,7 @@ Holat: ✅ bajarildi · 🔜 navbatdagi · ⏳ keyin
 - ✅ Eslatmalar auditi, Bugun bo'limlari, bekor qilish (25 ta), o'zbekcha sanalar, qo'llanma. Qoldi: Safari (WebKit) sinovi, sinxron holati belgisi, eksport.
 
 - ✅ Cambridge so'zlari (shaxsiy fayl + bulut). Qoldi: Reading javoblar varag'i bilan bog'lash (faylda Cambridge test raqami yo'q), so'zlar bo'yicha o'yinlar.
+
+- ✅ 14 noy: Pul (tez yozish, zakot va sadaqa, sof boylik, do'kon foydasi, xarajat = mehnat soati, tablar 4 + Yana), Bugun tepasi ixcham ko'rinish, Sozlamalar guruhlandi (egasi bo'limi, zaxira bir joyda, qisqa yangiliklar). Sinovlar parallel va portativ (`bash tests/run_all.sh` → HAMMASI YAXSHI, ~9 daqiqa).
+- ⏸ Lazy-load (tezlik): 14 noy o'lchandi, hozircha SHART EMAS. Birinchi mazmun: 0,3 s (oddiy CPU), 1,2-1,6 s (CPU 4× sekin), 2,4-2,8 s (6× sekin); servis worker keshi bor. Eng katta ma'lumot bloki (`58-data-lugat.js`) hajmning ~7%i; hamma kod bitta global nom maydonida va `onclick` lar global funksiyalarga tayanadi, shuning uchun bo'lish xavfli. Qayta ko'rib chiqish sharti: haqiqiy telefonda ochilish sezilarli sekin bo'lsa (kerak bo'lsa avval `build_app.py --min` va `58-data-lugat.js` ni alohida faylga chiqarish).
+- Qoldi: Hisobot sahifasini bo'limlarga bo'lish (Pul), haqiqiy iPhone sinovi, AI provayder adapteri (B16), 1 daqiqalik tanishuv (B3).
