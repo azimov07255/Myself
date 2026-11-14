@@ -546,6 +546,10 @@ html.btc #app .wk .wd{padding:4px 0;border-radius:10px;font-size:11px}
 html.btc #app .wk .wd b{font-size:15px}
 html.btc #app .wk+.in{margin-top:4px}
 html.btc #app .wk+.in .btn{padding:6px 14px;font-size:13px}
+
+/* Pul tablari (ixcham): 5 ta tab bir qatorga sig'adi */
+.seg.sc.ptb button{flex:1 1 0;min-width:0;padding:9px 4px;font-size:14px}
+@media (max-width:350px){.seg.sc.ptb button{font-size:11px;padding:9px 2px}}
 </style>
 </head>
 <body>
@@ -629,8 +633,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-5';
-const APP_BUILD='2bd2aba7ae'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.12.19-6';
+const APP_BUILD='cf52f94815'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -957,8 +961,8 @@ function pReja(){
 
 function pul(){
   finInit();
-  const seg=[['b','🏠 Bosh'],['t','🧾 Tarix'],['q','🤝 Qarzlar'],['h','📈 Hisobot'],['r','🎯 Reja'],['z','🕌 Zakat']].map(x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc">${seg}</div>${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+mhnRep()+pInsUi():PV==='z'?zktUi():pReja()+mhnCard()+pCatBudUi()+pRcUi()}`}
+  const seg=ptbSeg();
+  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc${ptbOn()?' ptb':''}">${seg}</div>${ptbSub()}${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+mhnRep()+pInsUi():PV==='z'?zktUi():pReja()+mhnCard()+pCatBudUi()+pRcUi()}`}
 
 function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
@@ -4527,6 +4531,17 @@ function mhnRep(){
   return `<h2>⏱ Xarajat = mehnat</h2><div class="goal"><p style="margin:0 0 6px">Shu oy sarflaganing <b>${num(tot)}</b> so‘m ≈ <b>${mhnFmt(tot/r)}</b> ish.</p>
    ${t.k||t.x?`<p class="mu" style="margin:0;font-size:13px">${t.k?'🔴 Keraksiz: '+num(t.k)+' so‘m ≈ '+mhnFmt(t.k/r)+'. ':''}${t.x?'🟡 Xohish: '+num(t.x)+' so‘m ≈ '+mhnFmt(t.x/r)+'.':''}</p>`:''}</div>`}
 function mhnJl(){return `<p class="mu" style="margin:12px 0 4px;font-size:12px"><b>⏱ Pul: xarajat necha soatlik ish ekani</b></p>${jlSeg('trk_mhn','1',[['1','Ko‘rinsin (daromad kiritilsa)'],['0','Ko‘rinmasin (avvalgidek)']])}`}
+// ---- PUL: tablar tartibi. Ixcham: Bosh, Tarix, Hisobot, Reja + "Yana" (Qarzlar, Zakat). "Avvalgidek": 6 ta tab. Prefiks: ptb ----
+const ptbOn=()=>{try{return localStorage.getItem('trk_ptb')!=='a'}catch(e){return true}};
+function ptbSeg(){
+  const b=x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`;
+  if(!ptbOn())return [['b','🏠 Bosh'],['t','🧾 Tarix'],['q','🤝 Qarzlar'],['h','📈 Hisobot'],['r','🎯 Reja'],['z','🕌 Zakat']].map(b).join('');
+  const more=PV==='q'||PV==='z';
+  return [['b','🏠 Bosh'],['t','🧾 Tarix'],['h','📈 Hisobot'],['r','🎯 Reja']].map(b).join('')+`<button class="${more?'on':''}" onclick="PV='${PV==='z'?'z':'q'}';render()">⋯ Yana</button>`}
+function ptbSub(){
+  if(!ptbOn()||!(PV==='q'||PV==='z'))return '';
+  return `<div class="seg" style="margin-top:8px"><button class="${PV==='q'?'on':''}" onclick="PV='q';render()">🤝 Qarzlar</button><button class="${PV==='z'?'on':''}" onclick="PV='z';render()">🕌 Zakat</button></div>`}
+function ptbJl(){return `<p class="mu" style="margin:12px 0 4px;font-size:12px"><b>💰 Pul tablari</b></p>${jlSeg('trk_ptb','g',[['g','Ixcham (4 + Yana)'],['a','Avvalgidek (6 ta tab)']])}`}
 // ---- DIZAYN: Klassik (hozirgi) yoki Yangi uslub, urg'u rangi, matn o'lchami, animatsiya. Faqat shu qurilmada saqlanadi ----
 const DZA=[['zumrad','Zumrad','#0f6b52'],['kok','Ko‘k','#1f5fbf'],['binafsha','Binafsha','#6a46c9'],['atirgul','Atirgul','#c2335b'],['oltin','Oltin','#a06a12'],['grafit','Grafit','#2f3d48']];
 function dzMeta(){try{const m=document.querySelector('meta[name=theme-color]');if(m){const c=getComputedStyle(document.body).backgroundColor;if(c)m.setAttribute('content',c)}}catch(e){}}
@@ -4927,6 +4942,7 @@ function ovCard(){const c=ovCfg(),V=ovEn(),o=ovDev(),opt=(name)=>V.map(v=>`<opti
 try{const T=ieTts&&ieTts();if(T&&'onvoiceschanged' in T)T.onvoiceschanged=()=>{try{if(tab==='s')render()}catch(e){}}}catch(e){}
 // ---- "NIMA YANGILANDI?": har versiya uchun yozuv. HAR CHIQARISHDA ro'yxatning BOSHIGA yangi yozuv qo'shing: v = APP_VER (tools/build_app.py tekshiradi), t = qisqa xulosa (yangilash tugmasi ustida ko'rinadi, apostrofsiz yozing) ----
 const NEWSV=[
+{v:'2026.12.19-6',t:'💰 Pul tablari ixchamlandi: 4 ta asosiy tab + Yana',items:[['💰 Pul tablari: Bosh, Tarix, Hisobot, Reja asosiy; Qarzlar va Zakat “⋯ Yana” ichida. Endi tablar qatori yonga surilmaydi','Pul'],['Eskisi: 6 ta tab holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Pul tablari']]},
 {v:'2026.12.19-5',t:'⚙️ Sozlamalar tartibga solindi: guruhlar, zaxira bir joyda, egasi bo‘limi',items:[['⚙️ Sozlamalar guruhlandi: 🎨 Ko‘rinish va qulaylik (Dizayn, Bugun ko‘rinishi, Jilo, Reja rejimlari, Ovoz, Mushaf), 💾 Zaxira va sinxron (uch zaxira bo‘limi birga), 🛠 Egasi va diagnostika (Ishga tayyormi, Foydalanish, Xatolar jurnali, Diagnostika). Yangiliklar ro‘yxati qisqardi: oxirgi 2 versiya ochiq, eskilari alohida bo‘limda','Sozlamalar'],['Eskisi: bitta uzun ro‘yxat holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Sozlamalar tuzilishi']]},
 {v:'2026.12.19-4',t:'🌅 Bugun tepasi: ixcham ko‘rinish (ixtiyoriy)',items:[['🌅 Bugun tepasini ixchamlash: salomlashish kichrayadi, doira kichik nishonga aylanadi, hafta chizig‘i pastroq, shior bir qatorga sig‘adi (yoki yashirin). “Hozir” kartasi va “Bajardim” tugmasi ekran tepasiga yaqinlashadi. Standart avvalgidek, o‘zing yoqasan','Sozlamalar → 🗂 Bugun ko‘rinishi → Bugun tepasi']]},
 {v:'2026.12.19-3',t:'🕌 Zakot va sadaqa, 💎 sof boylik, 🏪 do‘kon foydasi, ⏱ xarajat necha soatlik ish',items:[['🕌 Zakot va sadaqa: nisobga yetganingni, hawl (bir yil) qachon to‘lishini va qancha zakot kerakligini hisoblaydi; berganingni qayd etadi; shu oy va shu yil sadaqang, oylik sadaqa maqsadi. Taxminiy hisob: aniq masala uchun imomga murojaat qil','Pul → 🕌 Zakat'],['💎 Sof boylik: naqd + karta + senga qarzdorlar − sen qarzdorlar, so‘nggi 12 oylik grafik va o‘tgan oyga nisbatan o‘zgarish','Pul → Hisobot, tepada'],['🏪 Do‘kon foydasi: sof foyda, marja, o‘tgan oy bilan taqqos, eng yaxshi va eng past kun, savdosiz kunlar, hafta kunlari bo‘yicha o‘rtacha daromad','Pul → Dokon → Hisobot'],['⏱ Xarajat necha soatlik ish: oylik daromad va ish soatini yozsang, xarajat kiritganingda “≈ 2 soat 30 daqiqa ish” deb ko‘rsatadi; hisobotda keraksiz va xohish xarajatlar necha soatlik ish ekani','Pul → Reja → Mehnat narxi'],['Eskisi: ⏱ ko‘rsatmasini o‘chirish mumkin','Sozlamalar → 🪄 Jilo va qulaylik']]},
@@ -6076,7 +6092,7 @@ function jlCard(){return `<p class="mu" style="margin:0 0 8px;font-size:13px">Ya
   <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Sana ko‘rinishi</b></p>${jlSeg('trk_dfmt','u',[['u','9-noyabr'],['i','2026-11-09']])}
   <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Bekor qilish tugmasi</b> (o‘chirilganda 8 soniya chiqadi)</p>${jlSeg('trk_ud','1',[['1','Yoqilgan'],['0','O‘chirilgan']])}
   <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Sabqi/Manzil va pora takrori</b></p>${jlSeg('trk_tqrd','a',[['a','Alohida sanaladi'],['q','O‘qish hisobiga ham qo‘shilsin (avvalgidek)']])}
-  <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Surish maslahati</b></p><button class="btn s" onclick="uiS('trk_swh','0');toast('Maslahat Bugun jadvalida yana chiqadi');render()">Qayta ko‘rsatish</button>${jlCard2()}${jlCard3()}${jlCard4()}${jlCard5()}${jlCard6()}${jlCard7()}${jlCard8()}${jlCard9()}${jlCard10()}${jlCard11()}${jlCard12()}${jlCard13()}${ptzJl()}${mhnJl()}${sgrJl()}`}
+  <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Surish maslahati</b></p><button class="btn s" onclick="uiS('trk_swh','0');toast('Maslahat Bugun jadvalida yana chiqadi');render()">Qayta ko‘rsatish</button>${jlCard2()}${jlCard3()}${jlCard4()}${jlCard5()}${jlCard6()}${jlCard7()}${jlCard8()}${jlCard9()}${jlCard10()}${jlCard11()}${jlCard12()}${jlCard13()}${ptzJl()}${mhnJl()}${sgrJl()}${ptbJl()}`}
 // ----- 💡 surish maslahati (bir marta) -----
 const swHint=()=>uiG('trk_swh')==='1'?'':`<div class="row" style="cursor:default;margin:6px 0"><span class="t">💡 <b>Surish:</b> jadval qatorini <b>o‘ngga</b> sursang “bajarildi”, <b>chapga</b> sursang “o‘tkazildi” (sababini so‘raydi).</span><button class="x" onclick="uiS('trk_swh','1');render()" aria-label="Yopish">✕</button></div>`;
 // ----- 🧪 tizim tekshiruvi (telefonning o'zida) -----
