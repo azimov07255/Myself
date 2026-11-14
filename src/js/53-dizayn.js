@@ -14,3 +14,6 @@ function dzCard(){const a=uiG('trk_acc')||'zumrad',fs=uiG('trk_fs')||'m',mo=uiG(
    <p style="margin:12px 0 6px"><b>Animatsiyalar</b></p><div class="seg"><button class="${mo?'on':''}" onclick="dzSet('mo','1')">Yoqilgan</button><button class="${mo?'':'on'}" onclick="dzSet('mo','0')">O‘chirilgan</button></div>${plJl()}`}
 function plJl(){const o=uiG('trk_pl')!=='0';return `<p class="mu" style="margin:14px 0 6px"><b>✨ Sayqal</b> <span style="font-size:12px">(soyalar, burchaklar, bosish effekti, pastki menyu, tablar)</span></p><div class="seg"><button class="${o?'on':''}" onclick="dzSet('pl','1')">Yoqilgan</button><button class="${o?'':'on'}" onclick="dzSet('pl','0')">Avvalgidek</button></div><p class="mu" style="margin:4px 0 0;font-size:12px">“Avvalgidek” desang, ilova avvalgi tekis ko‘rinishga qaytadi.</p>`}
 try{dzApply()}catch(e){}
+
+// Sayqal: faol tab ko'rinmay qolgan bo'lsa (yonga surilgan qatorda), uni ko'rinadigan joyga suradi
+function plSeg(){if(!document.documentElement.classList.contains('pl'))return;document.querySelectorAll('#app .seg.sc').forEach(e=>{const b=e.querySelector('button.on');if(!b)return;const l=b.offsetLeft,r=l+b.offsetWidth;if(l<e.scrollLeft||r>e.scrollLeft+e.clientWidth)e.scrollLeft=Math.max(0,l-(e.clientWidth-b.offsetWidth)/2)})}

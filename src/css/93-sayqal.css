@@ -24,3 +24,14 @@ html.pl input:focus,html.pl select:focus,html.pl textarea:focus{outline:2px soli
 /* Odat: telefonda kompyuter tugmalari (ustun kengligi, keng ekran) yashirinadi */
 @media (max-width:700px){html.pl .hbcol,html.pl .hbwide{display:none}}
 @media (prefers-reduced-motion:reduce){html.pl *{transition:none!important}}
+
+/* ikkinchi daraja tablar: ixchamroq (ko'proq tab ko'rinadi), faol tab markazga suriladi */
+html.pl .seg.sc:not(.ptb) button{padding-left:11px;padding-right:11px;font-size:15px}
+html.pl .seg.sc{scroll-snap-type:x proximity}html.pl .seg.sc button{scroll-snap-align:center}
+/* Odat: 4 ta statistika bir qatorda, kichik (telefonda joy tejaydi) */
+@media (max-width:700px){html.pl .hbsum{grid-template-columns:repeat(4,1fr);gap:6px}
+html.pl .hbsum div{padding:9px 6px;border-radius:14px}
+html.pl .hbsum .mu{font-size:11px;line-height:1.2}
+html.pl .hbsum b{font-size:17px}
+html.pl .hbsum .mu+b+.mu{display:none}
+html.pl .hbsum .w{grid-column:auto}}

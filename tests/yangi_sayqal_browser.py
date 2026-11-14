@@ -21,6 +21,14 @@ with Run('sayqal') as R:
     go('1', 'o'); vis = lambda: ev("[...document.querySelectorAll('#app .hbcol,#app .hbwide')].filter(e=>e.getBoundingClientRect().width>0).length")
     chk('Odat on a phone with polish: "Ustun / Tor / Keng" and "Keng ekran" are hidden, "Ixcham" stays', vis() == 0 and 'Ixcham' in pg.inner_text('#app') and 'Keng ekran' not in pg.inner_text('#app'))
     go('0', 'o'); chk('Odat with "Avvalgidek": all of them are shown again', vis() == 3 + 1 + 0 or vis() >= 4, vis())
+    go('1', 'o'); cols = ev("getComputedStyle(document.querySelector('#app .hbsum')).gridTemplateColumns.split(' ').length")
+    chk('Odat with polish on a phone: the 4 statistics are in ONE row (4 columns), not 2x2', cols == 4, cols)
+    h1 = ev("document.querySelector('#app .hbsum').getBoundingClientRect().height"); go('0', 'o'); h0 = ev("document.querySelector('#app .hbsum').getBoundingClientRect().height")
+    chk('...which makes that block clearly shorter than before (the habit table starts higher)', h1 < h0 - 60, (h1, h0))
+    chk('"Avvalgidek": back to 2 columns', ev("getComputedStyle(document.querySelector('#app .hbsum')).gridTemplateColumns.split(' ').length") == 2)
+    go('1', 'q'); ev("()=>{QV='t';render()}"); pg.wait_for_timeout(120)
+    ok = ev("(()=>{const e=document.querySelector('#app .seg.sc');const b=e&&e.querySelector('button.on');if(!b)return 'no-active';const l=b.offsetLeft,r=l+b.offsetWidth;return l>=e.scrollLeft-1&&r<=e.scrollLeft+e.clientWidth+1})()")
+    chk('Qur\'on second-level tabs: the active tab (Takror) is inside the visible part of the row', ok is True, ok)
     # uslublar x rejimlar x ekranlar
     for th in ('light', 'dark'):
         for cls, nm in (('', 'Klassik'), ('ui2', 'Yangi'), ('ui2 glass', 'Glass')):
