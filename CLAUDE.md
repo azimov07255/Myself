@@ -47,7 +47,8 @@ Skriptlarda (`tools/`, `tests/`, `tests/run_all.sh`) `/mnt/user-data/outputs` (l
 - Reja: `ROADMAP.md`; arxitektura: `docs/ARCHITECTURE.md`; telefonda sinash ro'yxati: `tests/IPHONE_QA.md`.
 
 ## Xavfsizlik qoidalari (buzmaslik uchun)
-- **`main` ga to'g'ridan-to'g'ri push qilma.** Avval shox + Pull Request och; foydalanuvchi "main ga qo'sh" desagina qo'sh. Sayt (GitHub Pages) faqat `main` o'zgarganda yangilanadi.
+- **`main` ga to'g'ridan-to'g'ri push qilma.** Avval shox + Pull Request och. Sayt (GitHub Pages) faqat `main` o'zgarganda yangilanadi.
+- **Doimiy ruxsat (foydalanuvchidan, 2026-11-14):** har o'zgarishni sinab ko'rgach, Pull Request ochib **o'zing `main` ga qo'sha olasan** (alohida so'ramasdan). Shartlar: har o'zgarish alohida commit/PR; `build_app.py --check` va mumkin bo'lgan sinovlar o'tgan bo'lsin; sinalmagan narsani (iPhone, Playwright yo'q bo'lsa brauzer sinovi) foydalanuvchiga aniq ayt; saqlash/sinxron/zaxira kodiga tegsang alohida ehtiyot bo'l. Foydalanuvchi "qaytar" desa, `Revert` PR och.
 - Foydalanuvchining ma'lumoti (Supabase, telefon xotirasi) kodga bog'liq emas: hech qachon ma'lumotni o'chiradigan/qayta yozadigan migratsiya yoki skript ishga tushirma. Zaxira va sinxron kodiga (`src/js/` dagi `syncRem`, `save`, backup) o'zgartirish kiritsang, tegishli sinovni ishga tushir.
 - `supabase/config.toml` ishlayotgan holatda; faqat yangi funksiya qo'shilganda o'zgartir va `python3 tests/check_supabase_folder.py` bilan tekshir. Mavjud funksiya nomlarini o'zgartirma.
 - Mavjud sayt fayllarini (`index.html`, `sw.js`, `version.json`, `data/`, `fonts/`) faqat `tools/deploy_root.py` orqali yangila, qo'lda tahrir qilma.
