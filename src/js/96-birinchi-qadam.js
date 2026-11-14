@@ -1,0 +1,11 @@
+// ---- BIRINCHI QADAM: bo'sh ekranlarda nol raqamlar o'rniga "nimadan boshlash" kartasi (Odat, IELTS). Eskisi: Sozlamalar → Jilo. Prefiks: fqd ----
+const fqdOn=()=>uiG('trk_fqd')!=='0';
+const FQDH=[['💧','Suv ichish'],['📖','Kitob o‘qish'],['🕌','Namoz vaqtida'],['🚶','Yurish'],['🛏','Erta uxlash'],['🤲','Zikr']];
+function fqdAdd(e,t){if(!t)return;if(!S.hab.some(x=>x.t===t))S.hab.push({id:'h'+Date.now(),t,e});save()}
+function fqdHabCard(){return `<div class="goal fqd"><b style="font:700 19px Fraunces,serif">🌱 Birinchi qadam</b><p style="margin:6px 0 10px">Bitta kichik odat bilan boshla. Birini bos, u jadvalga qo‘shiladi. Keyin har kuni katakni belgilaysan.</p><div class="rwch">${FQDH.map(x=>`<button class="chip" style="border:0" onclick="fqdAdd('${x[0]}','${x[1]}')">${x[0]} ${x[1]}</button>`).join('')}</div><p class="mu" style="margin:10px 0 0;font-size:13px">Yoki pastdagi maydonga o‘zingning odatingni yoz.</p></div>`}
+function fqdIeEmpty(){try{const R=ieReady(),st=ieStat();return !R.learned&&!R.due&&!R.week&&!R.mat&&st.ov===null&&!S.ie.ex}catch(e){return false}}
+function fqdIeCard(){return `<div class="dpc2 fqd"><div class="h"><b>🎓 IELTS: birinchi qadam</b></div><p style="margin:6px 0 10px;font-size:14px">Hali hech narsa yo‘q. Shu 3 ta qadam eng tez natija beradi:</p>
+  <button class="row" onclick="tab='e';IVW='a';render()"><span style="font-size:22px">📰</span><span class="t"><b>1. Birinchi maqolani qo‘sh</b><br><span class="mu" style="font-size:12px">AI qiyin so‘zlarni topib beradi</span></span></button>
+  <button class="row" onclick="tab='e';IVW='l';render()"><span style="font-size:22px">🔤</span><span class="t"><b>2. 5 ta so‘z o‘rgan</b><br><span class="mu" style="font-size:12px">Lug‘at bo‘limida</span></span></button>
+  <button class="row" onclick="tab='e';IVW='y';render()"><span style="font-size:22px">🎓</span><span class="t"><b>3. Kurs rejasini tuz</b><br><span class="mu" style="font-size:12px">Imtihon sanasi va 12 haftalik reja</span></span></button></div>`}
+function fqdJl(){const o=fqdOn();return `<p class="mu" style="margin:12px 0 4px;font-size:12px"><b>🌱 Bo‘sh ekranlarda “Birinchi qadam”</b></p>${jlSeg('trk_fqd','1',[['1','Ko‘rinsin'],['0','Yo‘q (nol raqamlar, avvalgidek)']])}`}

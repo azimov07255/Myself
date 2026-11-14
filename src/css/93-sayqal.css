@@ -35,3 +35,6 @@ html.pl .hbsum .mu{font-size:11px;line-height:1.2}
 html.pl .hbsum b{font-size:17px}
 html.pl .hbsum .mu+b+.mu{display:none}
 html.pl .hbsum .w{grid-column:auto}}
+
+.fqd-hide{display:none}
+.goal.fqd,.dpc2.fqd{border-left:4px solid var(--go)}

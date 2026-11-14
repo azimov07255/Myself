@@ -46,7 +46,7 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-8';
+const APP_VER='2026.12.19-9';
 const APP_BUILD='{{BUILD}}'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
@@ -253,9 +253,9 @@ function odatlar(){
     const cs=[...Array(n)].map((_,q)=>{const k=key(q+1),on=(S.hb[k]||{})[x.id],fu=k>today;if(!fu&&!(!on&&hkOn(k,x.id))){tot++;if(on)got++}return `<td class="${gCls(y,m,q+1,today)}"><button class="cell ${on?'on':hkOn(k,x.id)?'hsk':''}" style="--hc:${col}" ${fu?'disabled':''} onclick="hbC('${x.id}','${k}')"></button></td>`}).join('');
     NL.push(`<div class="mr">${x.e?`<span style="margin-right:6px">${x.e}</span>`:`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}<span onclick="hbE(${hi})" style="cursor:pointer;border-bottom:1px dotted var(--mu)">${esc(x.t)}</span><br><span class="mu" style="font-size:12px">🔥 ${st}&nbsp; ${hbMeta(x,wn)} <button class="x" style="font-size:15px" onclick="delH(${hi})">×</button></span></div>`);return `<tr style="height:64px">${cs}</tr>`}).join('');
   return `<p class="mu" style="margin:0">Odatlar jadvali</p><h1 class="gr">${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h1><p class="mu" style="margin:0 0 4px">Bugun: ${now.getDate()}-${MON[now.getMonth()]}, ${DAYS[now.getDay()]}</p>
-  ${habNav()}${hbCtl()}
-  <div class="sum hbsum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
-  ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
+  ${habNav()}${S.hab.length||!fqdOn()?hbCtl():''}
+  <div class="sum hbsum${!S.hab.length&&fqdOn()?' fqd-hide':''}"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
+  ${!S.hab.length?(fqdOn()?fqdHabCard():'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>'):HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
   <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${habInsUi()}${habArcUi()}${suggCard()}`;
 }
 

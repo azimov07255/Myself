@@ -11,7 +11,7 @@ def cr(a, b):
     la, lb = lum(a), lum(b); return (max(la, lb) + .05) / (min(la, lb) + .05)
 with Run('dizayn', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
-    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');localStorage.setItem('trk_pl','0');dzApply();document.documentElement.dataset.theme='light';S.hab=[{id:'h1',t:'Kitob'}];tab='s';render()}"); pg.wait_for_timeout(150)
+    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');localStorage.setItem('trk_pl','0');localStorage.setItem('trk_fqd','0');dzApply();document.documentElement.dataset.theme='light';S.hab=[{id:'h1',t:'Kitob'}];tab='s';render()}"); pg.wait_for_timeout(150)
     H = lambda: ev("document.documentElement.classList.contains('ui2')")
     chk('the CLASSIC look is the default: the new-design class is not set and the accent defaults to "zumrad"', H() is False and ev("document.documentElement.dataset.acc") == 'zumrad')
     ev("document.querySelectorAll('#app details').forEach(d=>{if(d.textContent.includes('Dizayn'))d.open=true})"); pg.wait_for_timeout(60); t = pg.inner_text('#app')
