@@ -616,8 +616,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-1';
-const APP_BUILD='2b14fd09ac'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.12.19-3';
+const APP_BUILD='bc1942ccb0'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -863,7 +863,7 @@ function pForm(){
   const acc=K==='tr'?`<div class="acc"><button class="${FACC==='cash'?'on':''}" onclick="FACC='cash';FTO='card';render()">Naqddan kartaga</button><button class="${FACC==='card'?'on':''}" onclick="FACC='card';FTO='cash';render()">Kartadan naqdga</button></div>`:`<div class="acc"><button class="${FACC==='cash'?'on':''}" onclick="pAcc('cash')">💵 Naqd</button><button class="${FACC==='card'?'on':''}" onclick="pAcc('card')">💳 Karta</button></div>`;
   const cats=K==='tr'?'':`<div class="cchips">${lst.map((c,i)=>`<button class="${FC===i?'on':''}" onclick="FC=${i};render()"><span>${CI[c]||'•'}</span>${c}</button>`).join('')}</div>`;
   return `<div class="goal" style="margin-top:12px"><b>${EID?'Yozuvni tahrirlash':'Yangi yozuv'}</b><div style="margin-top:10px">${kind}${acc}</div>
-  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${FA?num(+FA):''}" oninput="FA=String(sfn(this.value));this.value=sfn(this.value)?num(sfn(this.value)):''" style="font-size:20px;font-weight:700"></div>${cats}
+  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${FA?num(+FA):''}" oninput="FA=String(sfn(this.value));this.value=sfn(this.value)?num(sfn(this.value)):'';mhnForm()" style="font-size:20px;font-weight:700"></div>${mhnLine()}${cats}
   <div class="in"><input placeholder="Izoh" value="${esc(FN)}" oninput="FN=this.value"></div><div class="in"><input type="date" value="${FD||dk()}" onchange="FD=this.value"></div>
   <div class="in"><button class="btn" style="flex:1" onclick="addM()">${EID?'Saqlash':'Yozish'}</button>${EID?'<button class="btn s" onclick="pCancel()">Bekor</button>':''}</div></div>`}
 function mRow(m){
@@ -875,7 +875,7 @@ function pBosh(){
   const owe=dB.filter(d=>d.k==='borrow').reduce((a,d)=>a+dRem(d),0),lent=dB.filter(d=>d.k==='lend').reduce((a,d)=>a+dRem(d),0);
   const recent=S.money.filter(m=>m.w===W).slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id).slice(0,6).map(mRow).join('');
   return `<section class="hero"><p class="lab">Umumiy balans</p><h1 style="font-size:36px;word-break:break-all">${num(B.tot)} so‘m</h1><div class="pbal"><div><span>💵 Naqd</span><b>${num(B.cash)}</b></div><div><span>💳 Karta</span><b>${num(B.card)}</b></div></div></section>
-  <h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
+  ${ptzUi()}<h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
   <div class="sum"><div><span class="mu">Kirim</span><b class="in-c">${num(inn)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'in','cash'))}, karta ${num(mSum(L,'in','card'))}</span></div><div><span class="mu">Chiqim</span><b class="out-c">${num(ou)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'out','cash'))}, karta ${num(mSum(L,'out','card'))}</span></div><div class="w"><span class="mu">Oy balansi</span><b>${num(inn-ou)} so‘m</b></div></div>
   ${W==='p'&&(owe||lent)?`<button class="row" onclick="PV='q';render()"><span class="t">Qarzlar<br><span class="mu">Men qarzdorman: ${num(owe)}. Menga qarzdor: ${num(lent)}</span></span></button>`:''}
   ${pDailyUi()}${pForecastUi()}${pQuickUi()}${pTypeUi()}${pForm()}${pWlUi()}<h2>So‘nggi yozuvlar</h2>${recent||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
@@ -926,7 +926,7 @@ function pHisob(){
   const diff=pou?Math.round((ou-pou)/pou*100):null;
   return `<div class="in"><button class="btn s" onclick="PF.mo--;render()">‹</button><button class="btn s" onclick="PF.mo=0;render()">${mn[0].toUpperCase()+mn.slice(1)} ${mk.d.getFullYear()}</button><button class="btn s" onclick="PF.mo++;render()">›</button></div>
   <section class="hero"><p class="lab">Oylik xulosa</p><h1 style="font-size:32px">${inn-ou>=0?'+':'−'}${num(Math.abs(inn-ou))} so‘m</h1><p class="mu">Kirim ${num(inn)}, chiqim ${num(ou)}.${inn?` Jamg‘arish ulushi ${Math.round((inn-ou)/inn*100)}%.`:''}</p><div class="pbal"><div><span>💵 Naqd chiqim</span><b>${num(mSum(L,'out','cash'))}</b></div><div><span>💳 Karta chiqim</span><b>${num(mSum(L,'out','card'))}</b></div></div></section>
-  <div class="sum"><div><span class="mu">Kunlik o‘rtacha chiqim</span><b>${num(Math.round(ou/Math.max(1,el)))}</b></div><div><span class="mu">O‘tgan oyga nisbatan</span><b class="${diff>0?'out-c':'in-c'}">${diff===null?'—':(diff>0?'+':'')+diff+'%'}</b></div></div>
+  ${dfyUi()}${sblUi()}<div class="sum"><div><span class="mu">Kunlik o‘rtacha chiqim</span><b>${num(Math.round(ou/Math.max(1,el)))}</b></div><div><span class="mu">O‘tgan oyga nisbatan</span><b class="${diff>0?'out-c':'in-c'}">${diff===null?'—':(diff>0?'+':'')+diff+'%'}</b></div></div>
   <h2>Chiqim kategoriyalari</h2>${cs.map(([c,v])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><span>${CI[c]||''} ${esc(c)}</span><span class="mu">${num(v)}, ${Math.round(v/Math.max(1,ou)*100)}%</span></div><div class="bar"><i style="width:${v/Math.max(1,ou)*100}%"></i></div></div>`).join('')||'<p class="mu">Bu oyda chiqim yo‘q.</p>'}
   <h2>Kunlar bo‘yicha chiqim</h2><div class="bars2">${day.map(v=>`<i style="height:${Math.max(2,v/mx*80)}px"></i>`).join('')}</div>
   <h2>Eng katta chiqimlar</h2>${top||'<p class="mu">Yo‘q.</p>'}
@@ -944,8 +944,8 @@ function pReja(){
 
 function pul(){
   finInit();
-  const seg=[['b','🏠 Bosh'],['t','🧾 Tarix'],['q','🤝 Qarzlar'],['h','📈 Hisobot'],['r','🎯 Reja']].map(x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc">${seg}</div>${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+pInsUi():pReja()+pCatBudUi()+pRcUi()}`}
+  const seg=[['b','🏠 Bosh'],['t','🧾 Tarix'],['q','🤝 Qarzlar'],['h','📈 Hisobot'],['r','🎯 Reja'],['z','🕌 Zakat']].map(x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc">${seg}</div>${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+mhnRep()+pInsUi():PV==='z'?zktUi():pReja()+mhnCard()+pCatBudUi()+pRcUi()}`}
 
 function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
@@ -4299,6 +4299,210 @@ function pSgUi(){const L=S.fin.sg,cur=dlS();
    <details class="sd"><summary>Sozlamalar va tarix</summary><p class="mu" style="margin:6px 0 4px">Belgi</p><div class="rwch">${SGE.map(e=>`<button class="chip ${g.e===e?'on':''}" style="border:0" onclick="sgIc(${g.id},'${e}')">${e}</button>`).join('')}</div><p class="mu" style="margin:8px 0 4px">Muddat</p><input type="date" value="${esc(g.dl||'')}" onchange="sgDl(${g.id},this.value)" style="width:100%">
    <button class="btn s" style="width:100%;margin-top:8px" onclick="dlGoal(${g.id})">${cur.m==='g'&&cur.g===g.id?'✓ Kunlik chegara shu maqsadga moslangan':'Kunlik chegarani shu maqsadga moslash'}</button>${h.length?`<p class="mu" style="margin:8px 0 2px">So‘nggi harakatlar</p>${h.map(x=>`<p style="margin:0 0 2px;font-size:13px">${esc(dU(x.d))} · <b class="${x.a>0?'in-c':'out-c'}">${x.a>0?'+':'−'}${num(Math.abs(x.a))}</b></p>`).join('')}`:''}<button class="btn s" style="width:100%;margin-top:8px" onclick="sgDel(${g.id})">O‘chirish</button></details></div>`}).join('')}
    <div class="goal" id="sgnew"><b>Yangi maqsad</b><div class="in" style="margin-top:8px"><input id="sgt" placeholder="Nima uchun? Masalan: Noutbuk"></div><div class="in"><input id="sga" type="text" inputmode="numeric" placeholder="Kerakli summa, so‘m"><input id="sgd" type="date" style="flex:0 0 150px" aria-label="Muddat"></div><div class="rwch" style="margin-bottom:8px">${SGE.map(e=>`<button class="chip ${(SGEN||'💎')===e?'on':''}" style="border:0" onclick="sgPick(this,'${e}')">${e}</button>`).join('')}</div><button class="btn" style="width:100%" onclick="sgAddG()">Maqsad qo‘sh</button></div>`}
+// ---- PUL: matn bilan tez kiritish ("taksi 15 ming", "maosh 3 mln karta"). Hammasi telefonning o'zida, AI ham internet ham kerak emas. Prefiks: ptz ----
+let PTZ='';
+const ptzN=s=>String(s||'').toLowerCase().replace(/[ʻʼ‘’`´]/g,"'").replace(/\s+/g,' ').trim();
+// kategoriya kaliti so'zlar (indeks CATS bo'yicha: 0 Ovqat, 1 Transport, 2 O‘qish, 3 Salomatlik, 4 Kiyim, 5 Ko‘ngil ochish, 6 Aloqa, 7 Uy-joy, 8 Sadaqa)
+const PTZK=[
+ ['ovqat','non','tushlik','kechki','nonushta','osh','lavash','shaurma','burger','kafe','restoran','choy','kofe','coffee','ichimlik','cola','kola','pitsa','pizza','bozor','go\'sht','gosht','sabzavot','meva','sut','tort','shirinlik','mahsulot','market','oziq','fastfud','somsa'],
+ ['taksi','taxi','yandex','yo\'lkira','yolkira','yo\'l','benzin','metro','avtobus','marshrutka','poyezd','samolyot','parkovka','mashina'],
+ ['kitob','kurs','dars','ielts','daftar','ruchka','repetitor','o\'qish','oqish','universitet','kontrakt','imtihon'],
+ ['dori','apteka','shifokor','vrach','tish','analiz','vitamin','klinika','massaj'],
+ ['kiyim','krossovka','ko\'ylak','koylak','shim','poyabzal','kurtka','futbolka'],
+ ['kino','o\'yin','oyin','game','konsert','teatr','bilyard','playstation','netflix','obuna','park'],
+ ['internet','telefon','paket','tarif','mobil','uzmobile','beeline','ucell','mobiuz','sms','aloqa','wifi'],
+ ['ijara','kommunal','svet','elektr','gaz','suv','kvartira','remont','mebel'],
+ ['sadaqa','zakot','zakat','xayr','ehson','hadya','fitr']];
+const PTZIN=/\b(maosh|stipendiya|daromad|kirim|tushum|tushdi|sovg'a|sovga|bonus|premiya|avans|foyda|savdo)\b/,PTZOUT=/\b(chiqim|xarajat|berdim|sotib|to'ladim|toladim)\b/;
+const PTZMUL={ming:1e3,min:1e3,k:1e3,mln:1e6,million:1e6,milyon:1e6,mlrd:1e9,milliard:1e9};
+function ptzAmt(t){
+  t=t.replace(/(\d)[  ](?=\d{3}(?!\d))/g,'$1');
+  const re=/(\d+(?:[.,]\d+)?)\s*(milliard|million|milyon|mlrd|mln|ming|min|k)?(?![a-z0-9'])/g;let m,best=null;
+  while((m=re.exec(t))){
+    let n=m[1],mul=m[2]?PTZMUL[m[2]]:1,v;
+    if(!m[2]&&/^\d{1,3}[.,]\d{3}$/.test(n))v=+n.replace(/[.,]/g,'');   // "15.000" = 15000
+    else v=parseFloat(n.replace(',','.'))*mul;
+    v=Math.round(v);if(!(v>0))continue;
+    if(!best||v>best.a)best={a:v,s:m.index,e:m.index+m[0].length}}
+  return best}
+function ptzCat(t){
+  const toks=t.split(/[^a-z0-9'ʻ]+/).filter(Boolean);
+  for(const tk of toks)for(let c=0;c<PTZK.length;c++)for(const st of PTZK[c]){
+    if(tk===st||(st.length>=4&&tk.startsWith(st))||(st.length<4&&tk.startsWith(st)&&tk.length<=st.length+2))return c}
+  return -1}
+function ptzParse(raw){
+  const t=ptzN(raw);if(!t)return{ok:false};const am=ptzAmt(t);if(!am)return{ok:false};
+  let rest=(t.slice(0,am.s)+' '+t.slice(am.e)),ac='cash',d=dk();
+  if(/\b(karta|kartadan|kartaga|plastik|click|payme|uzcard|humo)\b/.test(rest)){ac='card';rest=rest.replace(/\b(karta|kartadan|kartaga|plastik|click|payme|uzcard|humo)\b/g,' ')}
+  else if(/\b(naqd|naqdda|naqdga|naqdan|cash)\b/.test(rest)){rest=rest.replace(/\b(naqd|naqdda|naqdga|naqdan|cash)\b/g,' ')}
+  if(/\bkecha\b/.test(rest)){d=dAgo(1);rest=rest.replace(/\bkecha\b/g,' ')}
+  else if(/\bbugun\b/.test(rest))rest=rest.replace(/\bbugun\b/g,' ');
+  rest=rest.replace(/\bso'?m\b/g,' ').replace(/\s+/g,' ').trim();
+  const isIn=PTZIN.test(rest)&&!PTZOUT.test(rest),k=isIn?'in':'out';let c;
+  if(isIn){c=W==='d'?CIN[1]:/\b(sovg'a|sovga)\b/.test(rest)?CIN[2]:/\b(savdo|dokon|do'kon)\b/.test(rest)?CIN[1]:/\b(maosh|stipendiya|bonus|premiya|avans)\b/.test(rest)?CIN[0]:CIN[3]}
+  else{const i=ptzCat(rest);c=i>=0?CATS[i]:CATS[9]}
+  const n=rest?rest[0].toUpperCase()+rest.slice(1):'';
+  return{ok:true,k,a:am.a,c,ac,d,n}}
+function ptzTxt(r){const hrs=(typeof mhnTxt==='function'&&r.k==='out')?mhnTxt(r.a):'';return (r.k==='in'?'Kirim':'Chiqim')+' · '+(CI[r.c]||'•')+' '+r.c+' · '+num(r.a)+' so‘m · '+(r.ac==='card'?'💳 Karta':'💵 Naqd')+(r.d!==dk()?' · '+r.d.slice(8)+'-'+MON[+r.d.slice(5,7)-1]:'')+(r.n?' · “'+r.n+'”':'')+(hrs?' · '+hrs:'')}
+function ptzPrev(){const e=document.getElementById('ptzi'),p=document.getElementById('ptzp');if(!e||!p)return;PTZ=e.value;
+  if(!PTZ.trim()){p.textContent='';p.className='mu';return}
+  const r=ptzParse(PTZ);if(r.ok){p.textContent='✓ '+ptzTxt(r);p.className=''}else{p.textContent='Summani topolmadim (masalan: taksi 15 ming)';p.className='mu'}}
+function ptzGo(){
+  const r=ptzParse(PTZ);if(!r.ok){toast('Summani topolmadim. Masalan: taksi 15 ming');return}
+  putM({id:Date.now(),d:r.d,k:r.k,a:r.a,ac:r.ac,n:r.n,w:W,c:r.c});
+  try{if(r.k==='out')pBudChk(W,'out',r.c)}catch(e){}
+  const tx=ptzTxt(r);PTZ='';toast('✅ '+tx);save()}
+function ptzForm(){
+  const r=ptzParse(PTZ);if(!r.ok){toast('Summani topolmadim. Masalan: taksi 15 ming');return}
+  K=r.k;FACC=r.ac;FA=String(r.a);FN=r.n;FD=r.d===dk()?'':r.d;FT='';EID=0;FC=Math.max(0,(r.k==='out'?CATS:CIN).indexOf(r.c));PTZ='';render();scrollTo(0,0)}
+function ptzUi(){
+  if(uiG('trk_ptz')==='0')return '';
+  return `<div class="goal" style="margin-top:12px"><b>⚡ Tez yozish</b><p class="mu" style="margin:4px 0 8px;font-size:13px">Oddiy gap bilan yoz: “taksi 15 ming”, “tushlik 32000 karta”, “maosh 3 mln”.</p>
+  <div class="in"><input id="ptzi" placeholder="Nima va qancha?" value="${esc(PTZ)}" autocomplete="off" oninput="ptzPrev()" onkeydown="if(event.key==='Enter'){event.preventDefault();ptzGo()}"><button class="btn" onclick="ptzGo()">Yozish</button></div>
+  <p id="ptzp" class="mu" style="margin:0 0 6px;font-size:13px"></p><button class="btn s" onclick="ptzForm()" style="font-size:13px">Formada tahrirlash</button></div>`}
+function ptzJl(){return `<p class="mu" style="margin:12px 0 4px;font-size:12px"><b>💰 Pul: tez yozish oynasi</b></p>${jlSeg('trk_ptz','1',[['1','Ko‘rinsin'],['0','Yashirin (avvalgidek)']])}`}
+// ---- PUL: zakat va sadaqa hisoblagich. Taxminiy yordamchi: aniq masala uchun imomga murojaat qiling. Prefiks: zkt ----
+const ZKT_G=85,ZKT_S=595,ZKT_R=0.025,ZKT_HAWL=354;   // nisob: 85 g oltin yoki 595 g kumush; stavka 2,5%; hijriy yil ≈ 354 kun
+const zktS=()=>{finInit();const f=S.fin;f.zk=f.zk||{};const z=f.zk;if(!z.b)z.b='g';if(!Array.isArray(z.p))z.p=[];return z};
+function zktSet(k,v){const z=zktS();if(k==='pg'||k==='ps'||k==='x'||k==='sg')z[k]=sfn(v);else if(k==='d')z.d=v?1:0;else z[k]=v;save()}
+function zktBasis(b){zktS().b=b;save()}
+// qarz hisobi (sof boylik bilan bir xil qoida: faqat balansga ta'sir qiladigan qarzlar)
+function zktDebts(){let rec=0,pay=0;(S.debts||[]).forEach(d=>{if(d.led===false||d.st==='closed')return;const r=dRem(d);if(d.k==='lend')rec+=r;else pay+=r});return{rec,pay}}
+function zktCalc(){
+  const z=zktS(),price=z.b==='s'?z.ps||0:z.pg||0,grams=z.b==='s'?ZKT_S:ZKT_G,nisob=price*grams;
+  const paid=(z.p||[]).filter(x=>!z.h||x.d>=z.h).reduce((a,x)=>a+x.a,0);
+  const cash=bal('p').tot+(z.d?bal('d').tot:0),D=zktDebts(),extra=z.x||0,wealth=cash+D.rec-D.pay+extra+paid;   // berilgan zakot pulni kamaytirgan: hisobga qaytarib qo'shiladi, aks holda ikki marta ayriladi
+  const o={z,price,grams,nisob,cash,rec:D.rec,pay:D.pay,extra,paid,wealth,ok:price>0,reached:price>0&&wealth>=nisob};
+  o.due=o.reached?Math.round(wealth*ZKT_R):0;
+  if(z.h){const end=new Date(new Date(z.h+'T12:00:00').getTime()+ZKT_HAWL*864e5).toLocaleDateString('sv');o.end=end;o.left=dl(end);o.hawl=o.left<=0}
+  o.rest=Math.max(0,o.due-o.paid);
+  return o}
+function zktStart(){const z=zktS();z.h=dk();z.p=z.p||[];save()}
+function zktDate(v){const z=zktS();z.h=v||'';save()}
+function zktReset(){if(!confirm('Yangi hawl boshlansinmi? Eski hawl sanasi tozalanadi (to‘lovlar tarixi saqlanadi).'))return;const z=zktS();z.h='';save()}
+function zktPay(){const a=sfn(V('zktp')),ac=V('zkta')||'cash';if(!a){toast('Summani yozing');return}
+  const z=zktS(),d=dk();z.p.push({id:Date.now(),d,a});z.p=z.p.slice(-40);
+  putM({id:Date.now()+1,d,k:'out',a,ac,n:'Zakot',w:'p',c:'Sadaqa',z:1});toast('Zakot qayd etildi: '+num(a)+' so‘m 🤲');save()}
+function zktPayDel(id){const z=zktS();z.p=z.p.filter(x=>x.id!==id);save()}
+// sadaqa statistikasi (zakot yozuvlari alohida: z:1)
+function zktSad(){const mk=mKey(0).k,y=String(new Date().getFullYear()),L=S.money.filter(m=>m.w==='p'&&m.k==='out'&&m.c==='Sadaqa'&&!m.z),inc=mSum(mList('p',mk),'in');
+  const mo=L.filter(m=>m.d.startsWith(mk)).reduce((a,m)=>a+m.a,0),yr=L.filter(m=>m.d.startsWith(y)).reduce((a,m)=>a+m.a,0),zk=S.money.filter(m=>m.w==='p'&&m.z&&m.d.startsWith(y)).reduce((a,m)=>a+m.a,0);
+  return{mo,yr,zk,inc,pc:inc?Math.round(mo/inc*100):null}}
+function zktUi(){
+  const o=zktCalc(),z=o.z,S2=zktSad(),sg=z.sg||0,sp=sg?Math.min(100,Math.round(S2.mo/sg*100)):0,bs=z.b==='s',
+    pr=bs?'Kumush narxi (1 gramm), so‘m':'Oltin narxi (1 gramm), so‘m';
+  const row=(t,v,c)=>`<div class="usr"><span class="usk" style="flex:1">${t}</span><span class="usv ${c||''}" style="min-width:110px;text-align:right">${v}</span></div>`;
+  let res='';
+  if(!o.ok)res=`<p class="mu" style="margin:8px 0 0">Nisobni hisoblash uchun ${bs?'kumush':'oltin'} narxini yoz (1 gramm, bugungi kurs).</p>`;
+  else if(!o.reached)res=`<p style="margin:10px 0 4px"><b>Nisobga yetmagan.</b> Kerak: ${num(o.nisob)} so‘m, sende: ${num(Math.max(0,o.wealth))} (${Math.max(0,Math.round(o.wealth/o.nisob*100))}%). Hozircha zakot farz emas.</p><div class="bar"><i style="width:${Math.max(0,Math.min(100,o.wealth/o.nisob*100))}%"></i></div>`;
+  else res=`<p style="margin:10px 0 4px"><b>Nisobga yetgan.</b> Taxminiy zakot: <b style="font:700 20px Fraunces,serif">${num(o.due)} so‘m</b> <span class="mu">(${num(o.wealth)} × 2,5%)</span></p>
+   ${z.h?`<p class="mu" style="margin:0 0 6px">Hawl boshi: ${esc(dU(z.h))}. ${o.hawl?'<b style="color:var(--ac)">Hawl to‘ldi, zakot berish vaqti.</b>':'Hawl to‘lishiga <b>'+o.left+' kun</b> qoldi ('+esc(dU(o.end))+').'}</p>
+   <p style="margin:0 0 8px">Berilgan: <b>${num(o.paid)}</b> · Qolgan: <b>${num(o.rest)}</b> so‘m</p>
+   <div class="in"><input id="zktp" type="text" inputmode="numeric" placeholder="Zakot berdim, so‘m"><select id="zkta" style="flex:0 0 96px"><option value="cash">Naqd</option><option value="card">Karta</option></select><button class="btn" onclick="zktPay()">+</button></div>
+   ${(z.p||[]).length?`<p class="mu" style="margin:6px 0 0;font-size:12px">To‘lovlar: ${z.p.slice(-6).map(x=>x.d.slice(8)+'.'+x.d.slice(5,7)+' '+num(x.a)+' <button class="x" style="display:inline;padding:0 4px" onclick="zktPayDel(${x.id})">×</button>').join(', ')}</p>`:''}
+   <div class="in" style="margin-top:8px"><button class="btn s" onclick="zktReset()" style="font-size:13px">Yangi hawl boshlash</button></div>`
+   :`<p class="mu" style="margin:0 0 8px">Zakot nisobga yetgan pul ustidan to‘liq bir qamariy yil (≈354 kun) o‘tgandan keyin beriladi. Pul nisobga qachon yetganini belgila, ilova hawlni sanaydi.</p><div class="in"><button class="btn" style="flex:1" onclick="zktStart()">Hawl bugundan boshlansin</button></div><div class="in"><input type="date" onchange="zktDate(this.value)"><span class="mu" style="align-self:center;white-space:nowrap">yoki sanani tanla</span></div>`}`;
+  return `<h2>🕌 Zakot hisobi</h2><div class="goal"><p class="mu" style="margin:0 0 8px;font-size:13px">Taxminiy hisob: nisob ${ZKT_G} g oltin yoki ${ZKT_S} g kumush qiymati, stavka 2,5%. Mazhab va mahalliy idoraga qarab farq qilishi mumkin; aniq masala uchun imomga murojaat qiling.</p>
+   <div class="seg" style="margin-bottom:8px"><button class="${bs?'':'on'}" onclick="zktBasis('g')">Oltin (${ZKT_G} g)</button><button class="${bs?'on':''}" onclick="zktBasis('s')">Kumush (${ZKT_S} g)</button></div>
+   <p class="mu" style="margin:0 0 2px;font-size:12px">${pr}</p><div class="in"><input type="text" inputmode="numeric" placeholder="${pr}" value="${(bs?z.ps:z.pg)||''}" onchange="zktSet('${bs?'ps':'pg'}',this.value)"></div>
+   <p class="mu" style="margin:0 0 2px;font-size:12px">Ilovada yo‘q boylik (oltin, dollar...), so‘m</p><div class="in"><input type="text" inputmode="numeric" placeholder="Ilovada yo‘q boylik, so‘m" value="${z.x||''}" onchange="zktSet('x',this.value)"></div>
+   <label class="mu" style="display:flex;gap:8px;align-items:center;margin:4px 0 8px;font-size:13px"><input type="checkbox" ${z.d?'checked':''} onchange="zktSet('d',this.checked)"> Do‘kon hamyonini ham hisobga ol</label>
+   ${o.ok?`<div style="margin:6px 0">${row('Naqd va karta',num(o.cash))}${o.extra?row('Ilovada yo‘q boylik','+'+num(o.extra)):''}${o.paid?row('Berilgan zakot (qaytarib qo‘shildi)','+'+num(o.paid)):''}${o.rec?row('Menga qarzdor','+'+num(o.rec)):''}${o.pay?row('Men qarzdorman','−'+num(o.pay)):''}${row('<b>Jami</b>','<b>'+num(o.wealth)+'</b>')}${row('Nisob ('+o.grams+' g)',num(o.nisob))}</div>`:''}${res}</div>
+  <h2>🤲 Sadaqa</h2><div class="sum"><div><span class="mu">Shu oy</span><b>${num(S2.mo)}</b><span class="mu" style="font-size:12px">${S2.pc!==null?'daromadning '+S2.pc+'%i':'daromad yozilmagan'}</span></div><div><span class="mu">Shu yil</span><b>${num(S2.yr)}</b><span class="mu" style="font-size:12px">zakot: ${num(S2.zk)}</span></div></div>
+   <div class="goal"><b>Oylik sadaqa maqsadi</b><div class="in" style="margin-top:8px"><input type="text" inputmode="numeric" placeholder="Oyiga, so‘m" value="${sg||''}" onchange="zktSet('sg',this.value)"></div>${sg?`<div class="usr"><span class="usb"><i style="width:${sp}%"></i></span><span class="usv">${num(S2.mo)} / ${num(sg)}</span></div>`:'<p class="mu" style="margin:0;font-size:13px">Maqsad qo‘ysang, shu oy qancha berganing ko‘rinadi.</p>'}</div>`}
+// ---- PUL: sof boylik (net worth) va oyma-oy trend. Hamma narsa mavjud yozuvlardan hisoblanadi (yangi ma'lumot saqlanmaydi). Prefiks: sbl ----
+const sblWs=()=>(S.fin&&S.fin.nwd)?['p','d']:['p'];
+function sblNwd(v){finInit();S.fin.nwd=v?1:0;save()}
+// D sanasidagi holat. bal() bilan bir xil qoida: qarz boshlang'ich yozuvi faqat balansga ta'sir qilsa, to'lovlar har doim
+function sblAt(D,ws){
+  finInit();let cash=0,rec=0,pay=0;
+  ws.forEach(w=>{const o=(S.fin.open&&S.fin.open[w])||{};cash+=(o.cash||0)+(o.card||0);
+    S.money.forEach(m=>{if(m.w!==w||m.d>D)return;if(m.k==='in')cash+=m.a;else if(m.k==='out')cash-=m.a})});
+  if(ws.includes('p'))(S.debts||[]).forEach(d=>{
+    const bor=d.k==='borrow',paid=(d.pay||[]).filter(x=>x.d<=D).reduce((a,x)=>a+x.a,0),on=d.led!==false&&(d.d||'')<=D;
+    if(on)cash+=bor?d.a:-d.a;
+    cash+=bor?-paid:paid;
+    if(on&&d.st!=='closed'){const r=Math.max(0,d.a-paid);if(bor)pay+=r;else rec+=r}});
+  return{cash,rec,pay,nw:cash+rec-pay}}
+function sblSeries(n){const ws=sblWs(),out=[],now=new Date();
+  for(let i=n-1;i>=0;i--){const d=new Date(now.getFullYear(),now.getMonth()-i+1,0),D=i===0?dk():d.toLocaleDateString('sv');out.push(Object.assign({D,l:MON[d.getMonth()].slice(0,3)},sblAt(D,ws)))}
+  return out}
+function sblChart(s){
+  const W0=300,H0=96,vals=s.map(x=>x.nw),mn=Math.min(...vals,0),mx=Math.max(...vals,0),rg=Math.max(1,mx-mn),px=i=>8+i*(W0-16)/Math.max(1,s.length-1),py=v=>6+(mx-v)/rg*(H0-12);
+  const pts=s.map((x,i)=>px(i).toFixed(1)+','+py(x.nw).toFixed(1)).join(' ');
+  return `<svg viewBox="0 0 ${W0} ${H0}" width="100%" role="img" aria-label="Sof boylik: so‘nggi 12 oy" style="display:block;margin:8px 0 2px;overflow:visible">${mn<0?`<line x1="8" x2="${W0-8}" y1="${py(0).toFixed(1)}" y2="${py(0).toFixed(1)}" stroke="var(--mu,#999)" stroke-dasharray="3 3" stroke-width="1" opacity=".6"/>`:''}<polyline points="${pts}" fill="none" stroke="var(--ac)" stroke-width="2.4" stroke-linejoin="round" stroke-linecap="round"/>${s.map((x,i)=>`<circle cx="${px(i).toFixed(1)}" cy="${py(x.nw).toFixed(1)}" r="${i===s.length-1?4:2.4}" fill="var(--ac)"/>`).join('')}</svg>
+   <div style="display:flex">${s.map(x=>`<span class="mu" style="flex:1;text-align:center;font-size:10px">${x.l}</span>`).join('')}</div>`}
+const sblSgn=v=>(v>0?'+':v<0?'−':'')+num(Math.abs(v));
+function sblUi(){
+  if(W!=='p')return '';
+  const s=sblSeries(12),c=s[s.length-1],p=s[s.length-2],h=s[Math.max(0,s.length-7)],hasData=S.money.length||(S.debts||[]).length||sblWs().some(w=>{const o=(S.fin.open||{})[w]||{};return o.cash||o.card});
+  const dm=c.nw-p.nw,d6=c.nw-h.nw,row=(t,v,cl)=>`<div class="usr"><span class="usk" style="flex:1">${t}</span><span class="usv ${cl||''}" style="min-width:120px;text-align:right">${v}</span></div>`;
+  return `<h2>💎 Sof boylik</h2><div class="goal">${hasData?`<p style="margin:0"><b style="font:700 26px Fraunces,serif;word-break:break-all">${c.nw<0?'−':''}${num(Math.abs(c.nw))} so‘m</b></p>
+   <p class="mu" style="margin:4px 0 0">O‘tgan oy oxiriga nisbatan <b class="${dm>=0?'in-c':'out-c'}">${sblSgn(dm)}</b>${s.length>=7?` · 6 oy oldingiga nisbatan <b class="${d6>=0?'in-c':'out-c'}">${sblSgn(d6)}</b>`:''}</p>${sblChart(s)}
+   <div style="margin:8px 0 4px">${row('Naqd va karta',num(c.cash))}${c.rec?row('Menga qarzdor','+'+num(c.rec),'in-c'):''}${c.pay?row('Men qarzdorman','−'+num(c.pay),'out-c'):''}${row('<b>Sof boylik</b>','<b>'+(c.nw<0?'−':'')+num(Math.abs(c.nw))+'</b>')}</div>
+   <p class="mu" style="margin:4px 0 6px;font-size:12px">Sof boylik = naqd + karta + senga qarzdorlar − sen qarzdorlar. Jamg‘arma maqsadlaridagi pul ham shu summaga kiradi. Tarix yozuvlar sanasi bo‘yicha qayta hisoblanadi (hozirgi qoldiqni o‘zgartirsang, butun grafik shuncha siljiydi).</p>`
+   :'<p class="mu" style="margin:0">Kirim-chiqim yoz: sof boylik va uning oyma-oy o‘zgarishi shu yerda chiqadi.</p>'}
+   <label class="mu" style="display:flex;gap:8px;align-items:center;margin:4px 0 0;font-size:13px"><input type="checkbox" ${S.fin.nwd?'checked':''} onchange="sblNwd(this.checked)"> Do‘kon hamyonini ham qo‘sh</label></div>`}
+// ---- PUL: do'kon foyda hisoboti (Hisobot bo'limida, faqat 🏪 Dokon hamyonida). Hamma narsa yozuvlardan hisoblanadi. Prefiks: dfy ----
+const DFYW=['Dushanba','Seshanba','Chorshanba','Payshanba','Juma','Shanba','Yakshanba'];
+function dfyData(mk){
+  const L=mList('d',mk),days={};
+  L.forEach(m=>{if(m.k==='tr')return;const x=days[m.d]=days[m.d]||{i:0,o:0};if(m.k==='in')x.i+=m.a;else x.o+=m.a});
+  const rev=mSum(L,'in'),cost=mSum(L,'out');return{days,rev,cost,profit:rev-cost}}
+const dfyPct=(a,b)=>b?Math.round((a-b)/Math.abs(b)*100):null;
+const dfyDay=d=>+d.slice(8)+'-'+MON[+d.slice(5,7)-1];
+function dfyCalc(mo){
+  const mk=mKey(mo),pk=mKey(mo-1),A=dfyData(mk.k),B=dfyData(pk.k),y=mk.d.getFullYear(),m=mk.d.getMonth(),nd=pDim(y,m),el=mo===0?new Date().getDate():(mo<0?nd:0);
+  const ent=Object.entries(A.days),sale=ent.filter(([,x])=>x.i>0),byI=sale.slice().sort((a,b)=>b[1].i-a[1].i);
+  const wd=[0,0,0,0,0,0,0],wc=[0,0,0,0,0,0,0];
+  for(let d=1;d<=el;d++){const k=y+'-'+pad(m+1)+'-'+pad(d),w=(new Date(y,m,d).getDay()+6)%7;wc[w]++;wd[w]+=(A.days[k]||{i:0}).i}
+  const avg=wd.map((v,i)=>wc[i]?Math.round(v/wc[i]):0),bestW=avg.some(v=>v>0)?avg.indexOf(Math.max(...avg)):-1;
+  return{A,B,nd,el,sale:sale.length,noSale:Math.max(0,el-sale.length),avgSale:sale.length?Math.round(A.rev/sale.length):0,
+    proj:mo===0&&el>0&&A.rev>0?Math.round(A.rev/el*nd):null,best:byI[0]||null,worst:byI.length>1?byI[byI.length-1]:null,
+    lossDays:ent.filter(([,x])=>x.o>x.i).length,avg,bestW,margin:A.rev?Math.round(A.profit/A.rev*100):null,
+    dRev:dfyPct(A.rev,B.rev),dProfit:B.profit?dfyPct(A.profit,B.profit):null}}
+function dfyUi(){
+  if(W!=='d')return '';
+  const c=dfyCalc(PF.mo),A=c.A,B=c.B,mx=Math.max(1,...c.avg),sg=v=>(v>0?'+':v<0?'−':'')+num(Math.abs(v)),pc=v=>v===null?'—':(v>0?'+':'')+v+'%';
+  if(!A.rev&&!A.cost)return `<h2>🏪 Do‘kon foydasi</h2><div class="goal"><p class="mu" style="margin:0">Bu oyda do‘kon yozuvi yo‘q. Daromad va chiqim yozilsa, foyda va marja shu yerda chiqadi.</p></div>`;
+  return `<h2>🏪 Do‘kon foydasi</h2><div class="goal">
+   <p class="mu" style="margin:0">Sof foyda (daromad − chiqim)</p><p style="margin:2px 0 8px"><b class="${A.profit>=0?'in-c':'out-c'}" style="font:700 26px Fraunces,serif">${sg(A.profit)} so‘m</b></p>
+   <div class="sum"><div><span class="mu">Daromad</span><b class="in-c">${num(A.rev)}</b><span class="mu" style="font-size:12px">o‘tgan oyga ${pc(c.dRev)}</span></div><div><span class="mu">Chiqim</span><b class="out-c">${num(A.cost)}</b><span class="mu" style="font-size:12px">o‘tgan oy ${num(B.cost)}</span></div></div>
+   <div class="sum" style="margin-top:8px"><div><span class="mu">Marja (foyda ulushi)</span><b>${c.margin===null?'—':c.margin+'%'}</b><span class="mu" style="font-size:12px">o‘tgan oy foydasi ${sg(B.profit)}</span></div><div><span class="mu">Foyda o‘zgarishi</span><b class="${c.dProfit>0?'in-c':c.dProfit<0?'out-c':''}">${pc(c.dProfit)}</b><span class="mu" style="font-size:12px">o‘tgan oyga nisbatan</span></div></div>
+   <p style="margin:10px 0 4px">Savdo bo‘lgan kunlar: <b>${c.sale}</b>${c.el?` / ${c.el}`:''}${c.noSale?` · savdosiz kun: <b>${c.noSale}</b>`:''}. Savdo kunidagi o‘rtacha daromad: <b>${num(c.avgSale)}</b> so‘m.</p>
+   ${c.proj?`<p class="mu" style="margin:0 0 4px">Shu sur‘atda oy oxirigacha daromad ≈ <b>${num(c.proj)}</b> so‘m.</p>`:''}
+   ${c.best?`<p style="margin:0 0 2px">🔝 Eng yaxshi kun: <b>${dfyDay(c.best[0])}</b>, daromad ${num(c.best[1].i)}.</p>`:''}${c.worst?`<p style="margin:0 0 2px">📉 Eng past savdo kuni: <b>${dfyDay(c.worst[0])}</b>, daromad ${num(c.worst[1].i)}.</p>`:''}
+   ${c.lossDays?`<p class="mu" style="margin:0 0 2px">Chiqimi daromaddan ko‘p bo‘lgan kunlar: ${c.lossDays} ta.</p>`:''}
+   ${c.bestW>=0?`<p style="margin:8px 0 4px">Hafta kunlari bo‘yicha o‘rtacha daromad (eng kuchli: <b>${DFYW[c.bestW]}</b>)</p><div class="bars2" style="height:70px;gap:6px">${c.avg.map((v,i)=>`<i style="height:${Math.max(2,v/mx*64)}px;${i===c.bestW?'':'opacity:.55'}"></i>`).join('')}</div><div style="display:flex;gap:6px">${DFYW.map(n=>`<span class="mu" style="flex:1;text-align:center;font-size:10px">${n.slice(0,2)}</span>`).join('')}</div>`:''}
+   </div>`}
+// ---- PUL: "bu necha soatlik ish?" xarajatni mehnat soatiga aylantirib ko'rsatadi. Hamma narsa qurilmada. Prefiks: mhn ----
+const mhnS=()=>{finInit();return S.fin.mh=S.fin.mh||{}};
+const mhnOn=()=>uiG('trk_mhn')!=='0';
+function mhnRate(){const m=(S.fin&&S.fin.mh)||{};return(m.inc>0&&(m.hrs||160)>0)?m.inc/(m.hrs||160):0}
+const mhnDay=()=>{const m=(S.fin&&S.fin.mh)||{};return m.dh>0?m.dh:8};
+function mhnFmt(h){
+  const mins=Math.round(h*60);if(mins<1)return '1 daqiqadan kam';if(mins<60)return mins+' daqiqa';
+  const dh=mhnDay();if(h<dh){const hh=Math.floor(mins/60),mm=mins%60;return hh+' soat'+(mm?' '+mm+' daqiqa':'')}
+  const d=Math.round(h/dh*10)/10;return String(d).replace('.',',')+' ish kuni ('+dh+' soat)'}
+// a so'm necha soatlik mehnat; sozlanmagan yoki o'chirilgan bo'lsa bo'sh matn
+function mhnTxt(a){if(!mhnOn()||!(a>0))return '';const r=mhnRate();return r?'⏱ ≈ '+mhnFmt(a/r)+' ish':''}
+function mhnForm(){const e=document.getElementById('mhnf');if(!e)return;e.textContent=K==='out'?mhnTxt(+FA||0):''}
+function mhnLine(){if(K!=='out'||!mhnOn()||!mhnRate())return '';return `<p id="mhnf" class="mu" style="margin:-2px 0 6px;font-size:13px">${esc(mhnTxt(+FA||0))}</p>`}
+function mhnSet(k,v){const m=mhnS();m[k]=sfn(v);if(!(m[k]>0))delete m[k];save()}
+function mhnAuto(){const e=pIncomeEst();if(!(e>0)){toast('Avval kirim yozuvlarini qo‘sh');return}mhnS().inc=e;save()}
+function mhnCard(){
+  if(W!=='p')return '';const m=mhnS(),r=mhnRate(),ex=[10000,50000,200000];
+  return `<h2>⏱ Mehnat narxi</h2><div class="goal"><p class="mu" style="margin:0 0 8px;font-size:13px">Oylik daromading va ish soatingni yoz: xarajat kiritganingda “bu necha soatlik ish?” deb ko‘rsatiladi. Impuls xaridlarni kamaytiradi.</p>
+   <div class="in"><input type="text" inputmode="numeric" placeholder="Oylik daromad, so‘m" value="${m.inc||''}" onchange="mhnSet('inc',this.value)"><button class="btn s" onclick="mhnAuto()" style="flex:0 0 auto;font-size:12px">Kirimimdan</button></div>
+   <div class="in"><input type="text" inputmode="numeric" placeholder="Oyiga ish soati (standart 160)" value="${m.hrs||''}" onchange="mhnSet('hrs',this.value)"><input type="text" inputmode="numeric" placeholder="Ish kuni soati (8)" value="${m.dh||''}" onchange="mhnSet('dh',this.value)"></div>
+   ${r?`<p style="margin:0 0 4px">1 soat mehnating ≈ <b>${num(Math.round(r))}</b> so‘m.</p><p class="mu" style="margin:0;font-size:13px">${ex.map(a=>num(a)+' so‘m = '+mhnFmt(a/r)).join(' · ')}</p>`:'<p class="mu" style="margin:0;font-size:13px">Daromad yozilmaguncha ko‘rsatma chiqmaydi.</p>'}</div>`}
+function mhnRep(){
+  if(W!=='p')return '';const r=mhnRate();if(!r||!mhnOn())return '';
+  const L=mList(W,mKey(PF.mo).k).filter(m=>m.k==='out'),tot=L.reduce((a,m)=>a+m.a,0),t={z:0,x:0,k:0};L.forEach(m=>{if(t[m.t]!==undefined)t[m.t]+=m.a});
+  if(!tot)return '';
+  return `<h2>⏱ Xarajat = mehnat</h2><div class="goal"><p style="margin:0 0 6px">Shu oy sarflaganing <b>${num(tot)}</b> so‘m ≈ <b>${mhnFmt(tot/r)}</b> ish.</p>
+   ${t.k||t.x?`<p class="mu" style="margin:0;font-size:13px">${t.k?'🔴 Keraksiz: '+num(t.k)+' so‘m ≈ '+mhnFmt(t.k/r)+'. ':''}${t.x?'🟡 Xohish: '+num(t.x)+' so‘m ≈ '+mhnFmt(t.x/r)+'.':''}</p>`:''}</div>`}
+function mhnJl(){return `<p class="mu" style="margin:12px 0 4px;font-size:12px"><b>⏱ Pul: xarajat necha soatlik ish ekani</b></p>${jlSeg('trk_mhn','1',[['1','Ko‘rinsin (daromad kiritilsa)'],['0','Ko‘rinmasin (avvalgidek)']])}`}
 // ---- DIZAYN: Klassik (hozirgi) yoki Yangi uslub, urg'u rangi, matn o'lchami, animatsiya. Faqat shu qurilmada saqlanadi ----
 const DZA=[['zumrad','Zumrad','#0f6b52'],['kok','Ko‘k','#1f5fbf'],['binafsha','Binafsha','#6a46c9'],['atirgul','Atirgul','#c2335b'],['oltin','Oltin','#a06a12'],['grafit','Grafit','#2f3d48']];
 function dzMeta(){try{const m=document.querySelector('meta[name=theme-color]');if(m){const c=getComputedStyle(document.body).backgroundColor;if(c)m.setAttribute('content',c)}}catch(e){}}
@@ -4699,6 +4903,8 @@ function ovCard(){const c=ovCfg(),V=ovEn(),o=ovDev(),opt=(name)=>V.map(v=>`<opti
 try{const T=ieTts&&ieTts();if(T&&'onvoiceschanged' in T)T.onvoiceschanged=()=>{try{if(tab==='s')render()}catch(e){}}}catch(e){}
 // ---- "NIMA YANGILANDI?": har versiya uchun yozuv. HAR CHIQARISHDA ro'yxatning BOSHIGA yangi yozuv qo'shing: v = APP_VER (tools/build_app.py tekshiradi), t = qisqa xulosa (yangilash tugmasi ustida ko'rinadi, apostrofsiz yozing) ----
 const NEWSV=[
+{v:'2026.12.19-3',t:'🕌 Zakot va sadaqa, 💎 sof boylik, 🏪 do‘kon foydasi, ⏱ xarajat necha soatlik ish',items:[['🕌 Zakot va sadaqa: nisobga yetganingni, hawl (bir yil) qachon to‘lishini va qancha zakot kerakligini hisoblaydi; berganingni qayd etadi; shu oy va shu yil sadaqang, oylik sadaqa maqsadi. Taxminiy hisob: aniq masala uchun imomga murojaat qil','Pul → 🕌 Zakat'],['💎 Sof boylik: naqd + karta + senga qarzdorlar − sen qarzdorlar, so‘nggi 12 oylik grafik va o‘tgan oyga nisbatan o‘zgarish','Pul → Hisobot, tepada'],['🏪 Do‘kon foydasi: sof foyda, marja, o‘tgan oy bilan taqqos, eng yaxshi va eng past kun, savdosiz kunlar, hafta kunlari bo‘yicha o‘rtacha daromad','Pul → Dokon → Hisobot'],['⏱ Xarajat necha soatlik ish: oylik daromad va ish soatini yozsang, xarajat kiritganingda “≈ 2 soat 30 daqiqa ish” deb ko‘rsatadi; hisobotda keraksiz va xohish xarajatlar necha soatlik ish ekani','Pul → Reja → Mehnat narxi'],['Eskisi: ⏱ ko‘rsatmasini o‘chirish mumkin','Sozlamalar → 🪄 Jilo va qulaylik']]},
+{v:'2026.12.19-2',t:'⚡ Pul: matn bilan tez yozish (“taksi 15 ming”)',items:[['⚡ Tez yozish: “taksi 15 ming”, “tushlik 32000 karta”, “maosh 3 mln”, “kecha kitob 80 ming” deb yoz, summa, kategoriya va hisob o‘zi aniqlanadi. Yozishdan oldin nimani tushunganini ko‘rsatadi; xohlasang formada tahrirlaysan. Bularning barchasi telefonning o‘zida ishlaydi, internet va AI kerak emas','Pul → Bosh, tepada'],['Eskisi: tez yozish oynasini yashirish mumkin','Sozlamalar → 🪄 Jilo va qulaylik']]},
 {v:'2026.12.19-1',t:'📲 Bosh ekran yorliqlari, ☁ sinxronlash holati va avto-zaxira, 🕌 namoz-markazli kun, 📝 testlar kengaytmasi',items:[['📲 Bosh ekran yorliqlari: 🆘 Qiyin, 🔒 Sessiya, 🕌 Xufton, 🌅 Bomdod, ⚡ 5 daqiqa, 📝 Test, 🧩 Kun. Har biri alohida havola; Xufton va Bomdod avval so‘raydi, tasodifan bosilsa hech narsa o‘zgarmaydi. iPhone’da hali sinalmagan','Sozlamalar → 🪄 Jilo → Yorliqlar'],['☁ Sinxronlash holati: saqlangan, yuborilmoqda, oflayn; 30 daqiqadan ortiq saqlanmasa ogohlantirish. 🛟 Qurilmada har kuni avtomatik nusxa (7 tagacha), tiklash avval ko‘rib chiqish oynasini ochadi','Sozlamalar → ☁ Sinxronlash va zaxira'],['🕌 Namoz-markazli kun: reja blokini namoz vaqtiga bog‘la (“Peshin + 15 daqiqa”); namoz vaqtlari kunma-kun o‘zgarganda blok o‘zi siljiydi. 5 vaqt namoz bloklarini bir tegishda qo‘shish, nomiga qarab avtomatik bog‘lash','Sozlamalar → Namoz-markazli kun'],['📝 Testlar: 🧠 ochiq rejim (javobni o‘ylab, ko‘rib, o‘zingni baholaysan), 🔁 xatolarni takrorlash jadvali (1 va 3 kundan keyin), 📅 oraliq sanasi qo‘yilsa kuniga necha savol kerakligi va Bugun → Kun’da kartasi','O‘qish → Univer → Testlar'],['Har birining eskisi Sozlamalar → 🪄 Jilo va qulaylik da','Sozlamalar']]},
 {v:'2026.12.18-1',t:'Bugun qayta tartiblandi: 📅 Jadval va 🧩 Kun, o‘tgan rejalar joyi, Intizom kartasi',items:[['📅 Jadval endi toza: faqat Hozir kartasi, keyingi soatlar chizig‘i va rejalar jadvali. Qolgan kartalar yangi 🧩 Kun bo‘limida mavzulashgan guruhlarda (Ibodat va nafs, Intizom va fokus, O‘rganish, Natija, Kun yakuni); guruhlar yig‘iladi va eslab qolinadi','Bugun → 📅 Jadval, 🧩 Kun'],['O‘tgan rejalar joyi: pastda “O‘tgan” guruhida yoki avvalgidek joyida, vaqt tartibida (jadval tepasidagi tugma bilan darhol almashadi)','Bugun → Jadval'],['🧭 Intizom: Himoya, Rejim va Kun tartibi bitta kartaga birlashtirildi; Hozir ostida 🆘 🔒 🧩 tezkor tugmalari','Bugun → 🧩 Kun'],['Eskisi: Sozlamalar → 🪄 Jilo va qulaylik da “Bugun tuzilishi: bir ekranda barchasi (avvalgidek)”, “Intizom kartasi: alohida”, “O‘tgan rejalar: joyida”, “Bugun ochilganda qaysi bo‘lim”','Sozlamalar']]},
 {v:'2026.12.17-1',t:'🌙 Kechki zanjir, 🌅 Bomdod kafolati, 🗣 Til nazorati, 🎯 Kunlik 5 ta',items:[['🌙 Kechki zanjir: Xufton → Mulk → telefon karavotdan tashqarida → uxlash (maqsad 23:00, sozlanadi). Xufton vaqtida o‘qilsa ball, ketma-ket kunlar sanaladi, 2 ta budilnik tasdig‘i, uxlashdan 45 va 10 daqiqa oldin eslatma','Bugun → 🧭 Kun tartibi'],['🌅 Bomdod kafolati: “Bomdod o‘qidim” vaqtini yozadi; quyosh chiqqandan keyin bo‘lsa qazo sifatida to‘g‘ri hisoblanadi (uyaltirmasdan), 7 kunlik belgilar va maslahatlar','Kun tartibi → 🌅 Bomdod'],['🗣 Til nazorati: so‘kish, jahl, g‘iybat uchun jazosiz sanagich, “10 soniya sukut” tugmasi, do‘stlar uchun tayyor chegara iboralari (nusxalash), uchrashuv vaqt chegarasi taymeri','Kun tartibi → 🗣 Til'],['🎯 Kunlik 5 ta: namoz, Qur‘on, ingliz tili, mashq, telefon. Ilovadagi mavjud ma‘lumotlardan o‘zi to‘ladi, nishonlari sozlanadi','Kun tartibi → 🎯 5 ta'],['Har birining eskisi Sozlamalar → 🪄 Jilo va qulaylik da','Sozlamalar']]},
@@ -5844,7 +6050,7 @@ function jlCard(){return `<p class="mu" style="margin:0 0 8px;font-size:13px">Ya
   <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Sana ko‘rinishi</b></p>${jlSeg('trk_dfmt','u',[['u','9-noyabr'],['i','2026-11-09']])}
   <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Bekor qilish tugmasi</b> (o‘chirilganda 8 soniya chiqadi)</p>${jlSeg('trk_ud','1',[['1','Yoqilgan'],['0','O‘chirilgan']])}
   <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Sabqi/Manzil va pora takrori</b></p>${jlSeg('trk_tqrd','a',[['a','Alohida sanaladi'],['q','O‘qish hisobiga ham qo‘shilsin (avvalgidek)']])}
-  <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Surish maslahati</b></p><button class="btn s" onclick="uiS('trk_swh','0');toast('Maslahat Bugun jadvalida yana chiqadi');render()">Qayta ko‘rsatish</button>${jlCard2()}${jlCard3()}${jlCard4()}${jlCard5()}${jlCard6()}${jlCard7()}${jlCard8()}${jlCard9()}${jlCard10()}${jlCard11()}${jlCard12()}${jlCard13()}`}
+  <p class="mu" style="margin:6px 0 4px;font-size:12px"><b>Surish maslahati</b></p><button class="btn s" onclick="uiS('trk_swh','0');toast('Maslahat Bugun jadvalida yana chiqadi');render()">Qayta ko‘rsatish</button>${jlCard2()}${jlCard3()}${jlCard4()}${jlCard5()}${jlCard6()}${jlCard7()}${jlCard8()}${jlCard9()}${jlCard10()}${jlCard11()}${jlCard12()}${jlCard13()}${ptzJl()}${mhnJl()}`}
 // ----- 💡 surish maslahati (bir marta) -----
 const swHint=()=>uiG('trk_swh')==='1'?'':`<div class="row" style="cursor:default;margin:6px 0"><span class="t">💡 <b>Surish:</b> jadval qatorini <b>o‘ngga</b> sursang “bajarildi”, <b>chapga</b> sursang “o‘tkazildi” (sababini so‘raydi).</span><button class="x" onclick="uiS('trk_swh','1');render()" aria-label="Yopish">✕</button></div>`;
 // ----- 🧪 tizim tekshiruvi (telefonning o'zida) -----
