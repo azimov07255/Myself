@@ -44,7 +44,7 @@ function pBosh(){
   const owe=dB.filter(d=>d.k==='borrow').reduce((a,d)=>a+dRem(d),0),lent=dB.filter(d=>d.k==='lend').reduce((a,d)=>a+dRem(d),0);
   const recent=S.money.filter(m=>m.w===W).slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id).slice(0,6).map(mRow).join('');
   return `<section class="hero"><p class="lab">Umumiy balans</p><h1 style="font-size:36px;word-break:break-all">${num(B.tot)} so‘m</h1><div class="pbal"><div><span>💵 Naqd</span><b>${num(B.cash)}</b></div><div><span>💳 Karta</span><b>${num(B.card)}</b></div></div></section>
-  <h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
+  ${ptzUi()}<h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
   <div class="sum"><div><span class="mu">Kirim</span><b class="in-c">${num(inn)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'in','cash'))}, karta ${num(mSum(L,'in','card'))}</span></div><div><span class="mu">Chiqim</span><b class="out-c">${num(ou)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'out','cash'))}, karta ${num(mSum(L,'out','card'))}</span></div><div class="w"><span class="mu">Oy balansi</span><b>${num(inn-ou)} so‘m</b></div></div>
   ${W==='p'&&(owe||lent)?`<button class="row" onclick="PV='q';render()"><span class="t">Qarzlar<br><span class="mu">Men qarzdorman: ${num(owe)}. Menga qarzdor: ${num(lent)}</span></span></button>`:''}
   ${pDailyUi()}${pForecastUi()}${pQuickUi()}${pTypeUi()}${pForm()}${pWlUi()}<h2>So‘nggi yozuvlar</h2>${recent||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
