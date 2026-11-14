@@ -1,0 +1,5 @@
+// ---- MAQSAD ekranini bo'limlarga ajratish: Maqsad / O'yin / Fokus / Kun / Bog' (bitta uzun lenta o'rniga) ----
+let MQV='g';
+const MQT=[['g','🎯','Maqsad'],['o','⚔️','O‘yin'],['f','🍅','Fokus'],['k','🌙','Kun'],['b','🌳','Bog‘'],['n','🧭','Nafs']];
+const mqSeg=()=>`<div class="seg mqseg" role="tablist" aria-label="Maqsad bo‘limlari">${MQT.map(x=>`<button role="tab" aria-selected="${MQV===x[0]}" class="${MQV===x[0]?'on':''}" onclick="MQV='${x[0]}';render();scrollTo(0,0)"><span class="mqi">${x[1]}</span>${x[2]}</button>`).join('')}</div>`;
+const mqLinks=()=>`<p class="mu" style="margin:14px 0 6px;font-size:13px">Mashq o‘yinlari</p><button class="row" onclick="EV='i';IVW='l';go('e')"><span style="font-size:24px">🧠</span><span class="t">Til o‘yinlari<br><small class="mu">Birikmalar, so‘z oilasi, paraphrase, xatoni top</small></span><span class="tm">ochish</span></button><button class="row" onclick="QT='t';go('q')"><span style="font-size:24px">🎯</span><span class="t">Ayat o‘yini<br><small class="mu">Yodlagan suralaringdan, xato qilsang takrorga qaytadi</small></span><span class="tm">ochish</span></button>`;

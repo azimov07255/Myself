@@ -1,0 +1,83 @@
+/* ===== YANGI DIZAYN (ui2): hamma qoida html.ui2 ostida, klassik ko'rinishga tegmaydi ===== */
+/* 1) rang palitralari: qorong'i (standart), yorug', 6 ta urg'u rangi */
+html.ui2{--bg:#0a1520;--c1:#122230;--c2:#1a2f40;--tx:#e8f0ee;--mu:#8ea6a0;--ln:rgba(255,255,255,.09);--bad:#ef7f72;--on-ac:#06201a;--on-go:#1a1405;--hp:rgba(255,255,255,.045);--sh:0 1px 0 rgba(255,255,255,.04),0 14px 30px -20px rgba(0,0,0,.7);--hlab:#f6c98f;--hmu:rgba(255,255,255,.7);--htx:#f6f3ea;
+ --ac-d:#45cfae;--go-d:#f0b45a;--hbg-d:#0e3f37;--ac-l:#0f6b52;--go-l:#c0541c;--hbg-l:#0f5f4a;--ac:var(--ac-d);--go:var(--go-d);--hbg:var(--hbg-d);color-scheme:dark}
+@media(prefers-color-scheme:light){html.ui2:not([data-theme=dark]){--bg:#f4efe6;--c1:#ffffff;--c2:#ece6d8;--tx:#17251e;--mu:#62746a;--ln:rgba(23,37,30,.10);--bad:#c0503f;--on-ac:#fff;--on-go:#fff;--hp:rgba(255,255,255,.07);--sh:0 1px 0 rgba(23,37,30,.04),0 14px 30px -22px rgba(23,37,30,.45);--hlab:#ffd2a8;--ac:var(--ac-l);--go:var(--go-l);--hbg:var(--hbg-l);color-scheme:light}}
+html.ui2[data-theme=light]{--bg:#f4efe6;--c1:#ffffff;--c2:#ece6d8;--tx:#17251e;--mu:#62746a;--ln:rgba(23,37,30,.10);--bad:#c0503f;--on-ac:#fff;--on-go:#fff;--hp:rgba(255,255,255,.07);--sh:0 1px 0 rgba(23,37,30,.04),0 14px 30px -22px rgba(23,37,30,.45);--hlab:#ffd2a8;--ac:var(--ac-l);--go:var(--go-l);--hbg:var(--hbg-l);color-scheme:light}
+html.ui2[data-acc=kok]{--ac-d:#62a5f5;--go-d:#f2b45a;--hbg-d:#12365f;--ac-l:#1f5fbf;--go-l:#b45d0e;--hbg-l:#1d4f9f}
+html.ui2[data-acc=binafsha]{--ac-d:#a58af0;--go-d:#f0b45a;--hbg-d:#2d2260;--ac-l:#6a46c9;--go-l:#c35217;--hbg-l:#55389f}
+html.ui2[data-acc=atirgul]{--ac-d:#f07a9b;--go-d:#f0c060;--hbg-d:#5a1a35;--ac-l:#c2335b;--go-l:#a36817;--hbg-l:#a52a4d}
+html.ui2[data-acc=oltin]{--ac-d:#e6b450;--go-d:#4fcfa8;--hbg-d:#4a3410;--ac-l:#a06a12;--go-l:#1f7a5e;--hbg-l:#8a5a10}
+html.ui2[data-acc=grafit]{--ac-d:#9fb4c4;--go-d:#f0b45a;--hbg-d:#1c2830;--ac-l:#2f3d48;--go-l:#c0541c;--hbg-l:#2b3640}
+/* 2) asos */
+html.ui2 body{background:var(--bg) radial-gradient(900px 420px at 90% -8%,color-mix(in srgb,var(--ac) 16%,transparent),transparent 70%) fixed,radial-gradient(700px 420px at -10% 8%,color-mix(in srgb,var(--go) 11%,transparent),transparent 70%) fixed;-webkit-font-smoothing:antialiased;font-feature-settings:'tnum' 1,'ss01' 1}
+html.ui2 #app{padding:calc(env(safe-area-inset-top,0px) + 20px) 18px calc(env(safe-area-inset-bottom,0px) + 118px)}
+html.ui2 h2{font-size:20px;font-weight:700;letter-spacing:-.015em;margin:30px 0 12px}
+html.ui2 ::selection{background:color-mix(in srgb,var(--ac) 32%,transparent)}
+html.ui2 .top .d{font-size:25px;letter-spacing:-.02em}
+/* 3) kartochkalar */
+html.ui2 .hero{border:0;border-radius:28px;padding:24px 22px;isolation:isolate;position:relative;overflow:hidden;background:linear-gradient(155deg,color-mix(in srgb,var(--hbg) 80%,#fff 20%),var(--hbg) 52%,color-mix(in srgb,var(--hbg) 80%,#000 20%));box-shadow:0 24px 46px -24px color-mix(in srgb,var(--hbg) 85%,#000),inset 0 1px 0 rgba(255,255,255,.16)}
+html.ui2 .hero::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:repeating-conic-gradient(from 45deg,transparent 0 25%,var(--hp) 0 50%) 0 0/30px 30px}
+html.ui2 .hero::after{content:'';position:absolute;z-index:-1;pointer-events:none;width:280px;height:280px;right:-90px;top:-120px;border-radius:50%;background:radial-gradient(circle,rgba(255,255,255,.2),transparent 70%)}
+html.ui2 .hero .lab{font-size:12px;letter-spacing:.09em;text-transform:uppercase}
+html.ui2 .hero h1{letter-spacing:-.03em}
+html.ui2 .goal,html.ui2 .sum div,html.ui2 .sd,html.ui2 .dpc{background:var(--c1);border:1px solid var(--ln);border-radius:20px;box-shadow:var(--sh)}
+html.ui2 .goal{padding:16px 16px;margin-bottom:12px}
+html.ui2 .sum{gap:10px}html.ui2 .sum div{padding:14px 15px}html.ui2 .sum .w{border-color:color-mix(in srgb,var(--go) 60%,transparent)}
+html.ui2 .sum b{font-size:21px;letter-spacing:-.02em}
+html.ui2 .sd{margin:12px 0;padding:0 16px}html.ui2 .sd summary{padding:15px 0;position:relative;padding-right:22px}
+html.ui2 .sd summary::after{content:'›';position:absolute;right:2px;top:50%;transform:translateY(-52%) rotate(90deg);color:var(--mu);font-size:22px;transition:transform .2s}
+html.ui2 .sd[open] summary::after{transform:translateY(-52%) rotate(-90deg)}
+html.ui2 .rwc{background:linear-gradient(135deg,color-mix(in srgb,var(--hbg) 82%,#fff 18%),var(--hbg));border-radius:22px;box-shadow:0 18px 34px -22px color-mix(in srgb,var(--hbg) 90%,#000)}
+/* 4) qatorlar, tugmalar */
+html.ui2 .row{background:var(--c1);border:1px solid var(--ln);border-left:3px solid transparent;border-radius:18px;padding:14px;margin-bottom:8px;box-shadow:var(--sh);transition:transform .12s,background .2s}
+html.ui2 .row.now{border-left-color:var(--go);background:color-mix(in srgb,var(--go) 9%,var(--c1))}
+html.ui2 .row:active{transform:scale(.99)}
+html.ui2 .ck{width:25px;height:25px;border-width:2px;transition:background .2s,box-shadow .2s}
+html.ui2 .done .ck{box-shadow:0 0 0 5px color-mix(in srgb,var(--ac) 20%,transparent)}
+html.ui2 .big{min-height:54px;border-radius:18px;font-size:17px;font-weight:700;letter-spacing:-.01em;background:linear-gradient(180deg,color-mix(in srgb,var(--go) 88%,#fff 12%),var(--go));box-shadow:0 14px 26px -14px color-mix(in srgb,var(--go) 80%,#000),inset 0 1px 0 rgba(255,255,255,.28);transition:transform .12s,box-shadow .2s}
+html.ui2 .big.ok{background:var(--c2);color:var(--ac);box-shadow:none}
+html.ui2 .ghost{border-radius:16px;min-height:46px}
+html.ui2 .btn{min-height:44px;border-radius:14px;padding:11px 18px;font-weight:700;background:var(--ac);box-shadow:0 10px 20px -14px color-mix(in srgb,var(--ac) 85%,#000);transition:transform .12s,box-shadow .2s,background .2s}
+html.ui2 .btn.s{background:var(--c1);color:var(--tx);border:1px solid var(--ln);box-shadow:none}
+html.ui2 .btn:active,html.ui2 .big:active{transform:scale(.97)}
+html.ui2 .btn:disabled,html.ui2 .big:disabled{opacity:.5}
+/* 5) formalar */
+html.ui2 input:not([type=checkbox]):not([type=radio]):not([type=range]),html.ui2 select,html.ui2 textarea{min-height:46px;border-radius:14px;border:1px solid var(--ln);background:var(--c1);color:var(--tx);padding:12px 14px;transition:border-color .15s,box-shadow .15s}
+html.ui2 textarea{min-height:78px}
+html.ui2 input:focus,html.ui2 select:focus,html.ui2 textarea:focus{outline:none;border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 22%,transparent)}
+html.ui2 input::placeholder,html.ui2 textarea::placeholder{color:color-mix(in srgb,var(--mu) 75%,transparent)}
+html.ui2 .seg{background:var(--c2);border-radius:16px;padding:4px;gap:2px}
+html.ui2 .seg button{border-radius:12px;padding:10px 6px;transition:background .2s,color .2s,box-shadow .2s}
+html.ui2 .seg button.on{background:var(--c1);color:var(--tx);box-shadow:0 3px 10px -4px rgba(0,0,0,.35)}
+html.ui2 .chips button,html.ui2 .cchips button{background:var(--c1);color:var(--tx);border:1px solid var(--ln);border-radius:999px;padding:9px 14px;transition:background .15s,transform .12s}
+html.ui2 .chips .on,html.ui2 .chips button.on,html.ui2 .cchips .on{background:var(--ac);color:var(--on-ac);border-color:var(--ac)}
+html.ui2 .chip{border-radius:999px;padding:4px 11px}html.ui2 .chip.on{background:var(--go);color:var(--on-go)}
+html.ui2 .mood button{transition:transform .15s,opacity .15s}html.ui2 .mood .on{transform:scale(1.15);border-color:var(--ac);background:color-mix(in srgb,var(--ac) 15%,transparent)}
+/* 6) hafta chiziqchasi, jadval */
+html.ui2 .wd{border-radius:16px;padding:9px 0;background:var(--c1);box-shadow:var(--sh);transition:transform .12s}
+html.ui2 .wd.on{background:var(--ac);color:var(--on-ac);box-shadow:0 12px 22px -12px var(--ac)}
+html.ui2 .cell{width:32px;height:32px;transition:background .15s,transform .12s}html.ui2 .cell:active{transform:scale(.9)}
+html.ui2 .bar,html.ui2 .usb{height:10px;border-radius:8px}
+html.ui2 .bar i,html.ui2 .usb i{background:linear-gradient(90deg,var(--ac),color-mix(in srgb,var(--ac) 55%,var(--go)));border-radius:8px}
+/* 7) pastki panel: suzuvchi shisha */
+html.ui2 nav{background:none;border:0;pointer-events:none;padding:0 12px calc(env(safe-area-inset-bottom,0px) + 10px)}
+html.ui2 nav div{pointer-events:auto;background:color-mix(in srgb,var(--c1) 84%,transparent);-webkit-backdrop-filter:blur(22px) saturate(1.5);backdrop-filter:blur(22px) saturate(1.5);border:1px solid var(--ln);border-radius:28px;padding:7px 8px;box-shadow:0 18px 40px -16px rgba(0,0,0,.55)}
+html.ui2 nav button{border-radius:18px;transition:background .2s,color .2s}
+html.ui2 nav button .ni{transition:transform .2s}
+html.ui2 nav button.on{background:color-mix(in srgb,var(--ac) 17%,transparent);color:var(--ac)}
+html.ui2 nav button.on .ni{transform:translateY(-1px) scale(1.12)}
+html.ui2 .navai{border:4px solid color-mix(in srgb,var(--c1) 100%,transparent)!important;box-shadow:0 12px 24px -8px color-mix(in srgb,var(--ac) 70%,#000)!important}
+/* 8) varaqlar, xabarlar */
+html.ui2 .mfs,html.ui2 .hbsh{background:var(--c1);border-radius:28px 28px 0 0;box-shadow:0 -18px 50px rgba(0,0,0,.45);border-top:1px solid var(--ln)}
+html.ui2 #toast{border-radius:16px!important;-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);box-shadow:0 14px 30px -10px rgba(0,0,0,.5)!important}
+html.ui2 .updb{border-radius:18px;background:var(--hbg)}
+html.ui2 ::-webkit-scrollbar{width:10px;height:10px}html.ui2 ::-webkit-scrollbar-thumb{background:var(--ln);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+html.ui2 button:focus-visible,html.ui2 summary:focus-visible,html.ui2 a:focus-visible{outline:3px solid color-mix(in srgb,var(--ac) 65%,transparent);outline-offset:2px}
+html.ui2 .x{min-width:36px;min-height:36px;border-radius:12px}
+/* 9) katta ekran */
+@media(min-width:1000px){html.ui2 #app{max-width:560px}html.ui2.wide #app,html.ui2.wide nav div{max-width:900px}}
+/* ===== ikkala uslub uchun: matn o'lchami va animatsiya tanlovi ===== */
+html[data-fs=s] #app{zoom:.94}html[data-fs=l] #app{zoom:1.08}html[data-fs=xl] #app{zoom:1.16}
+html[data-mo=off] *,html[data-mo=off] *::before,html[data-mo=off] *::after{animation:none!important;transition:none!important}
+@media(prefers-reduced-motion:reduce){html.ui2 *,html.ui2 *::before,html.ui2 *::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}

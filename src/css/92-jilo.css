@@ -1,0 +1,15 @@
+/* Bugun ekrani uchun ixtiyoriy "Jilo" (Sozlamalar → Bugun ko'rinishi). Faqat html.bpol bo'lganda ishlaydi */
+html.bpol #app .top h1.gr{font-size:36px;letter-spacing:-.025em;line-height:1.05}
+html.bpol #app .wk{gap:8px}
+html.bpol #app .wk .wd{border-radius:20px;padding:11px 0;box-shadow:0 8px 18px -12px rgba(0,0,0,.4)}
+html.bpol #app .wk .wd.on{box-shadow:0 12px 24px -10px var(--ac)}
+html.bpol #app .goal,html.bpol #app .hero{margin-bottom:14px}
+html.bpol #app .goal{border-radius:22px;box-shadow:0 10px 26px -18px rgba(0,0,0,.45)}
+html.bpol #app .hero{border-radius:28px;box-shadow:0 22px 44px -24px var(--ac)}
+html.bpol #app .row{border-radius:20px;box-shadow:0 8px 20px -16px rgba(0,0,0,.4)}
+html.bpol #app .tl .tb{border-radius:20px;box-shadow:0 8px 18px -14px rgba(0,0,0,.4);padding:12px 14px}
+html.bpol #app .tl.now .tb{box-shadow:0 14px 28px -14px var(--go)}
+html.bpol #app .seg.btabs{border-radius:22px;padding:5px;box-shadow:0 8px 22px -14px rgba(0,0,0,.4)}
+html.bpol #app .seg.btabs button{border-radius:17px;min-height:44px}
+html.bpol #app .btchips button,html.bpol #app .chips button{min-height:38px;border-radius:19px}
+html.bpol #app .bar{height:9px;border-radius:6px}

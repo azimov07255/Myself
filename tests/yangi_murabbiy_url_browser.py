@@ -1,0 +1,71 @@
+# AI murabbiy va havoladan maqola olish. Soat: 2026-11-08 (yakshanba) 10:00.
+import sys, json
+sys.path.insert(0, '/mnt/user-data/outputs/tests')
+from _pw import Run
+GOOD = {'summary': 'Hafta yaxshi o‘tdi: 5 kunda maqsad bajarildi.', 'wins': ['3 kun ketma-ket', 'Hifz 6 bet'], 'focus': [{'t': 'IELTS Writing', 'why': '5.8 ball'}, {'t': 'Takror', 'why': '9 ta so‘z navbatda'}, {'t': 'Uyqu', 'why': 'rejadan kech'}],
+        'week': [{'d': d, 'tasks': ['IELTS lug‘at: 15 daqiqa', 'Hifz: 3 bet ' + d]} for d in ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya']], 'tip': 'Davom et!'}
+with Run('mur', when=(2026, 11, 8, 10, 0, 0)) as R:
+    ev, chk, pg = R.ev, R.chk, R.pg
+    ev("""()=>{window.aiOk=()=>true;aiS().sh={core:1,quran:1,study:1,health:1,money:1};S.q.m={1:10};S.q.ord=[1];S.q.ppd=3;S.ie.target=7;S.ie.ex='2026-12-20';S.ie.tests=[{id:1,d:dk(),k:'M',b:{L:7,R:6.5,W:6,S:7}},{id:2,d:dk(),k:'W',b:{W:6},fb:{errors:[{o:'a lot of informations',c:'a lot of information',t:'grammar'}]}}];S.ie.words=Array.from({length:12},(_,i)=>({id:i,w:'w'+i,m:'m',box:i<4?4:0,due:dk(),t:1}));tab='h';rwReset();render()}""")
+    # ---------- 1. context ----------
+    c = ev("coCtx()")
+    chk('the context covers the last 7 days: XP per day, days met, plan percentages', len(c['xp_7_kun']) == 7 and len(c['reja_foizi_7_kun']) == 7 and isinstance(c['maqsad_bajarilgan_kunlar'], int) and c['kunlik_maqsad_xp'] > 0)
+    chk('the day names start TOMORROW (Sunday today -> Du, Se, Ch, Pa, Ju, Sh, Ya)', c['kunlar'] == ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya'], c['kunlar'])
+    chk('hifz and IELTS sections carry real numbers (memorised pages, remaining, readiness, error types, exam countdown)', c['hifz']['yodlangan_bet'] == 10 and c['hifz']['kunlik_bet'] == 3 and c['ielts']['maqsad_ball'] == 7 and c['ielts']['xato_turlari'] == {'grammar': 1} and c['ielts']['imtihongacha_kun'] == 42 and isinstance(c['ielts']['tayyorgarlik_foiz'], int))
+    chk('the app-usage hint lists screens never opened', isinstance(c['ilova']['ochilmagan_bolimlar'], list) and len(c['ilova']['ochilmagan_bolimlar']) >= 1)
+    chk('health and money data are NEVER in the coach context, whatever the switches say', 'health' not in json.dumps(c).lower() and 'pul' not in c and 'money' not in json.dumps(c).lower())
+    ev("aiS().sh={core:1,quran:0,study:0,health:0,money:0}"); c2 = ev("coCtx()")
+    chk('PRIVACY: with the Quran and study switches off those sections are not sent', 'hifz' not in c2 and 'ielts' not in c2 and 'xp_7_kun' in c2)
+    ev("aiS().sh={core:1,quran:1,study:1,health:0,money:0}")
+    chk('the context stays well under the server limit (9000 characters)', len(json.dumps(ev("coCtx()"))) < 8500)
+    # ---------- 2. validation ----------
+    dates = ['2026-11-09', '2026-11-10', '2026-11-11', '2026-11-12', '2026-11-13', '2026-11-14', '2026-11-15']
+    v = lambda j: ev("(x)=>{try{return coValid(x[0],x[1])}catch(e){return {err:e.message}}}", [j, dates])
+    ok_ = v(GOOD); chk('a good answer is accepted and normalised (7 days, 3 focus areas, trimmed text)', 'err' not in ok_ and len(ok_['week']) == 7 and len(ok_['focus']) == 3 and ok_['summary'].startswith('Hafta'))
+    bad = dict(GOOD, summary=''); chk('a missing summary is rejected', 'err' in v(bad))
+    bad = dict(GOOD, focus=[]); chk('no focus areas -> rejected', 'err' in v(bad))
+    bad = dict(GOOD, week=GOOD['week'][:3]); chk('fewer than 5 planned days -> rejected ("not complete")', 'to‘liq chiqmadi' in v(bad).get('err', ''))
+    big = dict(GOOD, week=GOOD['week'] + [{'d': 'X', 'tasks': ['x']}] * 3, wins=['a'] * 9, focus=GOOD['focus'] * 2)
+    r = v(big); chk('extra days, wins and focus items are cut (7 days, max 4 wins, max 3 focus)', len(r['week']) == 7 and len(r['wins']) == 4 and len(r['focus']) == 3)
+    r = v(dict(GOOD, week=[{'d': 'Du', 'tasks': ['t%d  ' % i for i in range(9)] + ['  ', None]}] * 7)); chk('at most 4 tasks per day; blank tasks are dropped', all(len(d['tasks']) == 4 for d in r['week']))
+    chk('garbage (not an object) is rejected with a message', 'tushunarsiz' in v('hello').get('err', ''))
+    # ---------- 3. generation + Bugun card ----------
+    ev("""(g)=>{window.__calls=[];window.fnAI=async(b)=>{window.__calls.push(b);return {text:JSON.stringify(g)}};S.coach=undefined;tab='h';render()}""", GOOD); pg.wait_for_timeout(150)
+    t = pg.inner_text('#app'); chk('with no plan the Bugun screen invites the user to make one (1 AI request)', '🧭 AI murabbiy' in t and 'Haftalik reja tuz' in t and '1 ta AI so‘rovi' in t)
+    ev("window.aiOk=()=>false;render()"); chk('not signed in: the card is not shown at all', '🧭 AI murabbiy' not in pg.inner_text('#app')); ev("window.aiOk=()=>true;render()")
+    pg.click('#app >> text=Haftalik reja tuz'); pg.wait_for_timeout(400)
+    c = ev("__calls"); chk('one request: action coach with the JSON context (parseable, contains the day names)', len(c) == 1 and c[0]['action'] == 'coach' and 'kunlar' in json.loads(c[0]['ctx']))
+    co = ev("S.coach"); chk('the plan is stored for the NEXT 7 days with the date of creation', co['at'] == '2026-11-08' and co['days'] == dates and len(co['res']['week']) == 7 and co['x'] == {})
+    t = pg.inner_text('#app'); chk('on the day of creation there are no tasks for today: the card says the plan starts tomorrow', '🧭 Murabbiy: bugun' in t and 'Reja ertadan boshlanadi' in t)
+    R.at(2026, 11, 9, 9, 0, 0); ev("()=>{rwReset();render()}"); pg.wait_for_timeout(150); t = pg.inner_text('#app')
+    chk('next day the card shows TODAY\u2019s tasks only (Du) with a 0 / 2 counter', '0 / 2' in t and 'IELTS lug‘at: 15 daqiqa' in t and 'Hifz: 3 bet Du' in t and 'Hifz: 3 bet Se' not in t.split('To‘liq hafta')[0])
+    pg.click('#app .goal .row >> nth=0'); pg.wait_for_timeout(120); chk('ticking a task saves it and updates the counter', '1 / 2' in pg.inner_text('#app') and ev("S.coach.x['2026-11-09:0']") == 1)
+    pg.click('#app .goal .row >> nth=0'); chk('ticking again unticks', ev("S.coach.x['2026-11-09:0']") == 0)
+    ev("document.querySelector('#app .goal details').open=true"); pg.wait_for_timeout(80); t = pg.inner_text('#app .goal details')
+    chk('the full plan shows the summary, wins, 3 focus areas with reasons, every day of the week and the tip', 'Hafta yaxshi o‘tdi' in t and '3 kun ketma-ket' in t and '1. IELTS Writing' in t and '5.8 ball' in t and 'Se 11-10' in t and 'Ya 11-15' in t and 'Davom et!' in t)
+    ev("window.confirm=()=>false;window.__calls=[]"); pg.click('#app >> text=Yangi reja tuz'); pg.wait_for_timeout(300)
+    chk('regenerating a plan made on an EARLIER day goes straight through (no question) and replaces it', ev("__calls.length") == 1 and ev("S.coach.at") == '2026-11-09' and ev("S.coach.days[0]") == '2026-11-10')
+    ev("()=>{S.coach.at=dk()}"); ev("window.__calls=[]"); pg.click('#app >> text=Yangi reja tuz'); pg.wait_for_timeout(200); chk('a same-day regeneration that is cancelled sends no request', ev("__calls.length") == 0)
+    # errors
+    d0 = ev("S.coach.days[0]")
+    ev("""()=>{window.confirm=()=>true;window.fnAI=async()=>{throw new Error('Bugungi limit tugadi (40 ta so‘rov).')};S.coach.at='2000-01-01';render()}"""); pg.click('#app >> text=Yangi reja tuz'); pg.wait_for_timeout(300)
+    chk('an AI error is shown on the card and the old plan is kept', 'Bugungi limit tugadi' in pg.inner_text('#app') and ev("!!S.coach.res") and ev("S.coach.days[0]") == d0)
+    ev("""()=>{COE='';window.fnAI=async()=>({text:JSON.stringify({summary:'short',week:[]})});render()}"""); pg.click('#app >> text=Yangi reja tuz'); pg.wait_for_timeout(300)
+    chk('an incomplete AI plan is rejected with a message and never replaces the good plan', 'to‘liq chiqmadi' in pg.inner_text('#app') and ev("S.coach.res.summary").startswith('Hafta'))
+    ev("()=>{COE=''}")
+    R.at(2026, 11, 17, 9, 0, 0); ev("()=>{rwReset();render()}"); pg.wait_for_timeout(120)
+    chk('after the week is over the card invites a new plan again', 'Haftalik reja tuz' in pg.inner_text('#app') and '🧭 Murabbiy: bugun' not in pg.inner_text('#app'))
+    R.at(2026, 11, 8, 10, 0, 0)
+    # ---------- 4. link import ----------
+    ev("()=>{tab='e';EV='i';IVW='a';IMF.add=1;IMF.mk='a';render()}"); pg.wait_for_timeout(120)
+    chk('the add-material form has a link field and a "🔗 Olish" button', ev("!!document.getElementById('mu')") and '🔗 Olish' in pg.inner_text('#app'))
+    ev("()=>{window.__f=[];window.fnPost=async(b,ms)=>{window.__f.push([b,ms]);return {title:'Cities & Rain',text:'Paragraph one of the article.\\n\\nParagraph two.',host:'news.example.com',chars:2345}}}")
+    pg.click('#app >> text=🔗 Olish'); pg.wait_for_timeout(100); chk('an empty link is refused with a message (no request)', ev("__f.length") == 0 and 'Havolani kiriting' in pg.inner_text('body'))
+    pg.fill('#mu', 'https://news.example.com/story'); pg.click('#app >> text=🔗 Olish'); pg.wait_for_timeout(200)
+    f = ev("__f"); chk('one request: action "article", the link, with a 40 s wait', len(f) == 1 and f[0][0] == {'action': 'article', 'url': 'https://news.example.com/story'} and f[0][1] == 40000)
+    chk('the title and the text fill the form; the status line names the site and the size', ev("document.getElementById('mt').value") == 'Cities & Rain' and ev("document.getElementById('mx').value").startswith('Paragraph one') and 'news.example.com' in pg.inner_text('#mus') and '2345' in pg.inner_text('#mus'))
+    pg.fill('#mt', 'My own title'); pg.click('#app >> text=🔗 Olish'); pg.wait_for_timeout(150); chk('a title the user typed is NOT overwritten', ev("document.getElementById('mt').value") == 'My own title')
+    ev("()=>{window.fnPost=async()=>{throw new Error('Sahifadan matn topilmadi (u JavaScript bilan yuklanadi yoki yopiq). Matnni qo‘lda nusxalab qo‘ying.')}}"); pg.click('#app >> text=🔗 Olish'); pg.wait_for_timeout(200)
+    chk('a server error is shown (toast) and the status line is cleared', 'qo‘lda nusxalab' in pg.inner_text('body') and pg.inner_text('#mus').strip() == '')
+    ev("()=>{window.fnPost=async()=>({title:'T',text:'x '.repeat(200),host:'h.com',chars:400})}"); pg.fill('#mt', ''); pg.click('#app >> text=🔗 Olish'); pg.wait_for_timeout(150)
+    pg.click('#app button >> text="Saqlash va ochish"'); pg.wait_for_timeout(300); chk('after fetching, "Saqlash va ochish" saves the fetched text as an article and opens the reader', ev("S.ie.mat[0].t") == 'T' and ev("S.ie.mat[0].k") == 'a' and len(ev("S.ie.mat[0].x")) >= 200 and ev("!!document.getElementById('iem')"))

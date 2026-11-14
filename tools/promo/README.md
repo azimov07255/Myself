@@ -1,0 +1,1 @@
+# Qisqa promo video generatori. Talab: espeak-ng (apt), ffmpeg, PIL, numpy; ekran rasmlari /tmp/guide/shots (tools/guide/shoot.py). Ishga tushirish: python3 make.py (preview: python3 make.py preview). Chiqish: /tmp/promo/video_only.mp4 + audio_*.wav, keyin ffmpeg bilan birlashtiriladi.
