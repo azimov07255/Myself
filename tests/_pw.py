@@ -22,7 +22,7 @@ class Run:
         ctx = self.b.new_context(viewport={'width': self.width, 'height': 844}, device_scale_factor=2, is_mobile=True, has_touch=True)
         self.pg = ctx.new_page(); self.errs = []; self.pg.on('pageerror', lambda e: self.errs.append(str(e)))
         self.pg.clock.install(time=datetime.datetime(*self.when))
-        if self.bg == 'o': self.pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o')}catch(e){}")  # eski sinovlar eski (hammasi bir ekranda) tuzilishni tekshiradi
+        if self.bg == 'o': self.pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a')}catch(e){}")  # eski sinovlar eski (hammasi bir ekranda) tuzilishni tekshiradi
         self.pg.route('**/*', lambda r: r.continue_() if r.request.url.startswith(('http://127.0.0.1', 'data:', 'blob:')) else r.abort())
         self.pg.goto(f'http://127.0.0.1:{self.port}/index.html'); self.pg.wait_for_timeout(600)
         self.pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
