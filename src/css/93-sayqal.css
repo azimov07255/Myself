@@ -1,0 +1,26 @@
+/* SAYQAL: umumiy dizayn sayqali (Sozlamalar → 🎨 Dizayn → Sayqal). Hammasi html.pl ostida: o'chirilsa avvalgi ko'rinish qaytadi.
+   Faqat ko'rinish: soyalar, burchaklar, bosish effekti, tab va pastki menyu. Ranglar CSS o'zgaruvchilaridan. */
+html.pl nav{background:var(--bg);background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:saturate(1.5) blur(14px);backdrop-filter:saturate(1.5) blur(14px);border-top-color:var(--ln)}
+html.pl nav button{transition:background .2s,color .2s,transform .12s}
+html.pl nav button:active{transform:scale(.93)}
+html.pl nav button.on{background:var(--c2);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 6px 14px -8px rgba(0,0,0,.45)}
+html.pl nav button.on .ni{transform:translateY(-1px) scale(1.1)}
+html.pl nav .ni{transition:transform .2s}
+html.pl .goal,html.pl .sum div{border:1px solid var(--ln);border-radius:18px;box-shadow:0 1px 2px rgba(10,30,20,.05),0 10px 22px -16px rgba(10,30,20,.35)}
+html.pl .goal{padding:14px 16px}
+html.pl .hero{border-radius:26px;box-shadow:0 20px 36px -22px rgba(5,40,28,.65),0 1px 0 rgba(255,255,255,.16) inset}
+html.pl .big{border-radius:18px;min-height:50px;box-shadow:0 12px 24px -14px var(--go);transition:transform .12s,filter .2s,box-shadow .2s}
+html.pl .btn{border-radius:14px;min-height:44px;transition:transform .12s,filter .2s}
+html.pl .big:active,html.pl .btn:active,html.pl .seg button:active,html.pl .tbb:active{transform:scale(.97);filter:brightness(.96)}
+html.pl .seg{border:1px solid var(--ln);border-radius:14px}
+html.pl .seg button{border-radius:11px;transition:background .2s,color .2s,transform .12s}
+html.pl .seg button.on{background:var(--c2);color:var(--tx);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 4px 10px -7px rgba(0,0,0,.5)}
+html.pl .seg.sc button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px}
+html.pl .tbb{box-shadow:0 6px 14px -9px rgba(10,30,20,.5);transition:transform .12s}
+html.pl h2{letter-spacing:-.01em;margin-top:24px}
+html.pl .row{border-radius:16px}
+html.pl input,html.pl select,html.pl textarea{border-radius:14px}
+html.pl input:focus,html.pl select:focus,html.pl textarea:focus{outline:2px solid color-mix(in srgb,var(--ac) 55%,transparent);outline-offset:1px}
+/* Odat: telefonda kompyuter tugmalari (ustun kengligi, keng ekran) yashirinadi */
+@media (max-width:700px){html.pl .hbcol,html.pl .hbwide{display:none}}
+@media (prefers-reduced-motion:reduce){html.pl *{transition:none!important}}

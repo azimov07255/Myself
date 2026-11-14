@@ -89,3 +89,4 @@ yangi_yorliq_zaxira_browser|Yorliqlar, sinxronlash holati, avto-zaxira (haqiqiy 
 yangi_namoz_kun_browser|Namoz-markazli kun (haqiqiy brauzer)
 yangi_testlar2_browser|Testlar kengaytmasi (haqiqiy brauzer)
 mushaf_browser|Mushaf (haqiqiy brauzer: 604 sahifa, uzoq bosish, sinov)
+yangi_sayqal_browser|Dizayn sayqali: yoqilgan/avvalgidek, 3 uslub, yorug'/qorong'u (haqiqiy brauzer)
