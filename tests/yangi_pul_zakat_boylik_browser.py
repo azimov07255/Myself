@@ -95,6 +95,7 @@ with Run('pul_zbd') as R:
     ev("(()=>{PF.mo=0;render()})()")
     chk('it also shows the profit sign correctly for a loss month', ev("(()=>{S.money=[{id:1,d:'2026-10-02',k:'in',a:100000,c:'Dokon daromadi',n:'',w:'d',ac:'cash'},{id:2,d:'2026-10-03',k:'out',a:300000,c:'Boshqa',n:'',w:'d',ac:'cash'}];render();return 1})()") == 1 and '−200 000' in text())
     ev("(()=>{S.money=[];PF.mo=0;render()})()"); chk('an empty month shows a short hint instead of zeros', 'do‘kon yozuvi yo‘q' in text())
+    chk('in the shop wallet the personal net worth and hours cards are NOT shown (they would mislead)', 'Sof boylik' not in text() and 'Xarajat = mehnat' not in text())
     ev("(()=>{W='p';render()})()"); chk('the personal wallet does not show the shop card', 'Do‘kon foydasi' not in text())
     setup(money=shop, w='d', pv='h'); chk('no horizontal overflow in the shop report', nows())
 
@@ -102,7 +103,7 @@ with Run('pul_zbd') as R:
     setup(pv='b'); chk('with nothing set there is no hours hint anywhere', ev("mhnTxt(25000)") == '' and pg.locator('#mhnf').count() == 0)
     ev("mhnSet('inc','1 600 000')"); pg.wait_for_timeout(60)
     chk('income 1 600 000 / default 160 hours = 10 000 so‘m an hour', ev("mhnRate()") == 10000)
-    chk('25 000 = 2 soat 30 daqiqa; 5 000 = 30 daqiqa; 10 000 = 1 soat; 600 = under a minute', ev("mhnTxt(25000)") == '⏱ ≈ 2 soat 30 daqiqa ish' and ev("mhnTxt(5000)") == '⏱ ≈ 30 daqiqa ish' and ev("mhnTxt(10000)") == '⏱ ≈ 1 soat ish' and 'kam' in ev("mhnTxt(600)"))
+    chk('25 000 = 2 soat 30 daqiqa; 5 000 = 30 daqiqa; 10 000 = 1 soat; 50 = under a minute', ev("mhnTxt(25000)") == '⏱ ≈ 2 soat 30 daqiqa ish' and ev("mhnTxt(5000)") == '⏱ ≈ 30 daqiqa ish' and ev("mhnTxt(10000)") == '⏱ ≈ 1 soat ish' and 'kam' in ev("mhnTxt(50)"))
     chk('80 000 = 8 hours = 1 ish kuni; 120 000 = 1,5 ish kuni; with a 6-hour day 120 000 = 2 ish kuni (6 soat)', ev("mhnTxt(80000)") == '⏱ ≈ 1 ish kuni (8 soat) ish' and '1,5 ish kuni' in ev("mhnTxt(120000)") and (ev("(()=>{mhnSet('dh','6');const r=mhnTxt(120000);mhnSet('dh','');return r})()") == '⏱ ≈ 2 ish kuni (6 soat) ish'))
     ev("()=>{PV='b';K='out';render()}"); pg.wait_for_timeout(80)
     chk('the expense form shows a live line under the amount (empty until a number is typed)', pg.locator('#mhnf').count() == 1 and pg.inner_text('#mhnf').strip() == '')

@@ -22,10 +22,11 @@ function sblChart(s){
    <div style="display:flex">${s.map(x=>`<span class="mu" style="flex:1;text-align:center;font-size:10px">${x.l}</span>`).join('')}</div>`}
 const sblSgn=v=>(v>0?'+':v<0?'−':'')+num(Math.abs(v));
 function sblUi(){
+  if(W!=='p')return '';
   const s=sblSeries(12),c=s[s.length-1],p=s[s.length-2],h=s[Math.max(0,s.length-7)],hasData=S.money.length||(S.debts||[]).length||sblWs().some(w=>{const o=(S.fin.open||{})[w]||{};return o.cash||o.card});
   const dm=c.nw-p.nw,d6=c.nw-h.nw,row=(t,v,cl)=>`<div class="usr"><span class="usk" style="flex:1">${t}</span><span class="usv ${cl||''}" style="min-width:120px;text-align:right">${v}</span></div>`;
   return `<h2>💎 Sof boylik</h2><div class="goal">${hasData?`<p style="margin:0"><b style="font:700 26px Fraunces,serif;word-break:break-all">${c.nw<0?'−':''}${num(Math.abs(c.nw))} so‘m</b></p>
-   <p class="mu" style="margin:4px 0 0">O‘tgan oy oxiriga nisbatan <b class="${dm>=0?'in-c':'out-c'}">${sblSgn(dm)}</b>${s.length>=7?` · 6 oy oldinga nisbatan <b class="${d6>=0?'in-c':'out-c'}">${sblSgn(d6)}</b>`:''}</p>${sblChart(s)}
+   <p class="mu" style="margin:4px 0 0">O‘tgan oy oxiriga nisbatan <b class="${dm>=0?'in-c':'out-c'}">${sblSgn(dm)}</b>${s.length>=7?` · 6 oy oldingiga nisbatan <b class="${d6>=0?'in-c':'out-c'}">${sblSgn(d6)}</b>`:''}</p>${sblChart(s)}
    <div style="margin:8px 0 4px">${row('Naqd va karta',num(c.cash))}${c.rec?row('Menga qarzdor','+'+num(c.rec),'in-c'):''}${c.pay?row('Men qarzdorman','−'+num(c.pay),'out-c'):''}${row('<b>Sof boylik</b>','<b>'+(c.nw<0?'−':'')+num(Math.abs(c.nw))+'</b>')}</div>
    <p class="mu" style="margin:4px 0 6px;font-size:12px">Sof boylik = naqd + karta + senga qarzdorlar − sen qarzdorlar. Jamg‘arma maqsadlaridagi pul ham shu summaga kiradi. Tarix yozuvlar sanasi bo‘yicha qayta hisoblanadi (hozirgi qoldiqni o‘zgartirsang, butun grafik shuncha siljiydi).</p>`
    :'<p class="mu" style="margin:0">Kirim-chiqim yoz: sof boylik va uning oyma-oy o‘zgarishi shu yerda chiqadi.</p>'}

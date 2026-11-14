@@ -49,6 +49,7 @@ echo "== Kun yakuni, haftalik sharh, odat eslatmasi va arxivi (haqiqiy brauzer)"
 echo "== Vidjet: xulosa, yuborish, Scriptable skripti (haqiqiy brauzer)"; out=$(python3 $T/yangi_vidjet_browser.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1
 echo "== Ishonchlilik: 1 yillik katta ma'lumot, tezlik, zaxira (haqiqiy brauzer)"; out=$(python3 $T/stress_browser.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1
 echo "== Pul: matn bilan tez yozish (haqiqiy brauzer)"; out=$(python3 $T/yangi_pul_tez_browser.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1
+echo "== Pul: zakat, sadaqa, sof boylik, dokon foydasi, mehnat narxi (haqiqiy brauzer)"; out=$(python3 $T/yangi_pul_zakat_boylik_browser.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1
 echo "== Pul nazorati, haftalik sharh tugmasi, yangiliklar (haqiqiy brauzer)"; out=$(python3 $T/yangi_pul2_browser.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1
 echo "== Qo'llanma sahifasi (haqiqiy brauzer)"; out=$(python3 $T/qollanma_check.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1
 echo "== Uyqu, Bugun tuzilishi, kunlik chegara, jamg'arma maqsadlari (haqiqiy brauzer)"; out=$(python3 $T/yangi_uyqu_bugun_browser.py 2>&1); echo "$out" | grep -E '^FAIL|passed'; echo "$out" | grep -q '^FAIL' && fail=1

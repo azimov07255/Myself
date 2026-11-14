@@ -20,7 +20,7 @@ function mhnCard(){
    <div class="in"><input type="text" inputmode="numeric" placeholder="Oyiga ish soati (standart 160)" value="${m.hrs||''}" onchange="mhnSet('hrs',this.value)"><input type="text" inputmode="numeric" placeholder="Ish kuni soati (8)" value="${m.dh||''}" onchange="mhnSet('dh',this.value)"></div>
    ${r?`<p style="margin:0 0 4px">1 soat mehnating ≈ <b>${num(Math.round(r))}</b> so‘m.</p><p class="mu" style="margin:0;font-size:13px">${ex.map(a=>num(a)+' so‘m = '+mhnFmt(a/r)).join(' · ')}</p>`:'<p class="mu" style="margin:0;font-size:13px">Daromad yozilmaguncha ko‘rsatma chiqmaydi.</p>'}</div>`}
 function mhnRep(){
-  const r=mhnRate();if(!r||!mhnOn())return '';
+  if(W!=='p')return '';const r=mhnRate();if(!r||!mhnOn())return '';
   const L=mList(W,mKey(PF.mo).k).filter(m=>m.k==='out'),tot=L.reduce((a,m)=>a+m.a,0),t={z:0,x:0,k:0};L.forEach(m=>{if(t[m.t]!==undefined)t[m.t]+=m.a});
   if(!tot)return '';
   return `<h2>⏱ Xarajat = mehnat</h2><div class="goal"><p style="margin:0 0 6px">Shu oy sarflaganing <b>${num(tot)}</b> so‘m ≈ <b>${mhnFmt(tot/r)}</b> ish.</p>
