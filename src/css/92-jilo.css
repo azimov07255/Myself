@@ -13,3 +13,16 @@ html.bpol #app .seg.btabs{border-radius:22px;padding:5px;box-shadow:0 8px 22px -
 html.bpol #app .seg.btabs button{border-radius:17px;min-height:44px}
 html.bpol #app .btchips button,html.bpol #app .chips button{min-height:38px;border-radius:19px}
 html.bpol #app .bar{height:9px;border-radius:6px}
+
+/* Bugun tepasi: ixtiyoriy ixcham ko'rinish (Sozlamalar → Bugun ko'rinishi → Bugun tepasi) */
+html.btc #app .top:has(h1.gr){gap:10px}
+html.btc #app .top:has(h1.gr)>div:first-child{min-width:0;flex:1}
+html.btc #app .top h1.gr{font-size:20px;margin:0 0 2px;letter-spacing:0;line-height:1.15}
+html.btc #app .top .qt{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+html.btc.btq0 #app .top .qt{display:none}
+html.btc #app .top:has(h1.gr) svg{width:44px;height:44px;flex:0 0 auto}
+html.btc #app .wk{margin-top:8px;gap:4px}
+html.btc #app .wk .wd{padding:4px 0;border-radius:10px;font-size:11px}
+html.btc #app .wk .wd b{font-size:15px}
+html.btc #app .wk+.in{margin-top:4px}
+html.btc #app .wk+.in .btn{padding:6px 14px;font-size:13px}
