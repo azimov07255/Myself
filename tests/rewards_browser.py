@@ -13,7 +13,7 @@ FILL = """(k,n)=>{ // n = 60 (5 prayers) or 100 (5 prayers + 2 top-3)
 with sync_playwright() as p:
     b = p.chromium.launch(); ctx = b.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=2, is_mobile=True, has_touch=True)
     pg = ctx.new_page()
-    pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+    pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.on('dialog', lambda d: d.accept())
     pg.clock.install(time=datetime.datetime(2026, 10, 31, 10, 0, 0))
     pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
