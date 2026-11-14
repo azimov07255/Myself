@@ -26,3 +26,7 @@ html.btc #app .wk .wd{padding:4px 0;border-radius:10px;font-size:11px}
 html.btc #app .wk .wd b{font-size:15px}
 html.btc #app .wk+.in{margin-top:4px}
 html.btc #app .wk+.in .btn{padding:6px 14px;font-size:13px}
+
+/* Pul tablari (ixcham): 5 ta tab bir qatorga sig'adi */
+.seg.sc.ptb button{flex:1 1 0;min-width:0;padding:9px 4px;font-size:14px}
+@media (max-width:350px){.seg.sc.ptb button{font-size:11px;padding:9px 2px}}
