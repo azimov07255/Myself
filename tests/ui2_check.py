@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Yangi dizayn qatlami (90-ui2.css): HAMMA qoida faqat html.ui2 (yoki matn o'lchami/animatsiya tanlovi) ostida bo'lishi shart: klassik ko'rinish o'zgarmasligi kafolati.
 import re, sys
-css = re.sub(r'/\*.*?\*/', '', open('/mnt/user-data/outputs/src/css/90-ui2.css', encoding='utf-8').read() + open('/mnt/user-data/outputs/src/css/91-glass.css', encoding='utf-8').read(), flags=re.S)
+css = re.sub(r'/\*.*?\*/', '', open((ROOT + '/src/css/90-ui2.css'), encoding='utf-8').read() + open((ROOT + '/src/css/91-glass.css'), encoding='utf-8').read(), flags=re.S)
 OK = ('html.ui2', 'html[data-fs=', 'html[data-mo=')
 bad, n = [], 0
 def walk(t):

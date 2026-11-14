@@ -11,14 +11,14 @@ globalThis.__cc=()=>({auth:{getUser:async t=>({data:{user:users[t]||null}}),admi
  const base={GEMINI_API_KEY:'k',SUPABASE_URL:'u',SUPABASE_SERVICE_ROLE_KEY:'s'};
  const rq=(tok,body)=>new Request('http://x',{method:'POST',headers:{Authorization:'Bearer '+tok},body:JSON.stringify(body)});
  const msg=[{r:'user',t:'Salom'}];
- let H=load('/mnt/user-data/outputs/server-setup/ai-assistant.ts',{...base,OWNER_EMAIL:' boss@example.com '});
+ let H=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),{...base,OWNER_EMAIL:' boss@example.com '});
  let r=await H(rq('own',{action:'chat',messages:msg}));ok('OWNER_EMAIL secret set (any case/spaces): the owner is not limited by the daily cap',r.status===200);
  r=await H(rq('usr',{action:'chat',messages:msg}));ok('a normal user at the cap is still limited (429)',r.status===429);
- H=load('/mnt/user-data/outputs/server-setup/ai-assistant.ts',base);
+ H=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),base);
  r=await H(rq('own',{action:'chat',messages:msg}));ok('OWNER_EMAIL not set: nobody is treated as owner (fails closed, limit applies)',r.status===429);
- const C=load('/mnt/user-data/outputs/server-setup/create-user.ts',{...base,OWNER_EMAIL:'boss@example.com'});
+ const C=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/create-user.ts'),{...base,OWNER_EMAIL:'boss@example.com'});
  r=await C(rq('own',{action:'list'}));ok('create-user: owner may use the owner API',r.status!==403);
  r=await C(rq('usr',{action:'list'}));ok('create-user: a normal user gets 403',r.status===403);
- const C2=load('/mnt/user-data/outputs/server-setup/create-user.ts',base);
+ const C2=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/create-user.ts'),base);
  r=await C2(rq('own',{action:'list'}));ok('create-user without OWNER_EMAIL: nobody is admitted (403)',r.status===403);
 })();

@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Kun yakuni qo'shimchalari, haftalik sharh, odat eslatmasi va arxivi. Soat: 2026-10-31 (shanba).
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('kunhafta') as R:
     ev, chk, pg = R.ev, R.chk, R.pg

@@ -1,3 +1,4 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI suhbat (klient): shlyuz xatosida qayta urinish, xabarlar, "Qayta yuborish" tugmasi, hisobot qatori. Tarmoq soxta fetch bilan almashtiriladi.
 import sys
 from playwright.sync_api import sync_playwright
@@ -14,7 +15,7 @@ with sync_playwright() as p:
     pg = ctx.new_page()
     pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a');if(localStorage.getItem('trk_ptb')===null)localStorage.setItem('trk_ptb','a')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
-    pg.goto('file:///mnt/user-data/outputs/tracker/index.html'); pg.wait_for_timeout(500)
+    pg.goto(('file://' + ROOT + '/tracker/index.html')); pg.wait_for_timeout(500)
     pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
     ev = pg.evaluate; ev("()=>{S.ob=1;S.ts=1}"); ev(STUB)
     run = lambda: ev("()=>aiStream([{r:'user',t:'salom'}],'',t=>{window.__txt=t},null,{onRetry:()=>{window.__retry++}}).then(r=>({ok:1,r}),e=>({ok:0,m:e.message}))")

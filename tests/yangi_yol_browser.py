@@ -1,8 +1,9 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # IELTS 8+ yo'l xaritasi: bosqichlar, maqsad, bugungi paket, daraja aniqlash, test. Soat: 2026-11-03 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
-LISTS = open('/mnt/user-data/outputs/data/ielts-lists-v1.json', encoding='utf-8').read()
+LISTS = open((ROOT + '/data/ielts-lists-v1.json'), encoding='utf-8').read()
 with Run('yol', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
     ev("""(txt)=>{window.confirm=()=>true;window.__t=[];window.toast=m=>window.__t.push(m);window.aiOk=()=>true;window.__req=[];window.__omit='';window.__failAt=0;

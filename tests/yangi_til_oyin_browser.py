@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Til o'yinlari: ma'lumot sifati, o'yin oqimi, ball/jon/combo, soat, xatolar daftari, o'z xatolaring. Soat: 2026-11-05 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('tilo', when=(2026, 11, 5, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

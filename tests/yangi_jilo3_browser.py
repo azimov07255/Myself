@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Jilo 3: Bugun bo'limlari, qolgan o'chirishlarda bekor qilish, eski bo'limlarda o'zbekcha sana. Soat: 2026-11-09 08:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 LIST = "[['hero','<i>H</i>'],['rt',''],['n3','<i>N3</i>'],['dc','<i>DC</i>'],['qr','<i>QR</i>'],['rw','<i>RW</i>'],['md','<i>MD</i>'],['ns','<i>NS</i>'],['ib','<i>IB</i>'],['kc','<i>KC</i>'],['ey',''],['tq','<i>TQ</i>'],['km','<i>KM</i>'],['tt','<i>TT</i>'],['zzz','<i>ZZZ</i>']]"
 with Run('j3', when=(2026, 11, 9, 8, 0, 0)) as R:

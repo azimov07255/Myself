@@ -1,6 +1,9 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Cambridge so'zlari: shaxsiy fayl import, bulut (soxta xotira), maqola birlashmasi, matn bo'yicha moslik, takrorlash. Soat: 2026-11-09 10:00.
 import sys, json, re, os
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
+if not os.path.exists(ROOT + '/cambridge-sozlar.json'):
+    print("O'TKAZIB YUBORILDI: cambridge-sozlar.json yo'q (uchinchi shaxs mehnati, ataylab repoda emas). 0 passed, 0 failed"); sys.exit(0)
 from _pw import Run
 def W(pi, test, no, w, pos, d, u, e): return [pi, test, no, w, pos, d, u, e]
 rows = []
@@ -76,13 +79,13 @@ with Run('cb', when=(2026, 11, 9, 10, 0, 0)) as R:
     ev("()=>{window.__cbUid=undefined}"); ev("cbUp()"); pg.wait_for_timeout(100); chk('without a signed-in account the cloud step explains that', 'Hisobga kirilmagan' in ev("CBS.cl")); ev("cbClose()")
     ev("cbOpen('s')"); pg.wait_for_timeout(100); chk('the ℹ️ tab shows the deck statistics, the daily limit choices, the file status and the privacy note', all(x in pg.inner_text('#cbv') for x in ['To‘plamda', 'Kuniga qo‘shish chegarasi', 'Qurilmada: ', 'Maxfiylik va bulut sozlash'])); ev("(async()=>{await cbDelLocal()})()"); pg.wait_for_timeout(200); chk('“Qurilmadagi nusxani o‘chirish” removes only the local file; your deck stays', ev("!CB") and ev("Object.keys(S.cb.w).length") >= 0); ev("cbClose()")
     # maxfiylik
-    html = open('/mnt/user-data/outputs/tracker/index.html', encoding='utf-8').read(); real = json.load(open('/mnt/user-data/outputs/cambridge-sozlar.json', encoding='utf-8'))
+    html = open((ROOT + '/tracker/index.html'), encoding='utf-8').read(); real = json.load(open((ROOT + '/cambridge-sozlar.json'), encoding='utf-8'))
     longs = [w[i] for w in real['w'] for i in (5, 6, 7) if len(w[i]) > 25]
     chk('PRIVACY: none of the file’s definitions, Uzbek translations or example sentences (%d long strings from all 7,569 entries) is inside the built app (at most 3 generic sentences may coincide with the app’s own texts)' % len(longs), len([x for x in longs if x in html]) <= 3, [x for x in longs if x in html][:3])
-    chk('…and the data file is not in the app package list (friends version / GitHub files)', 'cambridge' not in open('/mnt/user-data/outputs/tools/make_zips.py', encoding='utf-8').read().lower() and not os.path.exists('/mnt/user-data/outputs/tracker/cambridge-sozlar.json'))
-    sql = open('/mnt/user-data/outputs/server-setup/cambridge-storage.sql', encoding='utf-8').read(); chk('the SQL creates a PRIVATE bucket and four policies that restrict every operation to the user’s own folder', "'cambridge', 'cambridge', false" in sql and sql.count('create policy') == 4 and sql.count('auth.uid()::text') >= 5)
+    chk('…and the data file is not in the app package list (friends version / GitHub files)', 'cambridge' not in open((ROOT + '/tools/make_zips.py'), encoding='utf-8').read().lower() and not os.path.exists((ROOT + '/tracker/cambridge-sozlar.json')))
+    sql = open((ROOT + '/server-setup/cambridge-storage.sql'), encoding='utf-8').read(); chk('the SQL creates a PRIVATE bucket and four policies that restrict every operation to the user’s own folder', "'cambridge', 'cambridge', false" in sql and sql.count('create policy') == 4 and sql.count('auth.uid()::text') >= 5)
     # haqiqiy fayl
-    ok = ev("(t)=>{const d=JSON.parse(t);const s=performance.now();const ok=cbSetData(d);return [ok,CB.d.p.length,CB.byP[Object.values(CB.P).find(p=>p.t==='Manatees').i].length,Math.round(performance.now()-s)]}", open('/mnt/user-data/outputs/cambridge-sozlar.json', encoding='utf-8').read())
+    ok = ev("(t)=>{const d=JSON.parse(t);const s=performance.now();const ok=cbSetData(d);return [ok,CB.d.p.length,CB.byP[Object.values(CB.P).find(p=>p.t==='Manatees').i].length,Math.round(performance.now()-s)]}", open((ROOT + '/cambridge-sozlar.json'), encoding='utf-8').read())
     chk('YOUR REAL FILE loads and indexes: 144 passages, Manatees (tests 1 + 21) = 94 unique words, and it takes well under 2 seconds', ok[0] and ok[1] == 144 and ok[2] == 94 and ok[3] < 2000, ok)
     sample = ' '.join(r[7] for r in real['w'] if r[1] in (1, 21)) * 1
     r2 = ev("(t)=>{const s=performance.now();const a=cbAnalyze(t);return {top:a.sc[0]&&CB.P[a.sc[0].pi].t,f:a.sc[0]&&a.sc[0].f,n:a.sc[0]&&a.sc[0].n,ms:Math.round(performance.now()-s),nt:a.nt}}", sample + ' ' + sample)

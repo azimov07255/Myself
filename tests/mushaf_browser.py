@@ -1,7 +1,8 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Mushaf o'quvchisi: haqiqiy Chromium (telefon o'lchami) + lokal server. Hamma 604 sahifa, uzoq bosish, rang/izoh, varaqlash, sinov.
 import http.server, threading, socketserver, os, shutil, json, sys, functools, time
 from playwright.sync_api import sync_playwright
-OUT = '/mnt/user-data/outputs'; SITE = '/tmp/site_mf'
+OUT = ROOT; SITE = '/tmp/site_mf'
 shutil.rmtree(SITE, ignore_errors=True); os.makedirs(SITE)
 [shutil.copy(os.path.join(OUT, 'tracker', f), SITE) for f in os.listdir(OUT + '/tracker') if os.path.isfile(os.path.join(OUT, 'tracker', f))]; shutil.copytree(OUT + '/data', SITE + '/data'); shutil.copytree(OUT + '/fonts', SITE + '/fonts')
 class H(http.server.SimpleHTTPRequestHandler):

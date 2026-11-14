@@ -1,11 +1,12 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Uyqu bo'limi, Bugun yangi tuzilishi, kunlik chegara asosi va qo'lda belgilash, jamg'arma maqsadlari. Soat: 2026-11-03 10:00 (seshanba).
 import sys, json, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 digits = lambda s: int(re.sub(r'[^\d-]', '', s) or 0)
 with Run('uyqu', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
-    ev("""()=>{window.confirm=()=>true;window.__t=[];window.toast=m=>window.__t.push(m);window.aiOk=()=>true;localStorage.clear();localStorage.setItem('trk_bg','o');S.slp={};S.slpP=null;S.slpAi=undefined;S.slpg=8;S.wake={};S.hab=[{id:'h1',t:'Kitob'},{id:'h2',t:'Suv'}];S.hb={};S.hk={};S.mood={};S.q.ny={};S.q.ppd=3;S.top={};S.ob=1;S.money=[];S.fin={open:{p:{cash:0,card:0},d:{cash:0,card:0}},budget:0,sg:[],cb:{},rc:[],wl:[]};tab='o';OT='u';render()}""")
+    ev("""()=>{window.confirm=()=>true;window.__t=[];window.toast=m=>window.__t.push(m);window.aiOk=()=>true;localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');S.slp={};S.slpP=null;S.slpAi=undefined;S.slpg=8;S.wake={};S.hab=[{id:'h1',t:'Kitob'},{id:'h2',t:'Suv'}];S.hb={};S.hk={};S.mood={};S.q.ny={};S.q.ppd=3;S.top={};S.ob=1;S.money=[];S.fin={open:{p:{cash:0,card:0},d:{cash:0,card:0}},budget:0,sg:[],cb:{},rc:[],wl:[]};tab='o';OT='u';render()}""")
     # ---------- hisoblar ----------
     chk('sleep minutes cross midnight: 23:30 → 07:00 = 450, 01:00 → 08:00 = 420', ev("[slpM('23:30','07:00'),slpM('01:00','08:00'),slpM('22:00','22:00')]") == [450, 420, 0])
     ev("""()=>{S.slp={};S.wake={};for(let i=0;i<7;i++){const k=dAgo(i);S.slp[k]={b:i%2?'01:00':'23:00',q:i%2?2:4};S.wake[k]=i%2?'07:00':'07:00'}}""")

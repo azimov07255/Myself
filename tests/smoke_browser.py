@@ -1,3 +1,4 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Haqiqiy brauzerda (Chromium, telefon o'lchami) hamma ekranni ochib, xato va ko'ndalang tasmani tekshiradi
 from playwright.sync_api import sync_playwright
 seed="""S.ob=1;S.ts=1;const k=d=>{const x=new Date();x.setDate(x.getDate()+d);return x.toLocaleDateString('sv')};
@@ -17,7 +18,7 @@ with sync_playwright() as p:
     b=p.chromium.launch();ctx=b.new_context(viewport={'width':390,'height':844},is_mobile=True,has_touch=True);pg=ctx.new_page()
     errs=[];pg.on('pageerror',lambda e:errs.append(str(e)))
     pg.route('**/*',lambda r:r.abort() if r.request.url.startswith('http') else r.continue_())
-    pg.goto('file:///mnt/user-data/outputs/tracker/index.html');pg.wait_for_timeout(400);pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
+    pg.goto(('file://' + ROOT + '/tracker/index.html'));pg.wait_for_timeout(400);pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
     pg.evaluate("()=>{"+seed+"}")
     for js,name in screens:
         try:

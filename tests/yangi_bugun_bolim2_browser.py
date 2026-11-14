@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Bugun: 📅 Jadval + 🧩 Kun, Intizom kartasi, o'tgan rejalar joyi. Soat: chorshanba 2026-11-11 13:01.
 import sys, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 BL = "[{id:'uyqu1',t:'Uxlash',s:1440,e:1740,d:[0,1,2,3,4,5,6]},{id:'u2',t:'Uygonish',s:300,e:360,d:[0,1,2,3,4,5,6],ty:'uyqu',fx:1},{id:'q1',t:'Quron',s:360,e:540,d:[0,1,2,3,4,5,6],ty:'quron',fx:0},{id:'k1',t:'Kitob oqish',s:735,e:760,d:[0,1,2,3,4,5,6],ty:'oqish',fx:0},{id:'p1',t:'Peshin namozi',s:760,e:870,d:[0,1,2,3,4,5,6],ty:'ibodat',fx:1},{id:'t1',t:'Univer tasks',s:870,e:960,d:[0,1,2,3,4,5,6],ty:'oqish',fx:1},{id:'f1',t:'Univer',s:1080,e:1170,d:[0,1,2,3,4,5,6],ty:'ish',fx:1},{id:'d1',t:'Quron yodlash',s:1200,e:1260,d:[0,1,2,3,4,5,6],ty:'quron',fx:0}]"
 def setup(ev, extra=""):

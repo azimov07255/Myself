@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Pul (byudjetlar, prognoz, takroriy, shablon, CSV, tahlil) va Odat (dam kuni, haftalik maqsad, tahrirlash, kuch). Soat: 2026-10-31 (shanba) 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 def M(i, d, k, a, c='Ovqat', n='', w='p', ac='cash'): return {'id': i, 'd': d, 'k': k, 'a': a, 'c': c, 'n': n, 'w': w, 'ac': ac}
 with Run('pulodat') as R:

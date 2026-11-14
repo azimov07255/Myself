@@ -1,7 +1,8 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # IELTS: US/UK talaffuz, o'qib berish, so'zma-so'z yuruvchi subtitr, avtomatik transkript. HTTP serverda. Soat: 2026-10-31 10:00.
 import sys, os, shutil, json, struct, http.server, threading, socketserver, functools, datetime
 from playwright.sync_api import sync_playwright
-OUT = '/mnt/user-data/outputs'; SITE = '/tmp/site_iov'
+OUT = ROOT; SITE = '/tmp/site_iov'
 shutil.rmtree(SITE, ignore_errors=True); os.makedirs(SITE)
 [shutil.copy(os.path.join(OUT, 'tracker', f), SITE) for f in os.listdir(OUT + '/tracker') if os.path.isfile(os.path.join(OUT, 'tracker', f))]
 class H(http.server.SimpleHTTPRequestHandler):

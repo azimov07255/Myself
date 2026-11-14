@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Vidjet: xulosa, yuborish, sozlama kartochkasi, Scriptable skripti. Soat: 2026-10-31 (shanba) 10:00.
 import sys, json, subprocess
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('vidjet') as R:
     ev, chk, pg = R.ev, R.chk, R.pg
@@ -31,7 +32,7 @@ with Run('vidjet') as R:
     ev("window.__cp='';navigator.clipboard.writeText=async x=>{window.__cp=x}"); pg.click('#app details:has(summary:has-text("Vidjet")) button >> text=Skriptni nusxalash'); pg.wait_for_timeout(100); sc = ev("__cp")
     tok = ev("S.wd.t"); chk('the copied script holds this project\u2019s widget URL with the token and the public key, and no unreplaced placeholders', ('/functions/v1/widget?t=' + tok) in sc and '__URL__' not in sc and '__KEY__' not in sc and 'supabase.co' in sc and 'Bearer' in sc)
     open('/tmp/wd_script.js', 'w', encoding='utf-8').write(sc)
-    res = subprocess.run(['node', '/mnt/user-data/outputs/tests/widget_script_test.js', '/tmp/wd_script.js'], capture_output=True, text=True, timeout=60)
+    res = subprocess.run(['node', (ROOT + '/tests/widget_script_test.js'), '/tmp/wd_script.js'], capture_output=True, text=True, timeout=60)
     lines = [l for l in res.stdout.splitlines() if l.startswith(('PASS', 'FAIL'))]
     for l in lines: chk('Scriptable simulation: ' + l[5:], l.startswith('PASS'))
     chk('the Scriptable simulation ran all 13 checks without crashing', len(lines) == 13 and not res.stderr.strip(), res.stderr[:200])

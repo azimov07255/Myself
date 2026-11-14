@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Pul: zakat va sadaqa, sof boylik, do'kon foydasi, xarajat = necha soatlik ish. Soat: 2026-10-10 (shanba) 10:00.
 import sys, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 digits = lambda s: int(re.sub(r'[^\d-]', '', s.replace('−', '-')) or 0)
 def M(i, d, k, a, c='Ovqat', n='', w='p', ac='cash', t=None):

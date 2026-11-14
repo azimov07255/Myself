@@ -33,12 +33,12 @@ Repo ildizi = GitHub Pages sayti (`azimov07255/Myself`, `main`). Manba (`src/`, 
 4. Commit qil (qisqa o'zbekcha xabar) va push qil; bulut sessiyada shox + Pull Request ochilsa, foydalanuvchi aytsa `main` ga qo'sh. Pages ~1 daqiqada yangilanadi; Supabase funksiyalari (`supabase/functions/`, `config.toml`) GitHub'dan o'zi deploy bo'ladi.
 5. Yangi Supabase secret kerak bo'lsa foydalanuvchiga ayt (o'zing qo'sha olmaysan). Kalitlarni hech qachon faylga yozma.
 
-## Birinchi vazifa (Claude Code'da ilk marta, Windows)
-Skriptlarda (`tools/`, `tests/`, `tests/run_all.sh`) `/mnt/user-data/outputs` (loyiha ildizi) va `/tmp` mutlaq yo'llari qattiq yozilgan: Windows'da ular ishlamaydi. Birinchi ish shu:
-1. Loyiha ildizini bitta joydan olinadigan qil (masalan Python'da `ROOT = Path(__file__).resolve().parent.parent`, `.sh` da `ROOT=$(cd "$(dirname "$0")/.." && pwd)`), vaqtinchalik fayllar uchun `tempfile`/`$TMPDIR` ishlat. Hamma `/mnt/user-data/outputs` va `/tmp/...` o'rniga shularni qo'y (≈110 fayl: `grep -rl "/mnt/user-data/outputs" tools tests`).
-2. Kerakli dasturlar: Python 3.11+, Node.js 20+, `pip install playwright pdfplumber` va `playwright install chromium`. `.sh` skriptlar Git Bash orqali (`bash tests/run_all.sh`).
-3. Tekshir: `python tools/build_app.py --check`, so'ng bitta brauzer sinovi (`python tests/yangi_jadval_browser.py`), so'ng hammasi (`bash tests/run_all.sh`, ~15 daqiqa, oxirida "HAMMASI YAXSHI ✅"). Natijani foydalanuvchiga halol ayt.
-4. Shundan keyin oddiy ishga o'tish.
+## Muhit sozlash (bajarilgan, 2026-11-14)
+- Skriptlar (`tools/`, `tests/`, `tests/run_all.sh`) endi **portativ**: loyiha ildizi `KT_ROOT` muhit o'zgaruvchisidan yoki fayl joylashuvidan olinadi (`/mnt/user-data/outputs` ishlatilmaydi). Vaqtinchalik fayllar `$TMPDIR`/`tempfile` da.
+- Kerak: Python 3.11+, Node.js 20+, `pip install playwright pdfplumber` (Playwright versiyasi o'rnatilgan Chromium'ga mos bo'lsin; bulut muhitida `playwright==1.63.0`), `playwright install chromium`. `.sh` skriptlar Git Bash orqali.
+- `bash tests/run_all.sh` brauzer sinovlarini **parallel** ishga tushiradi (`JOBS=4` standart, ~9 daqiqa); ro'yxat `tests/browser_tests.txt` da (yangi brauzer sinovini shu yerga qo'sh). Traceback yoki natija chiqmasa ham xato hisoblanadi.
+- Shaxsiy fayllar (`testlar-banki.json`, `cambridge-sozlar.json`) repoda yo'q: ularga bog'liq sinovlar "O'TKAZIB YUBORILDI" deb chiqadi (0 passed, 0 failed), bu normal.
+- Sinov muhitida standart tuzilish eski: `_pw.py` va sinovlar `trk_bg='o'`, `trk_sgr='a'` (Sozlamalar), `trk_ptb='a'` (Pul tablari) ni o'rnatadi; yangi tuzilishlar o'z sinovlarida tekshiriladi. Sinov `localStorage.clear()` qilsa, shularni qayta o'rnatsin.
 
 ## Ish uslubi
 - Katta o'zgarishdan oldin qisqa reja ayt, so'ng qil. Har bir o'zgarishdan keyin tegishli sinovni ishga tushir.

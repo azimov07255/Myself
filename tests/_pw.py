@@ -1,7 +1,8 @@
 # Haqiqiy brauzer sinovlari uchun umumiy yordamchi: HTTP server, soxta soat, ilovani ochish, chk() hisoblagichi.
 import os, shutil, struct, base64, http.server, threading, socketserver, functools, datetime, sys
 from playwright.sync_api import sync_playwright
-OUT = '/mnt/user-data/outputs'
+import tempfile
+OUT = os.environ.get('KT_ROOT') or os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 def wav(sec=8, sr=8000):
     n = sr * sec
     return b'RIFF' + struct.pack('<I', 36 + n) + b'WAVEfmt ' + struct.pack('<IHHIIHH', 16, 1, 1, sr, sr, 1, 8) + b'data' + struct.pack('<I', n) + bytes([128]) * n
@@ -9,7 +10,7 @@ class Run:
     def __init__(self, name, when=(2026, 10, 31, 10, 0, 0), width=390, bg='o'):
         self.name, self.when, self.width, self.ok, self.bad, self.bg = name, when, width, 0, 0, bg
     def __enter__(self):
-        site = '/tmp/site_' + self.name; shutil.rmtree(site, ignore_errors=True); os.makedirs(site)
+        site = os.path.join(tempfile.gettempdir(), 'site_' + self.name); shutil.rmtree(site, ignore_errors=True); os.makedirs(site)
         [shutil.copy(os.path.join(OUT, 'tracker', f), site) for f in os.listdir(OUT + '/tracker') if os.path.isfile(os.path.join(OUT, 'tracker', f))]
         class H(http.server.SimpleHTTPRequestHandler):
             def log_message(self, *a): pass

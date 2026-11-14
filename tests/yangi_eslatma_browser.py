@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Eslatmalar auditi: mijozning eslatma qatorlari serverning (send-reminders.ts) haqiqiy mantig'i bo'yicha sinovdan o'tkaziladi. Soat: 2026-11-09 (dushanba) 07:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 SRV = """(()=>{window.srv=(rows,nowMs,st)=>{const fired=[],del=[];rows.forEach((r,i)=>{const loc=new Date(nowMs+(r.tz??300)*60000);const date=loc.toISOString().slice(0,10),nowMin=loc.getUTCHours()*60+loc.getUTCMinutes();const [h,m]=r.hhmm.split(':').map(Number);const delta=nowMin-(h*60+m),stamp=date+' '+r.hhmm;const kf=String(r.kind||''),at=kf.indexOf('@');const only=at>=0?kf.slice(at+1):'';if(only&&only!==date){if(only<date)del.push(i);return}if(delta<0||delta>2||!r.days.includes(loc.getUTCDay())||st[i]===stamp)return;fired.push(i);st[i]=stamp});return{fired,del}};
  window.simDay=(rows,y,mo,d)=>{const st={},out=rows.map(()=>[]);for(let mi=0;mi<1440;mi++){const tz=rows.length?(rows[0].tz??0):0;const ms=Date.UTC(y,mo-1,d,Math.floor(mi/60),mi%60)-tz*60000;const r=srv(rows,ms,st);r.fired.forEach(i=>out[i].push(mi))}return out}})()"""

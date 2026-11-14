@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # 604 bet, maqsadga avto-progress, tezkor reja (＋), takror aylanishi kun soni, namozda takror. Soat: 2026-11-09 (dushanba) 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 BL = "[{id:'uyqu1',t:'Uxlash',s:1380,e:1800,d:[0,1,2,3,4,5,6]},{id:'k1',t:'Dokon',s:540,e:1020,d:[0,1,2,3,4,5,6]},{id:'z1',t:'Zal',s:1050,e:1110,d:[0,1,2,3,4,5,6]}]"
 with Run('mn', when=(2026, 11, 9, 10, 0, 0)) as R:

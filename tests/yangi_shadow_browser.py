@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Shadowing: har gapdan keyin takrorlash pauzasi, gapni 1-3 marta takrorlash, matnni yashirish (telefon ovozi va AI ovozi). Soat: 2026-11-05 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 ANS = 'First sentence is here. Second sentence follows it. The third one comes now! And the fourth and final one?'
 with Run('shadow', when=(2026, 11, 5, 10, 0, 0)) as R:

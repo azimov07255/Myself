@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Sozlamalar tartibga solindi: guruhlar, zaxira bir joyda, egasi bo'limi, qisqa yangiliklar; Jilo'da eskisiga qaytish. Soat: 2026-10-31 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('sozlama_guruh') as R:
     ev, chk, pg = R.ev, R.chk, R.pg

@@ -1,3 +1,4 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI kun rejasi (ertalabdan kechgacha): niyat, kontekst, AI javobini tozalash, suhbat oqimi, saqlash, Bugun kartasi, ochko, eslatma.
 # Soat qotirilgan: 2026-10-31 (shanba) 10:00. Ertaga = yakshanba 2026-11-01.
 import sys, datetime, json
@@ -20,7 +21,7 @@ with sync_playwright() as p:
     pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a');if(localStorage.getItem('trk_ptb')===null)localStorage.setItem('trk_ptb','a')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.clock.install(time=datetime.datetime(2026, 10, 31, 10, 0, 0))
     pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
-    pg.goto('file:///mnt/user-data/outputs/tracker/index.html'); pg.wait_for_timeout(500)
+    pg.goto(('file://' + ROOT + '/tracker/index.html')); pg.wait_for_timeout(500)
     pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
     ev = pg.evaluate; ev(SETUP)
     # ---------- 1. intent ----------

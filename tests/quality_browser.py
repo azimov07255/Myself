@@ -1,7 +1,8 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Sifat: yangi versiya xabari (version.json, Yangilash, himoyalar) va egasi uchun xatolar paneli. HTTP serverda (version.json uchun).
 import sys, os, shutil, json, http.server, threading, socketserver, functools
 from playwright.sync_api import sync_playwright
-OUT = '/mnt/user-data/outputs'; SITE = '/tmp/site_q'
+OUT = ROOT; SITE = '/tmp/site_q'
 shutil.rmtree(SITE, ignore_errors=True); os.makedirs(SITE)
 [shutil.copy(os.path.join(OUT, 'tracker', f), SITE) for f in os.listdir(OUT + '/tracker') if os.path.isfile(os.path.join(OUT, 'tracker', f))]
 class H(http.server.SimpleHTTPRequestHandler):

@@ -1,9 +1,10 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Qo'llanma sahifasi: mazmun to'liqligi, rasmlar ichiga joylangan, tashqi so'rov yo'q, belgilar saqlanadi, zip va ilova havolasi.
 import sys, re, zipfile, os, base64
-sys.path.insert(0, '/mnt/user-data/outputs/tools/guide')
+sys.path.insert(0, (ROOT + '/tools/guide'))
 from content import SL
 from playwright.sync_api import sync_playwright
-OUT = '/mnt/user-data/outputs'; ok = bad = 0
+OUT = ROOT; ok = bad = 0
 def chk(l, c, d=''):
     global ok, bad
     if c: ok += 1; print('PASS', l)

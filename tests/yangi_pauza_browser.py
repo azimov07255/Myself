@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Speaking: yozuvdan pauza o'lchash (spPauses), ko'rsatkichlar va oldingi urinish bilan solishtirish. Soat: 2026-11-05 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('pauza', when=(2026, 11, 5, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

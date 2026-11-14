@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Writing: banki, reja, Task 1 grafik, band 8; parafraza; so'z oilasi; eksport. Soat: 2026-10-31 10:00.
 import sys, json, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 PLAN = {'type': 'opinion', 'ideas': {'for': [{'p': 'Free education widens access', 'why': 'Hamma o‘qiy oladi'}, {'p': 'Graduates earn more and pay taxes', 'why': 'Daromad'}], 'against': [{'p': 'Taxpayers carry the cost', 'why': 'Soliq yuki'}]},
         'outline': {'intro': 'Paraphrase the question and state your opinion.', 'body1': {'point': 'Access to education', 'support': 'Poorer students benefit most.', 'example': 'Germany abolished tuition fees in 2014.'}, 'body2': {'point': 'Cost to the state', 'support': 'Budgets are limited.', 'example': 'Some countries cut other services.'}, 'conclusion': 'Restate the opinion.'},

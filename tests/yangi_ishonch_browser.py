@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Ishonchlilik: ikki qurilma o'rtasida qo'shish, zaxira, server eslatma formati. Soat: 2026-11-09 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 AUD = """(()=>{const res=[];function walk(o,p){if(Array.isArray(o)){if(o.length&&o.every(x=>x&&typeof x==='object'&&!Array.isArray(x))){const ids=o.map(x=>x.id);const noid=ids.some(i=>i===undefined);const dup=!noid&&new Set(ids).size!==ids.length;if((noid||dup)&&p!=='S.pr.st')res.push(p+' ['+o.length+'] '+(noid?'NOID':'DUPID'))}o.forEach((x,i)=>{if(x&&typeof x==='object')walk(x,p+'['+i+']')})}else if(o&&typeof o==='object'){Object.keys(o).forEach(k=>walk(o[k],p+'.'+k))}}walk(S,'S');return res})()"""
 with Run('ish', when=(2026, 11, 9, 10, 0, 0)) as R:

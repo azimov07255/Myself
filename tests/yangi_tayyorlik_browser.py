@@ -1,10 +1,11 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Ustun kengligi, ixcham/keng ko'rinish, Bugun'da dam kuni, zaxira eslatmasi, "Ishga tayyormi?". Soat: 2026-10-31 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('tayyor') as R:
     ev, chk, pg = R.ev, R.chk, R.pg
-    ev("""()=>{window.confirm=()=>true;localStorage.clear();localStorage.setItem('trk_bg','o');uiInit();S.hab=[{id:'h1700000000000',t:'Har kuni 3 bet Quron yodlash va takrorlash',e:'📖'},{id:'h1700000000001',t:'Kuniga 5 bet takror',f:3}];S.hb={};S.hk={};tab='o';OT='j';HV='m';render()}""")
+    ev("""()=>{window.confirm=()=>true;localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');uiInit();S.hab=[{id:'h1700000000000',t:'Har kuni 3 bet Quron yodlash va takrorlash',e:'📖'},{id:'h1700000000001',t:'Kuniga 5 bet takror',f:3}];S.hb={};S.hk={};tab='o';OT='j';HV='m';render()}""")
     W = lambda: ev("Math.round(document.querySelector('#app .mn').getBoundingClientRect().width)")
     chk('the name column keeps its set width even with long names and the long note (before it grew to most of the screen)', abs(W() - 138) <= 1, W())
     ev("hbNw(20)"); chk('"Keng ▶" widens by 20 px and remembers it', abs(W() - 158) <= 1 and ev("uiG('trk_nw')") == '158' and ev("document.documentElement.style.getPropertyValue('--nw')") == '158px')
@@ -22,17 +23,17 @@ with Run('tayyor') as R:
     ev("(()=>{const a=Math.round(document.getElementById('app').getBoundingClientRect().width);window.__w0=a})()"); pg.click('#app >> text=Keng ekran'); pg.wait_for_timeout(100)
     chk('"↔ Keng ekran" lets the page and the bottom bar grow to 900 px (wide windows)', ev("document.documentElement.classList.contains('wide')") and ev("getComputedStyle(document.getElementById('app')).maxWidth") == '900px' and ev("getComputedStyle(document.querySelector('nav div')).maxWidth") == '900px' and 'Tor ekran' in pg.inner_text('#app'))
     ev("document.documentElement.classList.remove('wide','hbc');document.documentElement.style.removeProperty('--nw');uiS('trk_nw','200')"); ev("uiInit()"); chk('the saved choices are re-applied on start (wide, width 200)', ev("document.documentElement.classList.contains('wide')") and abs(W() - 200) <= 1 or ev("document.documentElement.style.getPropertyValue('--nw')") == '200px')
-    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');uiInit()}")
+    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');uiInit()}")
     # ---------- Bugun: dam kuni ----------
     ev("()=>{tab='h';BV='m';WO=0;render()}"); pg.wait_for_timeout(100); t = pg.inner_text('#app')
     chk('Bugun has the "🛌 Dam kuni belgilash" section with a chip per habit', 'Dam kuni belgilash' in t and ev("document.querySelectorAll('#app details.sd .rwch .chip').length") >= 2, t[:120])
-    pg.click('#app details.sd summary >> text=Dam kuni'); pg.click('#app details.sd .chip >> nth=0'); pg.wait_for_timeout(100)
+    pg.click('#app details.sd summary >> text=Dam kuni'); pg.click('#app details.sd:has(summary:has-text("Dam kuni")) .chip >> nth=0'); pg.wait_for_timeout(100)
     chk('tapping a chip marks that habit as a rest day today (not done), the row says so, the summary counts it', ev("hkOn(dk(),'h1700000000000')") and not ev("!!(S.hb[dk()]||{})['h1700000000000']") and 'dam kuni' in pg.inner_text('#app').lower() and '(1)' in pg.inner_text('#app'))
-    pg.click('#app details.sd .chip >> nth=0'); pg.wait_for_timeout(60); chk('tapping it again clears the rest day', not ev("hkOn(dk(),'h1700000000000')") and not ev("S.hk&&S.hk[dk()]"))
+    pg.click('#app details.sd:has(summary:has-text("Dam kuni")) .chip >> nth=0'); pg.wait_for_timeout(60); chk('tapping it again clears the rest day', not ev("hkOn(dk(),'h1700000000000')") and not ev("S.hk&&S.hk[dk()]"))
     ev("()=>{hbT('h1700000000001',dk());hbS('h1700000000001',dk())}"); chk('a habit that was already done becomes a rest day (and not done)', ev("hkOn(dk(),'h1700000000001')") and not ev("!!(S.hb[dk()]||{})['h1700000000001']"))
     ev("hbT('h1700000000001',dk())"); chk('ticking it as done afterwards removes the rest mark', not ev("hkOn(dk(),'h1700000000001')") and ev("!!S.hb[dk()]['h1700000000001']"))
     # ---------- zaxira eslatmasi ----------
-    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');S.hb={};S.hk={};S.money=[];S.ie.words=[];tab='h';BV='m';render()}"); chk('with almost no data there is no backup reminder', ev("bkBar()") == '')
+    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');S.hb={};S.hk={};S.money=[];S.ie.words=[];tab='h';BV='m';render()}"); chk('with almost no data there is no backup reminder', ev("bkBar()") == '')
     ev("()=>{for(let i=1;i<=3;i++){S.hb[dAgo(i)]={'h1700000000000':true}}render()}"); t = ev("bkBar()")
     chk('after a few days of use and no backup: "Hali zaxira olinmagan" with save / later buttons, shown on Bugun', 'Hali zaxira olinmagan' in t and 'Faylga saqlash' in t and 'Keyinroq' in t and 'Zaxira nusxa' in pg.inner_text('#app'))
     ev("uiS('trk_bk',dk())"); chk('a backup taken today hides it', ev("bkBar()") == '')
@@ -43,7 +44,7 @@ with Run('tayyor') as R:
     ev("()=>{window.__bk=0;window.bkDl=()=>{window.__bk++}}"); ev("render()"); pg.click('#app >> text=Faylga saqlash'); chk('"Faylga saqlash" starts the backup download', ev("__bk") == 1)
     chk('an unreadable backup date is treated as "no backup"', (ev("(()=>{uiS('trk_bk','xyz');return bkAge()})()") is None))
     # ---------- Ishga tayyormi? ----------
-    ev("""()=>{localStorage.clear();localStorage.setItem('trk_bg','o');S.hab=[{id:'h1',t:'Kitob'}];S.goals=[{t:'Maqsad',ms:[]}];S.ie.ex='2026-12-20';S.ie.target=7;S.q.ppd=3;S.rem=S.rem||{};S.rem.on=false;S.rem.tg=false;SYNC='ok';uiS('trk_bk',dk());window.__calls=[];window.fnPost=async b=>{window.__calls.push(b);if(window.__down)throw new Error('Tarmoq xatosi');return {owner:false,limit:40,used:7}};tab='s';render()}""")
+    ev("""()=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');S.hab=[{id:'h1',t:'Kitob'}];S.goals=[{t:'Maqsad',ms:[]}];S.ie.ex='2026-12-20';S.ie.target=7;S.q.ppd=3;S.rem=S.rem||{};S.rem.on=false;S.rem.tg=false;SYNC='ok';uiS('trk_bk',dk());window.__calls=[];window.fnPost=async b=>{window.__calls.push(b);if(window.__down)throw new Error('Tarmoq xatosi');return {owner:false,limit:40,used:7}};tab='s';render()}""")
     pg.wait_for_timeout(100); t = pg.inner_text('#app'); chk('Sozlama has the "✅ Ishga tayyormi?" group', 'Ishga tayyormi?' in t)
     ev("document.querySelectorAll('#app details').forEach(d=>{if(d.textContent.includes('Ishga tayyormi'))d.open=true})"); pg.click('#app >> text="Tekshirish"'); pg.wait_for_timeout(400)
     R_ = ev("RDY.res"); names = [x['t'] for x in R_]

@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI holati (limit tugadi / bugungi sarf) va maqola sarlavhalari (##). Soat: 2026-11-05 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 TXT = "## Introduction\n\nWhat are your favourite foods? Do you like pizza?\n\n## How Do We Taste Different Flavours?\n\nThese bumps contain receptors.\n\n### Sub heading\n\nUse #hashtag here and ## inside a line.\n\n#notaheading\n\nPlain paragraph."
 with Run('aiholat', when=(2026, 11, 5, 10, 0, 0)) as R:

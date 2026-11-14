@@ -23,7 +23,7 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  const tables={tg_codes:[],tg_links:[],tg_inbox:[],app_state:[{user_id:'u1',data:{}}]};
  globalThis.__cc=()=>mkDb(tables);
  const env={TELEGRAM_BOT_TOKEN:'tok',TELEGRAM_WEBHOOK_SECRET:'sec',SUPABASE_URL:'u',SUPABASE_SERVICE_ROLE_KEY:'s'};
- const H=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',env);
+ const H=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),env);
  const call=async(body,secret='sec')=>{TGSEND.length=0;const r=await H(new Request('http://x',{method:'POST',headers:secret?{'x-telegram-bot-api-secret-token':secret}:{},body:JSON.stringify(body)}));return r};
  const msg=(text,chat=111,type='private')=>({message:{text,chat:{id:chat,type},from:{username:'aziz'},message_id:5}});
  const last=()=>TGSEND.filter(x=>x.m==='sendMessage').slice(-1)[0];
@@ -62,7 +62,7 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  await call(msg('/vazifa x',333,'group'));ok('group chat messages are ignored',TGSEND.length===0);
  await call(msg('salom'));ok('unknown text -> hint to /yordam',/yordam/.test(last().b.text));
  await call(msg('/stop'));ok('/stop removes the link',tables.tg_links.length===0&&/uzildi/.test(last().b.text));
- const H2=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',env);globalThis.__cc=()=>({from:()=>{throw new Error('db down')}});
+ const H2=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),env);globalThis.__cc=()=>({from:()=>{throw new Error('db down')}});
  const r5=await H2(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify(msg('/bugun'))}));ok('database failure still answers 200 (Telegram must not retry forever)',r5.status===200);
  // ================= send-reminders =================
  const loc=new Date(Date.now()+300*60000),hhmm=String(loc.getUTCHours()).padStart(2,'0')+':'+String(loc.getUTCMinutes()).padStart(2,'0'),dow=loc.getUTCDay();
@@ -70,7 +70,7 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  const t2={reminders:[mkRem({id:1,title:'Bomdod namozi',body:'Vaqti kirdi',kind:'nm:fajr'}),mkRem({id:2,title:'Dars',kind:'blk:dars-1'}),mkRem({id:3,title:'Kunni yopish vaqti'})],push_subs:[],tg_links:[{user_id:'u1',chat_id:111}]};
  globalThis.__cc=()=>mkDb(t2);globalThis.__wp={setVapidDetails(){},sendNotification:async()=>{}};
  const env2={...env,CRON_SECRET:'cs',VAPID_SUBJECT:'mailto:a@b.c',VAPID_PUBLIC:'p',VAPID_PRIVATE:'q'};
- const SR=load('/mnt/user-data/outputs/server-setup/send-reminders.ts',env2);TGSEND.length=0;
+ const SR=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/send-reminders.ts'),env2);TGSEND.length=0;
  const rr=await SR(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));const sm=TGSEND.filter(x=>x.m==='sendMessage');
  ok('due reminders are delivered to Telegram (3 messages): '+sm.map(x=>x.b.text.split('\n')[0]).join(' | '),sm.length===3&&sm.every(x=>x.b.chat_id===111));
  ok('prayer reminder carries the "O‘qidim" button with callback nm:fajr',sm[0].b.reply_markup&&sm[0].b.reply_markup.inline_keyboard[0][0].callback_data==='nm:fajr'&&/O‘qidim/.test(sm[0].b.reply_markup.inline_keyboard[0][0].text));
@@ -78,38 +78,38 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  ok('reminders are marked as sent (no duplicates next minute)',t2.reminders.every(x=>x.last_sent));
  TGSEND.length=0;await SR(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));ok('second run in the same minute sends nothing again',TGSEND.length===0);
  t2.reminders.forEach(x=>x.last_sent=null);tgStatus=403;TGSEND.length=0;await SR(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));ok('user blocked the bot (403) -> link removed automatically',t2.tg_links.length===0);tgStatus=200;
- t2.tg_links=[{user_id:'u1',chat_id:111}];t2.reminders.forEach(x=>x.last_sent=null);const SR2=load('/mnt/user-data/outputs/server-setup/send-reminders.ts',{...env2,TELEGRAM_BOT_TOKEN:''});TGSEND.length=0;await SR2(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));ok('without a bot token nothing is sent to Telegram (push-only setups keep working)',TGSEND.length===0);
+ t2.tg_links=[{user_id:'u1',chat_id:111}];t2.reminders.forEach(x=>x.last_sent=null);const SR2=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/send-reminders.ts'),{...env2,TELEGRAM_BOT_TOKEN:''});TGSEND.length=0;await SR2(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));ok('without a bot token nothing is sent to Telegram (push-only setups keep working)',TGSEND.length===0);
  const rf=await SR(new Request('http://x',{headers:{'x-cron-secret':'bad'}}));ok('reminder function still requires the cron secret',rf.status===403);
 
  // ================= setup problems must be visible, not silent =================
  const errs=[];const realErr=console.error;console.error=(...a)=>errs.push(a.join(' '));
  const mkDbErr=msg=>({from:()=>{const b={select:()=>b,eq:()=>b,insert:()=>b,upsert:()=>b,delete:()=>b,maybeSingle:async()=>({data:null,error:{message:msg}}),then:(res)=>res({data:null,error:{message:msg}})};return b}});
  globalThis.__cc=()=>mkDbErr('relation "public.tg_links" does not exist');
- const H3=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',env);TGSEND.length=0;
+ const H3=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),env);TGSEND.length=0;
  const r3=await H3(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify(msg('/start'))}));
  ok('tables missing (telegram.sql not run): still 200, and the chat says what to do instead of staying silent',r3.status===200&&TGSEND.some(x=>x.m==='sendMessage'&&/telegram\.sql/.test(x.b.text))&&errs.some(e=>/telegram-bot error/.test(e)));
- globalThis.__cc=()=>mkDbErr('connection reset');TGSEND.length=0;const H3b=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',env);
+ globalThis.__cc=()=>mkDbErr('connection reset');TGSEND.length=0;const H3b=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),env);
  await H3b(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify(msg('/bugun'))}));
  ok('other errors give a generic message (internal details are not shown to users)',TGSEND.some(x=>x.m==='sendMessage'&&/Vaqtincha/.test(x.b.text)&&!/connection reset/.test(x.b.text)));
  globalThis.__cc=()=>mkDb({tg_links:[],tg_codes:[],tg_inbox:[]});
- const H4=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',{...env,TELEGRAM_BOT_TOKEN:' "bot123456:AAH-x_y" ',TELEGRAM_WEBHOOK_SECRET:' sec \n'});
+ const H4=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),{...env,TELEGRAM_BOT_TOKEN:' "bot123456:AAH-x_y" ',TELEGRAM_WEBHOOK_SECRET:' sec \n'});
  const urls=[];const f0=globalThis.fetch;globalThis.fetch=async(u,o)=>{urls.push(u);return f0(u,o)};
  const r4=await H4(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify(msg('/start'))}));
  ok('badly copied secrets (quotes, spaces, "bot" prefix, trailing newline) are cleaned: token used = 123456:AAH-x_y',r4.status===200&&urls.some(u=>u==='https://api.telegram.org/bot123456:AAH-x_y/sendMessage'));
  globalThis.fetch=f0;errs.length=0;tgStatus=401;await H3(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify(msg('/start'))}));
- globalThis.__cc=()=>mkDb({tg_links:[],tg_codes:[],tg_inbox:[]});const H5=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',env);errs.length=0;
+ globalThis.__cc=()=>mkDb({tg_links:[],tg_codes:[],tg_inbox:[]});const H5=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),env);errs.length=0;
  await H5(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify(msg('/start'))}));
  ok('when Telegram rejects the token (401) the cause is written to Logs ("telegram api sendMessage 401")',errs.some(e=>/telegram api sendMessage 401/.test(e)));
  tgStatus=200;console.error=realErr;
  // reminders: same cleaning
  const t5={reminders:[mkRem({id:1,title:'Test'})],push_subs:[],tg_links:[{user_id:'u1',chat_id:111}]};globalThis.__cc=()=>mkDb(t5);
- const SR3=load('/mnt/user-data/outputs/server-setup/send-reminders.ts',{...env2,TELEGRAM_BOT_TOKEN:' bot555:ZZ '});const u2=[];globalThis.fetch=async(u,o)=>{u2.push(u);return f0(u,o)};
+ const SR3=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/send-reminders.ts'),{...env2,TELEGRAM_BOT_TOKEN:' bot555:ZZ '});const u2=[];globalThis.fetch=async(u,o)=>{u2.push(u);return f0(u,o)};
  await SR3(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));ok('reminder sender also cleans the token',u2.some(u=>u==='https://api.telegram.org/bot555:ZZ/sendMessage'));globalThis.fetch=f0;
 
  // ================= zikr and fasting buttons =================
  {
  const tb={tg_codes:[],tg_links:[{user_id:'u1',chat_id:111,tz:300}],tg_inbox:[],app_state:[]};globalThis.__cc=()=>mkDb(tb);
- const HZ=load('/mnt/user-data/outputs/server-setup/telegram-bot.ts',env);
+ const HZ=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/telegram-bot.ts'),env);
  const cz=async data=>{TGSEND.length=0;return HZ(new Request('http://x',{method:'POST',headers:{'x-telegram-bot-api-secret-token':'sec'},body:JSON.stringify({callback_query:{id:'q',data,message:{message_id:3,text:'🔔 x',chat:{id:111,type:'private'}}}})}))};
  const dz=tzDate(300);
  await cz('zk:sb');ok('zikr button (morning) -> inbox zk with category sb',tb.tg_inbox.slice(-1)[0].kind==='zk'&&tb.tg_inbox.slice(-1)[0].payload.c==='sb'&&tb.tg_inbox.slice(-1)[0].payload.d===dz);
@@ -121,7 +121,7 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  const loc2=new Date(Date.now()+300*60000),hh=String(loc2.getUTCHours()).padStart(2,'0')+':'+String(loc2.getUTCMinutes()).padStart(2,'0'),dw=loc2.getUTCDay();
  const mk2=(id,title,kind)=>({id,user_id:'u1',hhmm:hh,days:[dw],title,body:'',tz:300,last_sent:null,kind});
  const t6={reminders:[mk2(1,'Ertalabki zikr','zk:sb'),mk2(2,'Kechki zikr','zk:sh'),mk2(3,'Ro‘za: bugun tutdingmi?','rz')],push_subs:[],tg_links:[{user_id:'u1',chat_id:111}]};globalThis.__cc=()=>mkDb(t6);
- const SR6=load('/mnt/user-data/outputs/server-setup/send-reminders.ts',env2);TGSEND.length=0;await SR6(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));
+ const SR6=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/send-reminders.ts'),env2);TGSEND.length=0;await SR6(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));
  const m6=TGSEND.filter(x=>x.m==='sendMessage');
  ok('zikr reminders carry one "O‘qidim" button (zk:sb / zk:sh)',m6[0].b.reply_markup.inline_keyboard[0][0].callback_data==='zk:sb'&&m6[1].b.reply_markup.inline_keyboard[0][0].callback_data==='zk:sh'&&m6[0].b.reply_markup.inline_keyboard[0].length===1);
  const rzb=m6[2].b.reply_markup.inline_keyboard[0];ok('fasting reminder carries two buttons: ✅ Tutdim (rz:1) and ❌ Tutolmadim (rz:2) in one row',rzb.length===2&&rzb[0].callback_data==='rz:1'&&rzb[1].callback_data==='rz:2'&&/Tutdim/.test(rzb[0].text)&&/Tutolmadim/.test(rzb[1].text));
@@ -133,7 +133,7 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  const day=x=>new Date(loc.getTime()+x*864e5).toISOString().slice(0,10),today=day(0);
  const mk=(id,title,kind)=>({id,user_id:'u1',hhmm:hh,days:[dw],title,body:'x',tz:300,last_sent:null,kind});
  const t7={reminders:[mk(1,'BUGUNGI','st@'+today),mk(2,'ESKI','st@'+day(-1)),mk(3,'KELAJAK','st@'+day(1)),mk(4,'ODDIY','ym'),mk(5,'HAFTA','wk@'+today)],push_subs:[],tg_links:[{user_id:'u1',chat_id:111}]};globalThis.__cc=()=>mkDb(t7);
- const SR7=load('/mnt/user-data/outputs/server-setup/send-reminders.ts',env2);TGSEND.length=0;await SR7(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));
+ const SR7=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/send-reminders.ts'),env2);TGSEND.length=0;await SR7(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));
  const ms=TGSEND.filter(x=>x.m==='sendMessage'),tx=ms.map(x=>x.b.text).join('|');
  ok('a reminder dated today (st@date) is sent',tx.includes('BUGUNGI'));
  ok('a reminder dated yesterday is NOT sent and is deleted',!tx.includes('ESKI')&&!t7.reminders.some(r=>r.id===2));
@@ -141,7 +141,7 @@ globalThis.fetch=async(u,o)=>{if(/api\.telegram\.org/.test(u)){const m=/bot[^/]+
  ok('plain kind "ym" (morning) is sent without buttons',tx.includes('ODDIY')&&ms.find(x=>x.b.text.includes('ODDIY')).b.reply_markup===undefined);
  ok('weekly report kind (wk@date) is sent on its date',tx.includes('HAFTA'));
  const t8={reminders:[mk(9,'BLOK','blk:qur@'+today)],push_subs:[],tg_links:[{user_id:'u1',chat_id:111}]};globalThis.__cc=()=>mkDb(t8);
- const SR8=load('/mnt/user-data/outputs/server-setup/send-reminders.ts',env2);TGSEND.length=0;await SR8(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));
+ const SR8=load(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/send-reminders.ts'),env2);TGSEND.length=0;await SR8(new Request('http://x',{headers:{'x-cron-secret':'cs'}}));
  const m8=TGSEND.filter(x=>x.m==='sendMessage');
  ok('a dated block reminder (blk:qur@date) still gets its "Bajardim" button with the clean callback blk:qur',m8.length===1&&m8[0].b.reply_markup.inline_keyboard[0][0].callback_data==='blk:qur');
  }

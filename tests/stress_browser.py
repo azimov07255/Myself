@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Ishonchlilik: 1 yillik KATTA ma'lumot bilan tezlik, saqlash hajmi, zaxirani tiklash. Soat: 2026-10-31 10:00.
 import sys, time, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 GEN = """()=>{const rnd=(()=>{let s=12345;return()=>{s=(s*1103515245+12345)&0x7fffffff;return s/0x7fffffff}})(),P=['fajr','dhuhr','asr','maghrib','isha','vitr'],CT=CATS;
   S.hab=Array.from({length:12},(_,i)=>({id:'h17000000000'+String(i).padStart(2,'0'),t:'Odat '+i+' uzun nomli odat matni',e:'⭐',f:i%3===0?4:undefined}));S.hb={};S.hk={};S.nm=S.nm||{d:{}};S.nm.d={};S.q.ny={};S.fm={};S.mood={};S.water={};S.note={};S.top={};S.tasks={};S.fl=[];S.money=[];

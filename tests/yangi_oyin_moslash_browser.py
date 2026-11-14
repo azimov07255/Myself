@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # So'z o'yinlari va matnni audioga moslash. Soat: 2026-10-31 10:00.
 import sys, re, json, random
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run, wav
 TX = ("Hello and welcome to the show. Today we talk about cities, climate and the way people live in them every single day. It is a big topic! "
       "Many experts say that the plan to reduce flooding in low-lying districts was far too expensive, although residents remained reluctant to accept higher taxes. In 2023, almost twelve percent of homes were affected. Thank you for listening.")

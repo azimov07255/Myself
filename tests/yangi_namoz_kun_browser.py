@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Namoz-markazli kun: bloklarni namoz vaqtiga bog'lash. Soat: chorshanba 2026-11-11 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 BL = "[{id:'uyqu1',t:'Uxlash',s:1380,e:1740,d:[0,1,2,3,4,5,6],ty:'uyqu'},{id:'b1',t:'Peshin namozi va tushlik',s:760,e:870,d:[0,1,2,3,4,5,6],ty:'ibodat',fx:1},{id:'b2',t:'Asr namozi',s:900,e:920,d:[0,1,2,3,4,5,6],ty:'ibodat',fx:1},{id:'b3',t:'Kitob',s:540,e:600,d:[0,1,2,3,4,5,6],ty:'oqish',fx:0}]"
 with Run('nmk', when=(2026, 11, 11, 10, 0, 0), bg='n') as R:

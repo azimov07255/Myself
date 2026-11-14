@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI murabbiy va havoladan maqola olish. Soat: 2026-11-08 (yakshanba) 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 GOOD = {'summary': 'Hafta yaxshi o‘tdi: 5 kunda maqsad bajarildi.', 'wins': ['3 kun ketma-ket', 'Hifz 6 bet'], 'focus': [{'t': 'IELTS Writing', 'why': '5.8 ball'}, {'t': 'Takror', 'why': '9 ta so‘z navbatda'}, {'t': 'Uyqu', 'why': 'rejadan kech'}],
         'week': [{'d': d, 'tasks': ['IELTS lug‘at: 15 daqiqa', 'Hifz: 3 bet ' + d]} for d in ['Du', 'Se', 'Ch', 'Pa', 'Ju', 'Sh', 'Ya']], 'tip': 'Davom et!'}
@@ -39,10 +40,10 @@ with Run('mur', when=(2026, 11, 8, 10, 0, 0)) as R:
     t = pg.inner_text('#app'); chk('on the day of creation there are no tasks for today: the card says the plan starts tomorrow', '🧭 Murabbiy: bugun' in t and 'Reja ertadan boshlanadi' in t)
     R.at(2026, 11, 9, 9, 0, 0); ev("()=>{rwReset();render()}"); pg.wait_for_timeout(150); t = pg.inner_text('#app')
     chk('next day the card shows TODAY\u2019s tasks only (Du) with a 0 / 2 counter', '0 / 2' in t and 'IELTS lug‘at: 15 daqiqa' in t and 'Hifz: 3 bet Du' in t and 'Hifz: 3 bet Se' not in t.split('To‘liq hafta')[0])
-    pg.click('#app .goal .row >> nth=0'); pg.wait_for_timeout(120); chk('ticking a task saves it and updates the counter', '1 / 2' in pg.inner_text('#app') and ev("S.coach.x['2026-11-09:0']") == 1)
-    pg.click('#app .goal .row >> nth=0'); chk('ticking again unticks', ev("S.coach.x['2026-11-09:0']") == 0)
-    ev("document.querySelector('#app .goal details').open=true"); pg.wait_for_timeout(80); t = pg.inner_text('#app .goal details')
-    chk('the full plan shows the summary, wins, 3 focus areas with reasons, every day of the week and the tip', 'Hafta yaxshi o‘tdi' in t and '3 kun ketma-ket' in t and '1. IELTS Writing' in t and '5.8 ball' in t and 'Se 11-10' in t and 'Ya 11-15' in t and 'Davom et!' in t)
+    pg.click('#app .goal:has-text("Murabbiy: bugun") .row >> nth=0'); pg.wait_for_timeout(120); chk('ticking a task saves it and updates the counter', '1 / 2' in pg.inner_text('#app') and ev("S.coach.x['2026-11-09:0']") == 1)
+    pg.click('#app .goal:has-text("Murabbiy: bugun") .row >> nth=0'); chk('ticking again unticks', ev("S.coach.x['2026-11-09:0']") == 0)
+    ev("[...document.querySelectorAll('#app .goal')].find(g=>g.textContent.includes('Murabbiy')).querySelector('details').open=true"); pg.wait_for_timeout(80); t = pg.locator('#app .goal:has-text("Murabbiy: bugun") details').first.inner_text()
+    chk('the full plan shows the summary, wins, 3 focus areas with reasons, every day of the week and the tip', 'Hafta yaxshi o‘tdi' in t and '3 kun ketma-ket' in t and '1. IELTS Writing' in t and '5.8 ball' in t and 'Se 10-noyabr' in t and 'Ya 15-noyabr' in t and 'Davom et!' in t)
     ev("window.confirm=()=>false;window.__calls=[]"); pg.click('#app >> text=Yangi reja tuz'); pg.wait_for_timeout(300)
     chk('regenerating a plan made on an EARLIER day goes straight through (no question) and replaces it', ev("__calls.length") == 1 and ev("S.coach.at") == '2026-11-09' and ev("S.coach.days[0]") == '2026-11-10')
     ev("()=>{S.coach.at=dk()}"); ev("window.__calls=[]"); pg.click('#app >> text=Yangi reja tuz'); pg.wait_for_timeout(200); chk('a same-day regeneration that is cancelled sends no request', ev("__calls.length") == 0)

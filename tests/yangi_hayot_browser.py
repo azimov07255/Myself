@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Hayot paneli, kashfiyotlar, ma'lumotdan so'rash, Maqsad dvigateli, fokus kengaytmasi. Soat: 2026-10-31 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 PLAN = {'summary': 'Haftalik reja tayyor.', 'unit': 'hafta', 'steps': [{'label': '1-hafta', 'focus': 'Diagnostika', 'tasks': ['Mock test ishla', '50 ta so‘z yod ol']}, {'label': '2-hafta', 'focus': 'Reading', 'tasks': ['3 ta matn ishla']}, {'label': '3-hafta', 'focus': 'Writing', 'tasks': ['2 ta insho yoz', 'Xatolarni tuzat']}], 'daily': {'t': 'Kuniga 20 ta so‘z', 'min': 20}, 'risks': ['Vaqt yetmasligi: jadvalga qat‘iy qo‘y.', 'Zerikish: turli manba ishlat.']}
 with Run('hayot') as R:

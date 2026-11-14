@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Bugun 3: kun tekshiruvi, imtihon yo'li, blok boshlanish marosimi. Soat: 2026-11-09 (dushanba) 07:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 ALL = '[0,1,2,3,4,5,6]'
 def B(*rows):

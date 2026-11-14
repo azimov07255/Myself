@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Rejimlar: zinapoya, izolyatsiya sessiyasi, 21 kunlik ketma-ketlik, tiklanish, indeks. Soat: chorshanba 2026-11-11 10:00.
 import sys, json, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 KEYS = "['n3','dc','qr','rw','co','md','ns','ib','kc','ey','tq','km','tt','cb','ml','sos','zn','st','top','zk','ai','wk']"
 CARDS = "btCards(%s.map(k=>[k,'<i>'+k+'</i>']))" % KEYS

@@ -1,8 +1,9 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # "Nima yangilandi?": versiyalangan yangiliklar, yangilangandan keyin chiqadigan oyna, yangilash tugmasi ustidagi izoh. Soat: 2026-11-05 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
-VJ = json.load(open('/mnt/user-data/outputs/tracker/version.json', encoding='utf-8'))
+VJ = json.load(open((ROOT + '/tracker/version.json'), encoding='utf-8'))
 with Run('yangilik', when=(2026, 11, 5, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
     ev("()=>{window.__t=[];window.toast=m=>window.__t.push(m);localStorage.removeItem('trk_seenv');tab='s';render()}")
