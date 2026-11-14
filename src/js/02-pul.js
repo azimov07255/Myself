@@ -32,7 +32,7 @@ function pForm(){
   const acc=K==='tr'?`<div class="acc"><button class="${FACC==='cash'?'on':''}" onclick="FACC='cash';FTO='card';render()">Naqddan kartaga</button><button class="${FACC==='card'?'on':''}" onclick="FACC='card';FTO='cash';render()">Kartadan naqdga</button></div>`:`<div class="acc"><button class="${FACC==='cash'?'on':''}" onclick="pAcc('cash')">💵 Naqd</button><button class="${FACC==='card'?'on':''}" onclick="pAcc('card')">💳 Karta</button></div>`;
   const cats=K==='tr'?'':`<div class="cchips">${lst.map((c,i)=>`<button class="${FC===i?'on':''}" onclick="FC=${i};render()"><span>${CI[c]||'•'}</span>${c}</button>`).join('')}</div>`;
   return `<div class="goal" style="margin-top:12px"><b>${EID?'Yozuvni tahrirlash':'Yangi yozuv'}</b><div style="margin-top:10px">${kind}${acc}</div>
-  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${FA?num(+FA):''}" oninput="FA=String(sfn(this.value));this.value=sfn(this.value)?num(sfn(this.value)):''" style="font-size:20px;font-weight:700"></div>${cats}
+  <div class="in"><input type="text" inputmode="numeric" placeholder="Summa, so‘m" value="${FA?num(+FA):''}" oninput="FA=String(sfn(this.value));this.value=sfn(this.value)?num(sfn(this.value)):'';mhnForm()" style="font-size:20px;font-weight:700"></div>${mhnLine()}${cats}
   <div class="in"><input placeholder="Izoh" value="${esc(FN)}" oninput="FN=this.value"></div><div class="in"><input type="date" value="${FD||dk()}" onchange="FD=this.value"></div>
   <div class="in"><button class="btn" style="flex:1" onclick="addM()">${EID?'Saqlash':'Yozish'}</button>${EID?'<button class="btn s" onclick="pCancel()">Bekor</button>':''}</div></div>`}
 function mRow(m){
@@ -95,7 +95,7 @@ function pHisob(){
   const diff=pou?Math.round((ou-pou)/pou*100):null;
   return `<div class="in"><button class="btn s" onclick="PF.mo--;render()">‹</button><button class="btn s" onclick="PF.mo=0;render()">${mn[0].toUpperCase()+mn.slice(1)} ${mk.d.getFullYear()}</button><button class="btn s" onclick="PF.mo++;render()">›</button></div>
   <section class="hero"><p class="lab">Oylik xulosa</p><h1 style="font-size:32px">${inn-ou>=0?'+':'−'}${num(Math.abs(inn-ou))} so‘m</h1><p class="mu">Kirim ${num(inn)}, chiqim ${num(ou)}.${inn?` Jamg‘arish ulushi ${Math.round((inn-ou)/inn*100)}%.`:''}</p><div class="pbal"><div><span>💵 Naqd chiqim</span><b>${num(mSum(L,'out','cash'))}</b></div><div><span>💳 Karta chiqim</span><b>${num(mSum(L,'out','card'))}</b></div></div></section>
-  <div class="sum"><div><span class="mu">Kunlik o‘rtacha chiqim</span><b>${num(Math.round(ou/Math.max(1,el)))}</b></div><div><span class="mu">O‘tgan oyga nisbatan</span><b class="${diff>0?'out-c':'in-c'}">${diff===null?'—':(diff>0?'+':'')+diff+'%'}</b></div></div>
+  ${dfyUi()}${sblUi()}<div class="sum"><div><span class="mu">Kunlik o‘rtacha chiqim</span><b>${num(Math.round(ou/Math.max(1,el)))}</b></div><div><span class="mu">O‘tgan oyga nisbatan</span><b class="${diff>0?'out-c':'in-c'}">${diff===null?'—':(diff>0?'+':'')+diff+'%'}</b></div></div>
   <h2>Chiqim kategoriyalari</h2>${cs.map(([c,v])=>`<div style="margin-bottom:8px"><div style="display:flex;justify-content:space-between"><span>${CI[c]||''} ${esc(c)}</span><span class="mu">${num(v)}, ${Math.round(v/Math.max(1,ou)*100)}%</span></div><div class="bar"><i style="width:${v/Math.max(1,ou)*100}%"></i></div></div>`).join('')||'<p class="mu">Bu oyda chiqim yo‘q.</p>'}
   <h2>Kunlar bo‘yicha chiqim</h2><div class="bars2">${day.map(v=>`<i style="height:${Math.max(2,v/mx*80)}px"></i>`).join('')}</div>
   <h2>Eng katta chiqimlar</h2>${top||'<p class="mu">Yo‘q.</p>'}
@@ -113,8 +113,8 @@ function pReja(){
 
 function pul(){
   finInit();
-  const seg=[['b','🏠 Bosh'],['t','🧾 Tarix'],['q','🤝 Qarzlar'],['h','📈 Hisobot'],['r','🎯 Reja']].map(x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`).join('');
-  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc">${seg}</div>${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+pInsUi():pReja()+pCatBudUi()+pRcUi()}`}
+  const seg=[['b','🏠 Bosh'],['t','🧾 Tarix'],['q','🤝 Qarzlar'],['h','📈 Hisobot'],['r','🎯 Reja'],['z','🕌 Zakat']].map(x=>`<button class="${PV===x[0]?'on':''}" onclick="PV='${x[0]}';render()">${x[1]}</button>`).join('');
+  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc">${seg}</div>${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+mhnRep()+pInsUi():PV==='z'?zktUi():pReja()+mhnCard()+pCatBudUi()+pRcUi()}`}
 
 function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
