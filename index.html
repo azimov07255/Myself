@@ -550,6 +550,32 @@ html.btc #app .wk+.in .btn{padding:6px 14px;font-size:13px}
 /* Pul tablari (ixcham): 5 ta tab bir qatorga sig'adi */
 .seg.sc.ptb button{flex:1 1 0;min-width:0;padding:9px 4px;font-size:14px}
 @media (max-width:350px){.seg.sc.ptb button{font-size:11px;padding:9px 2px}}
+/* SAYQAL: umumiy dizayn sayqali (Sozlamalar → 🎨 Dizayn → Sayqal). Hammasi html.pl ostida: o'chirilsa avvalgi ko'rinish qaytadi.
+   Faqat ko'rinish: soyalar, burchaklar, bosish effekti, tab va pastki menyu. Ranglar CSS o'zgaruvchilaridan. */
+html.pl nav{background:var(--bg);background:color-mix(in srgb,var(--bg) 84%,transparent);-webkit-backdrop-filter:saturate(1.5) blur(14px);backdrop-filter:saturate(1.5) blur(14px);border-top-color:var(--ln)}
+html.pl nav button{transition:background .2s,color .2s,transform .12s}
+html.pl nav button:active{transform:scale(.93)}
+html.pl nav button.on{background:var(--c2);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 6px 14px -8px rgba(0,0,0,.45)}
+html.pl nav button.on .ni{transform:translateY(-1px) scale(1.1)}
+html.pl nav .ni{transition:transform .2s}
+html.pl .goal,html.pl .sum div{border:1px solid var(--ln);border-radius:18px;box-shadow:0 1px 2px rgba(10,30,20,.05),0 10px 22px -16px rgba(10,30,20,.35)}
+html.pl .goal{padding:14px 16px}
+html.pl .hero{border-radius:26px;box-shadow:0 20px 36px -22px rgba(5,40,28,.65),0 1px 0 rgba(255,255,255,.16) inset}
+html.pl .big{border-radius:18px;min-height:50px;box-shadow:0 12px 24px -14px var(--go);transition:transform .12s,filter .2s,box-shadow .2s}
+html.pl .btn{border-radius:14px;min-height:44px;transition:transform .12s,filter .2s}
+html.pl .big:active,html.pl .btn:active,html.pl .seg button:active,html.pl .tbb:active{transform:scale(.97);filter:brightness(.96)}
+html.pl .seg{border:1px solid var(--ln);border-radius:14px}
+html.pl .seg button{border-radius:11px;transition:background .2s,color .2s,transform .12s}
+html.pl .seg button.on{background:var(--c2);color:var(--tx);box-shadow:0 1px 0 rgba(255,255,255,.35) inset,0 4px 10px -7px rgba(0,0,0,.5)}
+html.pl .seg.sc button{display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:42px}
+html.pl .tbb{box-shadow:0 6px 14px -9px rgba(10,30,20,.5);transition:transform .12s}
+html.pl h2{letter-spacing:-.01em;margin-top:24px}
+html.pl .row{border-radius:16px}
+html.pl input,html.pl select,html.pl textarea{border-radius:14px}
+html.pl input:focus,html.pl select:focus,html.pl textarea:focus{outline:2px solid color-mix(in srgb,var(--ac) 55%,transparent);outline-offset:1px}
+/* Odat: telefonda kompyuter tugmalari (ustun kengligi, keng ekran) yashirinadi */
+@media (max-width:700px){html.pl .hbcol,html.pl .hbwide{display:none}}
+@media (prefers-reduced-motion:reduce){html.pl *{transition:none!important}}
 </style>
 </head>
 <body>
@@ -633,8 +659,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-6';
-const APP_BUILD='cf52f94815'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.12.19-7';
+const APP_BUILD='a19e08afbe'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -3991,7 +4017,7 @@ try{(function(){let dr=null;
   document.addEventListener('pointerdown',e=>{const n=e.target.closest&&e.target.closest('.mn');if(!n)return;const r=n.getBoundingClientRect();if(e.clientX<r.right-8)return;dr={x:e.clientX,w:r.width,mv:0}});
   document.addEventListener('pointermove',e=>{if(!dr)return;if(!dr.mv&&Math.abs(e.clientX-dr.x)<4)return;dr.mv=1;hbNwSet(dr.w+e.clientX-dr.x)});
   const up=()=>{dr=null};document.addEventListener('pointerup',up);document.addEventListener('pointercancel',up)})()}catch(e){}
-function hbCtl(){const c=uiG('trk_hbc')==='1',w=wideOn();return `<div class="in" style="flex-wrap:wrap;margin:8px 0"><span class="mu" style="align-self:center;font-size:13px">Ustun:</span><button class="btn s" onclick="hbNw(-20)" aria-label="Torroq">◀ Tor</button><button class="btn s" onclick="hbNw(20)" aria-label="Kengroq">Keng ▶</button><button class="btn s" onclick="hbCompact()">${c?'Batafsil':'Ixcham'}</button><button class="btn s" onclick="wideToggle()">${w?'Tor ekran':'↔ Keng ekran'}</button></div>`}
+function hbCtl(){const c=uiG('trk_hbc')==='1',w=wideOn();return `<div class="in" style="flex-wrap:wrap;margin:8px 0"><span class="mu hbcol" style="align-self:center;font-size:13px">Ustun:</span><button class="btn s hbcol" onclick="hbNw(-20)" aria-label="Torroq">◀ Tor</button><button class="btn s hbcol" onclick="hbNw(20)" aria-label="Kengroq">Keng ▶</button><button class="btn s" onclick="hbCompact()">${c?'Batafsil':'Ixcham'}</button><button class="btn s hbwide" onclick="wideToggle()">${w?'Tor ekran':'↔ Keng ekran'}</button></div>`}
 // ---- Bugun'da dam kuni ----
 function hbS(id,k){k=k||dk();S.hb[k]=S.hb[k]||{};S.hk=S.hk||{};const hk=S.hk[k]=S.hk[k]||{};if(hk[id]){delete hk[id];if(!Object.keys(hk).length)delete S.hk[k]}else{hk[id]=1;S.hb[k][id]=false}save()}
 function hbRest(k){if(!S.hab.length)return '';const rs=x=>hkOn(k,x.id)&&!(S.hb[k]||{})[x.id],n=S.hab.filter(rs).length;
@@ -4545,7 +4571,7 @@ function ptbJl(){return `<p class="mu" style="margin:12px 0 4px;font-size:12px">
 // ---- DIZAYN: Klassik (hozirgi) yoki Yangi uslub, urg'u rangi, matn o'lchami, animatsiya. Faqat shu qurilmada saqlanadi ----
 const DZA=[['zumrad','Zumrad','#0f6b52'],['kok','Ko‘k','#1f5fbf'],['binafsha','Binafsha','#6a46c9'],['atirgul','Atirgul','#c2335b'],['oltin','Oltin','#a06a12'],['grafit','Grafit','#2f3d48']];
 function dzMeta(){try{const m=document.querySelector('meta[name=theme-color]');if(m){const c=getComputedStyle(document.body).backgroundColor;if(c)m.setAttribute('content',c)}}catch(e){}}
-function dzApply(){try{const d=document.documentElement,g=k=>uiG('trk_'+k),v=g('ui');d.classList.toggle('ui2',v==='2'||v==='3');d.classList.toggle('glass',v==='3');d.classList.toggle('bpol',g('bpol')==='1');d.classList.toggle('btc',g('btc')==='1');d.classList.toggle('btq0',g('bqt')==='0');d.dataset.acc=g('acc')||'zumrad';d.dataset.fs=g('fs')||'m';d.dataset.gl=g('gl')||'m';d.dataset.mo=g('mo')==='0'?'off':'on';dzMeta()}catch(e){}}
+function dzApply(){try{const d=document.documentElement,g=k=>uiG('trk_'+k),v=g('ui');d.classList.toggle('ui2',v==='2'||v==='3');d.classList.toggle('glass',v==='3');d.classList.toggle('bpol',g('bpol')==='1');d.classList.toggle('btc',g('btc')==='1');d.classList.toggle('pl',g('pl')!=='0');d.classList.toggle('btq0',g('bqt')==='0');d.dataset.acc=g('acc')||'zumrad';d.dataset.fs=g('fs')||'m';d.dataset.gl=g('gl')||'m';d.dataset.mo=g('mo')==='0'?'off':'on';dzMeta()}catch(e){}}
 function dzSet(k,v){uiS('trk_'+k,v);dzApply();render()}
 const dzMode=()=>{const v=uiG('trk_ui');return v==='2'||v==='3'?v:'1'};
 function dzPrev(n){const on=dzMode()===n,mini={'1':['#f8f4ea','#17604a','#fffdf8','6px','none'],'2':['linear-gradient(160deg,#102431,#0a1520)','linear-gradient(155deg,#1b6a5a,#0e3f37)','#122230','10px','0 4px 8px -4px #0008'],'3':['radial-gradient(70px 60px at 90% 0,#45cfae88,transparent),radial-gradient(60px 60px at 0 60%,#f0b45a66,transparent),#0a1520','linear-gradient(155deg,#2a8a78cc,#0e3f37cc)','rgba(255,255,255,.14)','12px','inset 0 1px 0 #fff5,0 4px 8px -4px #0008']}[n],nm={'1':'Klassik','2':'Yangi','3':'Liquid Glass'}[n],ds={'1':'Hozirgi ko‘rinish','2':'Yumshoq, zamonaviy','3':'Shaffof shisha'}[n],bar=n==='1'?'<div style="position:absolute;left:0;right:0;bottom:0;height:9px;background:#e5dfcf"></div>':`<div style="position:absolute;left:10px;right:10px;bottom:5px;height:11px;border-radius:9px;background:#ffffff${n==='3'?'3a':'26'};${n==='3'?'box-shadow:inset 0 1px 0 #fff6':''}"></div>`;
@@ -4555,7 +4581,8 @@ function dzCard(){const a=uiG('trk_acc')||'zumrad',fs=uiG('trk_fs')||'m',mo=uiG(
    ${m==='3'?`<p style="margin:12px 0 6px"><b>Shisha kuchi</b> <span class="mu" style="font-size:12px">(telefon sekin ishlasa “Yengil” ni tanla)</span></p><div class="seg">${[['s','Yengil'],['m','O‘rta'],['h','Kuchli']].map(x=>`<button class="${gl===x[0]?'on':''}" onclick="dzSet('gl','${x[0]}')">${x[1]}</button>`).join('')}</div>`:''}
    <p style="margin:12px 0 6px"><b>Rang</b> <span class="mu" style="font-size:12px">(Yangi va Liquid Glass uslubida)</span></p><div class="rwch">${DZA.map(x=>`<button class="chip ${a===x[0]?'on':''}" style="border:0;display:inline-flex;align-items:center;gap:6px" onclick="dzSet('acc','${x[0]}')"><i style="width:14px;height:14px;border-radius:50%;background:${x[2]};display:inline-block"></i>${x[1]}</button>`).join('')}</div>
    <p style="margin:12px 0 6px"><b>Matn o‘lchami</b></p><div class="seg">${[['s','Kichik'],['m','O‘rta'],['l','Katta'],['xl','Juda katta']].map(x=>`<button class="${fs===x[0]?'on':''}" onclick="dzSet('fs','${x[0]}')">${x[1]}</button>`).join('')}</div>
-   <p style="margin:12px 0 6px"><b>Animatsiyalar</b></p><div class="seg"><button class="${mo?'on':''}" onclick="dzSet('mo','1')">Yoqilgan</button><button class="${mo?'':'on'}" onclick="dzSet('mo','0')">O‘chirilgan</button></div>`}
+   <p style="margin:12px 0 6px"><b>Animatsiyalar</b></p><div class="seg"><button class="${mo?'on':''}" onclick="dzSet('mo','1')">Yoqilgan</button><button class="${mo?'':'on'}" onclick="dzSet('mo','0')">O‘chirilgan</button></div>${plJl()}`}
+function plJl(){const o=uiG('trk_pl')!=='0';return `<p class="mu" style="margin:14px 0 6px"><b>✨ Sayqal</b> <span style="font-size:12px">(soyalar, burchaklar, bosish effekti, pastki menyu, tablar)</span></p><div class="seg"><button class="${o?'on':''}" onclick="dzSet('pl','1')">Yoqilgan</button><button class="${o?'':'on'}" onclick="dzSet('pl','0')">Avvalgidek</button></div><p class="mu" style="margin:4px 0 0;font-size:12px">“Avvalgidek” desang, ilova avvalgi tekis ko‘rinishga qaytadi.</p>`}
 try{dzApply()}catch(e){}
 // ---- IELTS materiallari: hamma so'z ma'nosi (lug'at xaritasi), keshlangan izohlar, lug'atdagi so'zlarni matnda belgilash, internetdan podkast/maqola olish ----
 const ieKey=s=>String(s||'').toLowerCase().replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim();
@@ -4942,6 +4969,7 @@ function ovCard(){const c=ovCfg(),V=ovEn(),o=ovDev(),opt=(name)=>V.map(v=>`<opti
 try{const T=ieTts&&ieTts();if(T&&'onvoiceschanged' in T)T.onvoiceschanged=()=>{try{if(tab==='s')render()}catch(e){}}}catch(e){}
 // ---- "NIMA YANGILANDI?": har versiya uchun yozuv. HAR CHIQARISHDA ro'yxatning BOSHIGA yangi yozuv qo'shing: v = APP_VER (tools/build_app.py tekshiradi), t = qisqa xulosa (yangilash tugmasi ustida ko'rinadi, apostrofsiz yozing) ----
 const NEWSV=[
+{v:'2026.12.19-7',t:'✨ Dizayn sayqali: yumshoq soyalar, shishasimon pastki menyu, tab va tugmalar',items:[['✨ Sayqal: kartalar va tugmalarda yumshoq soya va yumaloq burchak, bosganda yengil bosilish effekti, pastki menyu shishasimon (xira orqa fon) va faol tab ajralib turadi, tablar bir xil balandlikda, Odat’da telefonda keraksiz kompyuter tugmalari yashirildi. Faqat ko‘rinish, funksiyalar o‘zgarmagan','Hamma ekranlar'],['Eskisi: avvalgi tekis ko‘rinishga qaytarish mumkin','Sozlamalar → 🎨 Dizayn → Sayqal']]},
 {v:'2026.12.19-6',t:'💰 Pul tablari ixchamlandi: 4 ta asosiy tab + Yana',items:[['💰 Pul tablari: Bosh, Tarix, Hisobot, Reja asosiy; Qarzlar va Zakat “⋯ Yana” ichida. Endi tablar qatori yonga surilmaydi','Pul'],['Eskisi: 6 ta tab holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Pul tablari']]},
 {v:'2026.12.19-5',t:'⚙️ Sozlamalar tartibga solindi: guruhlar, zaxira bir joyda, egasi bo‘limi',items:[['⚙️ Sozlamalar guruhlandi: 🎨 Ko‘rinish va qulaylik (Dizayn, Bugun ko‘rinishi, Jilo, Reja rejimlari, Ovoz, Mushaf), 💾 Zaxira va sinxron (uch zaxira bo‘limi birga), 🛠 Egasi va diagnostika (Ishga tayyormi, Foydalanish, Xatolar jurnali, Diagnostika). Yangiliklar ro‘yxati qisqardi: oxirgi 2 versiya ochiq, eskilari alohida bo‘limda','Sozlamalar'],['Eskisi: bitta uzun ro‘yxat holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Sozlamalar tuzilishi']]},
 {v:'2026.12.19-4',t:'🌅 Bugun tepasi: ixcham ko‘rinish (ixtiyoriy)',items:[['🌅 Bugun tepasini ixchamlash: salomlashish kichrayadi, doira kichik nishonga aylanadi, hafta chizig‘i pastroq, shior bir qatorga sig‘adi (yoki yashirin). “Hozir” kartasi va “Bajardim” tugmasi ekran tepasiga yaqinlashadi. Standart avvalgidek, o‘zing yoqasan','Sozlamalar → 🗂 Bugun ko‘rinishi → Bugun tepasi']]},
