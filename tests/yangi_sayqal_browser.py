@@ -29,6 +29,11 @@ with Run('sayqal') as R:
     go('1', 'q'); ev("()=>{QV='t';render()}"); pg.wait_for_timeout(120)
     ok = ev("(()=>{const e=document.querySelector('#app .seg.sc');const b=e&&e.querySelector('button.on');if(!b)return 'no-active';const l=b.offsetLeft,r=l+b.offsetWidth;return l>=e.scrollLeft-1&&r<=e.scrollLeft+e.clientWidth+1})()")
     chk('Qur\'on second-level tabs: the active tab (Takror) is inside the visible part of the row', ok is True, ok)
+    go('1', 'e'); r = ev("[...document.querySelectorAll('#app .seg')].slice(0,2).map(s=>({n:s.children.length,hs:[...s.children].map(b=>Math.round(b.getBoundingClientRect().height))}))")
+    chk('O\'qish top row (4 tabs): all tabs on ONE line with equal height (no stacked emoji, no taller row)', r[0]['n'] == 4 and max(r[0]['hs']) <= 50 and len(set(r[0]['hs'])) == 1, r)
+    chk('O\'qish second row (5 tabs): all five have the same height (consistent icon-over-label)', r[1]['n'] == 5 and len(set(r[1]['hs'])) == 1, r)
+    go('0', 'e'); r0 = ev("[...document.querySelectorAll('#app .seg')][0].children[0].getBoundingClientRect().height")
+    chk('"Avvalgidek": the old taller top row is back', r0 > 55, r0)
     # uslublar x rejimlar x ekranlar
     for th in ('light', 'dark'):
         for cls, nm in (('', 'Klassik'), ('ui2', 'Yangi'), ('ui2 glass', 'Glass')):
