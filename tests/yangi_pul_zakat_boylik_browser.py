@@ -18,7 +18,7 @@ with Run('pul_zbd') as R:
 
     # ================= ZAKAT =================
     setup(pv='z')
-    chk('the Pul tabs include "🕌 Zakat" and opening it shows the zakat card', 'Zakot hisobi' in text() and ev("[...document.querySelectorAll('#app .seg.sc button')].some(b=>/Zakat/.test(b.textContent))"))
+    chk('the Pul tabs include "🕌 Zakat" and opening it shows the zakat card', 'Zakot hisobi' in text() and ev("[...document.querySelectorAll('#app .seg button')].some(b=>/Zakat/.test(b.textContent))"))
     chk('without a gold price it asks for the price (no zakat is invented)', 'narxini yoz' in text() and ev("zktCalc().ok") is False)
     setup(money=[M(1, '2026-10-01', 'in', 50000000, 'Maosh')], fin={'zk': {'b': 'g', 'pg': 1000000}}, pv='z')
     o = ev("zktCalc()")

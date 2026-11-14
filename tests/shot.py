@@ -5,7 +5,7 @@ def shoot(seed_js,out,full=True,w=390,h=844,theme=None,scroll=0,clip_h=None):
         b=p.chromium.launch()
         ctx=b.new_context(viewport={'width':w,'height':h},device_scale_factor=2,is_mobile=True,has_touch=True)
         pg=ctx.new_page()
-        pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a')}catch(e){}")
+        pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a');if(localStorage.getItem('trk_ptb')===null)localStorage.setItem('trk_ptb','a')}catch(e){}")
         errs=[]
         pg.on('pageerror',lambda e:errs.append(str(e)))
         pg.route('**/*',lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
