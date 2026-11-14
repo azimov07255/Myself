@@ -22,7 +22,7 @@ def chk(name, cond, extra=''):
 with sync_playwright() as p:
     b = p.chromium.launch(); ctx = b.new_context(viewport={'width': 390, 'height': 844}, device_scale_factor=2, is_mobile=True, has_touch=True)
     pg = ctx.new_page()
-    pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a');if(localStorage.getItem('trk_ptb')===null)localStorage.setItem('trk_ptb','a')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
+    pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a');if(localStorage.getItem('trk_ptb')===null)localStorage.setItem('trk_ptb','a');if(localStorage.getItem('trk_pl')===null)localStorage.setItem('trk_pl','0')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.route('**/*', lambda r: r.continue_() if r.request.url.startswith('http://127.0.0.1') or r.request.url.startswith('data:') else r.abort())
     pg.goto(f'http://127.0.0.1:{PORT}/index.html'); pg.wait_for_timeout(600)
     pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())"); ev = pg.evaluate; ev("()=>{S.ob=1;S.ts=1;render()}")
