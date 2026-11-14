@@ -141,7 +141,7 @@ function renderCore(){try{rcRun()}catch(e){}
   const hs={};if(document.querySelectorAll)document.querySelectorAll('.hg').forEach(e=>{hs[e.dataset.k]=e.scrollLeft});
   const sy=window.scrollY||0;
   a.innerHTML=stick((SO?'':topbar())+v);
-  drawNav();fixGrid(hs);fixSeg(ss);if(RWO)rwDraw();try{usHit()}catch(e){}
+  drawNav();fixGrid(hs);fixSeg(ss);try{plSeg()}catch(e){}if(RWO)rwDraw();try{usHit()}catch(e){}
   if(sy>0)window.scrollTo(0,sy);
 }
 

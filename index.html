@@ -576,6 +576,17 @@ html.pl input:focus,html.pl select:focus,html.pl textarea:focus{outline:2px soli
 /* Odat: telefonda kompyuter tugmalari (ustun kengligi, keng ekran) yashirinadi */
 @media (max-width:700px){html.pl .hbcol,html.pl .hbwide{display:none}}
 @media (prefers-reduced-motion:reduce){html.pl *{transition:none!important}}
+
+/* ikkinchi daraja tablar: ixchamroq (ko'proq tab ko'rinadi), faol tab markazga suriladi */
+html.pl .seg.sc:not(.ptb) button{padding-left:11px;padding-right:11px;font-size:15px}
+html.pl .seg.sc{scroll-snap-type:x proximity}html.pl .seg.sc button{scroll-snap-align:center}
+/* Odat: 4 ta statistika bir qatorda, kichik (telefonda joy tejaydi) */
+@media (max-width:700px){html.pl .hbsum{grid-template-columns:repeat(4,1fr);gap:6px}
+html.pl .hbsum div{padding:9px 6px;border-radius:14px}
+html.pl .hbsum .mu{font-size:11px;line-height:1.2}
+html.pl .hbsum b{font-size:17px}
+html.pl .hbsum .mu+b+.mu{display:none}
+html.pl .hbsum .w{grid-column:auto}}
 </style>
 </head>
 <body>
@@ -659,8 +670,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-7';
-const APP_BUILD='a19e08afbe'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.12.19-8';
+const APP_BUILD='5118522ea2'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -867,7 +878,7 @@ function odatlar(){
     NL.push(`<div class="mr">${x.e?`<span style="margin-right:6px">${x.e}</span>`:`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;background:${col};margin-right:6px"></span>`}<span onclick="hbE(${hi})" style="cursor:pointer;border-bottom:1px dotted var(--mu)">${esc(x.t)}</span><br><span class="mu" style="font-size:12px">🔥 ${st}&nbsp; ${hbMeta(x,wn)} <button class="x" style="font-size:15px" onclick="delH(${hi})">×</button></span></div>`);return `<tr style="height:64px">${cs}</tr>`}).join('');
   return `<p class="mu" style="margin:0">Odatlar jadvali</p><h1 class="gr">${MON[m][0].toUpperCase()+MON[m].slice(1)} ${y}</h1><p class="mu" style="margin:0 0 4px">Bugun: ${now.getDate()}-${MON[now.getMonth()]}, ${DAYS[now.getDay()]}</p>
   ${habNav()}${hbCtl()}
-  <div class="sum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
+  <div class="sum hbsum"><div><span class="mu">Oylik bajarilish</span><b>${tot?Math.round(got/tot*100):0}%</b></div><div><span class="mu">Mukammal kunlar</span><b>${perfect}</b><span class="mu" style="font-size:12px">barcha odatlar belgilangan</span></div><div><span class="mu">Eng uzun seriya</span><b>${best} kun</b><span class="mu" style="font-size:12px">${esc(bn)}</span></div><div><span class="mu">Faol odatlar</span><b>${S.hab.length}</b></div></div>
   ${!S.hab.length?'<p class="mu">Hali odat yo‘q. Pastdan birinchi odatingni yoz.</p>':HV==='w'?habWeek(today):`${mgrid(NL,gHead(y,m,n,today,1),body,'j',64)}`}
   <div class="in" style="margin-top:14px"><input id="ne" placeholder="🙂" style="flex:0 0 58px;text-align:center"><input id="nh" placeholder="Yangi odat, masalan: 20 bet kitob" onkeydown="if(event.key==='Enter')addH()"><button class="btn" onclick="addH()">Qo‘sh</button></div>${habInsUi()}${habArcUi()}${suggCard()}`;
 }
@@ -1015,7 +1026,7 @@ function renderCore(){try{rcRun()}catch(e){}
   const hs={};if(document.querySelectorAll)document.querySelectorAll('.hg').forEach(e=>{hs[e.dataset.k]=e.scrollLeft});
   const sy=window.scrollY||0;
   a.innerHTML=stick((SO?'':topbar())+v);
-  drawNav();fixGrid(hs);fixSeg(ss);if(RWO)rwDraw();try{usHit()}catch(e){}
+  drawNav();fixGrid(hs);fixSeg(ss);try{plSeg()}catch(e){}if(RWO)rwDraw();try{usHit()}catch(e){}
   if(sy>0)window.scrollTo(0,sy);
 }
 
@@ -4584,6 +4595,9 @@ function dzCard(){const a=uiG('trk_acc')||'zumrad',fs=uiG('trk_fs')||'m',mo=uiG(
    <p style="margin:12px 0 6px"><b>Animatsiyalar</b></p><div class="seg"><button class="${mo?'on':''}" onclick="dzSet('mo','1')">Yoqilgan</button><button class="${mo?'':'on'}" onclick="dzSet('mo','0')">O‘chirilgan</button></div>${plJl()}`}
 function plJl(){const o=uiG('trk_pl')!=='0';return `<p class="mu" style="margin:14px 0 6px"><b>✨ Sayqal</b> <span style="font-size:12px">(soyalar, burchaklar, bosish effekti, pastki menyu, tablar)</span></p><div class="seg"><button class="${o?'on':''}" onclick="dzSet('pl','1')">Yoqilgan</button><button class="${o?'':'on'}" onclick="dzSet('pl','0')">Avvalgidek</button></div><p class="mu" style="margin:4px 0 0;font-size:12px">“Avvalgidek” desang, ilova avvalgi tekis ko‘rinishga qaytadi.</p>`}
 try{dzApply()}catch(e){}
+
+// Sayqal: faol tab ko'rinmay qolgan bo'lsa (yonga surilgan qatorda), uni ko'rinadigan joyga suradi
+function plSeg(){if(!document.documentElement.classList.contains('pl'))return;document.querySelectorAll('#app .seg.sc').forEach(e=>{const b=e.querySelector('button.on');if(!b)return;const l=b.offsetLeft,r=l+b.offsetWidth;if(l<e.scrollLeft||r>e.scrollLeft+e.clientWidth)e.scrollLeft=Math.max(0,l-(e.clientWidth-b.offsetWidth)/2)})}
 // ---- IELTS materiallari: hamma so'z ma'nosi (lug'at xaritasi), keshlangan izohlar, lug'atdagi so'zlarni matnda belgilash, internetdan podkast/maqola olish ----
 const ieKey=s=>String(s||'').toLowerCase().replace(/[‘’ʼ`]/g,"'").replace(/\s+/g,' ').trim();
 const ieCacheGet=(m,w)=>(m&&m.gl&&m.gl[ieKey(w)])||null;
@@ -4969,6 +4983,7 @@ function ovCard(){const c=ovCfg(),V=ovEn(),o=ovDev(),opt=(name)=>V.map(v=>`<opti
 try{const T=ieTts&&ieTts();if(T&&'onvoiceschanged' in T)T.onvoiceschanged=()=>{try{if(tab==='s')render()}catch(e){}}}catch(e){}
 // ---- "NIMA YANGILANDI?": har versiya uchun yozuv. HAR CHIQARISHDA ro'yxatning BOSHIGA yangi yozuv qo'shing: v = APP_VER (tools/build_app.py tekshiradi), t = qisqa xulosa (yangilash tugmasi ustida ko'rinadi, apostrofsiz yozing) ----
 const NEWSV=[
+{v:'2026.12.19-8',t:'🧭 Tablar ixchamlashdi, Odat statistikasi bir qatorda',items:[['🧭 Ikkinchi daraja tablar (Qur‘on, O‘qish, Odat va boshqalar) ixchamroq: ko‘proq tab ko‘rinadi, faol tab ko‘rinmay qolsa o‘zi markazga suriladi. Odat’da 4 ta statistika bir qatorga sig‘di, jadval yuqoriroq chiqdi. Faqat ko‘rinish','Qur‘on, Odat, O‘qish'],['Eskisi: Sozlamalar → 🎨 Dizayn → Sayqal → Avvalgidek','Sozlamalar']]},
 {v:'2026.12.19-7',t:'✨ Dizayn sayqali: yumshoq soyalar, shishasimon pastki menyu, tab va tugmalar',items:[['✨ Sayqal: kartalar va tugmalarda yumshoq soya va yumaloq burchak, bosganda yengil bosilish effekti, pastki menyu shishasimon (xira orqa fon) va faol tab ajralib turadi, tablar bir xil balandlikda, Odat’da telefonda keraksiz kompyuter tugmalari yashirildi. Faqat ko‘rinish, funksiyalar o‘zgarmagan','Hamma ekranlar'],['Eskisi: avvalgi tekis ko‘rinishga qaytarish mumkin','Sozlamalar → 🎨 Dizayn → Sayqal']]},
 {v:'2026.12.19-6',t:'💰 Pul tablari ixchamlandi: 4 ta asosiy tab + Yana',items:[['💰 Pul tablari: Bosh, Tarix, Hisobot, Reja asosiy; Qarzlar va Zakat “⋯ Yana” ichida. Endi tablar qatori yonga surilmaydi','Pul'],['Eskisi: 6 ta tab holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Pul tablari']]},
 {v:'2026.12.19-5',t:'⚙️ Sozlamalar tartibga solindi: guruhlar, zaxira bir joyda, egasi bo‘limi',items:[['⚙️ Sozlamalar guruhlandi: 🎨 Ko‘rinish va qulaylik (Dizayn, Bugun ko‘rinishi, Jilo, Reja rejimlari, Ovoz, Mushaf), 💾 Zaxira va sinxron (uch zaxira bo‘limi birga), 🛠 Egasi va diagnostika (Ishga tayyormi, Foydalanish, Xatolar jurnali, Diagnostika). Yangiliklar ro‘yxati qisqardi: oxirgi 2 versiya ochiq, eskilari alohida bo‘limda','Sozlamalar'],['Eskisi: bitta uzun ro‘yxat holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Sozlamalar tuzilishi']]},
