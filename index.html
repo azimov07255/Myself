@@ -590,6 +590,10 @@ html.pl .hbsum .w{grid-column:auto}}
 
 .fqd-hide{display:none}
 .goal.fqd,.dpc2.fqd{border-left:4px solid var(--go)}
+
+/* Tab qatorlari bir xil: 4 va undan kam tab bir qatorda (ikonka + matn yonma-yon), 5 ta tab ikonka tepada */
+html.pl .seg:not(.sc) button:first-child:nth-last-child(-n+4),html.pl .seg:not(.sc) button:first-child:nth-last-child(-n+4)~button{white-space:nowrap;padding-left:4px;padding-right:4px;font-size:15px}
+html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5),html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5)~button{line-height:1.25;text-align:center;font-size:14px}
 </style>
 </head>
 <body>
@@ -673,8 +677,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-9';
-const APP_BUILD='e2d4eb332c'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.12.19-10';
+const APP_BUILD='cb7257c454'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -4986,6 +4990,7 @@ function ovCard(){const c=ovCfg(),V=ovEn(),o=ovDev(),opt=(name)=>V.map(v=>`<opti
 try{const T=ieTts&&ieTts();if(T&&'onvoiceschanged' in T)T.onvoiceschanged=()=>{try{if(tab==='s')render()}catch(e){}}}catch(e){}
 // ---- "NIMA YANGILANDI?": har versiya uchun yozuv. HAR CHIQARISHDA ro'yxatning BOSHIGA yangi yozuv qo'shing: v = APP_VER (tools/build_app.py tekshiradi), t = qisqa xulosa (yangilash tugmasi ustida ko'rinadi, apostrofsiz yozing) ----
 const NEWSV=[
+{v:'2026.12.19-10',t:'🧭 Tab qatorlari bir xil ko‘rinishda',items:[['🧭 O‘qish, Odat va boshqa bo‘limlardagi tab qatorlari bir xil: 4 tagacha tab bir qatorda (belgi va matn yonma-yon, qator past), 5 ta tab belgi tepada va matn pastda. Avval bitta uzun nom butun qatorni ikki qavat qilib yuborardi','O‘qish, Odat, Qur‘on'],['Eskisi: Sozlamalar → 🎨 Dizayn → Sayqal → Avvalgidek','Sozlamalar']]},
 {v:'2026.12.19-9',t:'🌱 Bo‘sh ekranlarda “Birinchi qadam”',items:[['🌱 Birinchi qadam: odatlar yo‘q bo‘lsa nol kartalar o‘rniga bir bosishda odat qo‘shiladigan tayyor takliflar; IELTS’da hech narsa kiritilmagan bo‘lsa nol raqamlar o‘rniga 3 qadamli yo‘l (maqola, so‘z, kurs). Ma‘lumot paydo bo‘lishi bilan odatdagi ko‘rinish chiqadi','Odat; O‘qish → IELTS → Bosh'],['Eskisi: nol raqamlar holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Bo‘sh ekranlarda Birinchi qadam']]},
 {v:'2026.12.19-8',t:'🧭 Tablar ixchamlashdi, Odat statistikasi bir qatorda',items:[['🧭 Ikkinchi daraja tablar (Qur‘on, O‘qish, Odat va boshqalar) ixchamroq: ko‘proq tab ko‘rinadi, faol tab ko‘rinmay qolsa o‘zi markazga suriladi. Odat’da 4 ta statistika bir qatorga sig‘di, jadval yuqoriroq chiqdi. Faqat ko‘rinish','Qur‘on, Odat, O‘qish'],['Eskisi: Sozlamalar → 🎨 Dizayn → Sayqal → Avvalgidek','Sozlamalar']]},
 {v:'2026.12.19-7',t:'✨ Dizayn sayqali: yumshoq soyalar, shishasimon pastki menyu, tab va tugmalar',items:[['✨ Sayqal: kartalar va tugmalarda yumshoq soya va yumaloq burchak, bosganda yengil bosilish effekti, pastki menyu shishasimon (xira orqa fon) va faol tab ajralib turadi, tablar bir xil balandlikda, Odat’da telefonda keraksiz kompyuter tugmalari yashirildi. Faqat ko‘rinish, funksiyalar o‘zgarmagan','Hamma ekranlar'],['Eskisi: avvalgi tekis ko‘rinishga qaytarish mumkin','Sozlamalar → 🎨 Dizayn → Sayqal']]},
