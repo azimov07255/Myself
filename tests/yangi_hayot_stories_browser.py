@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Hayot haftalari xaritasi va haftalik stories. Soat: 2026-11-05 (payshanba) 10:00.
 import sys, datetime
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 BIRTH = '2008-03-10'
 lived = (datetime.date(2026, 11, 5) - datetime.date(2008, 3, 10)).days // 7

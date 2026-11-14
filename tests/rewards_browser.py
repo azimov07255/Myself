@@ -1,3 +1,4 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Yo'l (rag'bat tizimi): hisob-kitob, seriya, tanga, topshiriqlar, do'kon, ekranlar. Soat qotirilgan: 2026-10-31 (shanba), 10:00.
 import sys, datetime
 from playwright.sync_api import sync_playwright
@@ -17,7 +18,7 @@ with sync_playwright() as p:
     pg.on('dialog', lambda d: d.accept())
     pg.clock.install(time=datetime.datetime(2026, 10, 31, 10, 0, 0))
     pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
-    pg.goto('file:///mnt/user-data/outputs/tracker/index.html'); pg.wait_for_timeout(500)
+    pg.goto(('file://' + ROOT + '/tracker/index.html')); pg.wait_for_timeout(500)
     pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
     ev = pg.evaluate
     ev("()=>{window.__t=[];const o=toast;window.toast=function(t){window.__t.push(t);return o(t)}}")  # record toasts

@@ -1,5 +1,5 @@
 const fs=require('fs'),esbuild=require('esbuild');
-let src=fs.readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
+let src=fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),'utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
 const out=esbuild.transformSync(src,{loader:'ts',target:'es2022'}).code;
 let handler=null;const env={GEMINI_API_KEY:'k',SUPABASE_URL:'u',SUPABASE_SERVICE_ROLE_KEY:'s'};
 globalThis.Deno={env:{get:k=>env[k]},serve:h=>{handler=h}};

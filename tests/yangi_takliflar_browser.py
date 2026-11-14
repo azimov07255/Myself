@@ -1,8 +1,9 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Lug'at qidiruvida avtomatik to'ldirish: harflarga mos so'zlar ketma-ket chiqadi. Soat: 2026-11-03 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
-WORDS = open('/mnt/user-data/outputs/data/words-v1.txt', encoding='utf-8').read()
+WORDS = open((ROOT + '/data/words-v1.txt'), encoding='utf-8').read()
 with Run('takliflar', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
     ev("""(txt)=>{window.confirm=()=>true;window.__t=[];window.toast=m=>window.__t.push(m);window.aiOk=()=>true;window.__nf=0;window.__fp=[];

@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI Listening, materialdan savollar, talaffuz tekshiruvi. Soat: 2026-10-31 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 LINES = ["Good morning, I would like to join your gym, could you tell me about the membership options?", "Of course. We have monthly and yearly plans, and the monthly plan costs forty five pounds.",
  "That sounds fine. Is there a swimming pool included in that price?", "Yes, the pool is open every day from six in the morning until ten at night.", "Great. And where exactly is the gym located, I am new to this area.",

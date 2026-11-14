@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Testlar kengaytmasi: ochiq rejim, takrorlash jadvali, oraliq reja, Bugun kartasi. Soat: chorshanba 2026-11-11 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 def bank():
     mk = lambda sid, tid, n: {'id': tid, 'name': 'Mavzu ' + tid, 'src': 's', 'q': [{'id': '%s.%d' % (tid, i), 'q': 'Savol %s %d' % (tid, i), 'o': ['a', 'b', 'c', 'd'], 'a': i % 4, 'e': 'izoh %d' % i, 'r': '%d-slayd' % i} for i in range(1, n + 1)]}

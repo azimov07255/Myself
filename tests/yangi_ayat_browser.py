@@ -1,8 +1,9 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Ayat o'yini: keyingi so'zni top, ayatni tartibga sol. Soat: 2026-11-05 10:00. Haqiqiy Mushaf ma'lumoti bilan.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
-DATA = json.load(open('/mnt/user-data/outputs/data/quran-mushaf.json', encoding='utf-8'))
+DATA = json.load(open((ROOT + '/data/quran-mushaf.json'), encoding='utf-8'))
 with Run('ayat', when=(2026, 11, 5, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
     ev("""(d)=>{window.__t=[];window.toast=m=>window.__t.push(m);window.confetti=()=>{window.__cf=(window.__cf||0)+1};MF=d;MFP=Promise.resolve(d);

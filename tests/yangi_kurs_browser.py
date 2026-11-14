@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # IELTS kursi: reja, avtomatik progress, strategiyalar, xatolar daftari. Soat: 2026-11-03 10:00 (seshanba).
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('kurs', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
@@ -17,7 +18,7 @@ with Run('kurs', when=(2026, 11, 3, 10, 0, 0)) as R:
     pg.click('#app .seg.sc >> text=Strategiya'); pg.wait_for_timeout(100); chk('"🧭 Strategiya" works without a course too (cards, but no "O‘qidim" button)', ev("document.querySelectorAll('#app .goal').length") == ev("KST.length") and '✓ O‘qidim' not in pg.inner_text('#app'))
     pg.click('#app .seg.sc >> text=Xatolar'); pg.wait_for_timeout(100); chk('"📓 Xatolar" works without a course', '📓 Xatolar daftari' in pg.inner_text('#app'))
     pg.click('#app .seg.sc >> text=Reja'); pg.wait_for_timeout(100); chk('"📅 Reja" returns to the course setup', 'Kursni boshlash' in pg.inner_text('#app'))
-    pg.click('#app .rwch >> nth=0 >> text="8"'); pg.click('#app .rwch >> nth=1 >> text=3 soat'); pg.fill('#ksex', '2027-02-01'); pg.dispatch_event('#ksex', 'change'); pg.wait_for_timeout(60)
+    pg.click('#app .goal:has-text("12 haftalik reja") .rwch >> nth=0 >> text="8"'); pg.click('#app .goal:has-text("12 haftalik reja") .rwch >> nth=1 >> text=3 soat'); pg.fill('#ksex', '2027-02-01'); pg.dispatch_event('#ksex', 'change'); pg.wait_for_timeout(60)
     pg.click('#app >> text=Kursni boshlash'); pg.wait_for_timeout(150); k = ev("S.ie.kr"); t = pg.inner_text('#app')
     chk('starting saves the course (start today, target 8, 3 h/day, 12 weeks, exam date) and updates the general target', k['start'] == '2026-11-03' and k['target'] == 8 and k['hrs'] == 3 and k['wks'] == 12 and k['exam'] == '2027-02-01' and ev("S.ie.target") == 8, k)
     chk('the header shows "IELTS 8+ kursi", "Hafta 1 / 12", progress and the exam countdown (90 days)', 'IELTS 8+ kursi' in t and 'Hafta 1 / 12' in t and 'Imtihongacha 90 kun' in t and 'Umumiy jarayon' in t, t[:200])

@@ -1,3 +1,4 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 import sys,json
 from playwright.sync_api import sync_playwright
 def shoot(seed_js,out,full=True,w=390,h=844,theme=None,scroll=0,clip_h=None):
@@ -9,7 +10,7 @@ def shoot(seed_js,out,full=True,w=390,h=844,theme=None,scroll=0,clip_h=None):
         errs=[]
         pg.on('pageerror',lambda e:errs.append(str(e)))
         pg.route('**/*',lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
-        pg.goto('file:///mnt/user-data/outputs/tracker/index.html')
+        pg.goto(('file://' + ROOT + '/tracker/index.html'))
         pg.wait_for_timeout(400)
         pg.evaluate("""()=>{document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())}""")
         if theme: pg.evaluate(f"document.documentElement.setAttribute('data-theme','{theme}')")

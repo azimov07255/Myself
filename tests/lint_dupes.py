@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Takroriy nomlarni topadi: bir xil funksiya/const ikki marta e'lon qilinsa, keyingisi indamay oldingisini bosib ketadi.
 import re,sys,collections
-h=open('/mnt/user-data/outputs/tracker/index.html',encoding='utf-8').read()
+h=open((ROOT + '/tracker/index.html'),encoding='utf-8').read()
 js=re.findall(r'<script>(.*?)</script>',h,re.S)[0]
 decl=collections.defaultdict(list)
 for i,l in enumerate(js.split('\n'),1):

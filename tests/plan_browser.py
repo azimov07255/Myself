@@ -1,3 +1,4 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI kun rejasi (klient): kontekst, taklif, qo'shish, xatolar. fnAI soxta javob bilan almashtiriladi. Soat qotirilgan: 2026-10-31 (shanba).
 import sys, datetime, json
 from playwright.sync_api import sync_playwright
@@ -12,7 +13,7 @@ with sync_playwright() as p:
     pg.add_init_script("try{if(localStorage.getItem('trk_bg')===null)localStorage.setItem('trk_bg','o');if(localStorage.getItem('trk_sgr')===null)localStorage.setItem('trk_sgr','a');if(localStorage.getItem('trk_ptb')===null)localStorage.setItem('trk_ptb','a')}catch(e){}"); errs = []; pg.on('pageerror', lambda e: errs.append(str(e)))
     pg.clock.install(time=datetime.datetime(2026, 10, 31, 10, 0, 0))
     pg.route('**/*', lambda r: r.abort() if r.request.url.startswith('http') else r.continue_())
-    pg.goto('file:///mnt/user-data/outputs/tracker/index.html'); pg.wait_for_timeout(500)
+    pg.goto(('file://' + ROOT + '/tracker/index.html')); pg.wait_for_timeout(500)
     pg.evaluate("document.querySelectorAll('#spl,.splash,#splash').forEach(e=>e.remove())")
     ev = pg.evaluate
     ev("""()=>{S.ob=1;S.ts=1;S.top={};S.tasks={};S.un.tasks=[{id:1,t:'Misol',s:'Matematika',due:dAgo(-1),x:0}];S.un.exams=[{id:1,s:'Fizika',d:dAgo(-5)}];

@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Zaxira: holat paneli, telefondagi snapshotlar, tiklashdan oldin ko'rish, oldingi holatga qaytish, ulashish. Soat: 2026-11-05 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('zaxira', when=(2026, 11, 5, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Maqsad vaqt hisobi va kuniga bir necha uyqu. Soat: 2026-11-09 (dushanba) 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('vq', when=(2026, 11, 9, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

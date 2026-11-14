@@ -1,5 +1,5 @@
 const fs=require('fs'),esbuild=require('esbuild');
-let src=fs.readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
+let src=fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),'utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
 const out=esbuild.transformSync(src,{loader:'ts',target:'es2022'}).code;
 let handler=null;const env={GEMINI_API_KEY:'k',SUPABASE_URL:'u',SUPABASE_SERVICE_ROLE_KEY:'s'};
 globalThis.Deno={env:{get:k=>env[k]},serve:h=>{handler=h}};
@@ -94,7 +94,7 @@ globalThis.fetch=async(u,o)=>{if(/\/models\?pageSize/.test(u))return new Respons
  ok('the word and the sentence reach the model',JSON.stringify(last.contents).includes('mitigate')&&JSON.stringify(last.contents).includes('risk of floods'));
  r=await handler(rq({action:'vocab',mode:'check',word:'',sentence:'The plan reduces the risk.'}));ok('check without a word refused (400)',r.status===400);
  r=await handler(rq({action:'vocab',mode:'check',word:'mitigate',sentence:'short'}));ok('check with a too short sentence refused (400)',r.status===400);
- ok('the IELTS grading prompt now asks for an error type ("t") limited to 5 values',(()=>{const src=require('fs').readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8');return /"t":"grammar"/.test(src)&&/grammar, vocab, collocation, spelling, other/.test(src)})());
+ ok('the IELTS grading prompt now asks for an error type ("t") limited to 5 values',(()=>{const src=require('fs').readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),'utf8');return /"t":"grammar"/.test(src)&&/grammar, vocab, collocation, spelling, other/.test(src)})());
  usage={n:40};r=await handler(rq({action:'reading',topic:'x'}));ok('daily limit applies to reading practice (429)',r.status===429);
  // ---------- transcript (Groq Whisper) ----------
  const rqf=(action,file,auth)=>{const fd=new FormData();fd.append('action',action);if(file)fd.append('file',file);return new Request('http://x',{method:'POST',headers:{Authorization:'Bearer '+(auth||'good')},body:fd})};
@@ -208,7 +208,7 @@ globalThis.fetch=async(u,o)=>{if(/\/models\?pageSize/.test(u))return new Respons
  X=await ix({kind:'model',part:2,question:'Describe a place you like to visit.'});ok('speaking model answer: band 7-7.5, length per part, three reasons and five useful phrases',X.s===200&&/band 7-7\.5/.test(X.sys)&&/150-190 so'z/.test(X.sys)&&/"why"/.test(X.sys)&&/"useful"/.test(X.sys)&&/Part 2/.test(X.usr));
  X=await ix({kind:'model',question:'short'});ok('model answer with a too short question -> 400',X.s===400);
  X=await ix({kind:'banana'});ok('an unknown kind -> 400',X.s===400);
- ok('no iex prompt contains Cyrillic characters',Object.keys({listening:1,material:1,plan:1,rewrite:1,task1:1,para:1,wfam:1,model:1}).every(()=>true)&&!/[\u0400-\u04FF]/.test(require('fs').readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8')));
+ ok('no iex prompt contains Cyrillic characters',Object.keys({listening:1,material:1,plan:1,rewrite:1,task1:1,para:1,wfam:1,model:1}).every(()=>true)&&!/[\u0400-\u04FF]/.test(require('fs').readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),'utf8')));
  ok('every successful iex request counts as one AI request (10 successes)',ups.length===10,ups.length);
  usage={n:40};X=await ix({kind:'wfam',word:'sustain'});ok('the daily AI limit applies to iex (429)',X.s===429);usage={n:0};
  // ---------- limit check (free of charge) ----------
@@ -218,7 +218,7 @@ globalThis.fetch=async(u,o)=>{if(/\/models\?pageSize/.test(u))return new Respons
  ok('limit: asking costs nothing (no AI usage is recorded)',ups.length===0);
  usage={n:40};r=await handler(rq({action:'limit'}));ok('limit: it still answers when the daily AI limit is used up (that is when it is most useful)',r.status===200&&(await r.json()).used===40);usage={n:0};
  r=await handler(new Request('http://x',{method:'POST',headers:{Authorization:'Bearer bad'},body:JSON.stringify({action:'limit'})}));ok('limit: needs a login (401)',r.status===401);
- ok('the limit can be changed with the AI_DAILY_LIMIT secret (clamped to 1-1000, default 40)',/AI_DAILY_LIMIT/.test(require('fs').readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8'))&&/Math\.min\(1000, Math\.max\(1,/.test(require('fs').readFileSync('/mnt/user-data/outputs/server-setup/ai-assistant.ts','utf8')));
+ ok('the limit can be changed with the AI_DAILY_LIMIT secret (clamped to 1-1000, default 40)',/AI_DAILY_LIMIT/.test(require('fs').readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),'utf8'))&&/Math\.min\(1000, Math\.max\(1,/.test(require('fs').readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/ai-assistant.ts'),'utf8')));
  // ---------- ask + goalplan ----------
  usage={n:0};ups.length=0;
  X=await ix({kind:'ask',question:'ab'});ok('ask: a question under 3 characters -> 400',X.s===400);

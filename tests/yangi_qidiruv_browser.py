@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Lug'at qidiruvi: UK/US IPA + ovoz, AI boyitish, kesh, tarix, imlo tuzatish, ibora, lug'atga qo'shish, kartochkada IPA. Soat: 2026-11-03 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('qidiruv', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

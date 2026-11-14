@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Bugun: "Kartalarni yig'ish" va "Jilo" sozlamalari (ikkalasi ham standart holatda O'CHIQ: hozirgi ko'rinish saqlanadi). Soat: 2026-11-05 14:20.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('bsoz', when=(2026, 11, 5, 14, 20, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

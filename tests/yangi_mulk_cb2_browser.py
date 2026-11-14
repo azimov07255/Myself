@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Mulk surasi, namozdan keyingi suralar, "Undan keyin" ro'yxati, Cambridge: yopilmaydigan bo'limlar, ommaviy tanlash, matnni saqlash. Soat: chorshanba 2026-11-11 21:00.
 import sys, json, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 def add(rows, pi, test, words):
     for i, (w, pos) in enumerate(words, 1):

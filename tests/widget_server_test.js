@@ -1,5 +1,5 @@
 const fs=require('fs'),esbuild=require('esbuild');
-let src=fs.readFileSync('/mnt/user-data/outputs/server-setup/widget.ts','utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
+let src=fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/widget.ts'),'utf8').replace(/import \{ createClient \} from [^\n]+\n/,'const createClient=globalThis.__cc;\n');
 const out=esbuild.transformSync(src,{loader:'ts',target:'es2022'}).code;
 let handler=null;const env={SUPABASE_URL:'u',SUPABASE_SERVICE_ROLE_KEY:'s'};
 globalThis.Deno={env:{get:k=>env[k]},serve:h=>{handler=h}};
@@ -19,6 +19,6 @@ const ok=(l,c)=>console.log((c?'PASS ':'FAIL ')+l);
  r=await handler(new Request('http://x/?t='+'b'.repeat(32)));ok('an unknown token -> 404 with a helpful message',r.status===404&&(await r.json()).error.includes('qayta yoqing'));
  fail=true;r=await handler(new Request('http://x/?t='+TOK));ok('a database error -> 500 without details',r.status===500&&!(await r.text()).includes('message'));fail=false;
  r=await handler(new Request('http://x/',{method:'OPTIONS'}));ok('browser preflight is answered',r.status===200&&/authorization/.test(r.headers.get('Access-Control-Allow-Headers')));
- ok('the function and SQL contain no Cyrillic characters',!/[\u0400-\u04FF]/.test(fs.readFileSync('/mnt/user-data/outputs/server-setup/widget.ts','utf8')+fs.readFileSync('/mnt/user-data/outputs/server-setup/widget.sql','utf8')));
- ok('the SQL protects the table: row level security and an own-row policy',/enable row level security/.test(fs.readFileSync('/mnt/user-data/outputs/server-setup/widget.sql','utf8'))&&/auth\.uid\(\) = user_id/.test(fs.readFileSync('/mnt/user-data/outputs/server-setup/widget.sql','utf8')));
+ ok('the function and SQL contain no Cyrillic characters',!/[\u0400-\u04FF]/.test(fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/widget.ts'),'utf8')+fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/widget.sql'),'utf8')));
+ ok('the SQL protects the table: row level security and an own-row policy',/enable row level security/.test(fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/widget.sql'),'utf8'))&&/auth\.uid\(\) = user_id/.test(fs.readFileSync(((process.env.KT_ROOT||require('path').join(__dirname,'..'))+'/server-setup/widget.sql'),'utf8')));
 })();

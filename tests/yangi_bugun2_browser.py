@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Bugun 2: tablar tepada, keyingi 3 soat, suring, yo'l buferi, kunni yopish, Hozir mini-chizig'i. Soat: 2026-11-09 (dushanba) 10:00.
 import sys
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 BL = """[{id:'uyqu1',t:'Uxlash',s:1380,e:1800,d:[0,1,2,3,4,5,6]},{id:'q1',t:'Qur‘on takror',s:360,e:420,d:[0,1,2,3,4,5,6]},{id:'k1',t:'Dokon',s:540,e:1020,tr:20,d:[0,1,2,3,4,5,6]},{id:'z1',t:'Zal',s:1050,e:1110,tr:15,d:[0,1,2,3,4,5,6]},{id:'o1',t:'Ovqat va dam',s:1110,e:1140,d:[0,1,2,3,4,5,6]},{id:'b1',t:'Kitob o‘qish',s:1140,e:1200,d:[0,1,2,3,4,5,6]}]"""
 def pev(row_sel, moves, ev, up=True, target=None):

@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Kun tartibi: kechki zanjir, Bomdod kafolati, til nazorati, kunlik 5 ta. Soat: chorshanba 2026-11-11 20:00.
 import sys, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 PT = "window.ptTimes=()=>({Fajr:345,Sunrise:430,Dhuhr:735,Asr:900,Maghrib:1070,Isha:1140})"
 with Run('zj', when=(2026, 11, 11, 20, 0, 0)) as R:

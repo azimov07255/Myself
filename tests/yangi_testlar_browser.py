@@ -1,8 +1,11 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Testlar bo'limi: savol banki import, mashq/imtihon, xatolar banki, statistika, bulut. Soat: 2026-11-11 10:00.
 import sys, json, re, os
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
-BANK = open('/mnt/user-data/outputs/testlar-banki.json', encoding='utf-8').read()
+if not os.path.exists(ROOT + '/testlar-banki.json'):
+    print("O'TKAZIB YUBORILDI: testlar-banki.json yo'q (foydalanuvchining shaxsiy fayli, ataylab repoda emas). 0 passed, 0 failed"); sys.exit(0)
+BANK = open((ROOT + '/testlar-banki.json'), encoding='utf-8').read()
 D = json.loads(BANK)
 SMALL = json.dumps({'v': 1, 'subjects': [{'id': 'x1', 'name': 'Tarix <b>X</b>', 'topics': [{'id': 'x11', 'name': 'Qadimgi davr', 'src': 's', 'q': [{'id': 'x11.%d' % i, 'q': 'Savol %d <img src=x onerror=1>' % i, 'o': ['a', 'b', 'c', 'd'], 'a': i % 4, 'e': 'izoh', 'r': '1-slayd'} for i in range(1, 6)]}]}]}, ensure_ascii=False)
 ANS = lambda ok: "(()=>{const id=TBQ.ids[TBQ.i],x=TBX[id],ord=TBQ.ord[TBQ.i];let k=ord.indexOf(x.q.a);if(!%s)k=(k+1)%%4;tbAns(k)})()" % ('true' if ok else 'false')
@@ -68,8 +71,8 @@ with Run('tb', when=(2026, 11, 11, 10, 0, 0)) as R:
     chk('importing also uploads to your private bucket at <your id>/testlar.json (same bucket, no extra SQL) and says so', lg[0][0] == 'cambridge' and lg[0][1] == 'user-1/testlar.json' and lg[0][2] is True and 'Bulutda saqlandi' in ev("TBS.cl"))
     ev("TB=null;TBX={};tbIdbDel()"); pg.wait_for_timeout(120); ev("tbOpen()"); pg.wait_for_timeout(450); chk('on another device (nothing stored locally) opening the section downloads the bank from the cloud by itself', ev("tbCount()") == len(allq) and 'Bulutdan yuklandi' in ev("TBS.cl")); ev("tbClose()")
     # maxfiylik
-    html = open('/mnt/user-data/outputs/tracker/index.html', encoding='utf-8').read()
-    chk('PRIVACY: none of the bank’s questions or explanations is inside the built app (the file is only imported), and the bank is not in the deploy package', not any(q['q'] in html or q['e'] in html for q in allq[:150]) and 'testlar-banki' not in open('/mnt/user-data/outputs/tools/make_zips.py', encoding='utf-8').read() and not os.path.exists('/mnt/user-data/outputs/tracker/testlar-banki.json'))
+    html = open((ROOT + '/tracker/index.html'), encoding='utf-8').read()
+    chk('PRIVACY: none of the bank’s questions or explanations is inside the built app (the file is only imported), and the bank is not in the deploy package', not any(q['q'] in html or q['e'] in html for q in allq[:150]) and 'testlar-banki' not in open((ROOT + '/tools/make_zips.py'), encoding='utf-8').read() and not os.path.exists((ROOT + '/tracker/testlar-banki.json')))
     bad = []
     ev("(t)=>{TB=null;return tbImportText(t,false)}", BANK); ev("uiS('trk_tbsh','1')")
     for ui in ('1', '2', '3'):

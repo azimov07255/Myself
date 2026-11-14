@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Nafs: 🆘 yo'l, 🕊 tavba va qaytish, 🛡 xavfli soatlar, 📱 Screen Time. Soat: chorshanba 2026-11-11 22:30.
 import sys, json, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('sos', when=(2026, 11, 11, 22, 30, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg

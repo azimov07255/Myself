@@ -1,9 +1,10 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Takror 2: maqsad, qo'shish (ayat/bet/pora), trekker, aylanish, pora yangiligi, integratsiya. Soat: 2026-11-09 (dushanba) 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 GC = "document.querySelector('#app section[aria-label=\"Takror maqsadi\"]').innerText"
-VP = json.load(open('/mnt/user-data/outputs/data/quran-mushaf.json', encoding='utf-8'))['vp']
+VP = json.load(open((ROOT + '/data/quran-mushaf.json'), encoding='utf-8'))['vp']
 with Run('tq', when=(2026, 11, 9, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
     ev("""()=>{window.__t=[];window.toast=m=>window.__t.push(m);window.confirm=()=>true;const q=S.q;q.tk=undefined;q.cr={};q.rd={};q.m=q.m||[];for(let i=0;i<114;i++)q.m[i]=0;q.rs={};q.jz=undefined;q.jd={};q.cur=1;TQF={m:'a',s:-1,a:1,b:0,pa:1,pb:1,j:[],d:''};TQSEL='';TQJ=0;tab='q';QT='t';QG=false;TKV='k';render()}""")

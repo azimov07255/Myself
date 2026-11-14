@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Dizayn: Klassik (standart) va Yangi uslub almashtirish, rang, matn o'lchami, animatsiya, kontrast, gorizontal toshib ketmaslik.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 def lum(h):
     h = h.lstrip('#'); h = ''.join(c * 2 for c in h) if len(h) == 3 else h; r, g, b = [int(h[i:i + 2], 16) / 255 for i in (0, 2, 4)]
@@ -10,7 +11,7 @@ def cr(a, b):
     la, lb = lum(a), lum(b); return (max(la, lb) + .05) / (min(la, lb) + .05)
 with Run('dizayn', when=(2026, 11, 3, 10, 0, 0)) as R:
     ev, chk, pg = R.ev, R.chk, R.pg
-    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');dzApply();document.documentElement.dataset.theme='light';S.hab=[{id:'h1',t:'Kitob'}];tab='s';render()}"); pg.wait_for_timeout(150)
+    ev("()=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');dzApply();document.documentElement.dataset.theme='light';S.hab=[{id:'h1',t:'Kitob'}];tab='s';render()}"); pg.wait_for_timeout(150)
     H = lambda: ev("document.documentElement.classList.contains('ui2')")
     chk('the CLASSIC look is the default: the new-design class is not set and the accent defaults to "zumrad"', H() is False and ev("document.documentElement.dataset.acc") == 'zumrad')
     ev("document.querySelectorAll('#app details').forEach(d=>{if(d.textContent.includes('Dizayn'))d.open=true})"); pg.wait_for_timeout(60); t = pg.inner_text('#app')
@@ -88,7 +89,7 @@ with Run('dizayn', when=(2026, 11, 3, 10, 0, 0)) as R:
     chk('text on a glass card stays readable even in the worst case (card over the strongest accent blob): text at least 4.5:1, muted 3:1, in 36 theme x colour x strength combinations', not fails, (fails[:6], round(worst, 2)))
     ev("()=>{document.documentElement.dataset.acc='zumrad';document.documentElement.dataset.gl='m';document.documentElement.dataset.theme='light'}")
     import re as _re
-    css = open('/mnt/user-data/outputs/src/css/91-glass.css', encoding='utf-8').read()
+    css = open((ROOT + '/src/css/91-glass.css'), encoding='utf-8').read()
     chk('safety nets exist: reduced-transparency setting and browsers without backdrop-filter fall back to solid cards', '@media(prefers-reduced-transparency:reduce)' in css and '@supports not ((backdrop-filter:blur(1px))' in css)
     bad = []
     for th in ('light', 'dark'):

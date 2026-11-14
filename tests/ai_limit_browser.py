@@ -1,11 +1,12 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # AI limit yozuvi: egasi uchun "cheksiz", oddiy hisob uchun serverdagi haqiqiy limit. Soat: 2026-10-31 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 with Run('ailim') as R:
     ev, chk, pg = R.ev, R.chk, R.pg
     def reset(resp=None, ok=True, fail=False):
-        ev("""(a)=>{localStorage.clear();localStorage.setItem('trk_bg','o');ALM=null;ALB=0;window.aiOk=()=>a[1];window.__f=[];window.__resp=a[0];window.fnPost=async(b,ms)=>{window.__f.push([b,ms]);if(a[2])throw new Error('offline');return window.__resp};S.us=undefined}""", [resp, ok, fail])
+        ev("""(a)=>{localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');ALM=null;ALB=0;window.aiOk=()=>a[1];window.__f=[];window.__resp=a[0];window.fnPost=async(b,ms)=>{window.__f.push([b,ms]);if(a[2])throw new Error('offline');return window.__resp};S.us=undefined}""", [resp, ok, fail])
     reset(None, False)
     chk('not signed in: the label shows the local count and the default 40, and no request is made', ev("aiUseLabel()") == 'AI: 0/40 bugun' and ev("__f.length") == 0)
     reset({'owner': False, 'limit': 40, 'used': 12})
@@ -26,5 +27,5 @@ with Run('ailim') as R:
     t = ev("aiLimDiag()"); chk('Diagnostika text for a normal account: the limit, today\u2019s server use and the hint about OWNER_EMAIL', 'oddiy hisob' in t and '40' in t and '9 ta' in t and 'OWNER_EMAIL' in t)
     reset({'owner': True, 'limit': 40, 'used': 0}); ev("aiUseLabel()"); pg.wait_for_timeout(120); chk('Diagnostika text for the owner: unlimited', ev("aiLimDiag()") == 'egasi hisobi: cheksiz')
     chk('the Diagnostika report contains the AI limit line', 'AI limit:' in ev("diagText()"))
-    ev("()=>{S.ie.words=[];window.__f=[];ALM=null;localStorage.clear();localStorage.setItem('trk_bg','o');window.aiOk=()=>true;window.__resp={owner:true,limit:40,used:0};aiBuild();aiRender()}"); pg.wait_for_timeout(200)
+    ev("()=>{S.ie.words=[];window.__f=[];ALM=null;localStorage.clear();localStorage.setItem('trk_bg','o');localStorage.setItem('trk_sgr','a');localStorage.setItem('trk_ptb','a');window.aiOk=()=>true;window.__resp={owner:true,limit:40,used:0};aiBuild();aiRender()}"); pg.wait_for_timeout(200)
     chk('the open chat header updates itself when the answer arrives', 'cheksiz (egasi)' in pg.inner_text('#aisub'), pg.inner_text('#aisub'))

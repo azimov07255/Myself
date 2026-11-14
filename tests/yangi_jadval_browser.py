@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Bugun jadvali 4: keyingi N soat, tartibni o'zgartirish, pastdagi chiziq, avto-joylash, kun buzildi, blokdan taymer. Soat: dushanba 2026-11-09 10:00.
 import sys, re
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 BL = """[{id:'uyqu1',t:'Uxlash',s:1380,e:1800,d:[0,1,2,3,4,5,6]},{id:'p1',t:'Tong zikri',s:360,e:390,d:[1],ty:'ibodat',fx:0},{id:'p2',t:'Sport',s:420,e:480,d:[1],ty:'sport',fx:0},{id:'c1',t:'Dokon',s:540,e:720,d:[1],ty:'ish',fx:1},{id:'n1',t:'IELTS Reading',s:750,e:840,d:[1],ty:'ielts',fx:0},{id:'n2',t:'Takror',s:900,e:960,d:[1],ty:'quron',fx:0},{id:'n3',t:'Kitob',s:990,e:1050,d:[1],ty:'oqish',fx:0},{id:'f1',t:'Univer',s:1080,e:1170,d:[1],ty:'ish',fx:1},{id:'n5',t:'Dars',s:1200,e:1260,d:[1],ty:'oqish',fx:0}]"""
 def setup(ev, extra=''):

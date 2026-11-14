@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Materiallar: hamma so'z ma'nosi, keshlangan izohlar, lug'atdagi so'zlar belgilanishi, internetdan olish, masofadagi audio. Soat: 2026-11-03 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 T1 = ("Cities around the world are investing in public transport to reduce traffic congestion. Experts argue that electric buses and metro systems can substantially cut pollution. "
       "However, critics point out that the cost is high and the benefits depend on how many people actually use them. In the long term, planners hope that cleaner and faster transport will change how people live and work.")

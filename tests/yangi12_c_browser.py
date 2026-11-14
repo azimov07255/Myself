@@ -1,6 +1,7 @@
+import os as _os; ROOT = _os.environ.get('KT_ROOT') or _os.path.dirname(_os.path.dirname(_os.path.abspath(__file__)))
 # Speaking ko'rsatkichlari va namuna, mock, yo'l xaritasi, imtihon kuni, yangi bo'limlar joylashuvi. Soat: 2026-10-31 10:00.
 import sys, json
-sys.path.insert(0, '/mnt/user-data/outputs/tests')
+sys.path.insert(0, ROOT + '/tests')
 from _pw import Run
 ANS = ' '.join(['Well I think that living in a big city has many advantages because there are more jobs and better schools for everyone'] * 3)
 with Run('y12c') as R:
