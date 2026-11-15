@@ -114,7 +114,7 @@ function pReja(){
 function pul(){
   finInit();
   const seg=ptbSeg();
-  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc${ptbOn()?' ptb':''}">${seg}</div>${ptbSub()}${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+mhnRep()+pInsUi():PV==='z'?zktUi():pReja()+mhnCard()+pCatBudUi()+pRcUi()}`}
+  return `<div class="top"><p class="d">Pul</p></div><div class="seg" style="margin-top:12px"><button class="${W==='p'?'on':''}" onclick="W='p';render()">👤 Shaxsiy</button><button class="${W==='d'?'on':''}" onclick="W='d';render()">🏪 Dokon</button></div><div class="seg sc${ptbOn()?' ptb':''}">${seg}</div>${ptbSub()}${PV==='b'?pBosh():PV==='t'?pTarix():PV==='q'?pQarz():PV==='h'?pHisob()+pTypeRep()+mhnRep()+pInsUi():PV==='z'?zktUi():pReja()+drjUi()+mhnCard()+pCatBudUi()+pRcUi()}`}
 
 function authView(msg){
   return `<div class="auth"><img src="favicon.svg" width="64" height="64" alt="" style="border-radius:16px;margin-bottom:16px"><h1>Kunlik tizim</h1>${brand()}<p class="mu">Kirish uchun login va parol kiriting.</p><div style="margin-top:20px"><div class="in"><input id="lg" placeholder="Login yoki email" autocapitalize="none" autocomplete="username"></div><div class="in"><input id="pw" type="password" placeholder="Parol (kamida 6 belgi)" autocomplete="current-password"></div></div><p class="err" id="er">${msg||''}</p><button class="big" style="margin-top:0" onclick="auth(false)">Kirish</button></div>`;
@@ -130,7 +130,7 @@ function drawNav(){
   const mid=ai?`<button class="navai" onclick="aiOpen()" aria-label="Yordamchi (AI)">✨</button>`:'';
   n.innerHTML=`<nav><div>${T.slice(0,3).map(b).join('')}${mid}${T.slice(3).map(b).join('')}</div></nav>`}
 function render(){try{renderCore()}catch(e){try{reportErr('render: '+e.message,e.stack)}catch(x){}const a=$('#app');if(a)a.innerHTML=errView(e)}}
-function renderCore(){try{rcRun()}catch(e){}
+function renderCore(){try{rcRun()}catch(e){}try{drjRun()}catch(e){}
   const a=$('#app');
   if(sb&&!UID){navOff();if(!$('#lg'))a.innerHTML=authView();return}
   if(sb&&UID&&lockMsg()){navOff();a.innerHTML=lockView();return}
