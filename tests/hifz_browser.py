@@ -90,7 +90,7 @@ with sync_playwright() as p:
     chk('tapping "Yaxshi" marks the part done on the screen with an undo button', '✓ Bajarildi (yaxshi)' in pg.inner_text('#app') and pg.evaluate("!!document.querySelector('#app button[aria-label=\"Bekor qilish\"]')"))
     pg.evaluate("document.querySelector('#app button[aria-label=\"Bekor qilish\"]').click()"); pg.wait_for_timeout(150)
     chk('undo from the screen works', '✓ Bajarildi' not in pg.inner_text('#app'))
-    pg.evaluate("document.querySelectorAll('#app .ssc')[1].querySelectorAll('.btn.s')[0].click()") ; pg.wait_for_timeout(300)
+    pg.evaluate("document.querySelectorAll('#app .ssc')[1].querySelectorAll('.btn.s')[0].click()") ; pg.wait_for_function("MFO===true",timeout=20000); pg.wait_for_timeout(100)
     chk('"Mushafda" opens the reader at the first page of the sabqi range', pg.evaluate("MFO") is True and pg.evaluate("MFPG") == sp[1] + 3, pg.evaluate("MFPG"))
     pg.evaluate("mfClose()"); pg.wait_for_timeout(150); pg.evaluate("()=>{tab='q';QT='t';render()}"); pg.wait_for_timeout(100)
     pg.evaluate("document.querySelectorAll('#app .ssc')[1].querySelectorAll('.btn.s')[1].click()"); pg.wait_for_timeout(350)

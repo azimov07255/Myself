@@ -594,6 +594,9 @@ html.pl .hbsum .w{grid-column:auto}}
 /* Tab qatorlari bir xil: 4 va undan kam tab bir qatorda (ikonka + matn yonma-yon), 5 ta tab ikonka tepada */
 html.pl .seg:not(.sc) button:first-child:nth-last-child(-n+4),html.pl .seg:not(.sc) button:first-child:nth-last-child(-n+4)~button{white-space:nowrap;padding-left:4px;padding-right:4px;font-size:15px}
 html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5),html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5)~button{line-height:1.25;text-align:center;font-size:14px}
+
+/* pul raqamlari ustunda tekis */
+html.pl #app{font-variant-numeric:tabular-nums}
 </style>
 </head>
 <body>
@@ -677,8 +680,8 @@ function fillDef(a,b){for(const k in b){if(a[k]===undefined)a[k]=JSON.parse(JSON
 const norm=o=>syIds(fillDef(o,blank()));
 function load(){try{return norm(Object.assign(blank(),JSON.parse(localStorage.getItem(KEY())||'{}')))}catch(e){return blank()}}
 function save(){rwReset();syIds(S);S.ts=Date.now();try{localStorage.setItem(KEY(),JSON.stringify(S))}catch(e){}clearTimeout(tm);tm=setTimeout(push,700);if(S.rem&&(S.rem.on||S.rem.tg))remSoon();render();if(!CELB){CELB=1;setTimeout(()=>{CELB=0;try{celeb()}catch(e){}},200)}}
-const APP_VER='2026.12.19-11';
-const APP_BUILD='02176f92ba'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
+const APP_VER='2026.12.19-12';
+const APP_BUILD='12b6ae2d2e'; // yig'ishda (tools/build_app.py) o'zgarmas identifikatorga almashadi; ilova shuni version.json bilan solishtirib, yangi versiya borligini biladi
 // Mushaf bo‘limi: 'all' = yoqilgan, 'off' = butunlay o‘chirilgan (do‘stlarga beriladigan versiyada shu qatorni 'off' qiling).
 const MUSHAF_MODE='all';
 const lsGet=k=>{try{return localStorage.getItem(k)}catch(e){return null}},lsSet=(k,v)=>{try{localStorage.setItem(k,v)}catch(e){}},lsRm=k=>{try{localStorage.removeItem(k)}catch(e){}};
@@ -936,7 +939,7 @@ function pBosh(){
   const owe=dB.filter(d=>d.k==='borrow').reduce((a,d)=>a+dRem(d),0),lent=dB.filter(d=>d.k==='lend').reduce((a,d)=>a+dRem(d),0);
   const recent=S.money.filter(m=>m.w===W).slice().sort((a,b)=>b.d.localeCompare(a.d)||b.id-a.id).slice(0,6).map(mRow).join('');
   return `<section class="hero"><p class="lab">Umumiy balans</p><h1 style="font-size:36px;word-break:break-all">${num(B.tot)} so‘m</h1><div class="pbal"><div><span>💵 Naqd</span><b>${num(B.cash)}</b></div><div><span>💳 Karta</span><b>${num(B.card)}</b></div></div></section>
-  ${ptzUi()}<h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
+  ${ptzUi()}${drjHome()}<h2>${MON[new Date().getMonth()][0].toUpperCase()+MON[new Date().getMonth()].slice(1)} oyi</h2>
   <div class="sum"><div><span class="mu">Kirim</span><b class="in-c">${num(inn)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'in','cash'))}, karta ${num(mSum(L,'in','card'))}</span></div><div><span class="mu">Chiqim</span><b class="out-c">${num(ou)}</b><span class="mu" style="font-size:12px">naqd ${num(mSum(L,'out','cash'))}, karta ${num(mSum(L,'out','card'))}</span></div><div class="w"><span class="mu">Oy balansi</span><b>${num(inn-ou)} so‘m</b></div></div>
   ${W==='p'&&(owe||lent)?`<button class="row" onclick="PV='q';render()"><span class="t">Qarzlar<br><span class="mu">Men qarzdorman: ${num(owe)}. Menga qarzdor: ${num(lent)}</span></span></button>`:''}
   ${pDailyUi()}${pForecastUi()}${pQuickUi()}${pTypeUi()}${pForm()}${pWlUi()}<h2>So‘nggi yozuvlar</h2>${recent||'<p class="mu">Hali yozuv yo‘q.</p>'}`}
@@ -4628,10 +4631,43 @@ function drjUi(){
    <div class="in"><button class="btn s" onclick="drjPreset('all')">Har kuni</button><button class="btn s" onclick="drjPreset('wd')">Du–Ju</button><button class="btn s" onclick="drjPreset('we')">Dam olish</button></div><button class="btn" style="width:100%" onclick="drjAdd()">Qo‘shish</button></details>
    <button class="btn s" style="margin-top:8px" onclick="drjSample()">Namuna qoidalarni qo‘shish</button><p class="mu" style="margin:6px 0 0;font-size:12px">Ishxona 75 000 (har kuni), dadam 70 000 (Du–Ju), ovqat 37 000, yo‘lkira 27 000. Keyin o‘zingizga moslab o‘zgartirasiz.</p></div>
   ${f.wr.length?`<div class="sum"><div><span class="mu">Haftalik daromad</span><b class="in-c">${num(P.wi)}</b></div><div><span class="mu">Haftalik xarajat</span><b class="out-c">${num(P.wo)}</b></div><div><span class="mu">Oylik daromad (≈)</span><b>${num(P.mi)}</b></div><div><span class="mu">Oylik xarajat (≈)</span><b>${num(P.mo)}</b></div><div class="w"><span class="mu">Qoladigan pul (haftasiga)</span><b class="${P.wn>=0?'in-c':'out-c'}">${P.wn<0?'−':''}${num(Math.abs(P.wn))} so‘m</b></div></div>`:''}
-  <div class="goal"><b>🎯 Dollar maqsadi</b><div class="in" style="margin-top:8px"><input type="text" inputmode="numeric" placeholder="Maqsad, $" value="${pl.usd||''}" onchange="drjSet('usd',this.value)"><input type="text" inputmode="numeric" placeholder="Kurs: 1$ = so‘m" value="${pl.rate||''}" onchange="drjSet('rate',this.value)"></div>
+  ${drjEnvUi()}<div class="goal"><b>🎯 Dollar maqsadi</b><div class="in" style="margin-top:8px"><input type="text" inputmode="numeric" placeholder="Maqsad, $" value="${pl.usd||''}" onchange="drjSet('usd',this.value)"><input type="text" inputmode="numeric" placeholder="Kurs: 1$ = so‘m" value="${pl.rate||''}" onchange="drjSet('rate',this.value)"></div>
    <p class="mu" style="margin:0 0 4px;font-size:12px">Kursni o‘zing yoz (Markaziy bank kursi); ilova uni tekshirmaydi.</p>
    <p class="mu" style="margin:8px 0 4px;font-size:13px">Daromaddan necha foizni jamg‘arasan?</p><div class="seg">${pcs}</div>
-   ${P.goal?`<p style="margin:8px 0 0">Maqsad: <b>${num(P.goal)}</b> so‘m. Oyiga ${P.pc}% = <b>${num(P.sv)}</b> so‘m jamg‘arsang, ${P.eta?`<b>~${P.eta} oyda</b> yetasan.`:P.rem<=0?'maqsadga yetgansan! 🎉':'daromad rejasini kiriting.'}</p><button class="btn" style="margin-top:8px;width:100%" onclick="drjGoal()">${P.g?'Jamg‘arma maqsadini yangilash':'Jamg‘arma maqsadi qilib qo‘shish'}</button>`:'<p class="mu" style="margin:8px 0 0">$ va kursni yozsang, necha oyda yetishing hisoblanadi.</p>'}</div>`}
+   ${P.goal?`<p style="margin:8px 0 0">Maqsad: <b>${num(P.goal)}</b> so‘m. Oyiga ${P.pc}% = <b>${num(P.sv)}</b> so‘m jamg‘arsang, ${P.eta?`<b>~${P.eta} oyda</b> yetasan.`:P.rem<=0?'maqsadga yetgansan! 🎉':'daromad rejasini kiriting.'}</p><button class="btn" style="margin-top:8px;width:100%" onclick="drjGoal()">${P.g?'Jamg‘arma maqsadini yangilash':'Jamg‘arma maqsadi qilib qo‘shish'}</button>`:'<p class="mu" style="margin:8px 0 0">$ va kursni yozsang, necha oyda yetishing hisoblanadi.</p>'}</div>${drjQUi()}`}
+
+// ---- haftalik konvertlar, "agar tejasam?" kalkulyatori, juma jamg'arma marosimi ----
+const drjAddD=(d,n)=>new Date(new Date(d+'T12:00').getTime()+n*864e5).toLocaleDateString('sv');
+const drjWk=(d)=>{const x=new Date((d||dk())+'T12:00');x.setDate(x.getDate()-drjDow(d||dk()));return x.toLocaleDateString('sv')};
+function drjEnv(){const f=drjS(),e=f.env||{},wk=drjWk(),we=drjAddD(wk,6),sp={};
+  S.money.forEach(m=>{if(m.w==='p'&&m.k==='out'&&m.d>=wk&&m.d<=we){const c=m.c||'Boshqa';sp[c]=(sp[c]||0)+m.a}});
+  const left=7-drjDow(dk());
+  return Object.keys(e).map(c=>({c,lim:e[c],sp:sp[c]||0,pc:e[c]?Math.round((sp[c]||0)/e[c]*100):0,left:e[c]-(sp[c]||0),perDay:Math.floor((e[c]-(sp[c]||0))/left),dl:left}))}
+function drjEnvPlan(){const f=drjS();f.env={};f.wr.filter(r=>r.on&&r.k==='out').forEach(r=>{f.env[r.c]=(f.env[r.c]||0)+r.a*r.days.length});if(!Object.keys(f.env).length){toast('Avval xarajat qoidalarini qo‘shing');return}save()}
+function drjEnvSet(){const a=sfn(V('drje')),c=CATS[+V('drjec')];if(!(a>0)){toast('Summani yozing');return}const f=drjS();f.env=f.env||{};f.env[c]=a;save()}
+function drjEnvDel(c){const f=drjS();if(f.env)delete f.env[c];save()}
+function drjEnvUi(){const L=drjEnv();
+  const bar=x=>{const col=x.pc>=100?'var(--bad)':x.pc>=80?'#d9a441':'var(--ac)';return `<div style="margin-bottom:10px"><div style="display:flex;justify-content:space-between"><span>${CI[x.c]||''} ${esc(x.c)}</span><span class="mu">${num(x.sp)} / ${num(x.lim)}</span></div><div class="bar" style="margin:4px 0"><i style="width:${Math.min(100,x.pc)}%;background:${col}"></i></div><span class="mu" style="font-size:12px">${x.left>=0?'Qoldi '+num(x.left)+(x.dl>0?', kuniga ~'+num(Math.max(0,x.perDay)):''):'<b style="color:var(--bad)">Chegaradan '+num(-x.left)+' oshdi</b>'}</span><button class="x" style="float:right" onclick="drjEnvDel('${x.c}')" aria-label="O‘chirish">×</button></div>`};
+  return `<h2>🧾 Haftalik konvertlar</h2><div class="goal"><p class="mu" style="margin:0 0 8px;font-size:13px">Har kategoriya uchun haftalik chegara (dushanbadan yakshanbagacha). Daromading haftalik kelgani uchun oylikdan qulayroq.</p>${L.length?L.map(bar).join(''):'<p class="mu" style="margin:0 0 8px">Hali konvert yo‘q.</p>'}
+   <button class="btn s" onclick="drjEnvPlan()">Xarajat qoidalaridan to‘ldirish</button>
+   <div class="in" style="margin-top:8px"><select id="drjec">${CATS.map((c,i)=>`<option value="${i}">${c}</option>`).join('')}</select><input id="drje" type="text" inputmode="numeric" placeholder="Haftalik, so‘m"><button class="btn" onclick="drjEnvSet()">+</button></div></div>`}
+// agar tejasam?
+function drjWhatIf(q){const P=drjPlan();if(!P.goal||P.rem<=0||P.sv<=0)return null;const extra=Math.round(q*30.4),sv2=P.sv+extra,mo=Math.ceil(P.rem/sv2);return{extra,sv2,mo,saved:Math.max(0,P.eta-mo)}}
+function drjQ(v){const e=document.getElementById('drjqo'),l=document.getElementById('drjql');if(!e)return;const q=+v||0;if(l)l.textContent=num(q);const w=drjWhatIf(q);e.textContent=w?(q?'Oyiga +'+num(w.extra)+' so‘m. Maqsadga ~'+w.mo+' oyda yetasan'+(w.saved?' (':'')+(w.saved?w.saved+' oy erta)':''):'Hozirgi sur‘at bilan ~'+drjPlan().eta+' oy'):'Avval $ maqsad va kursni yozing.'}
+function drjQUi(){const P=drjPlan();if(!P.goal)return '';return `<div class="goal"><b>💡 Agar tejasam?</b><p class="mu" style="margin:6px 0 8px;font-size:13px">Kuniga qancha tejasang (yo‘lkira, ovqat…), maqsadga necha oy erta yetasan?</p><div style="display:flex;justify-content:space-between"><span>Kuniga tejayman</span><b><span id="drjql">0</span> so‘m</b></div><input type="range" min="0" max="30000" step="1000" value="0" style="width:100%" oninput="drjQ(this.value)" aria-label="Kuniga tejash"><p id="drjqo" style="margin:6px 0 0">${P.eta?'Hozirgi sur‘at bilan ~'+P.eta+' oy':P.rem<=0?'Maqsadga yetgansan! 🎉':''}</p></div>`}
+// juma jamg'arma marosimi
+function drjJz(){const f=drjS(),P=drjPlan();f.jz=f.jz||{};const wk=drjWk(),weekly=Math.round(P.sv*7/30.4);
+  let st=0,w=f.jz[wk]?wk:drjAddD(wk,-7);while(f.jz[w]&&st<520){st++;w=drjAddD(w,-7)}
+  return{wk,weekly,done:f.jz[wk]||0,streak:st,dow:drjDow(dk()),P}}
+function drjSaveWeek(){const f=drjS(),J=drjJz(),g=J.P.g;if(!g){toast('Avval jamg‘arma maqsadini qo‘shing');return}if(J.done)return;
+  const a=sfn(V('drjws'))||J.weekly;if(!(a>0)){toast('Summani yozing');return}g.s+=a;(g.h=g.h||[]).push({d:dk(),a});g.h=g.h.slice(-60);f.jz[J.wk]=a;toast('💎 Jamg‘arma: +'+num(a)+' so‘m');save()}
+function drjUnsave(){const f=drjS(),J=drjJz(),g=J.P.g;if(!J.done||!g)return;g.s=Math.max(0,g.s-J.done);g.h=(g.h||[]).filter((x,i,a)=>!(i===a.length-1&&x.a===J.done));delete f.jz[J.wk];save()}
+function drjJzUi(){const J=drjJz();if(!J.P.g||!(J.weekly>0))return '';
+  const fri=J.dow>=4,day=['dushanba','seshanba','chorshanba','payshanba','juma','shanba','yakshanba'];
+  return `<div class="goal" style="border-left:4px solid var(--go)"><div class="h"><b>💎 Haftalik jamg‘arma</b>${J.streak?`<span class="chip">🔥 ${J.streak} hafta ketma-ket</span>`:''}</div>
+   ${J.done?`<p style="margin:6px 0">Bu hafta <b>${num(J.done)}</b> so‘m jamg‘arding. Barakalla! 👏</p><button class="btn s" onclick="drjUnsave()">Bekor qilish</button>`
+   :`<p style="margin:6px 0 8px">${fri?'<b>Bugun jamg‘arma kuni.</b> ':'Jamg‘arma kuni: juma ('+(4-J.dow)+' kun qoldi). '}Bu hafta rejadagi summa: <b>${num(J.weekly)}</b> so‘m.</p><div class="in"><input id="drjws" type="text" inputmode="numeric" value="${J.weekly}"><button class="btn" onclick="drjSaveWeek()">Jamg‘armaga o‘tkazdim</button></div>`}</div>`}
+function drjHome(){if(W!=='p')return '';const f=drjS();let h=drjJzUi();const E=drjEnv();if(E.length)h+=`<div class="goal"><b>🧾 Bu hafta konvertlari</b>${E.map(x=>{const col=x.pc>=100?'var(--bad)':x.pc>=80?'#d9a441':'var(--ac)';return `<div class="usr" style="margin-top:8px"><span class="usk" style="flex-basis:96px">${CI[x.c]||''} ${esc(x.c)}</span><span class="usb"><i style="width:${Math.min(100,x.pc)}%;background:${col}"></i></span><span class="usv">${x.left>=0?num(x.left):'−'+num(-x.left)}</span></div>`}).join('')}<p class="mu" style="margin:6px 0 0;font-size:12px">Qolgan summa shu hafta uchun.</p></div>`;return h}
 // ---- DIZAYN: Klassik (hozirgi) yoki Yangi uslub, urg'u rangi, matn o'lchami, animatsiya. Faqat shu qurilmada saqlanadi ----
 const DZA=[['zumrad','Zumrad','#0f6b52'],['kok','Ko‘k','#1f5fbf'],['binafsha','Binafsha','#6a46c9'],['atirgul','Atirgul','#c2335b'],['oltin','Oltin','#a06a12'],['grafit','Grafit','#2f3d48']];
 function dzMeta(){try{const m=document.querySelector('meta[name=theme-color]');if(m){const c=getComputedStyle(document.body).backgroundColor;if(c)m.setAttribute('content',c)}}catch(e){}}
@@ -5036,6 +5072,7 @@ function ovCard(){const c=ovCfg(),V=ovEn(),o=ovDev(),opt=(name)=>V.map(v=>`<opti
 try{const T=ieTts&&ieTts();if(T&&'onvoiceschanged' in T)T.onvoiceschanged=()=>{try{if(tab==='s')render()}catch(e){}}}catch(e){}
 // ---- "NIMA YANGILANDI?": har versiya uchun yozuv. HAR CHIQARISHDA ro'yxatning BOSHIGA yangi yozuv qo'shing: v = APP_VER (tools/build_app.py tekshiradi), t = qisqa xulosa (yangilash tugmasi ustida ko'rinadi, apostrofsiz yozing) ----
 const NEWSV=[
+{v:'2026.12.19-12',t:'🧾 Haftalik konvertlar, 💡 Agar tejasam, 💎 Juma jamg‘arma marosimi',items:[['🧾 Haftalik konvertlar: kategoriya bo‘yicha haftalik chegara (xarajat qoidalaridan avtomatik to‘ldiriladi), qancha qolgani va kuniga qancha sarflasa bo‘lishi; Pul bosh sahifasida ham ko‘rinadi','Pul → Reja → Haftalik konvertlar; Pul → Bosh'],['💡 Agar tejasam?: slayder bilan kuniga qancha tejasang maqsadga necha oy erta yetishingni ko‘rasan','Pul → Reja → Dollar maqsadi ostida'],['💎 Haftalik jamg‘arma: rejadagi summa va jumagacha qolgan kun, bir bosishda maqsadga qo‘shiladi, necha hafta ketma-ket jamg‘arganing seriya bo‘ladi','Pul → Bosh'],['Raqamlar ustunda tekis turadi','Hamma ekranlar (Sayqal)']]},
 {v:'2026.12.19-11',t:'📅 Pul: haftalik takroriy daromad va xarajat, Daromad rejasi, dollar maqsadi',items:[['📅 Haftalik takroriy qoidalar: “Ishxona 75 000 har kuni”, “Dadam 70 000 Du–Ju”, “Ovqat 37 000”, “Yo‘lkira 27 000” kabi bir marta yoz, ilova shu kunlarda yozuvni o‘zi qo‘shadi (to‘xtatish va o‘chirish mumkin). Namuna tugmasi tayyor misol qo‘shadi','Pul → Reja → Daromad rejasi'],['📊 Kutilgan haftalik va oylik daromad, xarajat va qoladigan pul','Pul → Reja'],['🎯 Dollar maqsadi: $ summa va kursni yozsang so‘mga o‘giradi, oyiga necha foiz jamg‘arsang necha oyda yetishingni hisoblaydi va jamg‘arma maqsadi qilib qo‘shadi','Pul → Reja → Dollar maqsadi']]},
 {v:'2026.12.19-10',t:'🧭 Tab qatorlari bir xil ko‘rinishda',items:[['🧭 O‘qish, Odat va boshqa bo‘limlardagi tab qatorlari bir xil: 4 tagacha tab bir qatorda (belgi va matn yonma-yon, qator past), 5 ta tab belgi tepada va matn pastda. Avval bitta uzun nom butun qatorni ikki qavat qilib yuborardi','O‘qish, Odat, Qur‘on'],['Eskisi: Sozlamalar → 🎨 Dizayn → Sayqal → Avvalgidek','Sozlamalar']]},
 {v:'2026.12.19-9',t:'🌱 Bo‘sh ekranlarda “Birinchi qadam”',items:[['🌱 Birinchi qadam: odatlar yo‘q bo‘lsa nol kartalar o‘rniga bir bosishda odat qo‘shiladigan tayyor takliflar; IELTS’da hech narsa kiritilmagan bo‘lsa nol raqamlar o‘rniga 3 qadamli yo‘l (maqola, so‘z, kurs). Ma‘lumot paydo bo‘lishi bilan odatdagi ko‘rinish chiqadi','Odat; O‘qish → IELTS → Bosh'],['Eskisi: nol raqamlar holatiga qaytarish mumkin','Sozlamalar → 🪄 Jilo va qulaylik → Bo‘sh ekranlarda Birinchi qadam']]},

@@ -42,3 +42,6 @@ html.pl .hbsum .w{grid-column:auto}}
 /* Tab qatorlari bir xil: 4 va undan kam tab bir qatorda (ikonka + matn yonma-yon), 5 ta tab ikonka tepada */
 html.pl .seg:not(.sc) button:first-child:nth-last-child(-n+4),html.pl .seg:not(.sc) button:first-child:nth-last-child(-n+4)~button{white-space:nowrap;padding-left:4px;padding-right:4px;font-size:15px}
 html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5),html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5)~button{line-height:1.25;text-align:center;font-size:14px}
+
+/* pul raqamlari ustunda tekis */
+html.pl #app{font-variant-numeric:tabular-nums}
