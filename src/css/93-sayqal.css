@@ -45,3 +45,16 @@ html.pl .seg:not(.sc) button:first-child:nth-last-child(n+5),html.pl .seg:not(.s
 
 /* pul raqamlari ustunda tekis */
 html.pl #app{font-variant-numeric:tabular-nums}
+
+/* SAYQAL 2: boyroq ko'rinish (ranglar va joylashuv o'zgarmaydi) */
+html.pl .hero{position:relative;overflow:hidden}
+html.pl .hero::after{content:'';position:absolute;inset:0;pointer-events:none;background:linear-gradient(160deg,rgba(255,255,255,.14),transparent 48%,rgba(0,0,0,.2))}
+html.pl .hero h1,html.pl .gr{letter-spacing:-.02em}
+html.pl h2::before{content:'';display:inline-block;width:4px;height:.9em;margin-right:9px;border-radius:3px;background:var(--go);vertical-align:-.1em}
+html.pl .bar{height:10px;border-radius:10px;overflow:hidden}
+html.pl .bar i{border-radius:10px;background-image:linear-gradient(90deg,transparent,rgba(255,255,255,.28))}
+html.pl .usb{border-radius:10px;overflow:hidden}html.pl .usb i{border-radius:10px;background-image:linear-gradient(90deg,transparent,rgba(255,255,255,.28))}
+html.pl .row>span:first-child[style*="font-size:22px"]{display:grid;place-items:center;flex:0 0 auto;width:44px;height:44px;border-radius:14px;background:var(--c2)}
+html.pl .sum b{font-size:21px}
+html.pl .goal>.h>b,html.pl .goal>b{letter-spacing:-.01em}
+html.pl .chip{box-shadow:0 1px 0 rgba(255,255,255,.3) inset}
