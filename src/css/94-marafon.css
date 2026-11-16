@@ -1,0 +1,6 @@
+/* Isolation marafoni */
+.mrfh{padding:18px}
+.mrfdots{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
+.mrfdot{width:calc((100% - 6*6px)/7);min-width:34px;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;font:700 13px Figtree,system-ui;background:rgba(255,255,255,.14);color:var(--htx)}
+.mrfdot.f{background:var(--go);color:var(--on-go)}.mrfdot.p{background:rgba(255,255,255,.34)}.mrfdot.m{background:rgba(255,255,255,.08);text-decoration:line-through}.mrfdot.now{outline:3px solid var(--go);outline-offset:2px}
+.mrfc{border-left:4px solid var(--go)}

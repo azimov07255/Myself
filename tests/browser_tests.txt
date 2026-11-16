@@ -93,3 +93,4 @@ yangi_sayqal_browser|Dizayn sayqali: yoqilgan/avvalgidek, 3 uslub, yorug'/qorong
 yangi_birinchi_qadam_browser|Birinchi qadam: bo'sh Odat va IELTS ekranlari (haqiqiy brauzer)
 yangi_pul_haftalik_browser|Pul: haftalik takroriy daromad, Daromad rejasi, dollar maqsadi (haqiqiy brauzer)
 yangi_pul_konvert_browser|Pul: haftalik konvertlar, agar tejasam, juma jamg'arma (haqiqiy brauzer)
+yangi_isolation_browser|Isolation marafoni: kunlar, Prava, Hifz, pul, motivatsiya (haqiqiy brauzer)
