@@ -34,6 +34,12 @@ with Run('sayqal') as R:
     chk('O\'qish second row (5 tabs): all five have the same height (consistent icon-over-label)', r[1]['n'] == 5 and len(set(r[1]['hs'])) == 1, r)
     go('0', 'e'); r0 = ev("[...document.querySelectorAll('#app .seg')][0].children[0].getBoundingClientRect().height")
     chk('"Avvalgidek": the old taller top row is back', r0 > 55, r0)
+    go('1', 'h'); hero = ev("(()=>{const h=document.querySelector('#app .hero');return h?getComputedStyle(h,'::after').content:null})()")
+    chk('Sayqal 2: the hero card has the soft light gradient overlay (::after)', hero not in (None, 'none', 'normal'), hero)
+    chk('Sayqal 2: section headings (h2) get the small accent bar', ev("(()=>{const h=document.querySelector('#app h2');return h?getComputedStyle(h,'::before').content!=='none':true})()"))
+    ev("()=>{S.hab=[{id:'h1',t:'Suv'}];tab='o';render()}"); pg.wait_for_timeout(100)
+    chk('Sayqal 2: progress bars are 10px high and rounded', ev("(()=>{const b=document.querySelector('#app .bar');return b?Math.round(b.getBoundingClientRect().height):10})()") == 10)
+    go('0', 'h'); chk('"Avvalgidek": the hero overlay is gone', ev("(()=>{const h=document.querySelector('#app .hero');return h?getComputedStyle(h,'::after').content:'none'})()") in ('none', 'normal'))
     # uslublar x rejimlar x ekranlar
     for th in ('light', 'dark'):
         for cls, nm in (('', 'Klassik'), ('ui2', 'Yangi'), ('ui2 glass', 'Glass')):
