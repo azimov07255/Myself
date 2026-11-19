@@ -95,3 +95,4 @@ yangi_pul_haftalik_browser|Pul: haftalik takroriy daromad, Daromad rejasi, dolla
 yangi_pul_konvert_browser|Pul: haftalik konvertlar, agar tejasam, juma jamg'arma (haqiqiy brauzer)
 yangi_isolation_browser|Isolation marafoni: kunlar, Prava, Hifz, pul, motivatsiya (haqiqiy brauzer)
 yangi_3d_browser|3D: yo'l xaritasi, tanga minorasi, Hozir kartasi, namoz osmoni (haqiqiy brauzer)
+yangi_pul_markaz_browser|Pul markazi: sog‘liq balli, minora, tejash tahlilchisi, chellenj, biznes markazi, yutuqlar (haqiqiy brauzer)
