@@ -87,7 +87,7 @@ with Run('pulodat') as R:
     mark('h1700000000000', [1, 2, 4], []); chk('an empty day does break it (2)', ev("hst('h1700000000000')") == 2)
     mark('h1700000000000', [], []); chk('today not done yet does not zero a streak that ended yesterday', ev("(()=>{S.hb[dAgo(1)]={'h1700000000000':true};return hst('h1700000000000')})()") == 1)
     mark('h1700000000000', [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 12, 14, 15, 16, 17], [7, 13, 18, 19]); chk('30-day strength: 15 done, 4 rest days excluded, today (not done) not counted → 15 of 25 = 60%', ev("hbPct(S.hab[0],30)") == 60)
-    ev("()=>{S.hab.push({id:'h'+(Date.now()-4*864e5),t:'Yangi'});S.hb={};S.hb[dAgo(1)]={['h'+(Date.now()-4*864e5)]:true}}"); chk('a habit created 4 days ago is judged only on its own days (1 done of 4 = 25%), not penalised for the time before it existed', ev("hbPct(S.hab[2],30)") == 25)
+    ev("()=>{const hid='h'+(Date.now()-4*864e5);S.hab.push({id:hid,t:'Yangi'});S.hb={};S.hb[dAgo(1)]={[hid]:true}}"); chk('a habit created 4 days ago is judged only on its own days (1 done of 4 = 25%), not penalised for the time before it existed', ev("hbPct(S.hab[2],30)") == 25)
     ev("S.hab.pop()")
     # weekly goal
     mark('h1700000000001', [5, 4, 3, 12, 11, 10], []); chk('weekly goal 3: this week (Mon 26-Sat 31) has 3 done and last week has 3 → 2 weeks in a row; the week before has none and stops it', ev("hsW(S.hab[1])") == 2)
