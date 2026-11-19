@@ -29,7 +29,7 @@ with Run('d3', when=(2026, 11, 18, 10, 0, 0)) as R:
     ev("()=>{S.fin.sg[0].s=0;render()}"); chk('nothing saved yet: 0 solid coins, 24 ghost slots', ev("document.querySelectorAll('#app .d3co:not(.g)').length") == 0 and ev("document.querySelectorAll('#app .d3co.g').length") == 24)
     ev("()=>{S.fin.sg[0].s=500000;render()}"); chk('even a small saving shows at least one coin', ev("document.querySelectorAll('#app .d3co:not(.g)').length") == 4)
     ev("()=>{S.fin.sg[0].s=13000000;render()}"); chk('goal reached: the tower is full (24 coins = 96 layers, no ghosts) and says 100%', ev("document.querySelectorAll('#app .d3co:not(.g)').length") == 96 and ev("document.querySelectorAll('#app .d3co.g').length") == 0 and '100%' in text())
-    ev("()=>{S.fin.sg=[];drjSet('usd','');render()}"); chk('without a goal there is no tower', pg.locator('#app .d3coins').count() == 0)
+    ev("()=>{S.fin.sg=[];drjSet('usd','');render()}"); chk('without a goal the tower is EMPTY (no solid coins) and a goal form invites the user to start', pg.locator('#app .d3coins').count() == 1 and ev("document.querySelectorAll('#app .d3co:not(.g)').length") == 0 and pg.locator('#pmu').count() == 1)
     # ---------- 5. Hozir kartasi ----------
     ev("()=>{tab='h';BV='j';render()}"); pg.wait_for_timeout(150)
     chk('Bugun → Jadval: the "Hozir" card has the 3D class and a floating animation', pg.locator('#app .hero.d3c').count() == 1 and ev("getComputedStyle(document.querySelector('#app .hero.d3c')).animationName") == 'd3fl')

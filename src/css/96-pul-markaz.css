@@ -1,0 +1,19 @@
+/* Pul markazi */
+.pmzbr{padding:18px}.pmzc{border-left:4px solid var(--go)}
+.pmzmd{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;perspective:700px;margin-bottom:10px}
+.pmzm{text-align:center;padding:12px 4px;border-radius:18px;background:var(--c1);border:1px solid var(--ln);font-size:11px;opacity:.6;transform-style:preserve-3d}
+.pmzm b{display:block;margin-top:6px;font-size:11px;line-height:1.2}
+.pmzc2{width:54px;height:54px;border-radius:50%;margin:0 auto;display:grid;place-items:center;font-size:26px;background:var(--c2);box-shadow:inset 0 2px 6px rgba(0,0,0,.15)}
+.pmzm.on{opacity:1;box-shadow:0 12px 22px -14px rgba(0,0,0,.5)}
+.pmzm.on .pmzc2{box-shadow:inset 0 0 0 3px rgba(255,255,255,.4),0 8px 14px -6px rgba(0,0,0,.45);color:#fff}
+.pmzm.on.g .pmzc2{background:conic-gradient(from 20deg,#f2b632,#fff 14%,#a96b00 30%,#f2b632 52%,#fff 66%,#a96b00 82%,#f2b632)}
+.pmzm.on.s .pmzc2{background:conic-gradient(from 20deg,#d7dce4,#fff 14%,#7c8798 30%,#d7dce4 52%,#fff 66%,#7c8798 82%,#d7dce4)}
+.pmzm.on.b .pmzc2{background:conic-gradient(from 20deg,#e0955a,#fff 14%,#8a4a1c 30%,#e0955a 52%,#fff 66%,#8a4a1c 82%,#e0955a)}
+html.d3 .pmzm.on{animation:pmzt 4s ease-in-out infinite}
+@keyframes pmzt{0%,100%{transform:rotateY(-16deg)}50%{transform:rotateY(16deg)}}
+.pmzban{position:relative;overflow:hidden;border-left:4px solid var(--go)}
+.pmzcf{position:absolute;inset:0;pointer-events:none}.pmzcf i{position:absolute;top:-20px;font-style:normal;font-size:20px;animation:pmzf 2.6s ease-in infinite}
+@keyframes pmzf{to{transform:translateY(240px) rotate(300deg);opacity:0}}
+.pmzdots{margin-top:0}.pmzdt{width:calc((100% - 6*6px)/7);min-width:34px;aspect-ratio:1;display:grid;place-items:center;border-radius:50%;background:var(--c2);font:700 14px Figtree,system-ui}
+.pmzdt.n{background:#bfe3cf}.pmzdt.o{background:#f3dc9a}.pmzdt.x{background:#f1b9ae}.pmzdt.t{outline:3px solid var(--go)}
+@media (prefers-reduced-motion:reduce){html.d3 .pmzm.on,.pmzcf i{animation:none!important}}
