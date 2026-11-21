@@ -1,0 +1,49 @@
+/* ===== AZIMOV uslubi (ui4): Azimov va IELTS ilovalari kabi binafsha-ko'k gradient. Yangi dizayn (ui2) ustiga qatlam; hamma qoida html.ui2.az ostida ===== */
+/* 1) ranglar: qorong'i (Azimov) standart, yorug' (IELTS) tizim yoki qo'lda tanlangan rejimda */
+html.ui2.az{--bg:#0a0c16;--c1:#141831;--c2:#1c2145;--tx:#eef0ff;--mu:#9ba1c8;--ln:rgba(255,255,255,.1);--bad:#fb7185;--on-ac:#fff;--on-go:#06202a;--hp:rgba(255,255,255,.05);--sh:0 18px 40px -24px rgba(0,0,0,.75);--hlab:#d6ecff;--hmu:rgba(255,255,255,.84);--htx:#fff;
+ --ac-d:#8b6cff;--go-d:#22d3ee;--hbg-d:#4a2fe0;--ac-l:#5b3df5;--go-l:#7c3aed;--hbg-l:#4a2fe0;
+ --az-g:linear-gradient(135deg,#7c5cff 0%,#4f8cff 58%,#1b95cf 100%);--az-h:linear-gradient(140deg,#6d4aff 0%,#4a78ff 56%,#1b95cf 100%);--az-n:#22d3ee;color-scheme:dark}
+@media(prefers-color-scheme:light){html.ui2.az:not([data-theme=dark]){--bg:#f4f2ff;--c1:#ffffff;--c2:#efebff;--tx:#1a1640;--mu:#6c6894;--ln:#e7e3fa;--bad:#d92d20;--on-go:#fff;--hp:rgba(255,255,255,.07);--sh:0 1px 2px rgba(60,40,160,.06),0 14px 30px -16px rgba(60,40,160,.28);--ac:var(--ac-l);--go:var(--go-l);--hbg:var(--hbg-l);--az-h:linear-gradient(150deg,#4a2fe0 0%,#6d4aff 50%,#9b6bff 100%);--az-n:#5b3df5;color-scheme:light}}
+html.ui2.az[data-theme=light]{--bg:#f4f2ff;--c1:#ffffff;--c2:#efebff;--tx:#1a1640;--mu:#6c6894;--ln:#e7e3fa;--bad:#d92d20;--on-go:#fff;--hp:rgba(255,255,255,.07);--sh:0 1px 2px rgba(60,40,160,.06),0 14px 30px -16px rgba(60,40,160,.28);--ac:var(--ac-l);--go:var(--go-l);--hbg:var(--hbg-l);--az-h:linear-gradient(150deg,#4a2fe0 0%,#6d4aff 50%,#9b6bff 100%);--az-n:#5b3df5;color-scheme:light}
+/* 2) orqa fon */
+html.ui2.az body{background:var(--bg) radial-gradient(800px 480px at 8% -10%,rgba(124,92,255,.30),transparent 62%) fixed,radial-gradient(700px 480px at 108% 8%,rgba(34,211,238,.16),transparent 62%) fixed,radial-gradient(600px 480px at 50% 118%,rgba(244,114,182,.10),transparent 62%) fixed}
+@media(prefers-color-scheme:light){html.ui2.az:not([data-theme=dark]) body{background:var(--bg) radial-gradient(800px 480px at 8% -10%,rgba(124,92,255,.15),transparent 62%) fixed,radial-gradient(700px 480px at 108% 8%,rgba(34,211,238,.12),transparent 62%) fixed}}
+html.ui2.az[data-theme=light] body{background:var(--bg) radial-gradient(800px 480px at 8% -10%,rgba(124,92,255,.15),transparent 62%) fixed,radial-gradient(700px 480px at 108% 8%,rgba(34,211,238,.12),transparent 62%) fixed}
+html.ui2.az h2{font-size:19px;letter-spacing:-.02em}
+html.ui2.az .top .d{font-size:27px;font-weight:800;letter-spacing:-.025em}
+/* 3) katta gradient kartalar */
+html.ui2.az .hero{border-radius:30px;background:var(--az-h);box-shadow:0 26px 48px -24px color-mix(in srgb,#6d4aff 80%,#000)}
+html.ui2.az .hero::before{display:none}
+html.ui2.az .hero::after{inset:0;width:auto;height:auto;right:auto;top:auto;border-radius:inherit;background:radial-gradient(320px 220px at 100% 0,rgba(255,255,255,.22),transparent 70%),linear-gradient(165deg,rgba(255,255,255,.1),transparent 45%,rgba(0,0,0,.14))}
+html.ui2.az .hero .lab{letter-spacing:.12em;font-weight:700}
+html.ui2.az .hero h1{font-weight:800}
+html.ui2.az .rwc{background:var(--az-h);border-radius:24px;box-shadow:0 20px 38px -22px #6d4aff}
+/* 4) oddiy kartalar */
+html.ui2.az .goal,html.ui2.az .sum div,html.ui2.az .sd,html.ui2.az .dpc{border-radius:24px;-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px)}
+html.ui2.az .goal{padding:17px}
+html.ui2.az .row{border-radius:20px}
+html.ui2.az .row.now{border-left-color:var(--az-n);background:color-mix(in srgb,var(--ac) 10%,var(--c1))}
+html.ui2.az .done .ck{box-shadow:0 0 0 5px color-mix(in srgb,var(--ac) 22%,transparent)}
+/* 5) tugmalar, tablar, chiplar */
+html.ui2.az .big,html.ui2.az .btn{background:var(--az-g);color:#fff;box-shadow:0 16px 28px -14px #6d4aff,inset 0 1px 0 rgba(255,255,255,.3)}
+html.ui2.az .big{border-radius:20px}
+html.ui2.az .big.ok{background:var(--c2);color:var(--ac);box-shadow:none}
+html.ui2.az .btn.s{background:var(--c1);color:var(--tx);box-shadow:none}
+html.ui2.az .seg{border-radius:18px;border:1px solid var(--ln)}
+html.ui2.az .seg button.on{background:var(--az-g);color:#fff;box-shadow:0 8px 18px -8px #6d4aff}
+html.ui2.az .wd.on,html.ui2.az .chips .on,html.ui2.az .chips button.on,html.ui2.az .cchips .on{background:var(--az-g);color:#fff;border-color:transparent}
+html.ui2.az .chip.on{background:var(--az-g);color:#fff}
+html.ui2.az .bar i,html.ui2.az .usb i{background:linear-gradient(90deg,#7c5cff,#22d3ee)}
+html.ui2.az input:focus,html.ui2.az select:focus,html.ui2.az textarea:focus{border-color:var(--ac);box-shadow:0 0 0 4px color-mix(in srgb,var(--ac) 25%,transparent)}
+/* 5b) Pul markazi, 3D minora, yutuqlar */
+html.ui2.az .pmzbr{background:var(--az-h)}
+html.ui2.az .pmzc,html.ui2.az .pmzban{border-left-color:var(--ac)}
+html.ui2.az .d3coins{background:linear-gradient(180deg,#3b2a9a,#17124a)}
+html.ui2.az .pmzm{border-radius:20px}
+/* 6) pastki panel: markazda gradient tugma */
+html.ui2.az nav div{border-radius:30px;background:color-mix(in srgb,var(--c1) 88%,transparent)}
+html.ui2.az nav button.on{background:color-mix(in srgb,var(--az-n) 14%,transparent);color:var(--az-n)}
+html.ui2.az .navai{background:var(--az-g)!important;border:0!important;border-radius:20px!important;box-shadow:0 14px 28px -10px #6d4aff!important}
+/* 7) varaqlar */
+html.ui2.az .mfs,html.ui2.az .hbsh{border-radius:30px 30px 0 0}
+html.ui2.az .updb{background:var(--az-h)}
